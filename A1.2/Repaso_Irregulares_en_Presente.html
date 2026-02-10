@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- ESTILOS VISUALES (TROPICAL - ESQUELETO 15) --- */
+        :root { 
+            --primary: #004d40; /* Verde Selva */
+            --accent: #ff6f00;  /* Naranja Atardecer */
+            --text-main: #1f2937; 
+            --bg-light: #fefce8; /* Crema Suave */
+            --danger: #ef4444; 
+        }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+        
+        /* Drawer y Pizarra */
+        #tucaneo-drawer { position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        #safe-close-btn:hover { transform: scale(1.1); }
+        
+        /* UI Flotante */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 100px; z-index: 5000; transition: all 0.3s ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; transition: all 0.3s ease; }
+        #floating-cta { position: fixed; bottom: 20px; left: 30px; z-index: 5000; font-size: 12px; color: var(--primary); text-decoration: none; letter-spacing: 1px; font-weight: bold; opacity: 0.7; }
+        
+        /* Reveal JS Base (Tipografía Tropical) */
+        .reveal { color: var(--text-main); font-size: 22px; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: var(--primary); text-transform: none; font-weight: 700; }
+        
+        /* ESTADO NORMAL (Slide centered) */
+        .reveal section { 
+            display: flex !important; 
+            flex-direction: column; 
+            justify-content: center; 
+            height: 100%; 
+            padding: 0 !important;
+        }
+
+        /* --- MODO ZOOM / SCROLL (PC) --- */
+        .reveal.is-zoomed {
+            overflow-y: scroll !important;
+            overflow-x: hidden !important;
+            background: var(--bg-light);
+        }
+        .reveal.is-zoomed .slides {
+            transform: none !important;
+            width: 100% !important;
+            height: auto !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 100px 0 150px 0 !important;
+            text-align: center !important;
+            overflow: visible !important;
+            inset: 0 !important;
+        }
+        .reveal.is-zoomed section.present {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            height: auto !important;
+            width: 90% !important;
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            transform: none !important;
+            text-align: left !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px; /* Tropical Rounding */
+            padding: 40px !important;
+            top: auto !important;
+            left: auto !important;
+        }
+        .reveal.is-zoomed section:not(.present) { display: none !important; }
+        .reveal.is-zoomed::-webkit-scrollbar { width: 12px; }
+        .reveal.is-zoomed::-webkit-scrollbar-track { background: var(--bg-light); }
+        .reveal.is-zoomed::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; border: 3px solid var(--bg-light); }
+
+        /* --- ESTILOS DE COMPONENTES (TROPICALIZADOS) --- */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8); 
+            border-radius: 20px; /* Redondeado Tropical */
+            padding: 30px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+            text-align: left; 
+            margin: 0 auto; 
+            width: 100%;
+        }
+        
+        .clean-input { 
+            border: none; border-bottom: 2px solid #e5e7eb; background: rgba(255,255,255,0.5); font-family: 'Handlee', cursive; font-size: 1.2em; color: var(--accent); text-align: left; width: 100%; transition: 0.3s; padding: 10px; border-radius: 10px; cursor: text; 
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; width: 100%; padding: 0 10px; }
+        
+        /* Botones Nav (Redondos) */
+        .nav-btn { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 12px; padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none; letter-spacing: 1px; }
+        .nav-btn.zoom { background-color: var(--accent); color: white; }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #64748b; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .nav-btn.zoom.active { background-color: #fff; color: var(--accent); border: 2px solid var(--accent); }
+
+        .cursor-eraser { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="white" stroke="black" stroke-width="1"/></svg>') 10 10, auto; }
+
+        /* Helpers Tablas */
+        .number-table { width: 100%; text-align: left; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
+        .number-table th { border-bottom: 2px solid var(--accent); color: var(--primary); font-family: 'Playfair Display', serif; padding: 8px; font-size: 1.1em; font-weight: bold; }
+        .number-table td { background: white; border-radius: 10px; padding: 12px; color: var(--text-main); font-family: 'Lato', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .pronunciation { font-style: italic; color: #94a3b8; font-size: 0.9em; margin-left: 10px; font-family: 'Handlee', cursive; }
+
+        /* UI Móvil */
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.1s; display: none; }
+        #back-to-top { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: opacity 0.3s, transform 0.3s; opacity: 0; pointer-events: none; }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        /* --- ZONA MÓVIL CRÍTICA (RESTAURADA EXACTAMENTE AL ESQUELETO 23) --- */
+        @media (max-width: 1024px) {
+            html, body { 
+                height: auto !important; 
+                overflow-y: auto !important; 
+                -webkit-overflow-scrolling: touch; 
+                touch-action: pan-y pinch-zoom !important; 
+            }
+            #fixed-logo { width: 80px; top: 15px; left: 15px; } 
+            #top-nav { top: 15px; right: 15px; gap: 8px; } 
+            .nav-btn span { display: none; } 
+            .nav-btn { padding: 8px; width: 36px; height: 36px; justify-content: center; }
+            /* Ocultamos el Dock y el Zoom en móvil para evitar bugs */
+            #btn-zoom, .nav-btn.whiteboard, #premium-dock { display: none !important; } 
+            #scroll-progress { display: block; }
+            #back-to-top { display: flex; }
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+
+            /* Reveal Reset para Móvil */
+            .reveal { overflow: visible !important; position: relative !important; height: auto !important; touch-action: pan-y pinch-zoom !important; background: transparent !important; }
+            .reveal .slides { 
+                display: block !important; 
+                position: static !important; 
+                height: auto !important; 
+                width: 100% !important; 
+                transform: none !important; 
+                margin: 0 !important; 
+                text-align: left !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                overflow: visible !important;
+            }
+            .reveal .slides section { 
+                display: block !important; 
+                opacity: 1 !important; 
+                visibility: visible !important; 
+                position: static !important; 
+                height: auto !important; 
+                width: 100% !important; 
+                padding: 80px 20px 60px 20px !important; 
+                border-bottom: 1px solid #e2e8f0; 
+                transform: none !important;
+            }
+            
+            input, textarea, .clean-input { position: relative !important; z-index: 2147483647 !important; font-size: 16px !important; padding: 15px !important; background: #fff !important; border: 1px solid #ccc !important; border-radius: 8px !important; margin-top: 10px !important; pointer-events: auto !important; }
+            .glass-card { padding: 20px; margin-bottom: 20px; box-shadow: none; border: 1px solid #cbd5e1; } 
+            .grid-responsive { grid-template-columns: 1fr; gap: 20px; padding: 0; } 
+            .reveal h1 { font-size: 2em !important; line-height: 1.1 !important; }
+        }
+
+        @media print {
+            #top-nav, #tucaneo-drawer, #safe-close-btn, #btn-zoom, .nav-btn, #floating-cta, #scroll-progress, #back-to-top, #premium-dock { display: none !important; }
+            body { background: white; }
+            .reveal { height: auto !important; overflow: visible !important; }
+            .reveal section { page-break-after: always; height: auto !important; padding: 20px !important; display: block !important; opacity: 1 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">FUNDAMENTOS NUMÉRICOS</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+           <section>
+                <div class="h-full w-full flex flex-col items-center justify-center p-6 box-border">
+                    <div class="w-full h-full flex flex-col items-center justify-center p-10 bg-white/60 backdrop-blur-sm rounded-3xl shadow-xl border border-white/60 max-w-5xl">
+                        <div class="mb-6">
+                            <span class="bg-orange-100 text-orange-600 px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest border border-orange-200">
+                                <i class="fas fa-bolt mr-2"></i> Gramática A2
+                            </span>
+                        </div>
+                        <h2 class="text-6xl md:text-8xl font-bold text-emerald-900 mb-6 font-playfair tracking-tight text-center">
+                            Verbos <br><span class="text-orange-500">Irregulares</span>
+                        </h2>
+                        <p class="text-3xl text-slate-600 font-handlee mt-4 text-center">
+                            El Presente Simple: ¡Sin miedo al éxito!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-6xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-4">
+                        <div class="bg-emerald-100 p-4 rounded-full text-emerald-600 text-2xl"><i class="fas fa-user"></i></div>
+                        <div>
+                            <h3 class="m-0 text-4xl text-emerald-800 font-playfair">El Club del "GO"</h3>
+                            <p class="text-slate-500 font-handlee text-xl">Solo cambia la primera persona (Yo).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-orange-400">
+                            <h4 class="text-xl font-bold text-slate-700 mb-4">Verbos Clave (-GO)</h4>
+                            <table class="w-full text-left text-lg">
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Hacer</td><td class="font-bold text-emerald-700">Yo Hago</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Poner</td><td class="font-bold text-emerald-700">Yo Pongo</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Salir</td><td class="font-bold text-emerald-700">Yo Salgo</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Traer</td><td class="font-bold text-emerald-700">Yo Traigo</td></tr>
+                                <tr><td class="py-2 text-slate-500">Tener*</td><td class="font-bold text-emerald-700">Yo Tengo</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-purple-400">
+                            <h4 class="text-xl font-bold text-slate-700 mb-4">Los Especiales (-ZCO / -OY)</h4>
+                            <table class="w-full text-left text-lg">
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Conocer</td><td class="font-bold text-purple-700">Yo Conozco</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Conducir</td><td class="font-bold text-purple-700">Yo Conduzco</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Dar</td><td class="font-bold text-purple-700">Yo Doy</td></tr>
+                                <tr class="border-b border-gray-100"><td class="py-2 text-slate-500">Saber</td><td class="font-bold text-purple-700">Yo Sé</td></tr>
+                                <tr><td class="py-2 text-slate-500">Ver</td><td class="font-bold text-purple-700">Yo Veo</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-5xl mx-auto text-center">
+                    <h3 class="text-emerald-800 mb-2 font-playfair">¡Ronda Relámpago!</h3>
+                    <p class="text-slate-500 mb-8 font-handlee text-xl">Escribe SOLAMENTE la forma "Yo".</p>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Make/Do</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Know (People)</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Go Out</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Give</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Put</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-md transform transition hover:scale-105">
+                            <p class="text-sm text-slate-400 uppercase font-bold mb-2">To Know (Info)</p>
+                            <input class="clean-input text-center text-orange-600 font-bold text-2xl" placeholder="Yo..." />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="h-full w-full flex flex-col justify-center p-4">
+                    <div class="text-center mb-6">
+                        <h3 class="text-4xl text-emerald-900 font-playfair font-bold">Los Verbos "Bota"</h3>
+                        <p class="text-xl text-slate-600 font-handlee">La raíz cambia, pero <strong>Nosotros</strong> somos fuertes y NO cambiamos.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-lg border-t-8 border-blue-400">
+                            <div class="text-center mb-4">
+                                <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-bold text-xl">E &rarr; IE</span>
+                                <p class="text-slate-400 mt-2 font-bold uppercase text-xs">Cerrar / Empezar</p>
+                            </div>
+                            <ul class="space-y-1 text-lg text-slate-700">
+                                <li>Yo <strong class="text-blue-500">cierro</strong></li>
+                                <li>Tú <strong class="text-blue-500">cierras</strong></li>
+                                <li>Él <strong class="text-blue-500">cierra</strong></li>
+                                <li class="bg-slate-100 p-1 rounded text-slate-500 font-bold text-base">N. cerramos</li>
+                                <li>Ellos <strong class="text-blue-500">cierran</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-lg border-t-8 border-orange-400">
+                            <div class="text-center mb-4">
+                                <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full font-bold text-xl">O &rarr; UE</span>
+                                <p class="text-slate-400 mt-2 font-bold uppercase text-xs">Dormir / Almorzar</p>
+                            </div>
+                            <ul class="space-y-1 text-lg text-slate-700">
+                                <li>Yo <strong class="text-orange-500">duermo</strong></li>
+                                <li>Tú <strong class="text-orange-500">duermes</strong></li>
+                                <li>Él <strong class="text-orange-500">duerme</strong></li>
+                                <li class="bg-slate-100 p-1 rounded text-slate-500 font-bold text-base">N. dormimos</li>
+                                <li>Ellos <strong class="text-orange-500">duermen</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-lg border-t-8 border-pink-400">
+                            <div class="text-center mb-4">
+                                <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full font-bold text-xl">E &rarr; I</span>
+                                <p class="text-slate-400 mt-2 font-bold uppercase text-xs">Pedir / Servir</p>
+                            </div>
+                            <ul class="space-y-1 text-lg text-slate-700">
+                                <li>Yo <strong class="text-pink-500">pido</strong></li>
+                                <li>Tú <strong class="text-pink-500">pides</strong></li>
+                                <li>Él <strong class="text-pink-500">pide</strong></li>
+                                <li class="bg-slate-100 p-1 rounded text-slate-500 font-bold text-base">N. pedimos</li>
+                                <li>Ellos <strong class="text-pink-500">piden</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-lg border-t-8 border-purple-500 relative overflow-hidden hover:-translate-y-1 transition">
+                            <div class="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">¡ESPECIAL!</div>
+                            <div class="text-center mb-4">
+                                <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full font-bold text-xl">U &rarr; UE</span>
+                                <p class="text-slate-400 mt-2 font-bold uppercase text-xs">Jugar (To Play)</p>
+                            </div>
+                            <ul class="space-y-1 text-lg text-slate-700">
+                                <li>Yo <strong class="text-purple-500">juego</strong></li>
+                                <li>Tú <strong class="text-purple-500">juegas</strong></li>
+                                <li>Él <strong class="text-purple-500">juega</strong></li>
+                                <li class="bg-slate-100 p-1 rounded text-slate-500 font-bold text-base">N. jugamos</li>
+                                <li>Ellos <strong class="text-purple-500">juegan</strong></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-5xl mx-auto">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-utensils text-3xl text-orange-500"></i>
+                        <h3 class="m-0 text-3xl text-emerald-800 font-playfair">En el Restaurante</h3>
+                    </div>
+                    
+                    <div class="space-y-6 text-xl leading-relaxed text-slate-700">
+                        <div class="flex items-baseline gap-3">
+                            <span>1. Hola, yo (querer)</span>
+                            <input class="clean-input w-48 text-center font-bold text-orange-600" placeholder="..." />
+                            <span>una mesa para dos.</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span>2. Los camareros (servir)</span>
+                            <input class="clean-input w-48 text-center font-bold text-orange-600" placeholder="..." />
+                            <span>la comida muy rápido aquí.</span>
+                        </div>
+
+                        <div class="flex items-baseline gap-3">
+                            <span>3. ¿Tú (poder)</span>
+                            <input class="clean-input w-48 text-center font-bold text-orange-600" placeholder="..." />
+                            <span>pasar la sal, por favor?</span>
+                        </div>
+
+                         <div class="flex items-baseline gap-3">
+                            <span>4. Nosotros no (almorzar)</span>
+                            <input class="clean-input w-48 text-center font-bold text-slate-400" placeholder="..." />
+                            <span>carne, somos vegetarianos.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 p-4 bg-yellow-50 rounded-xl border border-yellow-200 text-center font-handlee text-slate-600">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> ¡Ojo con la número 4! ¿Cambia o no cambia?
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid grid-cols-2 gap-8 max-w-6xl mx-auto h-full items-center">
+                    
+                    <div class="glass-card bg-emerald-50/80 border-emerald-200">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-brain text-5xl text-emerald-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold text-emerald-800">SABER</h3>
+                            <p class="text-sm uppercase tracking-widest text-emerald-600">Información / Habilidades</p>
+                        </div>
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-2">
+                                <span class="font-bold text-slate-700">1. Yo</span>
+                                <input class="clean-input flex-1" placeholder="conducir (habilidad)" />
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="font-bold text-slate-700">2. ¿Tú</span>
+                                <input class="clean-input flex-1" placeholder="dónde está el baño?" />
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card bg-purple-50/80 border-purple-200">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-handshake text-5xl text-purple-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold text-purple-800">CONOCER</h3>
+                            <p class="text-sm uppercase tracking-widest text-purple-600">Personas / Lugares</p>
+                        </div>
+                         <ul class="space-y-4">
+                            <li class="flex items-center gap-2">
+                                <span class="font-bold text-slate-700">3. Yo</span>
+                                <input class="clean-input flex-1" placeholder="a Shakira (persona)" />
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="font-bold text-slate-700">4. Ella</span>
+                                <input class="clean-input flex-1" placeholder="bien Bogotá (lugar)" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-6xl mx-auto h-full overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6 border-b border-red-100 pb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-red-100 p-3 rounded-full text-red-600 animate-pulse"><i class="fas fa-user-secret text-2xl"></i></div>
+                            <div>
+                                <h3 class="m-0 text-3xl text-red-800 font-playfair">Detective de Errores</h3>
+                                <p class="text-red-400 font-handlee text-lg">Encuentra el intruso y corrígelo.</p>
+                            </div>
+                        </div>
+                        <span class="bg-red-50 text-red-600 px-5 py-2 rounded-full text-sm font-bold shadow-sm uppercase tracking-wide border border-red-100">
+                            <i class="fas fa-search mr-2"></i> 6 Casos Abiertos
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">1</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Yo no <span class="text-red-500">sabo</span> la respuesta."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">2</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Tú <span class="text-red-500">tenes</span> un coche bonito."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">3</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Yo <span class="text-red-500">haco</span> la tarea hoy."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">4</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Nosotros <span class="text-red-500">piensamos</span> mucho."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">5</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Yo <span class="text-red-500">pono</span> el libro aquí."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4 border-l-4 border-red-300 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-400 font-bold text-xl">6</div>
+                            <div class="flex-1">
+                                <p class="text-lg text-slate-400 line-through decoration-red-500 decoration-2 mb-1 italic">"Yo <span class="text-red-500">salo</span> con mis amigos."</p>
+                                <div class="relative">
+                                    <input class="clean-input text-emerald-700 font-bold pl-8" placeholder="Corrección..." />
+                                    <i class="fas fa-check absolute left-2 top-3 text-emerald-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-5xl mx-auto h-full overflow-y-auto">
+                    <div class="flex items-center gap-4 mb-6 border-b border-orange-200 pb-4">
+                        <div class="bg-orange-100 p-3 rounded-full text-orange-600"><i class="fas fa-dog text-2xl"></i></div>
+                        <div>
+                            <h3 class="m-0 text-3xl text-slate-800 font-playfair">La Familia Suárez</h3>
+                            <p class="text-slate-500 font-handlee">Completa la historia de Daniel y sus perros.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/80 p-8 rounded-2xl shadow-inner text-lg leading-loose text-slate-700 font-handlee text-justify">
+                        <p>
+                            ¡Hola! Me llamo Daniel. En la foto 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(salir)" />
+                            con mi esposa Ximena y nuestras mascotas, Lara y Paco.
+                            Nosotros 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(ser)" />
+                            colombianos y amamos los perros.
+                        </p>
+                        <p class="mt-4">
+                            Todos los fines de semana, yo 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(salir)" />
+                            a dar un paseo. Mi esposa les 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(poner)" />
+                            la correa. Cuando regresamos, yo les 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(traer)" />
+                            sus galletas y 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(hacer)" />
+                            el desayuno para todos.
+                        </p>
+                        <p class="mt-4">
+                            Yo 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(reconocer)" />
+                            que mis perros son muy importantes. Yo 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(saber)" />
+                            que somos un poco obsesivos, pero nada 
+                            <input class="clean-input w-32 text-center text-emerald-700 font-bold mx-2" placeholder="(sustituir)" />
+                            el amor que ellos nos dan.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto items-center">
+        <div class="text-center md:text-left">
+            <h3 class="text-4xl text-emerald-900 font-playfair font-bold mb-2">¿Lógica o Locura?</h3>
+            <h4 class="text-2xl text-emerald-700 font-playfair mb-4">Logic or Madness?</h4>
+            
+            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 mb-8">
+                <p class="text-lg text-slate-700 font-handlee mb-2">
+                    🇪🇸 Lee las frases. Si la lógica es correcta, marca <strong class="text-emerald-600">V</strong>. Si es absurda, marca <strong class="text-red-500">F</strong>.
+                </p>
+                <hr class="border-emerald-200 my-2">
+                <p class="text-lg text-slate-600 font-handlee">
+                    🇺🇸 Read the sentences. If the logic is correct, mark <strong class="text-emerald-600">V</strong> (True). If it's absurd, mark <strong class="text-red-500">F</strong> (False).
+                </p>
+            </div>
+
+            <div class="hidden md:block text-9xl text-center opacity-20 text-emerald-900">
+                <i class="fas fa-balance-scale"></i>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-blue-400 hover:shadow-md transition">
+                <div class="text-lg text-slate-700">
+                    <span class="font-bold text-slate-400 mr-2">1.</span>
+                    Yo <span class="text-blue-600 font-bold bg-blue-50 px-1 rounded">duermo</span> en la oficina durante la reunión.
+                </div>
+                <div class="flex gap-2 shrink-0 ml-2">
+                    <button onclick="react('error')" class="w-10 h-10 rounded-full border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white font-bold transition">V</button>
+                    <button onclick="react('confetti')" class="w-10 h-10 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold transition">F</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-orange-400 hover:shadow-md transition">
+                <div class="text-lg text-slate-700">
+                    <span class="font-bold text-slate-400 mr-2">2.</span>
+                    Tú <span class="text-orange-600 font-bold bg-orange-50 px-1 rounded">pones</span> los zapatos en el refrigerador.
+                </div>
+                <div class="flex gap-2 shrink-0 ml-2">
+                    <button onclick="react('error')" class="w-10 h-10 rounded-full border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white font-bold transition">V</button>
+                    <button onclick="react('confetti')" class="w-10 h-10 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold transition">F</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-purple-400 hover:shadow-md transition">
+                <div class="text-lg text-slate-700">
+                    <span class="font-bold text-slate-400 mr-2">3.</span>
+                    Nosotros <span class="text-purple-600 font-bold bg-purple-50 px-1 rounded">pedimos</span> la cuenta después de comer.
+                </div>
+                <div class="flex gap-2 shrink-0 ml-2">
+                    <button onclick="react('confetti')" class="w-10 h-10 rounded-full border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white font-bold transition">V</button>
+                    <button onclick="react('error')" class="w-10 h-10 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold transition">F</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-pink-400 hover:shadow-md transition">
+                <div class="text-lg text-slate-700">
+                    <span class="font-bold text-slate-400 mr-2">4.</span>
+                    Yo <span class="text-pink-600 font-bold bg-pink-50 px-1 rounded">conduzco</span> mi coche por el océano.
+                </div>
+                <div class="flex gap-2 shrink-0 ml-2">
+                    <button onclick="react('error')" class="w-10 h-10 rounded-full border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white font-bold transition">V</button>
+                    <button onclick="react('confetti')" class="w-10 h-10 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold transition">F</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="max-w-6xl mx-auto h-full overflow-y-auto p-4">
+        
+        <div class="bg-white border-l-8 border-emerald-500 shadow-sm p-6 mb-8 rounded-r-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h3 class="text-3xl font-bold text-emerald-800 m-0 font-playfair flex items-center gap-3">
+                    <i class="fas fa-pencil-alt"></i> Complétalo
+                </h3>
+                <div class="mt-3 space-y-2">
+                    <p class="text-lg text-slate-600 font-handlee">
+                        🇪🇸 Mira el ícono y completa la frase con el verbo en <strong>Presente (Yo)</strong>.
+                    </p>
+                    <p class="text-base text-slate-400 font-handlee border-t border-slate-100 pt-1 mt-1">
+                        🇺🇸 Look at the icon and complete the sentence with the verb in <strong>Present (Yo)</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-orange-100 h-40 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                    <i class="fas fa-user-injured text-7xl text-orange-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Caer</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"¡Uy! Yo siempre me..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-orange-600 bg-orange-50 border-2 border-orange-100 rounded-xl focus:outline-none focus:border-orange-400 focus:bg-white transition" placeholder="________________" />
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-blue-100 h-40 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                    <i class="fas fa-car-side text-7xl text-blue-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                    <i class="fas fa-moon text-3xl text-blue-400 absolute top-8 right-12 opacity-50"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Conducir</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"Yo no..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-blue-600 bg-blue-50 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-400 focus:bg-white transition" placeholder="________________" />
+                    <p class="text-slate-400 text-sm mt-2 italic">...de noche.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-purple-100 h-40 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                    <i class="fas fa-gift text-7xl text-purple-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Traer</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"A la fiesta, yo..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-purple-600 bg-purple-50 border-2 border-purple-100 rounded-xl focus:outline-none focus:border-purple-400 focus:bg-white transition" placeholder="________________" />
+                    <p class="text-slate-400 text-sm mt-2 italic">...los regalos.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-pink-100 h-40 flex items-center justify-center group-hover:bg-pink-200 transition-colors">
+                    <i class="fas fa-utensils text-7xl text-pink-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-pink-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Poner</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"Antes de comer, yo..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-pink-600 bg-pink-50 border-2 border-pink-100 rounded-xl focus:outline-none focus:border-pink-400 focus:bg-white transition" placeholder="________________" />
+                    <p class="text-slate-400 text-sm mt-2 italic">...la mesa.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-indigo-100 h-40 flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                    <i class="fas fa-glass-cheers text-7xl text-indigo-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-indigo-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Salir</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"Los viernes, yo..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-indigo-600 bg-indigo-50 border-2 border-indigo-100 rounded-xl focus:outline-none focus:border-indigo-400 focus:bg-white transition" placeholder="________________" />
+                    <p class="text-slate-400 text-sm mt-2 italic">...con mis amigos.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group border border-slate-100">
+                <div class="bg-teal-100 h-40 flex items-center justify-center group-hover:bg-teal-200 transition-colors">
+                    <i class="fas fa-dumbbell text-7xl text-teal-500 transform group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="inline-block bg-teal-500 text-white text-xs px-3 py-1 rounded-full font-bold mb-4 tracking-wider uppercase">Verbo: Hacer</span>
+                    <p class="text-slate-600 text-lg mb-3 font-handlee">"Por la mañana, yo..."</p>
+                    <input class="w-full p-3 text-center text-xl font-bold text-teal-600 bg-teal-50 border-2 border-teal-100 rounded-xl focus:outline-none focus:border-teal-400 focus:bg-white transition" placeholder="________________" />
+                    <p class="text-slate-400 text-sm mt-2 italic">...ejercicio.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+            
+
+
+            <section>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto h-full overflow-hidden">
+                    
+                    <div class="bg-white/90 p-8 rounded-3xl shadow-sm border border-slate-200 overflow-y-auto max-h-[60vh]">
+                        <div class="flex items-center gap-3 mb-4 sticky top-0 bg-white/95 py-2 z-10 border-b border-slate-100">
+                            <i class="fas fa-train text-3xl text-emerald-600"></i>
+                            <h3 class="m-0 text-2xl text-slate-800 font-playfair">El Tren (Lectura)</h3>
+                        </div>
+                        <p class="text-justify text-slate-600 font-serif leading-relaxed text-lg">
+                            El tren llega a tiempo como siempre. Llega a las cuatro y veintiséis. 
+                            <strong class="text-emerald-600">Subo</strong> al tren con algunas personas y viajo a la ciudad. 
+                            Cerca de mí, una mujer <strong class="text-emerald-600">duerme</strong>. Ella descansa completamente. 
+                            <strong class="text-emerald-600">Pienso</strong> que tiene sueños dulces. 
+                            <br><br>
+                            Un hombre lee un periódico. Las noticias son interesantes hoy. 
+                            ¿Qué lee? Es imposible <strong class="text-emerald-600">saber</strong>.
+                            Un niño grita y después <strong class="text-emerald-600">sonríe</strong>. 
+                            A veces, quiero hablar con alguien pero <strong class="text-emerald-600">prefiero</strong> viajar sola con mis libros.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col justify-center space-y-6">
+                        <div class="glass-card">
+                            <h4 class="text-xl text-emerald-800 font-bold mb-4">Comprensión</h4>
+                            
+                            <div class="mb-4">
+                                <p class="font-bold text-slate-700 mb-2">1. ¿Qué hace la mujer cerca del narrador?</p>
+                                <select class="w-full p-3 rounded-lg border border-slate-300 bg-white font-handlee text-lg focus:border-emerald-500 outline-none">
+                                    <option>Selecciona...</option>
+                                    <option>Ella lee un periódico.</option>
+                                    <option>Ella duerme.</option>
+                                    <option>Ella grita.</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <p class="font-bold text-slate-700 mb-2">2. ¿Qué prefiere hacer el narrador?</p>
+                                <select class="w-full p-3 rounded-lg border border-slate-300 bg-white font-handlee text-lg focus:border-emerald-500 outline-none">
+                                    <option>Selecciona...</option>
+                                    <option>Hablar con la gente.</option>
+                                    <option>Viajar sola con sus libros.</option>
+                                    <option>Dormir todo el viaje.</option>
+                                </select>
+                            </div>
+
+                            <button onclick="react('confetti')" class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition">
+                                <i class="fas fa-check-circle mr-2"></i> Verificar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="h-full w-full flex flex-col justify-center items-center p-6 bg-slate-50">
+                    
+                    <div class="text-center mb-8 relative z-10">
+                        <div class="inline-block bg-orange-500 text-white px-8 py-2 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg mb-4 animate-bounce">
+                            <i class="fas fa-crown mr-2"></i> Reto Final
+                        </div>
+                        <h2 class="text-5xl md:text-6xl font-black text-slate-800 font-playfair mb-2">La Ruleta Irregular</h2>
+                        <p class="text-slate-500 font-handlee text-xl">¡Gira, acierta y gana!</p>
+                    </div>
+
+                    <div class="glass-card max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center p-8 relative overflow-visible border-2 border-white/50 shadow-2xl">
+                        
+                        <div class="relative flex justify-center items-center h-80">
+                            
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-20 text-orange-500 text-6xl drop-shadow-xl filter" style="filter: drop-shadow(0px 4px 2px rgba(0,0,0,0.3));">
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+
+                            <div id="wheel-final" 
+                                 class="w-72 h-72 rounded-full border-[8px] border-white shadow-[0_0_40px_rgba(0,0,0,0.1)] flex items-center justify-center relative bg-white"
+                                 style="transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1); background: conic-gradient(from 0deg, #10b981 0% 10%, #f0fdf4 10% 20%, #f59e0b 20% 30%, #fff7ed 30% 40%, #3b82f6 40% 50%, #eff6ff 50% 60%, #8b5cf6 60% 70%, #f5f3ff 70% 80%, #ec4899 80% 90%, #fdf2f8 90% 100%);">
+                                
+                                <div class="w-48 h-48 bg-white rounded-full shadow-inner flex flex-col items-center justify-center z-10 border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2">VERBO A CONJUGAR</p>
+                                    <h3 id="display-final" class="text-4xl font-black text-slate-800 font-playfair transition-all scale-100">?</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-6 justify-center h-full">
+                            
+                            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                                <span class="font-handlee text-slate-500 font-bold text-lg uppercase">Aciertos:</span>
+                                <div class="flex gap-2">
+                                    <i id="star-v3-1" class="fas fa-star text-3xl text-slate-200 transition-all duration-500"></i>
+                                    <i id="star-v3-2" class="fas fa-star text-3xl text-slate-200 transition-all duration-500"></i>
+                                    <i id="star-v3-3" class="fas fa-star text-3xl text-slate-200 transition-all duration-500"></i>
+                                </div>
+                            </div>
+
+                            <div class="relative bg-slate-50 p-6 rounded-2xl border border-slate-200 min-h-[140px] flex items-center justify-center">
+                                
+                                <button id="btn-spin-final" onclick="window.spinFinal()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg hover:shadow-emerald-200 hover:-translate-y-1 transition-all text-2xl flex items-center justify-center gap-3 active:scale-95">
+                                    <i class="fas fa-play"></i> ¡GIRAR!
+                                </button>
+
+                                <div id="input-area-final" class="hidden w-full flex-col gap-3 animate-fade-in">
+                                    <p class="text-center text-slate-500 font-handlee text-lg m-0">Escribe la forma <strong>YO</strong>:</p>
+                                    <div class="flex gap-2 w-full">
+                                        <input id="input-final" type="text" class="w-full p-3 text-center text-2xl font-bold text-emerald-800 bg-white border-2 border-emerald-200 rounded-xl focus:outline-none focus:border-emerald-500" placeholder="..." onkeydown="if(event.key==='Enter') window.checkFinal()">
+                                        <button onclick="window.checkFinal()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 rounded-xl font-bold shadow-md transition-transform active:scale-95">
+                                            <i class="fas fa-check text-xl"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="win-area-final" class="hidden flex-col items-center text-center animate-bounce">
+                                    <div class="text-6xl mb-2">🏆</div>
+                                    <h3 class="text-2xl font-bold text-emerald-700 font-playfair">¡Lo lograste!</h3>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    (function() {
+                        // 1. Datos del juego (Verbos irregulares de tus PDFs)
+                        const verbs = [
+                            { inf: "PONER", ans: "pongo" }, { inf: "SALIR", ans: "salgo" },
+                            { inf: "HACER", ans: "hago" }, { inf: "TRAER", ans: "traigo" },
+                            { inf: "SABER", ans: "sé" }, { inf: "VER", ans: "veo" },
+                            { inf: "DAR", ans: "doy" }, { inf: "CONOCER", ans: "conozco" },
+                            { inf: "TENER", ans: "tengo" }, { inf: "CAER", ans: "caigo" }
+                        ];
+
+                        // Variables de estado
+                        let currentRotation = 0;
+                        let currentVerbObj = null;
+                        let score = 0;
+
+                        // 2. Función Principal: Girar
+                        window.spinFinal = function() {
+                            const btn = document.getElementById('btn-spin-final');
+                            const wheel = document.getElementById('wheel-final');
+                            const display = document.getElementById('display-final');
+                            const inputArea = document.getElementById('input-area-final');
+                            const input = document.getElementById('input-final');
+
+                            // UI Reset
+                            btn.style.display = 'none'; // Ocultar botón
+                            inputArea.style.display = 'none'; // Asegurar input oculto
+                            display.style.color = '#cbd5e1'; // Texto gris claro
+
+                            // Calcular rotación (siempre suma para que no regrese)
+                            // 5 vueltas completas (1800deg) + aleatorio
+                            currentRotation += 1800 + Math.floor(Math.random() * 360);
+                            wheel.style.transform = "rotate(" + currentRotation + "deg)";
+
+                            // Efecto de texto rápido ("Tick Tock")
+                            let counter = 0;
+                            const interval = setInterval(() => {
+                                display.innerText = verbs[Math.floor(Math.random() * verbs.length)].inf;
+                                counter++;
+                                if(counter > 20) clearInterval(interval);
+                            }, 100);
+
+                            // Esperar a que termine la rotación (4 segundos según CSS)
+                            setTimeout(() => {
+                                // Elegir verbo ganador
+                                currentVerbObj = verbs[Math.floor(Math.random() * verbs.length)];
+                                
+                                // Mostrar verbo
+                                display.innerText = currentVerbObj.inf;
+                                display.style.color = '#059669'; // Verde esmeralda
+                                
+                                // Mostrar Input
+                                inputArea.style.display = 'flex';
+                                input.value = '';
+                                input.focus();
+
+                            }, 4000); 
+                        };
+
+                        // 3. Función: Verificar Respuesta
+                        window.checkFinal = function() {
+                            const input = document.getElementById('input-final');
+                            const btn = document.getElementById('btn-spin-final');
+                            const inputArea = document.getElementById('input-area-final');
+                            const winArea = document.getElementById('win-area-final');
+
+                            let userAns = input.value.trim().toLowerCase();
+                            // Normalización básica
+                            if(userAns === 'se' && currentVerbObj.inf === 'SABER') userAns = 'sé';
+
+                            if(userAns === currentVerbObj.ans) {
+                                // CORRECTO
+                                score++;
+                                if(window.react) window.react('confetti'); // Efecto del esqueleto
+                                
+                                // Actualizar estrella
+                                const star = document.getElementById('star-v3-' + score);
+                                if(star) {
+                                    star.classList.remove('text-slate-200');
+                                    star.classList.add('text-yellow-400');
+                                    star.style.transform = "scale(1.3)";
+                                    setTimeout(() => star.style.transform = "scale(1)", 300);
+                                }
+
+                                if(score >= 3) {
+                                    // GANAR
+                                    inputArea.style.display = 'none';
+                                    winArea.style.display = 'flex';
+                                    if(window.react) setTimeout(() => window.react('applause'), 500);
+                                } else {
+                                    // SIGUIENTE RONDA
+                                    inputArea.style.display = 'none';
+                                    btn.style.display = 'flex';
+                                    btn.innerHTML = '<i class="fas fa-forward"></i> SIGUIENTE';
+                                }
+
+                            } else {
+                                // INCORRECTO
+                                if(window.react) window.react('error');
+                                input.style.backgroundColor = '#fee2e2'; // Rojo suave
+                                input.classList.add('animate-shake'); // Si tienes animate.css, si no solo color
+                                setTimeout(() => input.style.backgroundColor = 'white', 500);
+                            }
+                        };
+
+                    })();
+                </script>
+            </section>
+
+           
+            <section>
+                <div class="glass-card max-w-4xl mx-auto text-center animate-fade-in">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-orange-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-200 text-white animate-bounce">
+                        <i class="fas fa-tasks text-4xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-bold text-slate-800 font-playfair mb-4">Misión Secreta (Tarea)</h2>
+                    <p class="text-slate-600 text-xl mb-8 font-handlee">Escribe 3 frases sobre tu rutina diaria usando:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left">
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="block font-bold text-emerald-700 mb-1"><i class="fas fa-check mr-2"></i>1. Un verbo "-GO"</span>
+                            <span class="text-sm text-slate-400 italic">Ej: Yo hago ejercicio...</span>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="block font-bold text-blue-600 mb-1"><i class="fas fa-check mr-2"></i>2. Un verbo "Bota"</span>
+                            <span class="text-sm text-slate-400 italic">Ej: Yo almuerzo a las...</span>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="block font-bold text-purple-600 mb-1"><i class="fas fa-check mr-2"></i>3. Ver o Saber</span>
+                            <span class="text-sm text-slate-400 italic">Ej: Yo veo la tele...</span>
+                        </div>
+                    </div>
+
+                    <button onclick="react('applause')" class="px-12 py-4 bg-emerald-600 text-white rounded-full font-bold shadow-lg hover:bg-emerald-700 hover:-translate-y-1 transition transform text-xl">
+                        <i class="fas fa-graduation-cap mr-2"></i> ¡Clase Terminada!
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Colores Tropicales) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#004d40'); /* Verde Tropical */ const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px 'Lato', sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none font-sans" style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escriba aquí..." /> </div> )} </div> ); }
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Activando Scroll Vertical Nativo (Estilo Esq 23).");
+            document.body.classList.add('is-mobile');
+            // IMPORTANTE: En móvil desactivamos Reveal y usamos scroll normal
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.width = scrolled + '%';
+                const btn = document.getElementById('back-to-top');
+                if(btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal con fondo tropical
+            Reveal.initialize({
+                controls: true, progress: true, center: true, hash: false,
+                width: 1200, height: 720, margin: 0.04, minScale: 0.1, maxScale: 3.0,
+                transition: 'slide', backgroundTransition: 'fade', 
+                background: '#fefce8' // Color crema tropical
+            });
+        }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+        function forceZoom() {
+            if (isMobile) return; 
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            
+            container.classList.toggle('is-zoomed');
+
+            if (container.classList.contains('is-zoomed')) {
+                btn.classList.add('active');
+                container.scrollTop = 0;
+            } else {
+                btn.classList.remove('active');
+                Reveal.layout(); 
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error': 
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

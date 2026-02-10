@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase Tucaneo - Comparativos (A2-B1)</title>
+    
+    <!-- LIBRERÍAS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- FUENTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #10b981; /* Verde Tucaneo */
+            --accent: #f59e0b;  /* Naranja Tropical */
+            --text-main: #1f2937; 
+            --bg-light: #f8fafc;
+        }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+
+        /* --- DRAWER --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2);
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 20001;
+            background: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%;
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        #safe-close-btn:hover { transform: scale(1.1); }
+
+        /* --- UI ELEMENTS --- */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; }
+        #floating-cta { 
+            position: fixed; bottom: 20px; left: 30px; z-index: 5000; 
+            font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px;
+        }
+
+        /* --- REVEAL OVERRIDES --- */
+        .reveal { color: var(--text-main); font-size: 24px; }
+        .reveal h1, .reveal h2, .reveal h3 { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--primary); 
+            text-transform: none; 
+            font-weight: 700;
+        }
+        .reveal section { display: flex !important; flex-direction: column; justify-content: center; height: 100%; padding: 20px 0; }
+        
+        /* Table Styles */
+        .reveal table { font-size: 0.8em; border-collapse: separate; border-spacing: 0 10px; width: 100%; }
+        .reveal th { text-transform: uppercase; font-size: 0.7em; color: var(--accent); letter-spacing: 1px; border-bottom: 2px solid #e5e7eb; padding: 10px; }
+        .reveal td { background: white; padding: 12px 15px; border-top: 1px solid #f3f4f6; border-bottom: 1px solid #f3f4f6; }
+        .reveal td:first-child { border-left: 1px solid #f3f4f6; border-top-left-radius: 8px; border-bottom-left-radius: 8px; font-weight: bold; color: var(--primary); }
+        .reveal td:last-child { border-right: 1px solid #f3f4f6; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        /* --- COMPONENTS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            margin: 20px auto;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .exercise-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            border-left: 3px solid #e5e7eb;
+        }
+        .exercise-item.primary { border-left-color: var(--primary); }
+        .exercise-item.accent { border-left-color: var(--accent); }
+
+        .clean-input {
+            border: none; border-bottom: 2px solid #cbd5e1; background: transparent;
+            font-family: 'Lato', sans-serif; font-size: 1em; color: var(--text-main);
+            text-align: center; width: 80px; transition: 0.3s; padding: 2px;
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
+
+        /* --- BUTTONS --- */
+        .nav-btn {
+            font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+            padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none;
+        }
+        .nav-btn.whiteboard { background-color: var(--accent); }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #374151; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+            .exercise-grid { grid-template-columns: 1fr; }
+            .reveal { font-size: 18px; }
+            #fixed-logo { width: 100px; top: 15px; left: 15px; }
+            #top-nav { top: 15px; right: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY</a>
+
+    <!-- MENÚ LATERAL (HERRAMIENTAS) -->
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <!-- BOTONES SUPERIORES -->
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
+            <i class="fas fa-pen"></i> Pizarra
+        </button>
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">
+            <i class="fas fa-sign-out-alt"></i> Salir
+        </a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- 1. PORTADA -->
+            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/tucanes-conversando-vecindario-diablanco.png-e1765688587506.png" data-background-opacity="0.8">
+                <div class="glass-card" style="text-align: center; max-width: 800px; margin: 0 auto; margin-top: 150px;">
+                    <span style="color: var(--accent); font-weight: 800; letter-spacing: 3px; font-size: 0.7em; text-transform: uppercase;">Gramática en Contexto | A2-B1</span>
+                    <h1 style="font-size: 3em; margin: 15px 0; text-shadow: 2px 2px 0px white;">Dime con quién te comparas...</h1>
+                    <div style="width: 60px; height: 4px; background: var(--primary); margin: 20px auto;"></div>
+                    <p style="font-size: 1.2em; color: #1f2937; font-weight: bold;">Los Comparativos y la posición del adjetivo.</p>
+                </div>
+            </section>
+
+            <!-- 2. ROMPEHIELO -->
+            <section>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 2em;">¿Cuál prefieres?</h2>
+                    <p style="color: #6b7280;">Usa: "Mejor", "Peor", "Más...", "Menos..."</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 0 40px;">
+                    <div class="glass-card" style="padding: 20px; text-align: center; margin: 0;">
+                        <i class="fas fa-book-open" style="font-size: 3em; color: var(--primary); margin-bottom: 15px;"></i>
+                        <h3>El Libro</h3>
+                        <p style="font-size: 0.8em; color: #666;">vs La Película</p>
+                        <input type="text" class="clean-input" style="width: 100%;" placeholder="Tu opinión...">
+                    </div>
+                    <div class="glass-card" style="padding: 20px; text-align: center; margin: 0;">
+                        <i class="fas fa-mountain" style="font-size: 3em; color: var(--accent); margin-bottom: 15px;"></i>
+                        <h3>La Montaña</h3>
+                        <p style="font-size: 0.8em; color: #666;">vs La Playa</p>
+                        <input type="text" class="clean-input" style="width: 100%;" placeholder="Tu opinión...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TABLA GRAMATICAL 1 -->
+            <section>
+                <h2 style="text-align: center;">Adjetivos y Adverbios</h2>
+                <div class="glass-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estructura</th>
+                                <th>Significado</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Más + [Adj] + que</td>
+                                <td>More... than</td>
+                                <td>Esta clase es <strong>más</strong> útil <strong>que</strong> la otra.</td>
+                            </tr>
+                            <tr>
+                                <td>Menos + [Adj] + que</td>
+                                <td>Less... than</td>
+                                <td>Las calles son <strong>menos</strong> anchas <strong>que</strong> las avenidas.</td>
+                            </tr>
+                            <tr>
+                                <td>Tan + [Adj] + como</td>
+                                <td>As... as</td>
+                                <td>Juan es <strong>tan</strong> inteligente <strong>como</strong> Ana.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. PRÁCTICA MECÁNICA A -->
+            <section>
+                <h3>¡Rápido y preciso!</h3>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Completa las frases con lógica:</p>
+                
+                <div class="glass-card" style="padding: 25px;">
+                    <div class="exercise-grid">
+                        <!-- Columna 1 -->
+                        <div class="exercise-item primary">
+                            <span>1. (Futuro) El viaje va a ser... (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>2. (Irregular) Hoy hace... (-)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>3. (Modismo) Él es... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>4. (Futuro) Llegaré... (+)</span>
+                            <input class="clean-input">
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="exercise-item primary">
+                            <span>5. (Ser) La paciencia es... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>6. (Ir) Ir en metro es... (-)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>7. (Conector) Mejor... mi francés.</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>8. (Conector) Tan viejo... parezco.</span>
+                            <input class="clean-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. TABLA GRAMATICAL 2 (SUSTANTIVOS) -->
+            <section>
+                <h2>Comparando Cantidades</h2>
+                <div class="glass-card">
+                    <div style="background: #fffbeb; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.8em; color: #d97706;">
+                        <i class="fas fa-exclamation-circle"></i> <strong>Nota:</strong> "Tanto" funciona como adjetivo y debe concordar con el nombre.
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estructura</th>
+                                <th>Uso</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Más/Menos + nombre + que</td>
+                                <td>Cantidad</td>
+                                <td>Tengo <strong>más</strong> lápices <strong>que</strong> María.</td>
+                            </tr>
+                            <tr>
+                                <td>Tanto/a + nombre + como</td>
+                                <td>Igualdad (Singular)</td>
+                                <td>Tengo <strong>tanta</strong> paciencia <strong>como</strong> tú.</td>
+                            </tr>
+                            <tr>
+                                <td>Tantos/as + nombre + como</td>
+                                <td>Igualdad (Plural)</td>
+                                <td>Él corre <strong>tantos</strong> metros <strong>como</strong> su hijo.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 6. PRÁCTICA EN LA OFICINA -->
+            <section>
+                <h3>En la Oficina</h3>
+                <p style="font-size: 0.9em; margin-bottom: 20px;">Completa las comparaciones laborales:</p>
+
+                <div class="glass-card" style="padding: 25px;">
+                    <div class="exercise-grid">
+                        <!-- Columna 1 -->
+                        <div class="exercise-item primary">
+                            <span>1. (Futuro) Voy a tener... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>2. (Ser) Esta oficina es... (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>3. (Irr) Yo hago... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>4. (Estar) El jefe está... (=)</span>
+                            <input class="clean-input">
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="exercise-item primary">
+                            <span>5. (Ser) Somos... (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>6. (Futuro) El sueldo será... (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>7. (Irr) Tengo... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>8. (Ser) Ella es... (=)</span>
+                            <input class="clean-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. IRREGULARIDADES -->
+            <section>
+                <h2>Las Irregularidades</h2>
+                <div class="glass-card">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #ecfdf5; padding: 20px; border-radius: 12px;">
+                            <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-user"></i> Personas</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9em;">
+                                <li style="margin-bottom: 10px;">Viejo → <strong>Mayor</strong> <br><small>Mi hermana mayor</small></li>
+                                <li>Joven → <strong>Menor</strong> <br><small>Su hermana es la menor</small></li>
+                            </ul>
+                        </div>
+                        <div style="background: #fffbeb; padding: 20px; border-radius: 12px;">
+                            <h4 style="color: var(--accent); margin-bottom: 10px;"><i class="fas fa-star"></i> Calidad</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9em;">
+                                <li style="margin-bottom: 10px;">Bueno → <strong>Mejor</strong> <br><small>El mejor restaurante</small></li>
+                                <li>Malo → <strong>Peor</strong> <br><small>El peor servicio</small></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. PRÁCTICA MECÁNICA B (8 EJERCICIOS) -->
+            <section>
+                <h3>La Familia y el Entorno</h3>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Mayor, Menor, Mejor, Peor o Más Viejo/a:</p>
+                <div class="glass-card" style="padding: 25px;">
+                    <div class="exercise-grid">
+                        <!-- Columna 1 -->
+                        <div class="exercise-item primary">
+                            <span>1. Mi abuelo (80) es... que mi padre.</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mayor</option><option>más viejo</option></select>
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>2. El bebé es el... de todos.</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>menor</option><option>más joven</option></select>
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>3. Esta casa es... que la otra. (Obj)</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mayor</option><option>más vieja</option></select>
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>4. Tu idea es... que la mía. (+)</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mejor</option><option>más buena</option></select>
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="exercise-item primary">
+                            <span>5. Mi hermano cocina... que yo. (-)</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>peor</option><option>más mal</option></select>
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>6. Soy... que mi prima de 15. (20)</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mayor</option><option>más vieja</option></select>
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>7. Este vino es... que el barato.</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mejor</option><option>más bueno</option></select>
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>8. Esos muebles son... (Obj)</span>
+                            <select class="clean-input" style="width: 80px;"><option>?</option><option>mayores</option><option>más viejos</option></select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. COMPARANDO ACCIONES (6 EJERCICIOS) -->
+            <section>
+                <h2>Comparando Acciones</h2>
+                <div class="glass-card" style="padding: 25px; margin-bottom: 10px;">
+                    <ul style="list-style: none; padding: 0; display: flex; justify-content: space-around; font-size: 0.9em; font-weight: bold;">
+                        <li style="color: var(--primary);">[Verbo] + más que</li>
+                        <li style="color: var(--accent);">[Verbo] + menos que</li>
+                        <li style="color: #3b82f6;">[Verbo] + tanto como</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card" style="padding: 25px; margin-top: 10px;">
+                    <h4 style="font-size: 0.9em; margin-bottom: 15px; color: #666;">Completa con la lógica de la rutina:</h4>
+                    <div class="exercise-grid">
+                        <div class="exercise-item primary">
+                            <span>1. (Dormir) Yo duermo... un gato. (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>2. (Trabajar) Tú trabajas... una hormiga. (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>3. (Viajar) Ellos viajan... nosotros. (-)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>4. (Comer) Ella come... su novio. (+)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>5. (Estudiar) Estudiamos... es necesario. (=)</span>
+                            <input class="clean-input">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>6. (Correr) Corres... antes. (-)</span>
+                            <input class="clean-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. DETECTIVE DE ERRORES -->
+            <section>
+                <h2 style="color: #ef4444;"><i class="fas fa-search"></i> Detective de Errores</h2>
+                <div class="glass-card">
+                    <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+                        <span style="color: #ef4444; font-weight: bold; font-size: 1.2em;">X</span>
+                        <span>Ella tiene <u>tanto</u> libros como yo.</span>
+                        <input class="clean-input" placeholder="Corrección" style="margin-left: auto; width: 150px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+                        <span style="color: #ef4444; font-weight: bold; font-size: 1.2em;">X</span>
+                        <span>Este es el <u>bueno</u> restaurante.</span>
+                        <input class="clean-input" placeholder="Corrección" style="margin-left: auto; width: 150px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+                        <span style="color: #ef4444; font-weight: bold; font-size: 1.2em;">X</span>
+                        <span>Juan corre <u>tan</u> rápido <u>que</u> Pedro.</span>
+                        <input class="clean-input" placeholder="Corrección" style="margin-left: auto; width: 150px;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. EL SUPERLATIVO -->
+            <section>
+                <h2>El Superlativo</h2>
+                <div class="glass-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estructura</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>El/la/los/las + <strong>más</strong> + [Adj] + de</td>
+                                <td>El apartamento de María es <strong>el más grande</strong> del edificio.</td>
+                            </tr>
+                            <tr>
+                                <td>El/la + <strong>mejor/peor</strong> + de</td>
+                                <td>Ella es <strong>la mejor de</strong> todas.</td>
+                            </tr>
+                            <tr>
+                                <td>El/la + <strong>mayor/menor</strong> + de</td>
+                                <td>Su hermana es <strong>la menor de</strong> su familia.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 12. PRÁCTICA RÉCORDS (6 EJERCICIOS) -->
+            <section>
+                <h3>Récords del Mundo</h3>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Crea la frase superlativa correcta:</p>
+                <div class="glass-card" style="padding: 25px;">
+                    <div class="exercise-grid">
+                        <!-- Columna 1 -->
+                        <div class="exercise-item primary">
+                            <span>1. Animal / Grande (Mundo)</span>
+                            <input class="clean-input" placeholder="El más..." style="width: 100px;">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>2. Ciudad / Cara (Europa)</span>
+                            <input class="clean-input" placeholder="La más..." style="width: 100px;">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>3. Comida / Picante (México)</span>
+                            <input class="clean-input" placeholder="La más..." style="width: 100px;">
+                        </div>
+                        
+                        <!-- Columna 2 -->
+                        <div class="exercise-item accent">
+                            <span>4. Película / Mala (Historia)</span>
+                            <input class="clean-input" placeholder="La peor..." style="width: 100px;">
+                        </div>
+                        <div class="exercise-item primary">
+                            <span>5. Libro / Bueno (Biblioteca)</span>
+                            <input class="clean-input" placeholder="El mejor..." style="width: 100px;">
+                        </div>
+                        <div class="exercise-item accent">
+                            <span>6. Persona / Vieja (Familia)</span>
+                            <input class="clean-input" placeholder="La mayor..." style="width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13. BONUS B1: POSICIÓN -->
+            <section>
+                <div style="text-align: center;">
+                    <span style="background: #374151; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.6em; text-transform: uppercase;">Nivel B1+</span>
+                    <h2 style="margin-top: 10px;">Cambio de Significado</h2>
+                </div>
+                
+                <div class="glass-card" style="font-size: 0.9em;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; font-weight: bold; color: var(--primary);">
+                        <div>Adjetivo</div>
+                        <div>Antes del Nombre</div>
+                        <div>Después del Nombre</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="font-weight: bold;">Grande</div>
+                        <div><strong>Gran</strong> hombre<br><small>(Famous/Great)</small></div>
+                        <div>Hombre <strong>grande</strong><br><small>(Big size)</small></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="font-weight: bold;">Pobre</div>
+                        <div><strong>Pobre</strong> mujer<br><small>(Unfortunate)</small></div>
+                        <div>Mujer <strong>pobre</strong><br><small>(No money)</small></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; padding: 15px 0;">
+                        <div style="font-weight: bold;">Viejo</div>
+                        <div><strong>Viejo</strong> amigo<br><small>(Long-time)</small></div>
+                        <div>Amigo <strong>viejo</strong><br><small>(Elderly)</small></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14. ROLEPLAY (CONTEXTO AÑADIDO) -->
+            <section>
+                <h2>La Entrevista de Trabajo</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: stretch; padding: 0 40px;">
+                    
+                    <!-- Columna Izquierda: Instrucciones -->
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="glass-card" style="margin: 0; padding: 20px; background: #fffbeb; border-color: var(--accent);">
+                            <h4 style="font-size: 0.9em; color: var(--accent); margin-bottom: 5px; font-weight: bold;"><i class="fas fa-briefcase"></i> Contexto de la Vacante</h4>
+                            <p style="font-size: 0.8em; color: #4b5563;">
+                                Empresa tecnológica internacional busca "Líder de Proyecto". 
+                                <br>Competencia alta. Solo hay 1 puesto.
+                            </p>
+                        </div>
+
+                        <div class="glass-card" style="margin: 0; padding: 20px;">
+                            <h4 style="font-size: 0.9em; color: var(--primary); margin-bottom: 5px; font-weight: bold;">Habilidades Requeridas:</h4>
+                            <ul style="font-size: 0.8em; color: #4b5563; padding-left: 20px; columns: 2;">
+                                <li>Liderazgo</li>
+                                <li>Inglés (B2+)</li>
+                                <li>Programación</li>
+                                <li>Ventas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Objetivos -->
+                    <div class="glass-card" style="margin: 0; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="font-size: 0.9em; color: #374151; margin-bottom: 15px; font-weight: bold; text-align: center;">Tus Argumentos (Objetivos):</h4>
+                        <ul style="font-size: 0.85em; color: #4b5563; list-style: none; padding: 0; gap: 10px; display: flex; flex-direction: column;">
+                            <li class="exercise-item primary">"Tengo tanta experiencia como..."</li>
+                            <li class="exercise-item accent">"Hablo inglés mejor que..."</li>
+                            <li class="exercise-item primary">"Soy el más trabajador de..."</li>
+                            <li class="exercise-item accent">"Tengo menos problemas que..."</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15. DEBATES (CENTRADO + 6 TEMAS) -->
+            <section>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 10px;">Debates Exprés</h2>
+                    <p style="color: #666; font-size: 1.1em; max-width: 600px; margin: 0 auto;">
+                        Elige una postura y defiéndela usando comparativos. Tienes 30 segundos por tema.
+                    </p>
+                </div>
+                
+                <div class="glass-card" style="padding: 25px; max-width: 800px;">
+                    <div class="exercise-grid">
+                        <div class="exercise-item primary" style="justify-content: center;">
+                            <strong>Vivir Solo</strong> <span style="margin: 0 10px; color: var(--accent);">vs</span> <strong>Roommates</strong>
+                        </div>
+                        <div class="exercise-item accent" style="justify-content: center;">
+                            <strong>Cine</strong> <span style="margin: 0 10px; color: var(--primary);">vs</span> <strong>Netflix</strong>
+                        </div>
+                        <div class="exercise-item primary" style="justify-content: center;">
+                            <strong>Verano</strong> <span style="margin: 0 10px; color: var(--accent);">vs</span> <strong>Invierno</strong>
+                        </div>
+                        <div class="exercise-item accent" style="justify-content: center;">
+                            <strong>Gatos</strong> <span style="margin: 0 10px; color: var(--primary);">vs</span> <strong>Perros</strong>
+                        </div>
+                        <div class="exercise-item primary" style="justify-content: center;">
+                            <strong>Ahorrar</strong> <span style="margin: 0 10px; color: var(--accent);">vs</span> <strong>Viajar</strong>
+                        </div>
+                        <div class="exercise-item accent" style="justify-content: center;">
+                            <strong>Libro Físico</strong> <span style="margin: 0 10px; color: var(--primary);">vs</span> <strong>E-book</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16. CIERRE (CONTRAPORTADA) -->
+            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/social-dos-amigos-hablando.jpg" data-background-opacity="0.2">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h2 style="font-size: 3em; margin-bottom: 30px;">¡Excelente Trabajo!</h2>
+                    
+                    <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <h4 style="color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9em; margin-bottom: 20px;">Tarea</h4>
+                        <p style="font-size: 1.2em; color: #4b5563; line-height: 1.6;">
+                            Escribe un párrafo comparando tu vida actual con tu vida hace 5 años. 
+                            <br><strong>Usa al menos 6 comparativos diferentes.</strong>
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 60px; color: #6b7280; font-size: 0.9em; letter-spacing: 1px; font-weight: bold;">
+                        TUCANEO ACADEMY
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- REACT COMPONENTS (PIZARRA + VOCABULARIO) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        
+        const I = {
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
+            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+
+        function VocabModule() {
+            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
+            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
+            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
+            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
+            const copy = () => {
+                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
+                if(!text) return alert("Lista vacía");
+                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
+            };
+            return (
+                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
+                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
+                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
+                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
+                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
+                </div>
+            );
+        }
+
+        function WhiteboardModule() {
+            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
+            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
+            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
+            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const generateId = () => Math.random().toString(36).substr(2, 9);
+            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
+            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+            useLayoutEffect(() => {
+                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
+                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
+                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
+                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
+                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
+                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
+                elements.forEach(el => {
+                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
+                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
+                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
+                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
+                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
+                });
+                ctx.restore();
+            }, [elements, size, panOffset]);
+            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
+            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+            const handleDown = (e) => {
+                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
+                if(tool==='selection') { setIsPanning(true); return; }
+                const {x,y} = getPos(e);
+                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
+                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+            };
+            const handleMove = (e) => {
+                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
+                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+            };
+            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
+            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
+            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+            return (
+                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
+                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
+                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
+                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
+                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
+                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
+                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+                    </div>
+                    <div className="absolute top-4 left-4 z-40 pointer-events-none opacity-50"><img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-1-e1765224729911.png" className="h-10 w-auto"/></div>
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
+                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+                </div>
+            );
+        }
+
+        function App() {
+            const [tab, setTab] = useState('board');
+            const close = () => window.toggleDrawer();
+            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            return (
+                <div className="h-full flex flex-col bg-slate-50">
+                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                        <div className="flex-1"></div>
+                    </div>
+                    <div className="flex-1 relative overflow-hidden">
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+        Reveal.initialize({
+            controls: true, progress: true, center: true, hash: false, history: false,
+            width: isMobile ? 360 : 1200, height: isMobile ? 600 : 700,
+            margin: isMobile ? 0.05 : 0.04, minScale: 0.2, maxScale: 2.0,
+            transition: 'slide', backgroundTransition: 'fade', overview: false
+        });
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+    </script>
+</body>
+</html>

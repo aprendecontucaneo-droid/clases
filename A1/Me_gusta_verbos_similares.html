@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tucaneo Academy - A2 Verbs Like Gustar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: #f8f9fa; 
+            --text-main: #2c3e50; 
+        }
+        body { font-family: 'Lato', sans-serif; }
+
+        /* ESTILOS BASE */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        
+        /* INPUTS Y CAJAS */
+        .interactive-input {
+            background: rgba(255, 248, 225, 0.95); /* Transparencia */
+            border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+            border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+            font-size: 0.85em; padding: 4px; min-width: 80px; margin: 0 5px;
+        }
+        .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+        
+        /* Contenedor de ejercicios denso para A2 - CON TRANSPARENCIA */
+        .dense-exercise-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            font-size: 0.8em;
+            text-align: left;
+        }
+        
+        .exercise-item {
+            background: rgba(255, 255, 255, 0.92); /* Fondo semi-transparente */
+            border-radius: 8px; border-left: 4px solid var(--primary);
+            padding: 8px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex; align-items: center; flex-wrap: wrap;
+        }
+
+        .concept-box { 
+            background: rgba(255, 255, 255, 0.92); /* Fondo semi-transparente */
+            border-radius: 15px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+            padding: 20px; text-align: left;
+        }
+        
+        .vocab-list { list-style: none; padding: 0; text-align: left; font-size: 0.9em; }
+        .vocab-list li { margin-bottom: 8px; padding-left: 15px; border-left: 3px solid var(--accent); background: rgba(255,255,255,0.6); }
+        
+        .text-reading {
+            background: rgba(255, 255, 255, 0.92); /* Fondo semi-transparente */
+            padding: 20px; border-radius: 10px; border: 1px solid #ddd;
+            font-size: 0.85em; text-align: justify; line-height: 1.6; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* --- MÓVIL (< 900px) --- */
+        @media screen and (max-width: 900px) {
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 5px; } /* Gap reducido para que quepan 3 botones */
+            .nav-btn { 
+                padding: 6px 8px; font-size: 10px; border-radius: 12px; 
+                background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;
+            }
+            .nav-btn.whiteboard { background: var(--accent); order: 1; }
+            .nav-btn.download { order: 2; }
+            .nav-btn.exit { background: #555; order: 3; } /* Exit gris en móvil */
+            
+            .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+            #floating-cta { 
+                background: white; color: var(--primary); border: 1px solid var(--primary);
+                padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+                left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .reveal { font-size: 16px; }
+            .reveal h1 { font-size: 1.8em; margin-top: 60px; margin-bottom: 20px; }
+            .reveal h2 { font-size: 1.4em; margin-top: 40px; margin-bottom: 20px; }
+            .dense-exercise-grid { grid-template-columns: 1fr; gap: 8px; }
+            .exercise-item { padding: 6px 10px; }
+            .img-container { max-height: 120px; width: auto; margin: 0 auto 15px auto; display: block; border-radius: 10px; }
+            .final-slide-container { margin-top: 40px; }
+            .cert-badge { width: 70px; height: 70px; margin: -25px auto 10px auto; border: 3px solid var(--background); }
+            .cert-badge img { width: 40px; }
+            .final-img { max-width: 70%; }
+        }
+
+        /* --- PC (> 901px) --- */
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+                padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .nav-btn.whiteboard { background-color: var(--accent); } /* Naranja para llamar la atención */
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--text-main); } /* Gris oscuro para no competir con la pizarra */
+            
+            .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+            .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+            #floating-cta {
+                bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+                padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+            }
+            #floating-cta:hover { background: var(--primary); color: white; }
+            .reveal { font-size: 22px; }
+            .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; padding-bottom: 5px; }
+            .reveal h2 { font-size: 1.6em; margin-bottom: 25px; color: var(--primary); }
+            .grid-responsive { display: grid; grid-template-columns: 40% 60%; gap: 30px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+            .img-container { width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+            .final-slide-container { max-width: 700px; margin: auto; }
+            .final-img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+            .cert-badge { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: -50px auto 20px auto; position: relative; border: 5px solid var(--background); }
+            .cert-badge img { width: 75px; }
+            .two-col-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+        @media print { #fixed-logo, #top-nav, #floating-cta { display: none !important; } }
+    </style>
+</head>
+<body>
+
+<img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+
+<div id="top-nav">
+    <a href="#" class="nav-btn download" onclick="window.print()">
+        <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+        PDF
+    </a>
+    <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+</div>
+<a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+<div class="reveal">
+    <div class="slides">
+
+        <section>
+            <div class="grid-responsive">
+                <div>
+                    <h1>Verbos de Afección</h1>
+                    <h3 style="color: var(--accent);">Nivel A2 - Intermedio Bajo</h3>
+                    <p>Going beyond "Me gusta". Expressing necessity, social relations, and abstract feelings.</p>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/desierto-tucanes-agotados.png-scaled-e1765659833697.png" class="img-container" alt="Social Interaction">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>The Structure Review</h2>
+            <div class="grid-responsive">
+                <div class="concept-box">
+                    <p>At A2 level, remember that the <strong>Subject</strong> usually comes <em>after</em> the verb.</p>
+                    <hr>
+                    <p style="font-size: 0.9em;"><strong>CLARIFIER + IOP + VERB + SUBJECT</strong></p>
+                    <ul class="vocab-list">
+                        <li><strong>A mí</strong> me <strong>interesan</strong> las lenguas.</li>
+                        <li><strong>A mis padres</strong> les <strong>preocupa</strong> el futuro.</li>
+                    </ul>
+                    <p style="color: #777; font-size: 0.8em; margin-top: 10px;">The verb only changes for Singular (gusta) or Plural (gustan) subjects.</p>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/construccion-obreros-esfuerzo_atardecer.png-scaled-e1766979199559.png" class="img-container" alt="Grammar Structure">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Social Relations & Annoyance</h2>
+            <div class="grid-responsive">
+                <div>
+                    <ul class="vocab-list">
+                        <li><strong>Caer bien/mal:</strong> To like/dislike a person (personality).<br><small>"Me cae bien Juan" (I like Juan/He suits me).</small></li>
+                        <li><strong>Molestar:</strong> To bother/annoy.</li>
+                        <li><strong>Fastidiar:</strong> To annoy/irritate (stronger/colloquial).</li>
+                        <li><strong>Parecer:</strong> To seem / To have an opinion.<br><small>"Me parece estupendo" (It seems great to me).</small></li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/amigos-playa-aprobacion-atardecer.png-scaled-e1765853185268.png" class="img-container" alt="Caer bien mal">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 1: Selección Lógica</h3>
+            <p style="font-size: 0.8em; margin-bottom: 20px;">Choose the correct verb form based on the context.</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. A mis vecinos les (molesta/molestan) mi música alta.</div>
+                <div class="exercise-item">2. A mí me (cae/caen) muy mal el nuevo jefe.</div>
+                <div class="exercise-item">3. ¿Te (parece/parecen) buena idea ir al cine?</div>
+                <div class="exercise-item">4. A nosotros nos (fastidia/fastidian) los mosquitos.</div>
+                <div class="exercise-item">5. A ellos les (cae/caen) fenomenal tus amigos.</div>
+                <div class="exercise-item">6. Me (parece/parecen) caros esos zapatos.</div>
+                <div class="exercise-item">7. ¿Te (molesta/molestan) si fumo aquí?</div>
+                <div class="exercise-item">8. A Ana le (cae/caen) bien todo el mundo.</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Necessity & Logic</h2>
+            <div class="grid-responsive">
+                <div>
+                    <ul class="vocab-list">
+                        <li><strong>Hacer falta:</strong> To need / To be missing something necessary.<br><small>"Me hace falta un coche."</small></li>
+                        <li><strong>Faltar:</strong> To be lacking / Not have enough.<br><small>"Me falta dinero."</small></li>
+                        <li><strong>Convenir:</strong> To be convenient / To suit someone.<br><small>"No me conviene ese horario."</small></li>
+                        <li><strong>Sobrar:</strong> To have in excess / To be left over.</li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/dinero-billetera-explosion.png-scaled-e1765853117809.png" class="img-container" alt="Necessity">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 2: Necesidad y Lógica</h3>
+            <p style="font-size: 0.8em;">Complete with: <em>hace falta, sobran, conviene, falta, importan, queda</em>.</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. No compro el coche porque me <input class="interactive-input" type="text"> dinero.</div>
+                <div class="exercise-item">2. A este equipo le <input class="interactive-input" type="text"> un líder.</div>
+                <div class="exercise-item">3. No te <input class="interactive-input" type="text"> comer tantos dulces.</div>
+                <div class="exercise-item">4. Hicimos mucha comida, ahora nos <input class="interactive-input" type="text"> paella.</div>
+                <div class="exercise-item">5. A mí no me <input class="interactive-input" type="text"> los rumores.</div>
+                <div class="exercise-item">6. Nos <input class="interactive-input" type="text"> estudiar más para el examen.</div>
+                <div class="exercise-item">7. ¿Cuánto tiempo <input class="interactive-input" type="text"> para terminar?</div>
+                <div class="exercise-item">8. A ella le <input class="interactive-input" type="text"> paciencia con los niños.</div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Lectura: "Problemas de Convivencia"</h3>
+            <div class="text-reading">
+                "Vivo con Miguel y tenemos problemas. A Miguel le <strong>encanta</strong> la música rock, pero a mí me <strong>molesta</strong> el ruido por la noche. A él le <strong>parece</strong> normal tocar la guitarra a las 3 AM. A mí me <strong>hace falta</strong> dormir ocho horas porque trabajo. Además, a Miguel no le <strong>importa</strong> el desorden, pero a mí me <strong>fastidia</strong> ver platos sucios. La verdad, Miguel me <strong>cae</strong> bien como amigo, pero no nos <strong>conviene</strong> vivir juntos."
+            </div>
+            <p style="font-size: 0.9em; margin-top: 15px;">Read closely for the next exercise.</p>
+        </section>
+
+        <section>
+            <h3>Práctica 3: Comprensión Lectora</h3>
+            <p style="font-size: 0.8em;">Based on the text, complete the sentences.</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. A Miguel le <input class="interactive-input" type="text"> la música rock.</div>
+                <div class="exercise-item">2. Al narrador le <input class="interactive-input" type="text"> el ruido.</div>
+                <div class="exercise-item">3. A Miguel le <input class="interactive-input" type="text"> normal tocar música.</div>
+                <div class="exercise-item">4. Al narrador le <input class="interactive-input" type="text"> dormir 8 horas.</div>
+                <div class="exercise-item">5. A Miguel no le <input class="interactive-input" type="text"> el desorden.</div>
+                <div class="exercise-item">6. Al narrador le <input class="interactive-input" type="text"> los platos sucios.</div>
+                <div class="exercise-item">7. Miguel le <input class="interactive-input" type="text"> bien como amigo.</div>
+                <div class="exercise-item">8. No les <input class="interactive-input" type="text"> vivir juntos.</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Clarifiers & Emphasizers</h2>
+            <div class="concept-box">
+                <p>Use the prepositional phrase to avoid ambiguity (especially with 'Le/Les') or to contrast opinions.</p>
+                <div style="font-size: 0.85em; background: #f0f8ff; padding: 10px; border-radius: 8px;">
+                    <strong>A Juan</strong> le gusta el té, pero <strong>a mí</strong> me gusta el café.
+                </div>
+            </div>
+            <div class="grid-responsive" style="margin-top: 20px;">
+                <div class="exercise-item">A mí &rarr; me</div>
+                <div class="exercise-item">A ti &rarr; te</div>
+                <div class="exercise-item">A él/ella/Ud &rarr; le</div>
+                <div class="exercise-item">A nosotros &rarr; nos</div>
+                <div class="exercise-item">A vosotros &rarr; os</div>
+                <div class="exercise-item">A ellos/Uds &rarr; les</div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 4: Los Clarificadores</h3>
+            <p style="font-size: 0.8em;">Complete with the correct prepositional phrase (e.g., "A mí").</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. <input class="interactive-input" type="text"> (me) interesa la política.</div>
+                <div class="exercise-item">2. <input class="interactive-input" type="text"> (you) te quedan bien las gafas.</div>
+                <div class="exercise-item">3. <input class="interactive-input" type="text"> (us) nos duele la cabeza.</div>
+                <div class="exercise-item">4. <input class="interactive-input" type="text"> (him) le falta experiencia.</div>
+                <div class="exercise-item">5. <input class="interactive-input" type="text"> (them) les encanta viajar.</div>
+                <div class="exercise-item">6. <input class="interactive-input" type="text"> (her) le cae mal su vecino.</div>
+                <div class="exercise-item">7. <input class="interactive-input" type="text"> (you pl.) les importa el precio.</div>
+                <div class="exercise-item">8. <input class="interactive-input" type="text"> (Sarah) le fascina leer.</div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 5: Ordenar Frases</h3>
+            <p style="font-size: 0.8em;">Order the words to form a logical sentence. (Mental or written).</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. cine / encanta / el / les / a / ellos / .</div>
+                <div class="exercise-item">2. te / bien / ese / queda / vestido / .</div>
+                <div class="exercise-item">3. importa / a / nada / le / él / no / .</div>
+                <div class="exercise-item">4. falta / vacaciones / nos / hacen / unas / .</div>
+                <div class="exercise-item">5. bien / jefe / el / cae / me / nuevo / .</div>
+                <div class="exercise-item">6. duele / mucho / estómago / me / el / .</div>
+                <div class="exercise-item">7. parece / idea / me / una / mala / .</div>
+                <div class="exercise-item">8. música / molesta / a / ti / la / ¿ / ?</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Doler (Body) & Quedar (Fit/Remain)</h2>
+            <div class="grid-responsive">
+                <div>
+                    <ul class="vocab-list">
+                        <li><strong>Doler (o-ue):</strong> Used with body parts. Use definite articles (el/la), never possessives (mi/tu).<br><em>"Me duele <strong>la</strong> mano."</em></li>
+                        <li><strong>Quedar (Fit):</strong> Clothing size/style.<br><em>"Esa camisa te queda pequeña."</em></li>
+                        <li><strong>Quedar (Remain):</strong> Time/Items left.<br><em>"Nos quedan cinco minutos."</em></li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="https://image.pollinations.ai/prompt/vector%20flat%20illustration%20clock%20tshirt%20pain%20collage%20minimalist%20white%20background?width=500&height=400&nologo=true" class="img-container" alt="Doler and Quedar">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 6: Doler y Quedar</h3>
+            <p style="font-size: 0.8em;">Fill in with the correct form of Doler or Quedar.</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. Caminé mucho, me (doler) <input class="interactive-input" type="text"> los pies.</div>
+                <div class="exercise-item">2. Esa falda te (quedar) <input class="interactive-input" type="text"> muy elegante.</div>
+                <div class="exercise-item">3. Solo nos (quedar) <input class="interactive-input" type="text"> dos huevos.</div>
+                <div class="exercise-item">4. A mi padre le (doler) <input class="interactive-input" type="text"> la espalda.</div>
+                <div class="exercise-item">5. Estos pantalones me (quedar) <input class="interactive-input" type="text"> grandes.</div>
+                <div class="exercise-item">6. ¿Te (doler) <input class="interactive-input" type="text"> los dientes?</div>
+                <div class="exercise-item">7. No tenemos tiempo, (quedar) <input class="interactive-input" type="text"> un minuto.</div>
+                <div class="exercise-item">8. A Ana le (quedar) <input class="interactive-input" type="text"> bien el rojo.</div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 7: Encuentra el Error</h3>
+            <p style="font-size: 0.8em;">Find the mistake in each sentence (Pronoun, Verb, or Article).</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. A yo me gusta el chocolate. <em>(Error: yo)</em></div>
+                <div class="exercise-item">2. Me duelen la cabeza. <em>(Error: duelen)</em></div>
+                <div class="exercise-item">3. A nosotros nos gusta los libros. <em>(Error: gusta)</em></div>
+                <div class="exercise-item">4. Te falta dinero a ti. <em>(Redundant but check order)</em></div>
+                <div class="exercise-item">5. Me duele mi brazo. <em>(Error: mi)</em></div>
+                <div class="exercise-item">6. A ella le caen bien Roberto. <em>(Error: caen)</em></div>
+                <div class="exercise-item">7. Nos interesan aprender español. <em>(Error: interesan)</em></div>
+                <div class="exercise-item">8. A ellos le gusta la playa. <em>(Error: le)</em></div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Práctica 8: Traducción Inversa</h3>
+            <p style="font-size: 0.8em;">Translate concepts to Spanish using the verbs studied.</p>
+            
+            <div class="dense-exercise-grid">
+                <div class="exercise-item">1. My head hurts. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">2. I need (lack) time. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">3. I like (personality) your brother. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">4. The noise bothers us. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">5. Science interests them. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">6. It seems good to me. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">7. We have 5 euros left. &rarr; <input class="interactive-input" type="text"></div>
+                <div class="exercise-item">8. I love (encantar) sleeping. &rarr; <input class="interactive-input" type="text"></div>
+            </div>
+        </section>
+
+        <section style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+            <div class="final-slide-container">
+                <h2 style="color: var(--primary); font-family: 'Merriweather', serif; font-size: 2.2em;">¡Buen trabajo!</h2>
+                <p class="subtitle" style="font-size: 1.2em; color: var(--text-main);">Has completado el laboratorio de Nivel A2.</p>
+                
+                <div style="position: relative; display: inline-block;">
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" alt="Happy" class="final-img">
+                    <div class="cert-badge">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Sello">
+                    </div>
+                </div>
+                
+                <p style="font-size: 1em; color: #777; font-style: italic; margin-top: 10px;">Descarga el PDF para revisar tus respuestas.</p>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
+<script>
+    // 1. Array con las 3 imágenes de fondo de marca
+    const brandBackgrounds = [
+        "https://tucaneo.com/wp-content/uploads/2025/12/4.jpg",
+        "https://tucaneo.com/wp-content/uploads/2025/12/5.jpg",
+        "https://tucaneo.com/wp-content/uploads/2025/12/6.jpg"
+    ];
+
+    // 2. Seleccionar todas las diapositivas
+    const slides = document.querySelectorAll('.reveal .slides > section');
+
+    // 3. Asignar imagen aleatoria a cada una
+    slides.forEach(slide => {
+        const randomImg = brandBackgrounds[Math.floor(Math.random() * brandBackgrounds.length)];
+        
+        // Asignar los atributos de Reveal.js
+        slide.setAttribute('data-background-image', randomImg);
+        slide.setAttribute('data-background-size', 'cover');
+        slide.setAttribute('data-background-position', 'center center');
+    });
+</script>
+<script>
+    const isMobile = window.innerWidth < 900;
+
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: false, history: false,
+        
+        // Configuración Responsive para Contenido Denso
+        width: isMobile ? 360 : 1200,
+        height: isMobile ? 650 : 750, // Más altura para los ejercicios
+        
+        margin: isMobile ? 0.02 : 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        
+        transition: 'slide',
+        backgroundTransition: 'fade',
+        overview: false
+    });
+</script>
+</body>
+</html>

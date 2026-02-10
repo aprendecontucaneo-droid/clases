@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja de Trabajo: Español Nivel A1 - Tucaneo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+
+        /* --- ESTILOS GENERALES --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; 
+            margin: 0; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm 20mm 30mm 20mm; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; }
+        .note { background-color: #fff3cd; padding: 10px; border-radius: 5px; font-size: 10pt; border: 1px solid #ffeeba; margin-bottom: 15px; }
+        
+        /* --- CAJA DE BANCO DE PALABRAS --- */
+        .word-bank {
+            border: 2px dashed var(--accent-color);
+            background-color: #fff8e1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #d35400;
+        }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 100px; text-align: center; }
+        .short-input { width: 40px; text-align: center; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            .page { width: 100%; min-height: auto; padding: 15px 15px 80px 15px; box-shadow: none; margin-bottom: 0; }
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+            .btn-container { position: relative; top: 0; right: 0; flex-direction: row; justify-content: center; width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; border-radius: 0; }
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (Limpio A4)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; padding: 0; margin: 0; display: block; }
+            .page { width: 100%; max-width: 100%; margin: 0; padding: 15mm 15mm; box-shadow: none; border: none; page-break-after: always; min-height: 290mm; }
+            .btn-container, .no-print { display: none !important; }
+            input[type="text"], textarea { background: none !important; border-bottom: 1px solid #000; }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            .img-container, h2, table, .word-bank { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+        <button class="ui-btn print-btn" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>1. Verbos: Ser vs. Estar</h1>
+        
+        <div class="note">
+            <strong>🇬🇧 English Explanation:</strong> In Spanish, "To Be" has two forms:<br>
+            1. <strong>SER:</strong> Permanent traits, occupation, origin, time. (DOCTOR: Description, Occupation, Characteristic, Time, Origin, Relationship).<br>
+            2. <strong>ESTAR:</strong> Temporary states, emotions, location. (PLACE: Position, Location, Action, Condition, Emotion).
+        </div>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/feria-senalar-variedad-scaled-e1768177521541.png" alt="Imagen Ser vs Estar">
+        </div>
+
+        <h2>A. Conjugación (Conjugation)</h2>
+        <p class="instruction">Completa la tabla con las formas correctas (Complete the chart).</p>
+        
+        <table>
+            <tr>
+                <td><strong>Pronombre (Subject)</strong></td>
+                <td><strong>SER (Permanent)</strong></td>
+                <td><strong>ESTAR (Temporary/Location)</strong></td>
+            </tr>
+            <tr>
+                <td>Yo (I)</td>
+                <td>Soy</td>
+                <td><input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td>Tú (You - informal)</td>
+                <td><input type="text" class="inline-input"></td>
+                <td>Estás</td>
+            </tr>
+            <tr>
+                <td>Él / Ella / Usted</td>
+                <td><input type="text" class="inline-input"></td>
+                <td>Está</td>
+            </tr>
+            <tr>
+                <td>Nosotros (We)</td>
+                <td>Somos</td>
+                <td><input type="text" class="inline-input"></td>
+            </tr>
+        </table>
+
+        <h2>B. ¿Ser o Estar?</h2>
+        <p class="instruction">Elige la opción correcta para completar las frases (Choose the correct option).</p>
+
+        <ol>
+            <li>Yo <input type="text" class="inline-input"> (soy/estoy) de Colombia. <em>(Origin)</em></li>
+            <li>El perro <input type="text" class="inline-input"> (es/está) en la casa. <em>(Location)</em></li>
+            <li>Tú <input type="text" class="inline-input"> (eres/estás) muy inteligente. <em>(Characteristic)</em></li>
+            <li>Nosotros <input type="text" class="inline-input"> (somos/estamos) felices hoy. <em>(Emotion)</em></li>
+            <li>¿Dónde <input type="text" class="inline-input"> (es/está) el baño? <em>(Location)</em></li>
+        </ol>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>2. La Casa y Preposiciones</h1>
+
+        <div class="note">
+            <strong>🇬🇧 English Explanation:</strong><br>
+            <strong>Vocabulary:</strong> La sala (living room), La cocina (kitchen), El baño (bathroom), El dormitorio (bedroom).
+        </div>
+
+        <div class="img-container">
+            <img src="https://image.pollinations.ai/prompt/cutaway%20house%20interior%20rooms%20labeled%20living%20room%20kitchen%20bedroom%20vector%20illustration%20flat%20white%20background?width=800&height=400&nologo=true" alt="Imagen de la casa">
+        </div>
+
+        <h2>A. Vocabulario de la Casa</h2>
+        <p class="instruction">Escribe el nombre de la habitación en español (Write the room name in Spanish).</p>
+        <ul>
+            <li>Where you sleep (Bedroom): <input type="text" class="inline-input"></li>
+            <li>Where you cook (Kitchen): <input type="text" class="inline-input"></li>
+            <li>Where you watch TV (Living room): <input type="text" class="inline-input"></li>
+            <li>Where you wash your hands (Bathroom): <input type="text" class="inline-input"></li>
+        </ul>
+
+        <h2>B. ¿Dónde están los objetos?</h2>
+        <p class="instruction">Observa la imagen. Usa el banco de palabras para completar las oraciones.</p>
+        
+        <div class="word-bank">
+            debajo de &nbsp;&nbsp;|&nbsp;&nbsp; encima de &nbsp;&nbsp;|&nbsp;&nbsp; al lado de
+        </div>
+
+        <div class="img-container" style="height: 200px;">
+             <img src="https://tucaneo.com/wp-content/uploads/2026/01/sala-gato-descansando.png-scaled-e1768176980652.png" alt="Sala con gato y objetos">
+        </div>
+
+        <ol>
+            <li>El gato está <input type="text" class="inline-input"> la mesa.</li>
+            <li>La planta está <input type="text" class="inline-input"> la mesa.</li>
+            <li>El sofá está <input type="text" class="inline-input"> la mesa.</li>
+        </ol>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>3. Palabras de Pregunta (Question Words)</h1>
+        
+        <h2>A. Relaciona (Match)</h2>
+        <p class="instruction">Traduce las palabras de pregunta al español (Translate to Spanish).</p>
+        
+        <table>
+            <tr>
+                <td>1. Where?</td>
+                <td><input type="text" class="inline-input"></td>
+                <td><em>(Answer: A place)</em></td>
+            </tr>
+            <tr>
+                <td>2. Who?</td>
+                <td><input type="text" class="inline-input"></td>
+                <td><em>(Answer: A person)</em></td>
+            </tr>
+            <tr>
+                <td>3. How?</td>
+                <td><input type="text" class="inline-input"></td>
+                <td><em>(Answer: A condition/manner)</em></td>
+            </tr>
+            <tr>
+                <td>4. What?</td>
+                <td><input type="text" class="inline-input"></td>
+                <td><em>(Answer: A thing/action)</em></td>
+            </tr>
+        </table>
+
+        <h2>B. Práctica Final (Writing)</h2>
+        <p class="instruction">Responde las preguntas completas en español (Answer in full Spanish sentences).</p>
+
+        <div class="img-container" style="height: 150px;">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/nido-cuatrotucanesbebes-confundidos.png-scaled-e1765660162345.png" alt="Familia feliz">
+        </div>
+
+        <p><strong>1. ¿Quiénes son ellos? (Who are they?)</strong></p>
+        <textarea placeholder="Ejemplo: Ellos son una familia..."></textarea>
+
+        <p><strong>2. ¿Dónde están ellos? (Where are they?)</strong></p>
+        <textarea placeholder="Ejemplo: Ellos están en..."></textarea>
+
+        <p><strong>3. ¿Cómo están ellos? (How are they?)</strong></p>
+        <textarea placeholder="Ejemplo: Ellos están felices..."></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,923 @@
+<style>
+  /* =========================================
+     1. MASTER CSS TUCANEO V2 (OPTIMIZADO)
+     ========================================= */
+
+  /* HEADER TRANSPARENTE */
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important; 
+  }
+
+  /* TEXTOS HEADER */
+  .main-header-menu .menu-item > .menu-link,
+  .site-title a, 
+  .site-header a {
+      color: #ffffff !important; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+      font-weight: 700 !important;
+      font-size: 1.1rem !important;
+  }
+   
+  .main-header-menu .menu-item > .menu-link:hover {
+      color: #f59e0b !important; 
+  }
+
+  /* PORTADA HERO */
+  .tucaneo-hero {
+    position: relative;
+    width: 100vw; 
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw; 
+    margin-right: -50vw;
+    height: 100vh; 
+    min-height: 700px; 
+    
+    background-image: url('https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722-e1764460753198.png');
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat;
+    
+    border-radius: 0 0 50px 50px; 
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, 
+        rgba(9, 23, 18, 0.6) 0%,      
+        rgba(9, 23, 18, 0.3) 40%,
+        rgba(9, 23, 18, 0.8) 100%
+    );
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+
+  .tucaneo-hero-content {
+    position: relative;
+    z-index: 10;
+    padding: 20px;
+    max-width: 850px;
+    text-align: center;
+    color: white;
+    margin-top: 150px; 
+  }
+
+  .tucaneo-tagline { display: inline-block; background-color: #f59e0b; color: #000; font-weight: 800; font-size: 0.9rem; padding: 8px 16px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+  .tucaneo-hero h1 { font-size: 4.5rem; line-height: 1.05; font-weight: 900; margin-bottom: 25px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  .tucaneo-hero p { font-size: 1.5rem; line-height: 1.6; color: #f3f4f6; margin-bottom: 45px; max-width: 80%; margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .tucaneo-cta { background-color: #10b981; color: white !important; padding: 18px 45px; border-radius: 50px; font-weight: 800; text-decoration: none; display: inline-block; transition: all 0.3s ease; border: none; font-size: 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5); cursor: pointer; }
+  .tucaneo-cta:hover { background-color: #059669; transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); }
+
+  /* RESPONSIVE */
+  @media (max-width: 921px) {
+    header#masthead, .site-header {
+       background-color: #ffffff !important; 
+       padding-top: 0px !important; 
+       box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+       position: fixed !important; 
+    }
+    
+    .site-title a, .site-header .ast-button-wrap .menu-toggle-icon {
+        color: #0e231b !important;
+        text-shadow: none !important;
+    }
+
+    .tucaneo-hero {
+      width: 92%; 
+      left: auto; right: auto; 
+      margin-left: auto; margin-right: auto;
+      height: auto !important; 
+      min-height: 550px; 
+      margin-top: 130px; 
+      border-radius: 25px !important; 
+      background-position: center center;
+    }
+
+    .tucaneo-hero-content {
+      padding: 30px 20px !important; 
+      margin-top: 0px !important; 
+    }
+
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+    .tucaneo-hero p { font-size: 1.1rem; max-width: 100%; }
+    .tucaneo-cta { padding: 15px 30px; font-size: 1rem; width: 80%; text-align: center;}
+  }
+
+  /* CONTENEDOR PRINCIPAL */
+  .tucaneo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* ACORDEÓN (MÓDULOS) */
+  .tucaneo-module {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+  }
+
+  details.tucaneo-module[open] { box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: #3b82f6; }
+
+  .tucaneo-summary {
+    background-color: #f9fafb;
+    padding: 20px 30px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #111827;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .tucaneo-summary:hover { background-color: #f3f4f6; }
+  .tucaneo-summary::after { content: '+'; font-size: 1.5rem; font-weight: 300; color: #6b7280; transition: transform 0.3s; }
+  details[open] .tucaneo-summary::after { content: '+'; transform: rotate(45deg); color: #ef4444; }
+  details[open] .tucaneo-summary { background-color: #eff6ff; color: #1d4ed8; border-bottom: 1px solid #e5e7eb; }
+  .tucaneo-summary::-webkit-details-marker { display: none; }
+
+  .tucaneo-module-content {
+    padding: 20px;
+    background: #fff;
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GRID Y TARJETAS */
+  .tucaneo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding-top: 10px;
+  }
+
+  .tucaneo-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .tucaneo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  }
+
+  .contenedor-imagen { position: relative; height: 180px; overflow: hidden; }
+  .tucaneo-cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .tucaneo-card:hover .tucaneo-cover-img { transform: scale(1.05); }
+
+  .tucaneo-badge {
+    position: absolute; top: 15px; left: 15px; color: white !important; padding: 6px 12px; border-radius: 8px;
+    font-size: 0.75rem; font-weight: 800; text-transform: uppercase; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .tucaneo-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+   
+  .tucaneo-meta {
+    display: flex; gap: 15px; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px; font-weight: 700; text-transform: uppercase;
+  }
+
+  .tucaneo-title { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 800; color: #1f2937; line-height: 1.2; }
+  .tucaneo-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    
+  /* BOTONES */
+  .tucaneo-btn {
+    display: flex; justify-content: center; align-items: center; width: 100%; padding: 14px;
+    font-weight: 800; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase;
+    font-size: 0.9rem; color: white !important; text-decoration: none !important; transition: 0.2s; box-sizing: border-box;
+  }
+  .tucaneo-btn:active { transform: scale(0.98); }
+
+  /* SEPARADOR DE EXAMEN */
+  .tucaneo-exam-separator {
+    margin: 40px 0; padding: 40px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    border-radius: 20px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+  }
+  .tucaneo-exam-separator h3 { color: white; margin-bottom: 10px; font-size: 1.8rem; font-weight: 800; }
+  .tucaneo-exam-separator p { color: #e0e7ff; margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+  /* BOTÓN EXAMEN (BLANCO) */
+  a.tucaneo-btn.btn-exam { 
+      background: white !important; 
+      color: #4f46e5 !important; 
+      max-width: 300px; 
+      margin: 0 auto; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  a.tucaneo-btn.btn-exam:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+
+  /* FINAL DEL CURSO (NUEVO ESTILO CON GENERADOR) */
+  .tucaneo-course-end {
+      margin-top: 60px;
+      padding: 60px 30px;
+      background: #fff;
+      border: 2px solid #fbbf24;
+      border-radius: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(251, 191, 36, 0.15);
+  }
+  .tucaneo-course-end::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 10px;
+      background: linear-gradient(90deg, #f59e0b, #fcd34d, #f59e0b);
+  }
+  .trophy-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+
+  /* Estilos para el input del nombre y estado de carga */
+  #nombreEstudiante {
+    padding: 15px;
+    border-radius: 50px;
+    border: 2px solid #e5e7eb;
+    width: 80%;
+    max-width: 400px;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #nombreEstudiante:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+  }
+  /* Estilo para cuando se está generando el certificado */
+  .generando {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+  }
+
+  /* COLORES */
+  .tema-a1 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .btn-a1 { background-color: #2563eb !important; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+  .btn-a1:hover { background-color: #1d4ed8 !important; }
+
+  .tema-b1 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+  .btn-b1 { background-color: #f59e0b !important; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+  .btn-b1:hover { background-color: #d97706 !important; }
+
+  .tema-b2 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+  .btn-b2 { background-color: #10b981 !important; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+  .btn-b2:hover { background-color: #059669 !important; }
+   
+  /* Estilo Especial Examen */
+  .tema-examen { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+  .btn-examen { background-color: #7c3aed !important; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
+  .btn-examen:hover { background-color: #6d28d9 !important; }
+</style>
+
+<div class="tucaneo-container">
+  
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div> 
+    
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Clases Personalizadas</span>
+      <h1>Clases de Español y Recursos Nivel A1</h1>
+      <p>Material didáctico exclusivo para mis estudiantes. Aprende con estructura, diversión y mi guía experta para garantizar tu fluidez.</p>
+      <a href="#modulo-1" class="tucaneo-cta">Ver Plan de Estudios</a>
+    </div>
+  </div>
+  
+  <details class="tucaneo-module" id="modulo-1" open>
+    <summary class="tucaneo-summary">
+      <span>Módulo 1: Fundamentos Básicos</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Fundamentos</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/fundamentos-alfabeto-aprendiendo-e1765062609662.png" class="tucaneo-cover-img" alt="Lección El Alfabeto Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">El Alfabeto</h3>
+            <p class="tucaneo-desc">Domina la pronunciación exacta de cada letra en español. Incluye la Ñ y la doble RR.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/alfabeto.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Comunicación</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/parque-tucan-_-saludando-scaled-e1767834994382.png" class="tucaneo-cover-img" alt="Lección Saludos en Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 10 min</span></div>
+            <h3 class="tucaneo-title">Saludos</h3>
+            <p class="tucaneo-desc">Aprende a presentarte y saludar con confianza natural. Frases clave para conectar.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/saludos.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Gramática</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/genero-ropa-atardecer-scaled-e1765338089794.png" class="tucaneo-cover-img" alt="Lección Género Gramatical">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Género</h3>
+            <p class="tucaneo-desc">¿El o La? Entiende por fin la lógica detrás del género gramatical.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Genero.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 2: Descripción y Existencia</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Vocabulario</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/ciudad-aves_exoticas-observando.png-e1765339358740.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 12 min</span></div>
+            <h3 class="tucaneo-title">Adjetivos</h3>
+            <p class="tucaneo-desc">Aprende a describir personas, lugares y cosas en español.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Adjetivos.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Gramática</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/exploradores-perdida-expedicion.png.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 12 min</span></div>
+            <h3 class="tucaneo-title">Hay (Existencia)</h3>
+            <p class="tucaneo-desc">Domina el uso de "Hay" para expresar lo que ves en tu entorno.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Hay.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">Práctica</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/entrenador-aves-lapices-e1765339293476.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Ejercicios con Hay</h3>
+            <p class="tucaneo-desc">Pon a prueba tus conocimientos sobre la existencia en español.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Hay_ejercicios.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Primer Hito: Evaluación</h3>
+      <p>Evalúa tu dominio del alfabeto, saludos, género y el uso de 'hay'.</p>
+      <a href="https://tucaneo.com/wp-content/uploads/slides/primer%20examen.html" class="tucaneo-btn btn-exam" target="_blank">Comenzar Examen</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 3: Ser y Estar</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/selva-tres_tucanes-conversando_y_senalando.png-scaled-e1765659410991.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Ser y Estar</h3>
+            <p class="tucaneo-desc">Aprende a diferenciar características permanentes de estados temporales.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/SER%20Y%20ESTAR.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">PRÁCTICA</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/colegio_jungla-tucan_profesor-ensenando.png-scaled-e1765660200338.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Ser y Estar (Ejercicios)</h3>
+            <p class="tucaneo-desc">Pon en práctica lo aprendido con ejercicios interactivos.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/ejercicios%20ser%20y%20estar.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Ejercicios</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 4: El Entorno</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/nido-cuatrotucanesbebes-confundidos.png-scaled-e1765660162345.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Preguntas</h3>
+            <p class="tucaneo-desc">Domina los pronombres interrogativos (qué, cómo, dónde).</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Preguntas.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+            <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/casa_arbol-tucan_con_escoba-limpiando_dia_nublado.png-scaled-e1765659374332.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">La Casa</h3>
+            <p class="tucaneo-desc">Vocabulario esencial para hablar de tu espacio personal.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Lacasa.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 10px 25px rgba(5, 150, 105, 0.3);">
+      <h3>Examen de Nivel</h3>
+      <p>Evalúa tu progreso integral con este examen final de la sección.</p>
+      <a href="https://tucaneo.com/wp-content/uploads/slides/exanmen%202.html" class="tucaneo-btn btn-exam" style="color: #059669 !important;">COMENZAR EXAMEN FINAL</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 5: Fundamentos Numéricos y Temporales</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/numeros_perdidos-ruinas.png-scaled-e1765658043879.png" class="tucaneo-cover-img" alt="Lección de Números en Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 10 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Números</h3>
+            <p class="tucaneo-desc">Domina el conteo básico en español. Aprende a escribir y pronunciar los números esenciales del 1 al 100 para desenvolverte en compras, precios y fechas.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Números.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">PRÁCTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/numeros-selva-baloncesto.png-scaled-e1765658114432.png" class="tucaneo-cover-img" alt="Ejercicios de números en español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Ejercicio de números</h3>
+            <p class="tucaneo-desc">Pon a prueba tus conocimientos sobre la existencia en español.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Ejercicios%20números.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">TIEMPO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/tucan-placa-brincando.png-scaled-e1767835446980.png" class="tucaneo-cover-img" alt="Lección Días de la semana">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Días de la semana</h3>
+            <p class="tucaneo-desc">Organiza tu agenda en español. Descubre el vocabulario clave para planificar tu semana, concertar citas y hablar sobre tus rutinas diarias con fluidez.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/día%20de%20la%20semana.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 6: Vida Cotidiana y Entorno</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">NIVEL A1</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/paisaje-pueblo-atardecer.png-scaled-e1765658508977.png" class="tucaneo-cover-img" alt="Bienvenido al pueblo">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Bienvenido al pueblo</h3>
+            <p class="tucaneo-desc">Descubre el vocabulario esencial para moverte por la ciudad. Aprende a identificar lugares clave como la plaza, el mercado y la estación en este recorrido inicial.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/bienvenidos%20al%20pueblo.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">NIVEL A1</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/reloj-nino-jugando.png-scaled-e1765659010332.png" class="tucaneo-cover-img" alt="Dar la hora">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Dar la hora</h3>
+            <p class="tucaneo-desc">Domina el tiempo en español. Aprende a preguntar y responder "¿Qué hora es?" con fluidez, practicando las estructuras básicas y los horarios cotidianos.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Dar_la_hora.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Examen 3</h3>
+      <p>¡Pon a prueba tus conocimientos! Evaluación integral sobre los números, cómo dar la hora y el vocabulario del pueblo para certificar tu progreso.</p>
+      <a href="https://tucaneo.com/wp-content/uploads/slides/Examen%203.html" class="tucaneo-btn btn-exam" target="_blank">Empezar Examen</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 7: El Tiempo Presente</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">Gramática</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/12/autobus-presente-familia.png-scaled-e1765658270745.png" class="tucaneo-cover-img" alt="Presente Simple en Español">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+                <span style="color: #2563eb;">● Nivel A1</span>
+                <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Presente Simple</h3>
+            <p class="tucaneo-desc">Domina la base del español. Aprende a conjugar verbos regulares e irregulares para describir tu rutina diaria, hechos y hábitos con total confianza.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/presentesimple.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">Práctica</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/12/jungla-tucan-saltando.png-scaled-e1765659242480.png" class="tucaneo-cover-img" alt="Ejercicios de Presente Simple">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+                <span style="color: #2563eb;">● Nivel A1</span>
+                <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Presente Simple: Ejercicios</h3>
+            <p class="tucaneo-desc">¡Pon a prueba tu memoria! Refuerza lo aprendido con actividades interactivas diseñadas para corregir errores comunes y agilizar tu fluidez mental.</p>
+            <a href="https://aprendecontucaneo-droid.github.io/clases/A1/Presente_Simple_Ejercicios.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 8: Verbos Irregulares y Demostrativos</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/12/exploradores-santuario-sorpresa.png-scaled-e1765659278428.png" class="tucaneo-cover-img" alt="Introducción a Verbos Irregulares">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+                <span style="color: #2563eb;">● Nivel A1</span>
+                <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Introducción Irregulares</h3>
+            <p class="tucaneo-desc">Domina la base de los verbos irregulares en español. Aprende a identify los cambios de raíz esenciales para conjugar correctamente en presente simple.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Ejercicios%20presente%20simple.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">PRÁCTICA</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/12/carpinteros-taller_irregular.png-scaled-e1765658762587.png" class="tucaneo-cover-img" alt="Taller de Verbos Irregulares">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+                <span style="color: #2563eb;">● Nivel A1</span>
+                <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Taller de Irregulares</h3>
+            <p class="tucaneo-desc">Pon en práctica lo aprendido con ejercicios interactivos. Refuerza tu memoria y gana agilidad mental conjugando los verbos más importantes.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Taller%20de%20irregulares.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Taller</a>
+            </div>
+        </article>
+
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/12/tienda_pueblo-anciano_joven-ensenando_artefacto.png-scaled-e1765658442421.png" class="tucaneo-cover-img" alt="Los Demostrativos en Español">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+                <span style="color: #2563eb;">● Nivel A1</span>
+                <span>• 10 min</span>
+            </div>
+            <h3 class="tucaneo-title">Demostrativos</h3>
+            <p class="tucaneo-desc">Aprende a diferenciar entre "este", "ese" y "aquel". Domina el uso de los adjetivos demostrativos para señalar ubicación y distancia correctamente.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/demostrativos.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Examen 4</h3>
+      <p>Evaluación integral: Pon a prueba tu dominio del presente simple, los verbos irregulares y el uso correcto de los demostrativos en contextos reales.</p>
+      <a href="https://tucaneo.com/wp-content/uploads/slides/examen4.5.html" class="tucaneo-btn btn-exam" target="_blank">Iniciar Examen</a>
+  </div>
+   
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 9: Gustos y Relaciones Personales</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/cocina-nino-feliz_comiendo.png-scaled.png" class="tucaneo-cover-img" alt="Lección Me Gusta Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Me gusta</h3>
+            <p class="tucaneo-desc">Domina el uso del verbo "gustar" para expresar tus preferencias personales. Aprende la estructura correcta para decir qué te agrada en español básico.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/me%20gusta.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/tucaneo-pareja-amor-noche.png-e1765657901519.png" class="tucaneo-cover-img" alt="Verbos Similares a Gustar">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 20 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Verbos similares a gustar</h3>
+            <p class="tucaneo-desc">Expande tu vocabulario emocional. Descubre verbos como "encantar", "interesar" y "molestar" que funcionan igual que "gustar" para enriquecer tus frases.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/verbos%20similares%20gustar.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2025/12/casa_arbol-familia_tucanes-cena_nevada.png-scaled-e1765658372796.png" class="tucaneo-cover-img" alt="Vocabulario La Familia Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 10 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">La familia</h3>
+            <p class="tucaneo-desc">Aprende el vocabulario esencial de los miembros de la familia. Una lección clave para principiantes para poder presentar y describir a tus seres queridos.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Familia.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 10: Frecuencia y Entorno</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">GRAMÁTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/entrenador-estudiante-amanecer.png-e1767836979193.png" class="tucaneo-cover-img" alt="Frecuencia">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #f59e0b;">● Nivel A2</span>
+              <span>• 10 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Frecuencia</h3>
+            <p class="tucaneo-desc">Aprende a expresar con qué frecuencia realizas acciones en español. Domina los adverbios clave para el nivel A2 y mejora tu fluidez al hablar de rutinas.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Frecuencia.Html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">REPASO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/playa-tres_adultos-jugando_voleyball.png-e1767835823521.png" class="tucaneo-cover-img" alt="Presente simple repaso">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #f59e0b;">● Nivel A2</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Presente simple repaso</h3>
+            <p class="tucaneo-desc">Repaso esencial del Presente Simple para solidificar tu base en el nivel A2. Refuerza la conjugación de verbos regulares e irregulares y su uso cotidiano.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/Presentesimplerepaso.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">VOCABULARIO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/mercado-tucan-confundido.png-scaled-e1767839705214.png" class="tucaneo-cover-img" alt="En el mercado">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A1</span>
+              <span>• 10 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">En el mercado</h3>
+            <p class="tucaneo-desc">Ejercicio práctico de español nivel A1. Aprende vocabulario esencial para desenvolverte en el mercado, pedir alimentos, preguntar precios y realizar compras básicas.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/slides/video%20compilatorio.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);">
+      <h3>Examen 5: Transición A2</h3>
+      <p>Evaluación clave de transición A1-A2. Pon a prueba tus conocimientos sobre el presente simple, los demostrativos, el uso de 'hay' y otros temas fundamentales.</p>
+      <a href="https://tucaneo.com/wp-content/uploads/slides/examen5.html" class="tucaneo-btn btn-exam" target="_blank" style="color: #6d28d9 !important;">Empezar Examen</a>
+  </div>
+
+  <div class="tucaneo-course-end">
+    <div class="trophy-icon">🏆</div>
+    <h2 style="color: #d97706; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px;">¡FELICITACIONES!</h2>
+    <p style="color: #4b5563; font-size: 1.2rem; max-width: 600px; margin: 0 auto 20px auto;">
+        Has completado exitosamente todas las lecciones del Nivel A1. Escribe tu nombre abajo para obtener tu diploma oficial.
+    </p>
+
+    <input type="text" id="nombreEstudiante" placeholder="Escribe tu nombre completo aquí">
+
+    <a href="#" id="btnDescargar" onclick="generarCertificado(event)" class="tucaneo-cta" style="background-color: #f59e0b; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);">
+        Descargar Certificado
+    </a>
+
+    <canvas id="certificadoCanvas" width="2000" height="1414" style="display:none;"></canvas>
+  </div>
+
+</div>
+
+<script>
+function generarCertificado(e) {
+    e.preventDefault(); 
+
+    const nombreInput = document.getElementById('nombreEstudiante');
+    const nombre = nombreInput.value;
+    const btn = document.getElementById('btnDescargar');
+    
+    // Validación: Si no escriben nombre, alerta
+    if (!nombre || nombre.trim() === "") {
+        alert("Por favor, escribe tu nombre para generar el certificado.");
+        nombreInput.focus();
+        return;
+    }
+
+    // Deshabilitar botón mientras se genera
+    btn.textContent = "Generando...";
+    btn.classList.add('generando');
+
+    const canvas = document.getElementById('certificadoCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- NUEVO: CARGAR IMAGEN DE FONDO (TU MARCO ESPECÍFICO) ---
+    const img = new Image();
+    // URL DE TU IMAGEN DE MARCO
+    img.src = 'https://tucaneo.com/wp-content/uploads/2025/12/Certificado-Tucaneo-A1.png'; 
+    img.setAttribute('crossOrigin', 'anonymous'); 
+
+    img.onload = function() {
+        // 1. DIBUJAR LA IMAGEN DE FONDO
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // 2. TEXTOS (COLORES OSCUROS PARA FONDO CLARO)
+        ctx.textAlign = "center";
+
+        // "Certifica que" (Gris oscuro)
+        ctx.fillStyle = "#374151"; 
+        ctx.font = "italic 50px Arial, sans-serif";
+        ctx.fillText("Certifica que:", canvas.width / 2, 450); // Ajustado para encajar en el marco
+
+        // NOMBRE DEL ESTUDIANTE (Azul oscuro elegante)
+        ctx.fillStyle = "#1e3a8a"; 
+        ctx.font = "bold 120px 'Segoe UI', Arial, sans-serif";
+        ctx.fillText(nombre, canvas.width / 2, 600); // Centrado en el espacio libre
+
+        // Línea debajo del nombre (Dorado oscuro)
+        ctx.beginPath();
+        ctx.moveTo(400, 650);
+        ctx.lineTo(canvas.width - 400, 650);
+        ctx.strokeStyle = "#ca8a04"; 
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Texto descriptivo (Gris oscuro)
+        ctx.fillStyle = "#374151";
+        ctx.font = "50px Arial, sans-serif";
+        ctx.fillText("Ha completado exitosamente el curso de español:", canvas.width / 2, 750);
+
+        // NIVEL (Verde o Dorado oscuro)
+        ctx.fillStyle = "#15803d"; // Verde oscuro para resaltar
+        ctx.font = "bold 100px Arial, sans-serif";
+        ctx.fillText("NIVEL A1", canvas.width / 2, 900);
+        
+        // Fecha (Gris medio)
+        const fecha = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+        ctx.fillStyle = "#4b5563";
+        ctx.font = "40px Arial, sans-serif";
+        ctx.fillText("Fecha de expedición: " + fecha, canvas.width / 2, 1050);
+
+        // 3. DESCARGAR
+        try {
+            const imagen = canvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.download = 'Certificado-Tucaneo-' + nombre.replace(/\s+/g, '-') + '.png';
+            link.href = imagen;
+            link.click();
+        } catch (err) {
+            console.error("Error al generar la imagen: ", err);
+            alert("Hubo un problema de seguridad al generar la imagen. Asegúrate de que tu servidor permita CORS.");
+        } finally {
+            // Restaurar botón
+            btn.textContent = "Descargar Certificado";
+            btn.classList.remove('generando');
+        }
+    };
+
+    img.onerror = function() {
+        alert("Error al cargar la imagen de fondo. Verifica la URL.");
+        btn.textContent = "Descargar Certificado";
+        btn.classList.remove('generando');
+    };
+}
+</script>

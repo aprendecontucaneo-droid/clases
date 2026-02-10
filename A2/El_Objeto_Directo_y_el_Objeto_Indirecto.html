@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+    /* =========================================
+       1. VARIABLES Y BASE (VISIBILIDAD ALTA)
+       ========================================= */
+    :root { 
+        --primary: #004d40; 
+        --accent: #ff6f00;  
+        --text-main: #0f172a; /* Texto casi negro para máximo contraste */
+        --text-secondary: #334155; /* Gris oscuro (antes era muy claro) */
+        --bg-light: #fefce8; 
+        --danger: #ef4444; 
+    }
+    
+    /* Mantenemos la magia del Zoom Nativo */
+    html, body { 
+        background-color: var(--bg-light); 
+        font-family: 'Lato', sans-serif;
+        height: 100%;
+        overflow-y: auto !important; /* CRÍTICO: NO BORRAR */
+    }
+
+    /* =========================================
+       2. REVEAL.JS - TIPOGRAFÍA (COMPACTA Y LEGIBLE)
+       ========================================= */
+    /* Bajamos un poco la base para que no se sienta "gigante" */
+    .reveal { color: var(--text-main); font-size: 28px; font-weight: 500; }
+    
+    /* Títulos */
+    .reveal h1 { font-size: 2.5em !important; line-height: 1.1 !important; color: var(--primary); margin-bottom: 0.5em !important; }
+    .reveal h2 { font-size: 1.8em !important; color: var(--primary); font-weight: 800; margin-bottom: 0.6em !important; }
+    .reveal h3 { font-size: 1.4em !important; font-weight: 700; color: var(--text-main); }
+    
+    /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
+    /* Forzamos un color mucho más oscuro y un peso semi-negrita */
+    .reveal .text-sm, 
+    .reveal .text-xs,
+    .reveal .text-gray-400, 
+    .reveal .text-gray-500 { 
+        color: var(--text-secondary) !important; /* Gris Oscuro */
+        font-weight: 600 !important; /* Más gordita la letra */
+        opacity: 0.9 !important; /* Quitamos transparencias */
+    }
+    
+    .reveal .text-sm { font-size: 0.85em !important; }
+    .reveal .text-xs { font-size: 0.75em !important; }
+
+    /* =========================================
+       3. ESTILO DE TARJETAS (CORREGIDO Y SEGURO)
+       ========================================= */
+    /* Modificado para permitir colores de fondo (como el verde) */
+    .glass-card {
+        /* Eliminamos la orden agresiva de transparencia */
+        backdrop-filter: blur(8px);       /* Efecto borroso bonito */
+        -webkit-backdrop-filter: blur(8px); /* Para Safari/iPhone */
+        
+        /* El resto lo dejamos que Tailwind lo controle en el HTML */
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Tarjetas internas: Más compactas y definidas */
+    .card {
+        background: white;
+        border-radius: 16px; 
+        padding: 2rem; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0; 
+    }
+/* =========================================
+       4. LAYOUT CONTROLADO (SCROLL + ARREGLO DE TÍTULOS)
+       ========================================= */
+    .reveal .slides { 
+        width: 100% !important; 
+        height: 100% !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        pointer-events: none; 
+    }
+    
+    .reveal section { 
+        height: 100vh !important;      
+        overflow-y: auto !important;   
+        overflow-x: hidden !important;
+        display: block !important;     
+        
+        /* AUMENTÉ ESTO: 100px arriba para bajar todo y que respete el menú */
+        padding: 100px 20px 80px 20px !important; 
+        
+        pointer-events: auto !important;
+        box-sizing: border-box; 
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* --- REGLA MÁGICA NUEVA --- */
+    /* Esto obliga al contenido a empezar desde arriba, anulando el 'justify-center' de Tailwind */
+    .reveal section > div {
+        height: auto !important;       /* Permite que crezca hacia abajo */
+        min-height: 100% !important;   
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important; /* ¡CLAVE! Alinea al inicio, no al centro */
+    }
+
+    /* AQUÍ ESTÁ EL TRUCO DE LA PROPORCIÓN: */
+    .slide-container {
+        width: 90% !important;
+        max-width: 1200px !important;
+        margin: 0 auto;
+    }
+    
+    /* =========================================
+       5. INPUTS VISIBLES (IGUAL QUE ANTES)
+       ========================================= */
+    .clean-input { 
+        width: 100%;
+        background: #f8fafc; 
+        border: 2px solid #cbd5e1;
+        border-radius: 8px; 
+        padding: 12px 16px; 
+        font-family: 'Handlee', cursive;
+        font-size: 1.1em; 
+        color: var(--primary) !important;
+        font-weight: bold; 
+        outline: none;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+    .clean-input:focus { 
+        border-color: var(--accent); 
+        background: #fff; 
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .clean-input::placeholder { 
+        color: #64748b !important; 
+        font-family: 'Lato', sans-serif; 
+        font-size: 0.9em; 
+        font-weight: 500; 
+    }
+
+    /* =========================================
+       6. UI Y UTILIDADES
+       ========================================= */
+    #tucaneo-drawer { position: fixed; top: 0; right: -150vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s; display: flex; flex-direction: column; }
+    #tucaneo-drawer.is-open { right: 0 !important; }
+    #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    
+    #fixed-logo { position: fixed; top: 30px; left: 40px; width: 100px; z-index: 5000; }
+    #top-nav { position: fixed; top: 30px; right: 40px; z-index: 5000; display: flex; gap: 15px; }
+    #floating-cta { position: fixed; bottom: 30px; left: 40px; z-index: 5000; font-size: 12px; color: var(--primary); font-weight: bold; opacity: 0.8; letter-spacing: 1px; }
+    
+    .nav-btn { padding: 8px 20px; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; border: none; font-weight: bold; font-size: 13px; text-decoration: none; }
+    .nav-btn.zoom { display: none !important; } 
+    .nav-btn.download { background-color: var(--primary); }
+    .nav-btn.exit { background-color: #64748b; }
+
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 6px; background: var(--accent); width: 0%; z-index: 9999; }
+    #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; }
+    #back-to-top.visible { display: flex; }
+
+ 
+    /* =========================================
+       7. MÓVIL: SOLUCIÓN FINAL (SCROLL REAL)
+       ========================================= */
+    @media (max-width: 1024px) {
+        
+        /* 1. FORZAR SCROLL EN EL CUERPO (La clave para que baje) */
+
+        /* --- ¡ESTO HACE VISIBLES LOS EJERCICIOS! --- */
+    .reveal .fragment {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+
+        html, body {
+            height: auto !important;
+            min-height: 100% !important;
+            overflow-y: scroll !important; /* Fuerza la barra de scroll */
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+            position: relative !important;
+        }
+
+        /* 2. DESACTIVAR REVEAL.JS (Convertir en lista vertical) */
+        .reveal {
+            height: auto !important;
+            overflow: visible !important;
+            position: relative !important;
+            touch-action: auto !important;
+        }
+
+        .reveal .slides {
+            position: static !important; /* Deja de flotar */
+            width: 100% !important;
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important; /* Apilar uno tras otro */
+            padding: 20px 15px 150px 15px !important; /* Espacio extra abajo */
+            transform: none !important;
+            top: auto !important;
+            left: auto !important;
+            pointer-events: none; /* El contenedor no bloquea, los hijos sí */
+        }
+
+        /* 3. CADA DIAPOSITIVA ES UN BLOQUE */
+        .reveal section {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            top: auto !important;
+            height: auto !important;
+            min-height: auto !important;
+            margin-bottom: 40px !important; /* Espacio entre diapositivas */
+            pointer-events: auto !important; /* ¡Habilitar interacción! */
+            transform: none !important;
+        }
+
+        /* 4. ELEMENTOS INTERNOS (Para que no se salgan) */
+        .slide-container, .card, .glass-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 5. INPUTS FUNCIONALES */
+        .clean-input {
+            pointer-events: auto !important;
+            z-index: 5000 !important; /* Asegurar que esté encima */
+            font-size: 16px !important;
+            background: #fff !important;
+            width: 100% !important;
+        }
+
+        /* 6. ARREGLAR GRILLAS (Todo en una columna) */
+        .grid, .grid-cols-2, .md\:grid-cols-2, .lg\:grid-cols-12 {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+
+        /* 7. LIMPIEZA VISUAL */
+        .reveal h1 { font-size: 2.2em !important; margin-top: 20px !important; }
+        .reveal img { max-height: 250px !important; width: auto !important; margin: 0 auto !important; }
+        
+        /* Ocultar controles de PC */
+        #btn-zoom, .nav-btn.zoom, #premium-dock, .reveal .controls, .reveal .progress { 
+            display: none !important; 
+        }
+        
+        /* Ajustar barra superior */
+        #fixed-logo { width: 60px; top: 10px; left: 10px; }
+        #top-nav { top: 10px; right: 10px; }
+        .nav-btn { width: 36px; height: 36px; padding: 0; justify-content: center; }
+        .nav-btn span { display: none; }
+    }
+
+    /* --- PARCHE DE CONTRASTE (CORREGIDO) --- */
+    
+    /* Usamos este selector especial para que el navegador entienda el color hexadecimal */
+    [class*="bg-[#004d40]"] h1, 
+    [class*="bg-[#004d40]"] h2, 
+    [class*="bg-[#004d40]"] h3, 
+    [class*="bg-[#004d40]"] p, 
+    [class*="bg-[#004d40]"] i, 
+    [class*="bg-[#004d40]"] span,
+    [class*="bg-[#004d40]"] li,
+    [class*="bg-[#004d40]"] .text-sm,
+    [class*="bg-[#004d40]"] .text-xs,
+    [class*="bg-[#004d40]"] .text-gray-400,
+    [class*="bg-[#004d40]"] .text-gray-500 {
+        color: #ffffff !important; /* BLANCO OBLIGATORIO */
+        opacity: 1 !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    /* También aplicamos la corrección para el color primario de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary h3, .bg-primary p, .bg-primary span, .bg-primary i {
+        color: #ffffff !important;
+    }
+
+    /* Opcional: Si usas la clase 'bg-primary' de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary p {
+        color: #ffffff !important;
+    }
+</style>
+
+   
+
+
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO.COM</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section data-background-gradient="linear-gradient(135deg, #f0fdf4 0%, #e2e8f0 100%)">
+    <div class="glass-card max-w-5xl mx-auto p-12 border-t-8 border-emerald-600 shadow-2xl">
+        <div class="flex justify-center mb-6">
+            <span class="bg-emerald-100 text-emerald-700 px-6 py-2 rounded-full font-bold text-sm tracking-widest uppercase border border-emerald-200">
+                Grammar Mastery • Level A2+
+            </span>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-bold text-slate-800 mb-6 font-playfair">
+            Pronombres Combinados
+        </h1>
+        <h3 class="text-2xl text-slate-600 font-light mb-8 leading-relaxed">
+            Direct Object (DO) + Indirect Object (IO) together.<br>
+            <span class="text-emerald-600 font-bold">"Se lo dije" / "Dámelo"</span>
+        </h3>
+        <div class="w-24 h-1 bg-emerald-500 mx-auto rounded-full"></div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 border-t-8 border-slate-600">
+        <h2 class="text-4xl font-bold text-slate-800 mb-2 flex items-center gap-3">
+            <i class="fas fa-users-cog text-slate-600"></i> The Two Players
+        </h2>
+        <p class="text-xl text-slate-500 mb-8 font-light">
+            Before combining them, we must identify them. Remember the color code.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+            
+            <div class="bg-indigo-50 rounded-2xl p-8 border-2 border-indigo-100 relative overflow-hidden group hover:border-indigo-300 transition">
+                <div class="absolute top-0 right-0 bg-indigo-200 text-indigo-800 text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">Receiver</div>
+                
+                <h3 class="text-3xl font-bold text-indigo-800 mb-4 flex items-center gap-3">
+                    <span class="bg-indigo-200 w-10 h-10 rounded-full flex items-center justify-center text-sm"><i class="fas fa-user"></i></span>
+                    Indirect Object (IO)
+                </h3>
+                
+                <div class="space-y-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">Function</p>
+                        <p class="text-lg text-slate-700">The person who <strong>receives</strong> the action (or the result of the action).</p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">The Magic Question</p>
+                        <p class="text-xl text-indigo-600 font-handlee font-bold">¿A quién? <span class="text-slate-400 text-base font-sans">(To whom?)</span></p>
+                    </div>
+
+                    <div class="bg-indigo-600 text-white p-4 rounded-xl shadow-md text-center">
+                        <p class="font-bold tracking-widest text-lg">ME • TE • LE • NOS • LES</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 rounded-2xl p-8 border-2 border-emerald-100 relative overflow-hidden group hover:border-emerald-300 transition">
+                <div class="absolute top-0 right-0 bg-emerald-200 text-emerald-800 text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">The Item</div>
+                
+                <h3 class="text-3xl font-bold text-emerald-800 mb-4 flex items-center gap-3">
+                    <span class="bg-emerald-200 w-10 h-10 rounded-full flex items-center justify-center text-sm"><i class="fas fa-box-open"></i></span>
+                    Direct Object (DO)
+                </h3>
+                
+                <div class="space-y-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">Function</p>
+                        <p class="text-lg text-slate-700">The <strong>thing</strong> that is being verb-ed directly.</p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-1">The Magic Question</p>
+                        <p class="text-xl text-emerald-600 font-handlee font-bold">¿Qué? <span class="text-slate-400 text-base font-sans">(What?)</span></p>
+                    </div>
+
+                    <div class="bg-emerald-600 text-white p-4 rounded-xl shadow-md text-center">
+                        <p class="font-bold tracking-widest text-lg">LO • LA • LOS • LAS</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 border-l-8 border-purple-500">
+        <h2 class="text-3xl font-bold text-slate-800 mb-8 text-center">
+            <i class="fas fa-search text-purple-500"></i> How to identify them?
+        </h2>
+
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 text-center mb-10 relative">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">Example Sentence</span>
+            <p class="text-4xl md:text-5xl font-playfair text-slate-700 leading-normal">
+                "Pedro compra <span class="text-emerald-600 border-b-4 border-emerald-200">flores</span> para <span class="text-indigo-600 border-b-4 border-indigo-200">Ana</span>."
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-slate-50 p-6 rounded-xl border-t-4 border-slate-400 flex flex-col items-center text-center">
+                <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-xl font-bold text-slate-600 mb-4">1</div>
+                <h4 class="font-bold text-slate-700 mb-2">Find the Verb</h4>
+                <p class="text-slate-500 text-sm italic">"Compra" (Buys)</p>
+            </div>
+
+            <div class="bg-emerald-50 p-6 rounded-xl border-t-4 border-emerald-500 flex flex-col items-center text-center shadow-sm">
+                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-xl font-bold text-emerald-600 mb-4">2</div>
+                <h4 class="font-bold text-emerald-800 mb-2">Ask: ¿QUÉ compra?</h4>
+                <p class="text-slate-600 mb-2">"Flores" (Feminine / Plural)</p>
+                <div class="mt-auto bg-white px-4 py-1 rounded border border-emerald-200 text-emerald-600 font-bold">
+                    DO = LAS
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border-t-4 border-indigo-500 flex flex-col items-center text-center shadow-sm">
+                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-xl font-bold text-indigo-600 mb-4">3</div>
+                <h4 class="font-bold text-indigo-800 mb-2">Ask: ¿PARA QUIÉN?</h4>
+                <p class="text-slate-600 mb-2">"Para Ana" (She)</p>
+                <div class="mt-auto bg-white px-4 py-1 rounded border border-indigo-200 text-indigo-600 font-bold">
+                    IO = LE
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-10 border-t-8 border-blue-600 shadow-2xl">
+        
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="bg-blue-100 text-blue-600 w-12 h-12 rounded-lg flex items-center justify-center text-2xl shadow-sm"><i class="fas fa-crown"></i></span>
+                The Golden Rule: Order Matters
+            </h2>
+            <p class="text-xl text-slate-500 mt-2 font-light">
+                Spanish has a strict hierarchy. You cannot change this sequence.
+            </p>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 mb-10 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 opacity-10 text-9xl text-blue-300 -mr-10 -mt-10"><i class="fas fa-users"></i></div>
+            
+            <h3 class="text-3xl font-playfair font-bold text-slate-700 mb-2">
+                "People First, Things Second"
+            </h3>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Always place the <strong>Indirect Object</strong> (The Person) <span class="text-blue-600 font-bold underline decoration-2 underline-offset-4">before</span> the <strong>Direct Object</strong> (The Thing).
+            </p>
+        </div>
+
+        <div class="relative">
+            <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 z-0 hidden md:block"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-indigo-500 flex flex-col items-center transform hover:-translate-y-1 transition duration-300">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3 shadow-md border-4 border-white">1</div>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">First Position</p>
+                    <h4 class="text-2xl font-bold text-indigo-700 mb-2">The Person (IO)</h4>
+                    <div class="bg-indigo-50 px-4 py-2 rounded text-indigo-600 font-mono font-bold w-full text-center">
+                        ME / TE / LE...
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-emerald-500 flex flex-col items-center transform hover:-translate-y-1 transition duration-300">
+                    <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3 shadow-md border-4 border-white">2</div>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Second Position</p>
+                    <h4 class="text-2xl font-bold text-emerald-700 mb-2">The Thing (DO)</h4>
+                    <div class="bg-emerald-50 px-4 py-2 rounded text-emerald-600 font-mono font-bold w-full text-center">
+                        LO / LA / LOS...
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-slate-500 flex flex-col items-center transform hover:-translate-y-1 transition duration-300">
+                    <div class="w-10 h-10 bg-slate-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-3 shadow-md border-4 border-white">3</div>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Final Position</p>
+                    <h4 class="text-2xl font-bold text-slate-700 mb-2">The Verb</h4>
+                    <div class="bg-slate-50 px-4 py-2 rounded text-slate-600 font-mono font-bold w-full text-center">
+                        (Conjugated)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 bg-slate-800 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between shadow-inner border border-slate-600" style="color: white !important;">
+    
+            <div class="text-left mb-4 md:mb-0">
+                <p class="text-xs font-bold uppercase mb-1 tracking-widest opacity-90" style="color: #ffffff !important;">Example Construction:</p>
+                <p class="italic text-sm" style="color: #e2e8f0 !important;">Context: "Buying flowers (las) for Ana (le)"</p>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-black/40 p-4 rounded-xl border border-slate-500 shadow-lg backdrop-blur-sm">
+                <span class="font-bold text-3xl drop-shadow-md" style="color: #a5b4fc !important;">Se</span>
+                <span class="text-xl" style="color: white !important;">+</span>
+                <span class="font-bold text-3xl drop-shadow-md" style="color: #6ee7b7 !important;">las</span>
+                <span class="text-xl" style="color: white !important;">+</span>
+                <span class="font-bold text-3xl drop-shadow-md" style="color: white !important;">compra</span>
+            </div>
+
+            <div class="text-right mt-4 md:mt-0">
+                 <div class="inline-block bg-yellow-900/60 border border-yellow-500 rounded px-4 py-2">
+                    <p class="text-xs font-bold tracking-wide" style="color: #fde047 !important;">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Remember: Le → Se
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-10 border-t-8 border-orange-500 shadow-2xl">
+        
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="bg-orange-100 text-orange-600 w-12 h-12 rounded-lg flex items-center justify-center text-2xl shadow-sm"><i class="fas fa-magic"></i></span>
+                The "L-L" Rule: The Transformation
+            </h2>
+            <p class="text-xl text-slate-500 mt-2 font-light">
+                Spanish speakers dislike the sound of two "L" pronouns together. It sounds repetitive.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-11 gap-4 items-center mb-10">
+            
+            <div class="md:col-span-3 bg-red-50 p-6 rounded-2xl border-2 border-red-100 flex flex-col items-center justify-center h-full relative overflow-hidden group hover:border-red-300 transition">
+                <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                    <i class="fas fa-times text-9xl text-red-500"></i>
+                </div>
+                <h3 class="text-red-800 font-bold uppercase tracking-widest text-xs mb-2">The Problem</h3>
+                <div class="flex items-center gap-2 text-3xl font-black text-slate-400 line-through decoration-red-500 decoration-4 mb-2">
+                    <span>LE</span> + <span>LO</span>
+                </div>
+                <p class="text-red-600 text-sm font-bold text-center">"Impossible"</p>
+                <p class="text-slate-500 text-xs text-center mt-2 italic">Pronunciation is difficult (Cacophony).</p>
+            </div>
+
+            <div class="md:col-span-1 flex justify-center text-slate-300 text-4xl">
+                <i class="fas fa-arrow-right hidden md:block"></i>
+                <i class="fas fa-arrow-down block md:hidden"></i>
+            </div>
+
+            <div class="md:col-span-3 bg-orange-50 p-6 rounded-2xl border-2 border-orange-200 flex flex-col items-center justify-center h-full shadow-sm">
+                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 text-xl mb-3 shadow-inner">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="text-orange-800 font-bold uppercase tracking-widest text-xs mb-2">The Fix</h3>
+                <p class="text-slate-700 text-center font-medium leading-relaxed">
+                    Change the first <strong>"L"</strong> (The Person) to <strong>"SE"</strong>.
+                </p>
+                <div class="mt-3 bg-white px-3 py-1 rounded border border-orange-200 text-xs font-mono text-orange-600 font-bold">
+                    LE / LES → SE
+                </div>
+            </div>
+
+            <div class="md:col-span-1 flex justify-center text-slate-300 text-4xl">
+                <i class="fas fa-arrow-right hidden md:block"></i>
+                <i class="fas fa-arrow-down block md:hidden"></i>
+            </div>
+
+            <div class="md:col-span-3 bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-200 flex flex-col items-center justify-center h-full relative shadow-md hover:scale-105 transition duration-300">
+                <div class="absolute top-2 right-2 text-emerald-400">
+                    <i class="fas fa-check-circle text-xl"></i>
+                </div>
+                <h3 class="text-emerald-800 font-bold uppercase tracking-widest text-xs mb-2">The Result</h3>
+                <div class="flex items-center gap-2 text-4xl font-black text-emerald-700 mb-2">
+                    <span>SE</span> + <span>LO</span>
+                </div>
+                <p class="text-emerald-600 text-sm font-bold text-center">"Perfect"</p>
+                <p class="text-slate-500 text-xs text-center mt-2 italic">Smooth pronunciation.</p>
+            </div>
+
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl p-8 shadow-inner border border-slate-600" style="color: white !important;">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                
+                <div class="flex flex-col gap-2 opacity-90">
+                    <p class="text-xs font-bold uppercase tracking-widest" style="color: #fca5a5 !important;">Incorrect (English Logic)</p>
+                    <p class="text-lg font-mono line-through decoration-2" style="color: #cbd5e1 !important; text-decoration-color: #ef4444 !important;">
+                        "Yo <span style="color: #fca5a5 !important;">le</span> <span style="color: #fca5a5 !important;">lo</span> dije."
+                    </p>
+                    <p class="text-xs italic" style="color: #94a3b8 !important;">I told it to him.</p>
+                </div>
+
+                <div class="flex flex-col gap-2 pl-0 md:pl-8 md:border-l border-slate-600">
+                    <p class="text-xs font-bold uppercase tracking-widest" style="color: #6ee7b7 !important;">Correct (Spanish Logic)</p>
+                    <p class="text-3xl font-playfair font-bold" style="color: white !important;">
+                        "Yo <span style="color: #fb923c !important;">se</span> <span style="color: #34d399 !important;">lo</span> dije."
+                    </p>
+                    <div class="flex gap-2 mt-1">
+                        <span class="text-xs px-2 py-1 rounded border" style="background-color: rgba(124, 45, 18, 0.5) !important; color: #fed7aa !important; border-color: rgba(249, 115, 22, 0.3) !important;">Se = To him (IO)</span>
+                        <span class="text-xs px-2 py-1 rounded border" style="background-color: rgba(6, 78, 59, 0.5) !important; color: #a7f3d0 !important; border-color: rgba(16, 185, 129, 0.3) !important;">Lo = It (DO)</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-10 border-t-8 border-purple-600 shadow-2xl">
+        
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="bg-purple-100 text-purple-600 w-12 h-12 rounded-lg flex items-center justify-center text-2xl shadow-sm"><i class="fas fa-map-signs"></i></span>
+                Where do I put them? (Placement)
+            </h2>
+            <p class="text-xl text-slate-500 mt-2 font-light">
+                The position depends on <strong>how many verbs</strong> are in the sentence.
+            </p>
+        </div>
+
+        <div class="mb-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Scenario A</div>
+                <h3 class="text-2xl font-bold text-slate-700">One Conjugated Verb</h3>
+            </div>
+            
+            <div class="bg-slate-50 rounded-2xl p-6 border-l-8 border-slate-500 flex flex-col md:flex-row items-center justify-between shadow-sm">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-lg text-slate-600">
+                        <i class="fas fa-lock text-slate-400 mr-2"></i> <strong>Strict Rule:</strong> The pronouns MUST go <span class="text-slate-800 font-bold underline decoration-purple-500 decoration-4">BEFORE</span> the conjugated verb.
+                    </p>
+                </div>
+                <div class="bg-white px-8 py-4 rounded-xl border border-slate-200 shadow-md">
+                    <p class="font-mono text-2xl text-slate-800">
+                        <span class="text-indigo-600 font-bold">Me</span> <span class="text-emerald-600 font-bold">lo</span> compró.
+                    </p>
+                    <p class="text-xs text-slate-400 text-center mt-2">NOT: "Compró me lo" (Incorrect)</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Scenario B</div>
+                <h3 class="text-2xl font-bold text-slate-700">Two Verbs (Conjugated + Infinitive/Gerund)</h3>
+            </div>
+
+            <p class="text-slate-500 mb-6 ml-2">
+                <i class="fas fa-unlock-alt text-purple-500 mr-2"></i> <strong>Flexible Rule:</strong> You have two valid options. Choose the one you prefer!
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-purple-400 hover:shadow-xl transition group">
+                    <h4 class="text-lg font-bold text-purple-700 mb-3 flex items-center justify-between">
+                        Option 1: Detached (Before)
+                        <i class="fas fa-arrow-left bg-purple-100 p-2 rounded-full text-sm"></i>
+                    </h4>
+                    <p class="text-slate-500 text-sm mb-4 min-h-[40px]">Place them separate, before the first verb.</p>
+                    
+                    <div class="bg-purple-50 p-4 rounded-xl border border-purple-100 text-center">
+                        <p class="font-mono text-xl text-slate-700">
+                            <span class="text-indigo-600 font-bold border-b-2 border-indigo-300">Te</span> <span class="text-emerald-600 font-bold border-b-2 border-emerald-300">lo</span> voy a decir.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-pink-500 hover:shadow-xl transition group">
+                    <h4 class="text-lg font-bold text-pink-600 mb-3 flex items-center justify-between">
+                        Option 2: Attached (After)
+                        <i class="fas fa-paperclip bg-pink-100 p-2 rounded-full text-sm"></i>
+                    </h4>
+                    <p class="text-slate-500 text-sm mb-4 min-h-[40px]">Attach them to the end of the infinitive. <strong>Add an accent!</strong></p>
+                    
+                    <div class="bg-pink-50 p-4 rounded-xl border border-pink-100 text-center relative">
+                        <p class="font-mono text-xl text-slate-700">
+                            Voy a decír<span class="text-indigo-600 font-bold bg-white px-1 rounded shadow-sm">te</span><span class="text-emerald-600 font-bold bg-white px-1 rounded shadow-sm">lo</span>.
+                        </p>
+                        <div class="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg shadow-lg animate-bounce" title="Don't forget the accent!">
+                            ´
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 border-t-8 border-orange-500 shadow-2xl relative min-h-[600px] flex flex-col justify-center">
+        
+        <div id="game-start" class="text-center w-full absolute inset-0 bg-white z-20 flex flex-col items-center justify-center rounded-xl p-8">
+            <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                <i class="fas fa-utensils text-6xl text-orange-500"></i>
+            </div>
+            <h2 class="text-5xl font-bold text-slate-800 mb-4 font-playfair">Chef's Challenge</h2>
+            <p class="text-xl text-slate-500 mb-8 max-w-lg">
+                Supera los 4 niveles del restaurante usando los pronombres combinados correctamente. ¿Estás listo?
+            </p>
+            <button onclick="startRestaurantGame()" class="px-10 py-4 bg-orange-500 text-white rounded-full font-bold text-xl shadow-lg hover:bg-orange-600 hover:scale-105 transition transform">
+                ¡Jugar Ahora! <i class="fas fa-play ml-2"></i>
+            </button>
+        </div>
+
+        <div id="game-interface" class="hidden w-full h-full flex flex-col">
+            
+            <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+                <div>
+                    <span id="level-indicator" class="bg-orange-100 text-orange-700 px-3 py-1 rounded-lg font-bold text-sm uppercase tracking-widest">Nivel 1</span>
+                    <h3 id="level-title" class="text-3xl font-bold text-slate-800 mt-1">Ordering Water</h3>
+                </div>
+                <div class="w-1/3 text-right">
+                    <div class="text-xs font-bold text-slate-400 mb-1">PROGRESO</div>
+                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                        <div id="game-progress" class="bg-orange-500 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 flex-1 items-center">
+                
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 h-full flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 text-9xl text-orange-50 opacity-20 transform rotate-12"><i class="fas fa-utensils"></i></div>
+                    
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Tu Misión:</p>
+                    <p id="game-instruction" class="text-lg text-slate-500 italic mb-6">Transforma esta frase:</p>
+                    
+                    <div class="bg-slate-50 p-6 rounded-xl border-l-4 border-orange-400 mb-4">
+                        <p id="game-question" class="text-2xl text-slate-800 font-serif leading-relaxed font-bold">
+                            "Trae <span class='text-emerald-600'>el menú</span> a <span class='text-indigo-600'>mí</span>."
+                        </p>
+                    </div>
+
+                    <div id="game-hint" class="flex gap-2 text-sm">
+                        </div>
+                </div>
+
+                <div id="game-options-container" class="flex flex-col gap-4">
+                    </div>
+            </div>
+
+            <div id="game-feedback-area" class="hidden mt-6 text-center animate-fade-in-up">
+                <p id="feedback-message" class="text-xl font-bold mb-2"></p>
+                <button id="next-level-btn" onclick="nextRestaurantLevel()" class="px-8 py-2 bg-slate-800 text-white rounded-full font-bold hover:bg-slate-900 transition">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-end-screen" class="hidden absolute inset-0 bg-white z-20 flex flex-col items-center justify-center rounded-xl p-8 text-center">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 text-5xl animate-pulse">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="text-4xl font-bold text-slate-800 mb-2">¡Completado!</h2>
+            <p class="text-lg text-slate-600 mb-6">Has dominado el arte de los pronombres en el restaurante.</p>
+            <p id="final-score-display" class="text-3xl font-bold text-orange-500 mb-8"></p>
+            <button onclick="startRestaurantGame()" class="px-8 py-3 bg-slate-200 text-slate-700 rounded-full font-bold hover:bg-slate-300 transition">
+                Jugar otra vez
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // DATOS DE LOS NIVELES
+        const restaurantLevels = [
+            {
+                level: 1,
+                title: "Nivel 1: El Cliente Sediento",
+                instruction: "Pide el agua (Water). Usa la forma más corta.",
+                question: "¿Puedes traer <span class='text-emerald-600'>el agua</span> a <span class='text-indigo-600'>mí</span>?",
+                hint: "<span class='bg-indigo-100 text-indigo-700 px-2 rounded font-bold text-xs'>Me</span> + <span class='bg-emerald-100 text-emerald-700 px-2 rounded font-bold text-xs'>La</span>",
+                options: [
+                    { text: "¿Me la puedes traer?", correct: true },
+                    { text: "¿Te la puedes traer?", correct: false },
+                    { text: "¿Puedes traerla me?", correct: false }
+                ],
+                explanation: "¡Correcto! 'Me' (Persona) va antes de 'La' (Cosa)."
+            },
+            {
+                level: 2,
+                title: "Nivel 2: El Camarero Responde",
+                instruction: "El camarero te confirma la orden (The Soup).",
+                question: "Sí, traigo <span class='text-emerald-600'>la sopa</span> a <span class='text-indigo-600'>ti</span> enseguida.",
+                hint: "Cambia 'a ti' por 'Te'.",
+                options: [
+                    { text: "Sí, se la traigo.", correct: false },
+                    { text: "Sí, me la traigo.", correct: false },
+                    { text: "Sí, te la traigo.", correct: true }
+                ],
+                explanation: "¡Bien! 'Te' es para 'a ti'. Te la traigo."
+            },
+            {
+                level: 3,
+                title: "Nivel 3: La Trampa 'Le'",
+                instruction: "Sirve el vino al jefe. ¡Cuidado con la regla L-L!",
+                question: "Yo sirvo <span class='text-emerald-600'>el vino</span> a <span class='text-indigo-600'>el jefe (Le)</span>.",
+                hint: "Le + Lo = ¡Imposible!",
+                options: [
+                    { text: "Le lo sirvo.", correct: false },
+                    { text: "Se lo sirvo.", correct: true },
+                    { text: "Lo le sirvo.", correct: false }
+                ],
+                explanation: "¡Excelente! 'Le lo' es imposible, cambiamos a 'Se lo'."
+            },
+            {
+                level: 4,
+                title: "Nivel 4: Master Chef",
+                instruction: "Recomienda el postre. Pon los pronombres al final.",
+                question: "Voy a recomendar <span class='text-emerald-600'>el postre</span> a <span class='text-indigo-600'>ustedes (Les)</span>.",
+                hint: "Attach to end + Accent mark!",
+                options: [
+                    { text: "Voy a recomendarleslo.", correct: false },
+                    { text: "Voy a se lo recomendar.", correct: false },
+                    { text: "Voy a recomendárselo.", correct: true }
+                ],
+                explanation: "¡Perfecto! Al final, 'Les lo' se convierte en 'selo' y lleva tilde."
+            }
+        ];
+
+        let currentRestLevel = 0;
+        let restScore = 0;
+
+        function startRestaurantGame() {
+            currentRestLevel = 0;
+            restScore = 0;
+            document.getElementById('game-start').classList.add('hidden');
+            document.getElementById('game-end-screen').classList.add('hidden');
+            document.getElementById('game-interface').classList.remove('hidden');
+            loadRestaurantLevel(0);
+        }
+
+        function loadRestaurantLevel(index) {
+            const data = restaurantLevels[index];
+            
+            // Actualizar UI
+            document.getElementById('level-indicator').innerText = `NIVEL ${data.level}`;
+            document.getElementById('level-title').innerText = data.title;
+            document.getElementById('game-instruction').innerText = data.instruction;
+            document.getElementById('game-question').innerHTML = data.question;
+            document.getElementById('game-hint').innerHTML = data.hint;
+            
+            // Barra de progreso
+            const progress = ((index) / restaurantLevels.length) * 100;
+            document.getElementById('game-progress').style.width = `${progress}%`;
+
+            // Resetear Feedback
+            document.getElementById('game-feedback-area').classList.add('hidden');
+
+            // Generar Botones
+            const container = document.getElementById('game-options-container');
+            container.innerHTML = '';
+            
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-white hover:border-orange-400 hover:bg-orange-50 transition shadow-sm group relative overflow-hidden";
+                btn.onclick = () => checkRestaurantAnswer(btn, opt.correct, data.explanation);
+                
+                const letter = String.fromCharCode(65 + i); // A, B, C
+                
+                btn.innerHTML = `
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-500 group-hover:bg-orange-500 group-hover:text-white transition">${letter}</div>
+                        <span class="text-xl text-slate-700 font-medium">${opt.text}</span>
+                    </div>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function checkRestaurantAnswer(btn, isCorrect, explanation) {
+            // Deshabilitar todos
+            const allBtns = document.getElementById('game-options-container').querySelectorAll('button');
+            allBtns.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-60', 'cursor-not-allowed');
+            });
+            btn.classList.remove('opacity-60', 'cursor-not-allowed');
+
+            const feedbackArea = document.getElementById('game-feedback-area');
+            const feedbackMsg = document.getElementById('feedback-message');
+            
+            feedbackArea.classList.remove('hidden');
+
+            if(isCorrect) {
+                // Correcto
+                btn.classList.remove('border-slate-200', 'bg-white');
+                btn.classList.add('border-green-500', 'bg-green-100');
+                btn.querySelector('.w-10').classList.add('bg-green-500', 'text-white', 'border-transparent');
+                
+                feedbackMsg.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> ${explanation}</span>`;
+                restScore++;
+                
+                if(typeof react === 'function') react('applause');
+            } else {
+                // Incorrecto
+                btn.classList.remove('border-slate-200', 'bg-white');
+                btn.classList.add('border-red-500', 'bg-red-100');
+                btn.querySelector('.w-10').classList.add('bg-red-500', 'text-white', 'border-transparent');
+                
+                feedbackMsg.innerHTML = `<span class="text-red-500"><i class="fas fa-times-circle"></i> Incorrecto. Intenta recordar la regla.</span>`;
+                
+                if(typeof react === 'function') react('error');
+            }
+
+            // Actualizar barra al terminar el intento
+            const progress = ((currentRestLevel + 1) / restaurantLevels.length) * 100;
+            document.getElementById('game-progress').style.width = `${progress}%`;
+        }
+
+        function nextRestaurantLevel() {
+            currentRestLevel++;
+            if (currentRestLevel < restaurantLevels.length) {
+                loadRestaurantLevel(currentRestLevel);
+            } else {
+                showRestaurantEndScreen();
+            }
+        }
+
+        function showRestaurantEndScreen() {
+            document.getElementById('game-interface').classList.add('hidden');
+            document.getElementById('game-end-screen').classList.remove('hidden');
+            
+            const scoreDisplay = document.getElementById('final-score-display');
+            scoreDisplay.innerText = `${restScore} / ${restaurantLevels.length} Aciertos`;
+            
+            if(restScore === restaurantLevels.length) {
+                scoreDisplay.innerHTML += " <br><span class='text-sm text-green-600'>¡PERFECTO! 🌟</span>";
+                if(typeof react === 'function') react('confetti');
+            }
+        }
+    </script>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 border-t-8 border-indigo-600 shadow-2xl relative min-h-[600px] flex flex-col justify-center">
+        
+        <div id="builder-start" class="text-center w-full absolute inset-0 bg-white z-20 flex flex-col items-center justify-center rounded-xl p-8">
+            <div class="w-32 h-32 bg-indigo-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                <i class="fas fa-boxes text-6xl text-indigo-600"></i>
+            </div>
+            <h2 class="text-5xl font-bold text-slate-800 mb-4 font-playfair">Logistics Manager</h2>
+            <p class="text-xl text-slate-500 mb-8 max-w-lg">
+                Los paquetes están etiquetados, pero las instrucciones están desordenadas. <br><strong>Ordena las palabras</strong> para enviar los paquetes correctamente.
+            </p>
+            <button onclick="startBuilderGame()" class="px-10 py-4 bg-indigo-600 text-white rounded-full font-bold text-xl shadow-lg hover:bg-indigo-700 hover:scale-105 transition transform">
+                ¡Empezar Turno! <i class="fas fa-dolly ml-2"></i>
+            </button>
+        </div>
+
+        <div id="builder-interface" class="hidden w-full h-full flex flex-col">
+            
+            <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
+                <div>
+                    <span id="builder-level" class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg font-bold text-sm uppercase tracking-widest">Paquete 1/4</span>
+                </div>
+                <div class="flex gap-1 text-yellow-400 text-xl" id="builder-stars">
+                    <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <p class="text-slate-400 font-bold uppercase text-xs tracking-widest mb-2">Instrucción del Jefe:</p>
+                <div class="bg-indigo-50 inline-block px-8 py-4 rounded-xl border border-indigo-100 shadow-sm">
+                    <p id="builder-context" class="text-2xl text-slate-800 font-serif italic">
+                        "Envía <span class='text-emerald-600 font-bold'>la carta</span> a <span class='text-purple-600 font-bold'>mí</span>."
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 min-h-[80px] rounded-xl border-2 border-dashed border-slate-300 flex flex-wrap items-center justify-center gap-3 p-4 mb-6 transition-colors" id="answer-zone">
+                <p class="text-slate-400 text-sm italic pointer-events-none select-none" id="placeholder-text">Haz clic en las palabras abajo para construir la frase...</p>
+                </div>
+
+            <div class="flex flex-wrap justify-center gap-3 mb-8" id="word-bank">
+                </div>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="resetBuilderLevel()" class="w-12 h-12 rounded-full bg-slate-200 text-slate-500 hover:bg-slate-300 transition flex items-center justify-center" title="Borrar todo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button onclick="checkBuilderAnswer()" class="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg hover:bg-indigo-700 transition flex items-center gap-2">
+                    Verificar Envío <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <div id="builder-feedback" class="hidden mt-4 text-center">
+                <p id="builder-msg" class="text-xl font-bold"></p>
+                <button onclick="nextBuilderLevel()" class="mt-2 text-indigo-600 underline font-bold hover:text-indigo-800">Siguiente Paquete &rarr;</button>
+            </div>
+
+        </div>
+
+        <div id="builder-end" class="hidden absolute inset-0 bg-white z-20 flex flex-col items-center justify-center rounded-xl p-8 text-center">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 text-5xl animate-bounce">
+                <i class="fas fa-check-double"></i>
+            </div>
+            <h2 class="text-4xl font-bold text-slate-800 mb-2">¡Trabajo Terminado!</h2>
+            <p class="text-lg text-slate-600 mb-6">Todos los paquetes han sido entregados con gramática perfecta.</p>
+            <button onclick="startBuilderGame()" class="px-8 py-3 bg-slate-200 text-slate-700 rounded-full font-bold hover:bg-slate-300 transition">
+                Reiniciar Turno
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const builderLevels = [
+            {
+                id: 1,
+                context: "Envía <span class='text-emerald-600 font-bold'>la carta (DO)</span> a <span class='text-purple-600 font-bold'>mí (IO)</span>.",
+                words: ["envía", "la", "me", "tú", "nos"], // Palabras disponibles (incluye distractores)
+                correctOrder: ["me", "la", "envía"], // Orden exacto
+                hint: "Persona (Me) + Cosa (La) + Verbo"
+            },
+            {
+                id: 2,
+                context: "No des <span class='text-emerald-600 font-bold'>el dinero</span> a <span class='text-purple-600 font-bold'>él</span>.",
+                words: ["dinero", "se", "no", "lo", "des", "le"],
+                correctOrder: ["no", "se", "lo", "des"],
+                hint: "Negativo + Se (Persona) + Lo (Cosa) + Verbo"
+            },
+            {
+                id: 3,
+                context: "¿Vas a comprar <span class='text-emerald-600 font-bold'>los libros</span> para <span class='text-purple-600 font-bold'>nosotros</span>?",
+                words: ["nos", "vas", "a", "los", "comprar", "se"],
+                correctOrder: ["nos", "los", "vas", "a", "comprar"], // Opción A (Separado)
+                altOrder: ["vas", "a", "comprárnoslos"], // Opción B (Junto - difícil de hacer con tiles separados, nos quedamos con la A para simplificar o añadimos tiles complejos)
+                // Para simplificar la UX de tiles, usaremos la estructura separada o tiles combinados si es necesario.
+                // Ajuste: Vamos a permitir la opción separada que es más clara con tiles.
+                hint: "Persona (Nos) + Cosa (Los) + Verbo compuesto"
+            },
+            {
+                id: 4,
+                context: "Tienes que explicar <span class='text-emerald-600 font-bold'>la lección</span> a <span class='text-purple-600 font-bold'>ellos</span>.",
+                words: ["explicar", "tienes", "que", "se", "la", "les"],
+                correctOrder: ["se", "la", "tienes", "que", "explicar"],
+                hint: "Recuerda: 'Les' se convierte en 'Se' antes de 'la'."
+            }
+        ];
+
+        let currentBuilderLevel = 0;
+        let currentSelection = [];
+
+        function startBuilderGame() {
+            currentBuilderLevel = 0;
+            document.getElementById('builder-start').classList.add('hidden');
+            document.getElementById('builder-end').classList.add('hidden');
+            document.getElementById('builder-interface').classList.remove('hidden');
+            loadBuilderLevel(0);
+        }
+
+        function loadBuilderLevel(index) {
+            const data = builderLevels[index];
+            currentSelection = [];
+            
+            // UI Updates
+            document.getElementById('builder-level').innerText = `Paquete ${index + 1}/${builderLevels.length}`;
+            document.getElementById('builder-context').innerHTML = `"${data.context}"`;
+            document.getElementById('answer-zone').innerHTML = '<p class="text-slate-400 text-sm italic pointer-events-none select-none" id="placeholder-text">Haz clic en las palabras abajo...</p>';
+            document.getElementById('answer-zone').classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50');
+            document.getElementById('answer-zone').classList.add('border-slate-300', 'bg-slate-100');
+            document.getElementById('builder-feedback').classList.add('hidden');
+
+            // Render Word Bank (Shuffle)
+            const bank = document.getElementById('word-bank');
+            bank.innerHTML = '';
+            
+            // Simple shuffle
+            const shuffled = [...data.words].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = "word-tile px-6 py-3 bg-white border-2 border-indigo-200 rounded-lg shadow-sm text-indigo-800 font-bold text-xl hover:-translate-y-1 hover:shadow-md transition active:scale-95 capitalize";
+                btn.innerText = word;
+                btn.onclick = () => selectWord(btn, word);
+                bank.appendChild(btn);
+            });
+            
+            updateStars();
+        }
+
+        function selectWord(btn, word) {
+            // Remove placeholder
+            const placeholder = document.getElementById('placeholder-text');
+            if(placeholder) placeholder.remove();
+
+            // Visual move logic (simple append for now)
+            const zone = document.getElementById('answer-zone');
+            
+            // Move button visually
+            btn.classList.remove('bg-white', 'border-indigo-200', 'text-indigo-800');
+            btn.classList.add('bg-indigo-600', 'border-indigo-600', 'text-white', 'scale-100');
+            btn.onclick = () => returnWord(btn, word); // Change click action to return
+            
+            zone.appendChild(btn);
+            currentSelection.push(word.toLowerCase());
+        }
+
+        function returnWord(btn, word) {
+            const bank = document.getElementById('word-bank');
+            
+            // Reset styles
+            btn.classList.add('bg-white', 'border-indigo-200', 'text-indigo-800');
+            btn.classList.remove('bg-indigo-600', 'border-indigo-600', 'text-white');
+            btn.onclick = () => selectWord(btn, word);
+            
+            bank.appendChild(btn);
+            
+            // Remove from logic array
+            const index = currentSelection.indexOf(word.toLowerCase());
+            if (index > -1) {
+                currentSelection.splice(index, 1);
+            }
+
+            // Restore placeholder if empty
+            if(currentSelection.length === 0) {
+                document.getElementById('answer-zone').innerHTML = '<p class="text-slate-400 text-sm italic pointer-events-none select-none" id="placeholder-text">Haz clic en las palabras abajo...</p>';
+            }
+        }
+
+        function resetBuilderLevel() {
+            loadBuilderLevel(currentBuilderLevel);
+        }
+
+        function checkBuilderAnswer() {
+            const data = builderLevels[currentBuilderLevel];
+            const zone = document.getElementById('answer-zone');
+            const feedback = document.getElementById('builder-feedback');
+            const msg = document.getElementById('builder-msg');
+
+            // Convert arrays to strings for easy comparison
+            const userStr = currentSelection.join(' ');
+            const correctStr = data.correctOrder.join(' ');
+
+            feedback.classList.remove('hidden');
+
+            if (userStr === correctStr) {
+                // Correct
+                zone.classList.remove('border-slate-300', 'bg-slate-100');
+                zone.classList.add('border-green-500', 'bg-green-50');
+                msg.innerHTML = "<span class='text-green-600'><i class='fas fa-check-circle'></i> ¡Paquete enviado!</span>";
+                if(typeof react === 'function') react('applause');
+            } else {
+                // Incorrect
+                zone.classList.remove('border-slate-300', 'bg-slate-100');
+                zone.classList.add('border-red-500', 'bg-red-50');
+                msg.innerHTML = `<span class='text-red-500'><i class='fas fa-times-circle'></i> Error en la etiqueta. <br><span class='text-sm font-normal text-slate-600'>Pista: ${data.hint}</span></span>`;
+                if(typeof react === 'function') react('error');
+            }
+        }
+
+        function nextBuilderLevel() {
+            currentBuilderLevel++;
+            if(currentBuilderLevel < builderLevels.length) {
+                loadBuilderLevel(currentBuilderLevel);
+            } else {
+                showBuilderEnd();
+            }
+        }
+
+        function showBuilderEnd() {
+            document.getElementById('builder-interface').classList.add('hidden');
+            document.getElementById('builder-end').classList.remove('hidden');
+            if(typeof react === 'function') react('confetti');
+        }
+        
+        function updateStars() {
+            const container = document.getElementById('builder-stars');
+            let html = '';
+            for(let i=0; i<4; i++) {
+                if(i < currentBuilderLevel) html += '<i class="fas fa-star text-yellow-400"></i>';
+                else html += '<i class="far fa-star text-slate-300"></i>';
+            }
+            container.innerHTML = html;
+        }
+    </script>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-6 border-t-8 border-indigo-600 shadow-2xl relative min-h-[700px] flex flex-col">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-bold text-slate-800 flex items-center justify-center gap-3">
+                <i class="fas fa-edit text-indigo-600"></i> The Magic Editor: Trip Planner
+            </h2>
+            <p class="text-lg text-slate-500 mt-1">
+                This email is too repetitive. <strong>Click the bracketed phrases</strong> to fix the grammar!
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-xl border-2 border-slate-300 overflow-hidden flex-1 flex flex-col w-full max-w-6xl mx-auto">
+            
+            <div class="bg-slate-100 border-b border-slate-200 p-3 flex items-center gap-4 sticky top-0 z-10">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div class="font-mono text-slate-500 text-xs flex-1 text-center font-bold tracking-wider">plan_vacaciones_verano.doc</div>
+                <div class="text-xs text-slate-400">120 words</div>
+            </div>
+
+            <div class="p-8 overflow-y-auto custom-scrollbar flex-1 bg-white">
+                <div class="text-2xl leading-loose text-slate-700 font-serif text-justify" id="story-content">
+                    
+                    <p class="mb-6">
+                        ¡Hola familia! Hoy <strong>estoy</strong> muy emocionado porque el viaje de este año va a <strong>ser</strong> más divertido que el anterior. <strong>Tengo muchas ganas de</strong> organizar todo perfectamente.
+                    </p>
+
+                    <p class="mb-6">
+                        Primero, los boletos de avión son caros, pero el hotel es más barato que el hostal. Ya tengo las reservas listas. 
+                        <strong>Tengo que</strong> 
+                        <span onclick="fixPhrase(this, 'enviárselas')" class="magic-phrase cursor-pointer bg-red-50 text-red-600 border-b-2 border-red-300 font-bold px-2 mx-1 hover:bg-red-100 transition-all">
+                            [enviar] [las reservas] [a ustedes]
+                        </span> 
+                        por correo electrónico esta noche.
+                    </p>
+
+                    <p class="mb-6">
+                        También, el itinerario es complejo. El guía turístico va a <strong>estar</strong> en el aeropuerto y él 
+                        <strong>va a</strong> 
+                        <span onclick="fixPhrase(this, 'explicárnoslo')" class="magic-phrase cursor-pointer bg-red-50 text-red-600 border-b-2 border-red-300 font-bold px-2 mx-1 hover:bg-red-100 transition-all">
+                            [explicar] [el itinerario] [a nosotros]
+                        </span> 
+                        antes de salir.
+                    </p>
+
+                    <p class="mb-6">
+                        Por cierto, compré una cámara nueva para mi hermana. <strong>Tengo ganas de</strong> 
+                        <span onclick="fixPhrase(this, 'dársela')" class="magic-phrase cursor-pointer bg-red-50 text-red-600 border-b-2 border-red-300 font-bold px-2 mx-1 hover:bg-red-100 transition-all">
+                            [dar] [la cámara] [a ella]
+                        </span> 
+                        durante la cena de bienvenida.
+                    </p>
+
+                    <p>
+                        Finalmente, si tienen dudas sobre el equipaje, por favor díganme. Yo puedo 
+                        <span onclick="fixPhrase(this, 'aclarárselas')" class="magic-phrase cursor-pointer bg-red-50 text-red-600 border-b-2 border-red-300 font-bold px-2 mx-1 hover:bg-red-100 transition-all">
+                            [aclarar] [las dudas] [a ustedes]
+                        </span> 
+                        rápidamente. ¡Va a ser genial!
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-4 border-t border-indigo-100 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check-circle text-indigo-400"></i>
+                    <span class="text-indigo-800 font-bold text-lg" id="progress-text">0/4 Correcciones</span>
+                </div>
+                <div class="w-1/3 bg-white h-4 rounded-full overflow-hidden border border-indigo-100">
+                    <div id="progress-bar" class="bg-indigo-500 h-full w-0 transition-all duration-700"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let fixesCount = 0;
+        const totalFixes = 4;
+
+        function fixPhrase(el, correctText) {
+            // Evitar doble click
+            if(el.classList.contains('fixed')) return;
+
+            // 1. Animación de salida
+            el.style.transform = "scale(0.9)";
+            el.style.opacity = "0.5";
+
+            setTimeout(() => {
+                // 2. Cambio de texto y estilo
+                el.innerHTML = correctText;
+                el.className = "fixed inline-block bg-indigo-600 text-white px-3 py-1 rounded-lg shadow-md font-bold text-2xl mx-1 transform scale-110 transition-all duration-300 cursor-default border-none";
+                el.style.opacity = "1";
+                
+                // 3. Lógica de progreso
+                updateProgress();
+                
+                // 4. Sonido (si existe)
+                if(typeof react === 'function') react('applause');
+            }, 200);
+        }
+
+        function updateProgress() {
+            fixesCount++;
+            const percent = (fixesCount / totalFixes) * 100;
+            
+            document.getElementById('progress-bar').style.width = percent + "%";
+            
+            const textEl = document.getElementById('progress-text');
+            if (fixesCount === totalFixes) {
+                textEl.innerHTML = "¡TEXTO PERFECTO! 🎉";
+                textEl.classList.add('text-green-600');
+                document.getElementById('progress-bar').classList.remove('bg-indigo-500');
+                document.getElementById('progress-bar').classList.add('bg-green-500');
+                
+                if(typeof react === 'function') react('confetti');
+            } else {
+                textEl.innerHTML = `${fixesCount}/${totalFixes} Correcciones`;
+            }
+        }
+    </script>
+
+    <style>
+        /* Scrollbar personalizado para que se vea elegante */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</section>
+
+<section>
+    <div class="glass-card max-w-4xl mx-auto p-4 border-t-8 border-green-500 shadow-2xl relative h-[750px] flex flex-col">
+        
+        <div class="bg-emerald-600 p-4 rounded-t-xl flex items-center justify-between text-white shadow-md z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white border-2 border-emerald-200 overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos&backgroundColor=c0aede" alt="Carlos" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg leading-none">Carlos 🇨🇴</h3>
+                    <p class="text-xs text-emerald-100 opacity-80" id="status-text">En línea</p>
+                </div>
+            </div>
+            <div class="flex gap-4 text-xl">
+                <i class="fas fa-video"></i>
+                <i class="fas fa-phone"></i>
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+
+        <div id="chat-window" class="flex-1 bg-[#e5ddd5] p-6 overflow-y-auto relative custom-scrollbar flex flex-col gap-4">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');"></div>
+
+            <div class="self-start bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[80%] relative z-10 animate-fade-in-up">
+                <p class="text-slate-800 text-lg">¡Parce! 🇨🇴 ¿Listo para el viaje? ¿Ya compraste los pasajes?</p>
+                <span class="text-[10px] text-slate-400 block text-right mt-1">10:00 AM</span>
+            </div>
+
+            </div>
+
+        <div class="bg-slate-100 p-4 border-t border-slate-300 rounded-b-xl relative z-20">
+            <div class="absolute -top-12 left-0 w-full flex justify-center gap-2 p-2 pointer-events-none">
+                <div id="heart-1" class="text-red-500 text-2xl drop-shadow-md transition-transform"><i class="fas fa-heart"></i></div>
+                <div id="heart-2" class="text-red-500 text-2xl drop-shadow-md transition-transform"><i class="fas fa-heart"></i></div>
+                <div id="heart-3" class="text-red-500 text-2xl drop-shadow-md transition-transform"><i class="fas fa-heart"></i></div>
+            </div>
+
+            <p class="text-xs text-slate-500 mb-2 font-bold uppercase ml-1">Elige tu respuesta:</p>
+            <div id="options-container" class="grid grid-cols-1 gap-2">
+                </div>
+            
+            <button id="restart-btn" onclick="startChatGame()" class="hidden w-full py-3 bg-emerald-600 text-white font-bold rounded-lg shadow hover:bg-emerald-700 transition">
+                Intentar de nuevo 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Datos del Chat
+        const chatFlow = [
+            {
+                step: 0,
+                carlosMsg: "¡Parce! 🇨🇴 ¿Listo para el viaje? ¿Ya compraste los pasajes?",
+                options: [
+                    { text: "Sí, ya te los compré.", correct: true, logic: "Te (a ti) + Los (pasajes)" },
+                    { text: "Sí, ya te los compró.", correct: false }, // Conjugación errónea
+                    { text: "Sí, ya compréte los.", correct: false }  // Posición errónea
+                ]
+            },
+            {
+                step: 1,
+                carlosMsg: "¡Uff qué bien! Oye, ¿tienes el itinerario que te mandé?",
+                options: [
+                    { text: "No, no le lo tengo.", correct: false }, // Le Lo error
+                    { text: "Sí, Juan va a enviármelo.", correct: true, logic: "Infinitivo + Me + Lo" },
+                    { text: "Sí, Juan va a me lo enviar.", correct: false } // Separación errónea
+                ]
+            },
+            {
+                step: 2,
+                carlosMsg: "Listo. Recuerda que en el Eje Cafetero mi tía nos va a hacer sancocho. 🍲",
+                options: [
+                    { text: "¡Qué rico! Ella va a preparárnoslo.", correct: true, logic: "Preparar + Nos + Lo" },
+                    { text: "¡Qué rico! Ella nos va a lo preparar.", correct: false }, 
+                    { text: "¡Qué rico! Ella va a prepararnoslo.", correct: false } // Falta tilde
+                ]
+            },
+            {
+                step: 3,
+                carlosMsg: "¿Y qué pasó con los regalos para tus papás?",
+                options: [
+                    { text: "Voy a comprárlelos allá.", correct: false }, // Le los error
+                    { text: "Voy a comprárselos en Bogotá.", correct: true, logic: "Comprar + Se (les) + Los" },
+                    { text: "Se los voy a comprar allá.", correct: true, logic: "Se + Los + Voy a..." } // Ambas válidas, pero dejaremos solo una correcta en el juego para simplificar, o ambas.
+                ]
+                // Ajuste para el código: dejaremos solo una correcta clara para evitar confusión en la UI simple.
+            }
+        ];
+        
+        // Ajuste manual de la última opción para el código real
+        chatFlow[3].options = [
+             { text: "Voy a comprárlelos allá.", correct: false },
+             { text: "Voy a comprárselos en Bogotá.", correct: true, logic: "Comprar + Se (Les) + Los" },
+             { text: "Voy a comprar se los.", correct: false }
+        ];
+
+        // Frases graciosas de error
+        const funnyErrors = [
+            "¿Ah? ¿Me estás hablando en chino? 🤨",
+            "Bro, revisa tu autocorrector, no entendí nada. 😂",
+            "¿Ese español es de Marte? 👽 Intenta otra vez.",
+            "Jajaja, ¿qué dijiste? Concentrado pues.",
+            "No te entiendo... ¿estás borracho? 🍺"
+        ];
+
+        let currentStep = 0;
+        let lives = 3;
+
+        function startChatGame() {
+            currentStep = 0;
+            lives = 3;
+            document.getElementById('chat-window').innerHTML = `
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');"></div>
+                <div class="self-start bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[80%] relative z-10 animate-fade-in-up">
+                    <p class="text-slate-800 text-lg">${chatFlow[0].carlosMsg}</p>
+                    <span class="text-[10px] text-slate-400 block text-right mt-1">10:00 AM</span>
+                </div>
+            `;
+            updateLivesUI();
+            showOptions(0);
+            document.getElementById('options-container').classList.remove('hidden');
+            document.getElementById('restart-btn').classList.add('hidden');
+            document.getElementById('status-text').innerText = "En línea";
+        }
+
+        function showOptions(stepIndex) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            const stepData = chatFlow[stepIndex];
+            // Mezclar opciones
+            const shuffled = [...stepData.options].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-emerald-50 hover:border-emerald-500 transition shadow-sm text-lg";
+                btn.innerText = opt.text;
+                btn.onclick = () => handleResponse(opt.correct, opt.text);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleResponse(isCorrect, text) {
+            // 1. Mostrar mensaje del usuario
+            addMessage(text, 'user');
+
+            if (isCorrect) {
+                // Correcto
+                if(typeof react === 'function') react('applause');
+                currentStep++;
+                
+                setTimeout(() => {
+                    if (currentStep < chatFlow.length) {
+                        // Siguiente pregunta de Carlos
+                        addMessage(chatFlow[currentStep].carlosMsg, 'carlos');
+                        showOptions(currentStep);
+                    } else {
+                        // GANASTE
+                        endGame(true);
+                    }
+                }, 1000);
+            } else {
+                // Incorrecto
+                lives--;
+                updateLivesUI();
+                if(typeof react === 'function') react('error');
+
+                setTimeout(() => {
+                    if (lives > 0) {
+                        // Respuesta graciosa
+                        const randomFunny = funnyErrors[Math.floor(Math.random() * funnyErrors.length)];
+                        addMessage(randomFunny, 'carlos');
+                    } else {
+                        // PERDISTE
+                        endGame(false);
+                    }
+                }, 800);
+            }
+        }
+
+        function addMessage(text, sender) {
+            const chat = document.getElementById('chat-window');
+            const div = document.createElement('div');
+            
+            if (sender === 'user') {
+                div.className = "self-end bg-[#d9fdd3] p-3 rounded-lg rounded-tr-none shadow-sm max-w-[80%] relative z-10 animate-fade-in-up";
+                div.innerHTML = `<p class="text-slate-800 text-lg">${text}</p><span class="text-[10px] text-slate-500 block text-right mt-1 flex justify-end gap-1">10:${String(currentStep).padStart(2, '0')} <i class="fas fa-check-double text-blue-500"></i></span>`;
+            } else {
+                div.className = "self-start bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[80%] relative z-10 animate-fade-in-up";
+                div.innerHTML = `<p class="text-slate-800 text-lg">${text}</p><span class="text-[10px] text-slate-400 block text-right mt-1">10:${String(currentStep).padStart(2, '0')}</span>`;
+            }
+            
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight; // Auto scroll
+        }
+
+        function updateLivesUI() {
+            for (let i = 1; i <= 3; i++) {
+                const heart = document.getElementById(`heart-${i}`);
+                if (i > lives) {
+                    heart.className = "text-slate-300 text-2xl transition-transform scale-90"; // Corazón roto/gris
+                } else {
+                    heart.className = "text-red-500 text-2xl drop-shadow-md transition-transform animate-pulse";
+                }
+            }
+        }
+
+        function endGame(victory) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = ''; // Limpiar opciones
+            container.classList.add('hidden');
+            document.getElementById('restart-btn').classList.remove('hidden');
+
+            if (victory) {
+                addMessage("¡Eso es! ✈️🇨🇴 ¡Nos vemos en el aeropuerto! Trae las arepas.", 'carlos');
+                if(typeof react === 'function') react('confetti');
+            } else {
+                addMessage("¿Sabes qué? Mejor viajo solo. No te entiendo nada. 🚫 Bloqueado.", 'carlos');
+                document.getElementById('status-text').innerText = "Últ. vez hoy a las 10:05";
+            }
+        }
+
+        // Iniciar al cargar (opcional, o esperar click)
+        setTimeout(startChatGame, 500);
+    </script>
+    
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+    </style>
+</section>
+
+
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 border-t-8 border-emerald-500 shadow-2xl relative">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-slate-800 flex items-center justify-center gap-3">
+                <i class="fas fa-sync-alt text-emerald-600"></i> Practice: Replace & Rewrite
+            </h2>
+            <p class="text-lg text-slate-500 mt-1 font-light">
+                Identify the objects and rewrite the sentence using the correct pronouns.
+                <br><span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-400">Hint: IO (Person) + DO (Thing)</span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="exercise-grid">
+            
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition exercise-card">
+                <p class="text-slate-700 font-medium mb-3 text-lg">
+                    1. Yo compro <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">las flores</span> para <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">ti</span>.
+                </p>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Yo</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="te las">
+                    <span class="text-slate-400 font-bold">compro.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition exercise-card">
+                <p class="text-slate-700 font-medium mb-3 text-lg">
+                    2. Ella prepara <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">el café</span> para <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">nosotros</span>.
+                </p>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Ella</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="nos lo">
+                    <span class="text-slate-400 font-bold">prepara.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition exercise-card">
+                <p class="text-slate-700 font-medium mb-3 text-lg">
+                    3. Tú envías <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">la carta</span> a <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">mí</span>.
+                </p>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Tú</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="me la">
+                    <span class="text-slate-400 font-bold">envías.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-orange-400 hover:shadow-md transition exercise-card">
+                <div class="flex justify-between">
+                    <p class="text-slate-700 font-medium mb-3 text-lg">
+                        4. Él dice <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">la verdad</span> a <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">su jefe</span>.
+                    </p>
+                    <span class="text-[10px] bg-orange-100 text-orange-600 px-2 py-1 rounded h-fit font-bold">Alert: Le+La</span>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Él</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="se la">
+                    <span class="text-slate-400 font-bold">dice.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition exercise-card">
+                <p class="text-slate-700 font-medium mb-3 text-lg">
+                    5. Nosotros escribimos <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">los correos</span> a <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">ti</span>.
+                </p>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Nosotros</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="te los">
+                    <span class="text-slate-400 font-bold">escribimos.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-orange-400 hover:shadow-md transition exercise-card">
+                <div class="flex justify-between">
+                    <p class="text-slate-700 font-medium mb-3 text-lg">
+                        6. Ellos venden <span class="text-emerald-600 font-bold border-b-2 border-emerald-200">el coche</span> a <span class="text-indigo-600 font-bold border-b-2 border-indigo-200">sus amigos</span>.
+                    </p>
+                    <span class="text-[10px] bg-orange-100 text-orange-600 px-2 py-1 rounded h-fit font-bold">Alert: Les+Lo</span>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
+                    <span class="text-slate-400 font-bold">Ellos</span>
+                    <input type="text" class="input-blank flex-1 bg-white border border-slate-300 rounded p-2 text-emerald-700 font-bold focus:border-emerald-500 outline-none text-center shadow-inner" placeholder="___ ___" data-answer="se lo">
+                    <span class="text-slate-400 font-bold">venden.</span>
+                    <i class="fas fa-check-circle text-green-500 text-xl hidden feedback-icon"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-8 flex flex-col items-center justify-center">
+            <button onclick="checkGridExercise()" class="bg-emerald-600 text-white px-10 py-3 rounded-full font-bold shadow-lg hover:bg-emerald-700 transition transform hover:scale-105 active:scale-95 flex items-center gap-2">
+                <i class="fas fa-check"></i> Check All Answers
+            </button>
+            <div id="gridFeedback" class="mt-4 font-bold text-xl text-slate-600 hidden"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function checkGridExercise() {
+            let correctCount = 0;
+            const inputs = document.querySelectorAll('.input-blank');
+            const total = inputs.length;
+
+            inputs.forEach(input => {
+                const answer = input.getAttribute('data-answer');
+                const userAnswer = input.value.trim().toLowerCase();
+                const parent = input.parentElement;
+                const icon = parent.querySelector('.feedback-icon');
+
+                // Reset styles
+                input.classList.remove('border-green-500', 'border-red-500', 'text-green-600', 'text-red-600');
+                icon.classList.add('hidden');
+                icon.className = "fas fa-check-circle text-green-500 text-xl ml-2 feedback-icon"; // Reset icon class
+
+                if (userAnswer === answer) {
+                    // Correcto
+                    input.classList.add('border-green-500', 'text-green-600', 'bg-green-50');
+                    icon.classList.remove('hidden');
+                    correctCount++;
+                    if(typeof react === 'function') react('applause');
+                } else {
+                    // Incorrecto
+                    input.classList.add('border-red-500', 'text-red-600', 'bg-red-50');
+                    icon.className = "fas fa-times-circle text-red-500 text-xl ml-2 feedback-icon";
+                    icon.classList.remove('hidden');
+                }
+            });
+
+            const feedback = document.getElementById('gridFeedback');
+            feedback.classList.remove('hidden');
+            feedback.innerHTML = `Score: ${correctCount} / ${total}`;
+            
+            if(correctCount === total) {
+                feedback.innerHTML += " <span class='text-emerald-600'>¡Excelente! 🎉</span>";
+                if(typeof react === 'function') react('confetti');
+            }
+        }
+    </script>
+</section>
+
+<section>
+    <div class="glass-card max-w-7xl mx-auto p-8 md:p-10 border-t-8 border-emerald-600 shadow-2xl relative h-full flex flex-col justify-center">
+
+        <div class="flex justify-center mb-8">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy" class="h-20 md:h-28 object-contain drop-shadow-md hover:scale-105 transition duration-500">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+
+            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg flex flex-col justify-center">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 border-b-2 border-slate-100 pb-4">
+                    <span class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-lg flex items-center justify-center text-xl"><i class="fas fa-brain"></i></span>
+                    Quick Recap
+                </h3>
+
+                <ul class="space-y-6">
+                    <li class="flex gap-4 items-start group">
+                        <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">1</div>
+                        <div>
+                            <p class="text-slate-800 font-bold text-lg">Order</p>
+                            <p class="text-slate-500 text-sm leading-relaxed"><strong>Person (IO)</strong> always goes before <strong>Thing (DO)</strong>.</p>
+                        </div>
+                    </li>
+                    
+                    <li class="flex gap-4 items-start group">
+                        <div class="bg-orange-50 text-orange-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shrink-0 group-hover:bg-orange-500 group-hover:text-white transition">2</div>
+                        <div>
+                            <p class="text-slate-800 font-bold text-lg">Rule "L-L"</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">No "Le Lo". Change the first one to <strong class="text-orange-500 bg-orange-50 px-1 rounded">SE</strong>.</p>
+                        </div>
+                    </li>
+
+                    <li class="flex gap-4 items-start group">
+                        <div class="bg-purple-50 text-purple-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shrink-0 group-hover:bg-purple-600 group-hover:text-white transition">3</div>
+                        <div>
+                            <p class="text-slate-800 font-bold text-lg">Position</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">Before conjugated verbs OR attached to infinitives.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+                
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fas fa-pencil-alt text-9xl text-white"></i>
+                </div>
+
+                <h3 class="text-3xl font-bold mb-6 flex items-center gap-3 relative z-10" style="color: white !important;">
+                    <i class="fas fa-book-reader"></i> La Tarea
+                </h3>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg relative z-10 transform transition hover:-translate-y-1 duration-300">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Writing Challenge</span>
+                        <i class="fas fa-edit text-emerald-400"></i>
+                    </div>
+                    
+                    <p class="text-xl text-slate-800 font-handlee mb-4 leading-relaxed">
+                        Write a short dialogue (5-8 lines) in a <strong>Restaurant</strong> or <strong>Airport</strong>.
+                    </p>
+                    
+                    <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                        <p class="text-sm font-bold text-emerald-800 mb-2">Checklist:</p>
+                        <ul class="text-sm space-y-2 text-slate-700">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-emerald-500"></i> 
+                                Use at least <strong>3 combined pronouns</strong>.
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-emerald-500"></i> 
+                                Use "Se lo" / "Se la" at least once.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center relative z-10">
+                    <p class="text-emerald-100 italic font-bold text-lg" style="color: #d1fae5 !important;">
+                        "¡Nos vemos en la próxima clase!" 🌴
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+           
+
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Colores Tropicales) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#004d40'); /* Verde Tropical */ const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px 'Lato', sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none font-sans" style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escriba aquí..." /> </div> )} </div> ); }
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Desactivando lógica de presentación.");
+            document.body.classList.add('is-mobile');
+            
+            // NO INICIAMOS REVEAL.JS EN MÓVIL
+            // Dejamos que el CSS haga todo el trabajo de scroll vertical.
+            
+            // Barra de progreso manual
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                const progressBar = document.getElementById('scroll-progress');
+                if(progressBar) progressBar.style.width = scrolled + '%';
+                
+                const btn = document.getElementById('back-to-top');
+                if(btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal (Solo aquí)
+            Reveal.initialize({
+                // ... tu configuración de PC ...
+                width: "100%", height: "100%", margin: 0, minScale: 1, maxScale: 1,
+                transition: 'slide', backgroundTransition: 'fade', background: '#fefce8'
+            });
+        }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+       // --- CONTROL INTELIGENTE DE TECLAS (VERSIÓN FINAL) ---
+        function handleZoomNavigation(e) {
+            // 1. Ignorar si el usuario escribe en un input
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+            // 2. Guardamos la posición EXACTA (diapositiva H y V) antes de movernos
+            const indicesBefore = Reveal.getIndices();
+            let actionTriggered = false;
+
+            // 3. Ejecutamos la acción de Reveal
+            if (e.key === 'ArrowLeft') {
+                Reveal.prev();
+                actionTriggered = true;
+            } else if (e.key === 'ArrowRight' || e.code === 'Space') {
+                Reveal.next();
+                actionTriggered = true;
+            }
+
+            // 4. Decidimos si hacer scroll arriba o no
+            if (actionTriggered) {
+                const indicesAfter = Reveal.getIndices();
+
+                // LÓGICA: Si la diapositiva Horizontal (h) o Vertical (v) cambió, es una diapositiva nueva -> SCROLL TOP
+                // Si h y v son iguales, significa que solo cambió el fragmento (f) -> NO SCROLL
+                if (indicesBefore.h !== indicesAfter.h || indicesBefore.v !== indicesAfter.v) {
+                    window.scrollTo(0, 0);
+                }
+                // Si no, nos quedamos quietos para ver la respuesta que acabamos de revelar.
+            }
+        }
+
+        function forceZoom() {
+            if (isMobile) return;
+            
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            const html = document.documentElement;
+            const body = document.body;
+            
+            const isActive = container.classList.contains('is-zoomed');
+
+            if (!isActive) {
+                // --- ACTIVAR ZOOM ---
+                html.classList.add('is-scrollable');
+                body.classList.add('is-scrollable');
+                container.classList.add('is-zoomed');
+                
+                // Apagamos teclado nativo de Reveal y encendemos el nuestro
+                Reveal.configure({ keyboard: false });
+                document.addEventListener('keydown', handleZoomNavigation);
+                
+                btn.classList.add('active');
+
+            } else {
+                // --- DESACTIVAR ZOOM ---
+                window.scrollTo(0, 0);
+                html.classList.remove('is-scrollable');
+                body.classList.remove('is-scrollable');
+                container.classList.remove('is-zoomed');
+                
+                // Restauramos todo
+                Reveal.configure({ keyboard: true });
+                document.removeEventListener('keydown', handleZoomNavigation);
+                Reveal.layout();
+                
+                btn.classList.remove('active');
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error': 
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

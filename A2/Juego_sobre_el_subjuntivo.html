@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misión Subjuntivo: Caos Lógico</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        h1, h2, h3, .game-font { font-family: 'Fredoka', sans-serif; }
+
+        /* Animaciones */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        .btn-option {
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-option:active { transform: translateY(4px); }
+        
+        .word-chip {
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .word-chip:hover { transform: translateY(-2px); }
+        .word-chip.used {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
+
+        .heart { transition: transform 0.3s; display: inline-block; }
+        .heart.lost { filter: grayscale(100%); opacity: 0.3; transform: scale(0.8); }
+
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;
+        }
+        
+        .type-badge {
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* Input Styles */
+        .game-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            transition: all 0.3s;
+        }
+        .game-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fbbf24;
+            outline: none;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-white">
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Game Container -->
+    <div id="game-container" class="w-full max-w-3xl bg-gray-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 overflow-hidden relative min-h-[600px] flex flex-col">
+        
+        <!-- Header -->
+        <div class="bg-black/30 p-4 flex justify-between items-center border-b border-white/5">
+            <div class="flex items-center gap-2">
+                <span class="text-3xl filter drop-shadow-lg" id="lives-display">
+                    <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+                </span>
+            </div>
+            <div class="text-center">
+                 <h1 class="text-xl font-bold text-yellow-400 tracking-wider">MISIÓN SUBJUNTIVO</h1>
+            </div>
+            <div class="flex flex-col items-end w-24">
+                <div class="text-xs font-bold uppercase text-blue-300">Progreso</div>
+                <div class="w-full h-3 bg-gray-700 rounded-full mt-1 overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <div class="text-xs mt-1 text-gray-400"><span id="level-indicator">1</span>/15</div>
+            </div>
+        </div>
+
+        <!-- MAIN MENU -->
+        <div id="screen-menu" class="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-8 animate-pop-in">
+            <div class="animate-float">
+                <div class="text-8xl mb-4">🧠</div>
+                <h1 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-red-500 drop-shadow-sm">CAOS LÓGICO</h1>
+            </div>
+            
+            <p class="text-xl text-gray-200 max-w-lg mx-auto leading-relaxed">
+                El subjuntivo no es solo gramática, es supervivencia.
+                <br><br>
+                Tendrás que elegir entre la <strong>gramática correcta</strong> y la <strong>lógica pura</strong>.
+                ¡Cuidado con las opciones trampa!
+            </p>
+
+            <button onclick="game.start()" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-black py-4 px-16 rounded-full text-2xl shadow-lg transform transition hover:scale-105 hover:rotate-1 active:scale-95 border-b-4 border-green-800">
+                ¡EMPEZAR MISIÓN!
+            </button>
+            <div class="text-xs opacity-40 mt-4">Powered by Tucaneo.com</div>
+        </div>
+
+        <!-- GAMEPLAY SCREEN -->
+        <div id="screen-game" class="hidden flex-1 flex flex-col p-6 md:p-8 relative">
+            
+            <!-- Context Area -->
+            <div class="mb-8 text-center">
+                <div id="level-type-badge" class="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 bg-purple-600 text-white shadow-lg type-badge">
+                    Modo Desconocido
+                </div>
+                
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-md">
+                    <p id="context-text" class="text-xl md:text-2xl text-blue-200 italic font-medium mb-4">
+                        Contexto aquí...
+                    </p>
+                    <p id="question-text" class="text-2xl md:text-3xl font-bold text-white leading-snug">
+                        Pregunta aquí...
+                    </p>
+                </div>
+            </div>
+
+            <!-- MODE 1: CHOICE (3 Buttons) -->
+            <div id="mode-choice" class="grid grid-cols-1 gap-4 max-w-2xl mx-auto w-full hidden">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <!-- MODE 2: BUILDER (Word Order) -->
+            <div id="mode-builder" class="hidden flex-col w-full max-w-2xl mx-auto">
+                <div class="bg-black/30 p-4 rounded-xl min-h-[80px] flex flex-wrap gap-2 items-center justify-center mb-6 border-2 border-dashed border-white/20" id="builder-dropzone">
+                    <span class="text-gray-500 italic text-sm pointer-events-none" id="builder-placeholder">Toca las palabras en orden...</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-3 mb-8" id="builder-pool"></div>
+                <div class="flex gap-4 justify-center">
+                    <button onclick="game.resetBuilder()" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg">Borrar</button>
+                    <button onclick="game.checkBuilder()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold py-2 px-8 rounded-lg shadow-lg">¡Comprobar!</button>
+                </div>
+            </div>
+
+            <!-- MODE 3: INPUT (Type the verb) -->
+            <div id="mode-input" class="hidden flex-col w-full max-w-md mx-auto text-center">
+                <input type="text" id="input-answer" class="game-input w-full p-4 text-2xl text-center rounded-xl mb-6 font-bold" placeholder="Escribe el verbo aquí..." autocomplete="off">
+                <button onclick="game.checkInput()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-10 rounded-full shadow-lg text-xl transform transition hover:scale-105">
+                    Validar Respuesta
+                </button>
+                <p class="text-sm text-gray-400 mt-4">Cuidado con las tildes y la ortografía.</p>
+            </div>
+
+            <!-- MODE 4: BINARY (Judge True/False) -->
+            <div id="mode-binary" class="hidden grid-cols-2 gap-6 max-w-xl mx-auto w-full">
+                <button onclick="game.checkBinary(true)" class="bg-green-600/80 hover:bg-green-500 border-b-4 border-green-800 text-white font-bold py-8 px-6 rounded-2xl text-2xl shadow-xl transform transition hover:scale-105 flex flex-col items-center gap-2">
+                    <span class="text-4xl">✅</span>
+                    <span>Correcto</span>
+                </button>
+                <button onclick="game.checkBinary(false)" class="bg-red-600/80 hover:bg-red-500 border-b-4 border-red-800 text-white font-bold py-8 px-6 rounded-2xl text-2xl shadow-xl transform transition hover:scale-105 flex flex-col items-center gap-2">
+                    <span class="text-4xl">❌</span>
+                    <span>Incorrecto</span>
+                </button>
+            </div>
+
+            <!-- Feedback Overlay -->
+            <div id="feedback-overlay" class="absolute inset-0 bg-gray-900/90 backdrop-blur-md hidden flex-col items-center justify-center z-20 p-6 animate-pop-in">
+                <div class="text-8xl mb-4" id="feedback-emoji">🤔</div>
+                <h3 id="feedback-title" class="text-3xl font-black mb-2 text-white uppercase tracking-wider">Título</h3>
+                <p id="feedback-message" class="text-xl text-gray-300 mb-8 text-center max-w-md leading-relaxed">Mensaje</p>
+                <button id="next-btn" class="bg-white text-gray-900 font-bold py-4 px-10 rounded-full text-xl hover:bg-gray-200 shadow-xl transition transform hover:scale-105">
+                    Continuar
+                </button>
+            </div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="screen-gameover" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6 animate-pop-in">
+            <div class="text-9xl mb-4">☠️</div>
+            <h2 class="text-5xl font-black text-red-500 uppercase">Misión Fallida</h2>
+            <p id="gameover-msg" class="text-2xl text-gray-300 font-light max-w-md">
+                La lógica o la gramática te han traicionado.
+            </p>
+            <div class="flex gap-4 mt-8">
+                <button onclick="game.restart()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-8 rounded-full shadow-lg">
+                    Reintentar Misión
+                </button>
+            </div>
+        </div>
+
+        <!-- VICTORY -->
+        <div id="screen-victory" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6 animate-pop-in">
+            <div class="text-9xl animate-float mb-4">🏆</div>
+            <h2 class="text-5xl font-black text-yellow-400 uppercase">¡Misión Cumplida!</h2>
+            <p class="text-xl text-gray-200 max-w-md">
+                Has sobrevivido al caos lógico y escapado del Templo del Indicativo.
+            </p>
+            <div class="bg-white/10 p-6 rounded-2xl w-full max-w-sm border border-white/20">
+                <div class="flex justify-between text-lg mb-2">
+                    <span>Puntuación Final:</span>
+                    <span id="final-score" class="font-bold text-yellow-300">0</span>
+                </div>
+                <div class="text-sm opacity-60">Rango: Maestro del Subjuntivo</div>
+            </div>
+            <button onclick="game.restart()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-10 rounded-full shadow-lg mt-4">
+                Jugar de Nuevo
+            </button>
+        </div>
+
+    </div>
+
+    <!-- AUDIO SYSTEM -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const sound = {
+            play: (type, freqStart, freqEnd, duration) => {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freqStart, audioCtx.currentTime);
+                if(freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, audioCtx.currentTime + duration);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            },
+            click: () => sound.play('triangle', 300, null, 0.05),
+            correct: () => {
+                sound.play('sine', 400, 800, 0.2);
+                setTimeout(() => sound.play('sine', 800, 1200, 0.2), 150);
+            },
+            wrong: () => sound.play('sawtooth', 150, 50, 0.4),
+            die: () => {
+                sound.play('sawtooth', 200, 50, 0.8);
+                setTimeout(() => sound.play('sawtooth', 150, 20, 0.8), 200);
+            },
+            place: () => sound.play('sine', 600, null, 0.05)
+        };
+    </script>
+
+    <!-- LOGIC -->
+    <script>
+        const levels = [
+            // --- NIVELES ESTÁNDAR (1-10) ---
+            {
+                type: 'choice',
+                modeName: 'Supervivencia Zombie',
+                color: 'bg-red-600',
+                context: "Un zombie está rompiendo tu ventana. Tienes un bate de béisbol.",
+                question: "¡Es urgente que ______ !",
+                options: [
+                    { text: "lo invites a cenar", type: 'logic_fail', feedback: "¡El zombie te comió el cerebro mientras ponías la mesa! 🧠" },
+                    { text: "te defiendes", type: 'grammar_fail', feedback: "¡Error gramatical! Usaste Indicativo y el zombie aprovechó tu duda." },
+                    { text: "te defiendas", type: 'correct', feedback: "¡Bien! Subjuntivo correcto. ¡Bateazo al zombie!" }
+                ]
+            },
+            {
+                type: 'choice',
+                modeName: 'Consejo de Salud',
+                color: 'bg-green-600',
+                context: "Tu amigo tiene una manzana podrida llena de gusanos en la mano.",
+                question: "Te aconsejo que ______.",
+                options: [
+                    { text: "no te la comas", type: 'correct', feedback: "Exacto. Consejo negativo + Subjuntivo." },
+                    { text: "te la comas", type: 'logic_fail', feedback: "¡Qué asco! Tu amigo ahora está en el hospital. 🤢" },
+                    { text: "no te la comes", type: 'grammar_fail', feedback: "El consejo requiere subjuntivo, no indicativo." }
+                ]
+            },
+            {
+                type: 'builder',
+                modeName: 'Constructor de Frases',
+                color: 'bg-blue-600',
+                context: "Organiza la frase para expresar DUDA sobre la inteligencia de Juan.",
+                words: ["Dudo", "que", "Juan", "sea", "inteligente"],
+                correctOrder: ["Dudo", "que", "Juan", "sea", "inteligente"],
+                feedback: "Muy bien. 'Dudar que' activa el subjuntivo (sea)."
+            },
+            {
+                type: 'choice',
+                modeName: 'Drama Amoroso',
+                color: 'bg-pink-600',
+                context: "Tu ex-novio/a tóxico/a te escribe a las 3 AM: 'Te extraño'.",
+                question: "Es importante que no ______.",
+                options: [
+                    { text: "le contestes", type: 'correct', feedback: "¡Bien hecho! Mantén tu dignidad con el subjuntivo." },
+                    { text: "le contestas", type: 'grammar_fail', feedback: "Perdiste la dignidad gramatical usando indicativo." },
+                    { text: "lo bloquees", type: 'logic_fail', feedback: "Lógica: La frase dice 'que NO lo bloquees'. ¡Error! Bloquearlo es lo mejor." } 
+                ]
+            },
+            {
+                type: 'choice',
+                modeName: 'Cazavampiros',
+                color: 'bg-purple-700',
+                context: "Un vampiro te ofrece pasar a su castillo oscuro.",
+                question: "Te sugiero que ______ corriendo.",
+                options: [
+                    { text: "entres", type: 'logic_fail', feedback: "Entraste... y eras delicioso. 🧛‍♂️" },
+                    { text: "salgas", type: 'correct', feedback: "¡Corre! Sugerencia + Subjuntivo." },
+                    { text: "sales", type: 'grammar_fail', feedback: "El vampiro odia la mala gramática (indicativo)." }
+                ]
+            },
+            {
+                type: 'builder',
+                modeName: 'Lámpara Mágica',
+                color: 'bg-yellow-600',
+                context: "Pide un deseo para ganar la lotería.",
+                words: ["Ojalá", "que", "yo", "gane", "la", "lotería"],
+                correctOrder: ["Ojalá", "que", "yo", "gane", "la", "lotería"],
+                feedback: "¡Ojalá! Recuerda: Ojalá siempre va con subjuntivo."
+            },
+            {
+                type: 'choice',
+                modeName: 'Entrevista de Trabajo',
+                color: 'bg-gray-600',
+                context: "El jefe pregunta: '¿Por qué quieres el trabajo?'",
+                question: "Busco un trabajo que ______ bien.",
+                options: [
+                    { text: "pague", type: 'correct', feedback: "Bien. Buscas algo indefinido (no sabes si existe), así que subjuntivo." },
+                    { text: "paga", type: 'grammar_fail', feedback: "Si dices 'paga' (indicativo), implica que ya tienes ese trabajo específico." },
+                    { text: "cueste", type: 'logic_fail', feedback: "¿Un trabajo que TE cueste dinero? ¡Mala idea!" }
+                ]
+            },
+            {
+                type: 'choice',
+                modeName: 'Encuentro Alienígena',
+                color: 'bg-indigo-600',
+                context: "Un alien te apunta con un láser.",
+                question: "Es necesario que ______ pacíficos.",
+                options: [
+                    { text: "seamos", type: 'correct', feedback: "Correcto. Necesidad impersonal." },
+                    { text: "ataquemos", type: 'logic_fail', feedback: "¡Te desintegraron! No ataques a quien tiene láseres." },
+                    { text: "somos", type: 'grammar_fail', feedback: "Indicativo incorrecto." }
+                ]
+            },
+            {
+                type: 'builder',
+                modeName: 'Sentimientos',
+                color: 'bg-red-500',
+                context: "Te molesta que tu vecino cante mal.",
+                words: ["Me", "molesta", "que", "él", "cante"],
+                correctOrder: ["Me", "molesta", "que", "él", "cante"],
+                feedback: "Verbos de emoción (molestar) activan subjuntivo."
+            },
+            {
+                type: 'choice',
+                modeName: 'Bosque Peligroso',
+                color: 'bg-green-800',
+                context: "Te encuentras un oso. Tienes un sándwich de miel.",
+                question: "Recomiendo que ______ el sándwich lejos y corras.",
+                options: [
+                    { text: "tires", type: 'correct', feedback: "¡Bien pensado! Distrae al oso." },
+                    { text: "tiras", type: 'grammar_fail', feedback: "El oso no entiende indicativo, solo miel." },
+                    { text: "comas", type: 'logic_fail', feedback: "Te comiste la miel... ¡y el oso te comió a ti!" }
+                ]
+            },
+            
+            // --- HISTORIA FINAL: EL TEMPLO MALDITO (11-15) ---
+            {
+                type: 'input',
+                modeName: 'Historia: La Puerta',
+                color: 'bg-stone-800',
+                context: "Has llegado al Templo del Indicativo. La puerta tiene una inscripción mágica. Para entrar, debes completar la frase escribiendo el verbo correctamente.",
+                question: "Solo pasará quien ______ (tener) la mente abierta.",
+                answers: ["tenga"],
+                feedback: "¡La puerta retumba y se abre! El subjuntivo es tu llave."
+            },
+            {
+                type: 'binary',
+                modeName: 'Historia: El Guardián',
+                color: 'bg-stone-700',
+                context: "Un esqueleto guardián te bloquea el paso. Él habla, pero su gramática podría ser una trampa. ¿Es CORRECTA esta frase?",
+                question: "'Dudo que tú tienes el valor para pasar.'",
+                isCorrect: false, // Incorrecto, debería ser 'tengas'
+                feedback: "¡Exacto! Era INCORRECTA. Al dudar, debería haber usado subjuntivo (tengas). El esqueleto se desmorona."
+            },
+            {
+                type: 'choice',
+                modeName: 'Historia: La Sala de Pociones',
+                color: 'bg-purple-900',
+                context: "Encuentras dos pociones. Un pergamino antiguo dice: 'Te aconsejo que bebas la que NO ______ (brillar)'. (La poción VERDE brilla, la AZUL no).",
+                question: "Elige la acción correcta:",
+                options: [
+                    { text: "beber la azul (que no brille)", type: 'correct', feedback: "¡Correcto! 'Brille' es subjuntivo y la lógica te salvó del veneno brillante." },
+                    { text: "beber la verde (que brilla)", type: 'logic_fail', feedback: "¡Bebiste la poción brillante! Te convertiste en sapo. 🐸" },
+                    { text: "beber la azul (que no brilla)", type: 'grammar_fail', feedback: "Elegiste bien la poción, pero tu gramática activó la trampa del templo." }
+                ]
+            },
+            {
+                type: 'input',
+                modeName: 'Historia: El Puente de Lava',
+                color: 'bg-orange-700',
+                context: "Un puente de piedra cruza un río de lava. Las piedras se caen si no usas el verbo adecuado.",
+                question: "El puente caerá a menos que tú ______ (correr) rápido.",
+                answers: ["corras"],
+                feedback: "¡Corriste como el viento! El subjuntivo mantuvo las piedras en su lugar."
+            },
+            {
+                type: 'builder',
+                modeName: 'Historia: El Hechizo Final',
+                color: 'bg-yellow-800',
+                context: "El espíritu del templo trata de atraparte. Debes lanzar el hechizo de expulsión final.",
+                words: ["Quiero", "que", "tú", "desaparezcas", "ahora"],
+                correctOrder: ["Quiero", "que", "tú", "desaparezcas", "ahora"],
+                feedback: "¡El espíritu se desvanece gritando en Indicativo! Has escapado con el tesoro."
+            }
+        ];
+
+        const game = {
+            levelIdx: 0,
+            lives: 3,
+            score: 0,
+            currentBuilder: [],
+
+            init: function() {
+                this.cacheDOM();
+                this.showScreen('menu');
+            },
+
+            cacheDOM: function() {
+                this.screens = {
+                    menu: document.getElementById('screen-menu'),
+                    game: document.getElementById('screen-game'),
+                    gameover: document.getElementById('screen-gameover'),
+                    victory: document.getElementById('screen-victory')
+                };
+                this.ui = {
+                    lives: document.getElementById('lives-display'),
+                    progressBar: document.getElementById('progress-bar'),
+                    levelInd: document.getElementById('level-indicator'),
+                    badge: document.getElementById('level-type-badge'),
+                    context: document.getElementById('context-text'),
+                    question: document.getElementById('question-text'),
+                    
+                    // Containers
+                    containerChoice: document.getElementById('mode-choice'),
+                    containerBuilder: document.getElementById('mode-builder'),
+                    containerInput: document.getElementById('mode-input'),
+                    containerBinary: document.getElementById('mode-binary'),
+
+                    // Elements
+                    builderDrop: document.getElementById('builder-dropzone'),
+                    builderPool: document.getElementById('builder-pool'),
+                    builderPlaceholder: document.getElementById('builder-placeholder'),
+                    inputField: document.getElementById('input-answer'),
+                    feedback: document.getElementById('feedback-overlay')
+                };
+            },
+
+            showScreen: function(name) {
+                Object.values(this.screens).forEach(s => s.classList.add('hidden'));
+                this.screens[name].classList.remove('hidden');
+            },
+
+            start: function() {
+                sound.click();
+                this.levelIdx = 0;
+                this.lives = 3;
+                this.score = 0;
+                this.updateUI();
+                this.showScreen('game');
+                this.loadLevel();
+            },
+
+            restart: function() {
+                this.start();
+            },
+
+            updateUI: function() {
+                // Lives
+                let heartsHtml = '';
+                for(let i=0; i<3; i++) {
+                    heartsHtml += `<span class="heart text-2xl mx-1 ${i < this.lives ? '' : 'lost'}">❤️</span>`;
+                }
+                this.ui.lives.innerHTML = heartsHtml;
+                
+                // Progress
+                this.ui.levelInd.innerText = this.levelIdx + 1;
+                const pct = ((this.levelIdx) / levels.length) * 100;
+                this.ui.progressBar.style.width = `${pct}%`;
+            },
+
+            loadLevel: function() {
+                if(this.levelIdx >= levels.length) {
+                    this.victory();
+                    return;
+                }
+                const level = levels[this.levelIdx];
+                
+                // Set Header info
+                this.ui.badge.innerText = level.modeName;
+                this.ui.badge.className = `inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 text-white shadow-lg type-badge ${level.color}`;
+                
+                this.ui.context.innerText = level.context;
+                
+                // Reset Views
+                [this.ui.containerChoice, this.ui.containerBuilder, this.ui.containerInput, this.ui.containerBinary].forEach(c => {
+                    c.classList.add('hidden');
+                    c.classList.remove('flex', 'grid');
+                });
+                this.ui.feedback.classList.add('hidden');
+                this.ui.feedback.classList.remove('flex');
+                this.updateUI();
+
+                // Dispatcher
+                if(level.type === 'choice') this.setupChoiceLevel(level);
+                else if(level.type === 'builder') this.setupBuilderLevel(level);
+                else if(level.type === 'input') this.setupInputLevel(level);
+                else if(level.type === 'binary') this.setupBinaryLevel(level);
+            },
+
+            // --- CHOICE LOGIC ---
+            setupChoiceLevel: function(level) {
+                this.ui.containerChoice.classList.remove('hidden');
+                this.ui.question.innerText = level.question;
+                this.ui.containerChoice.innerHTML = '';
+                const shuffled = [...level.options].sort(() => Math.random() - 0.5);
+                shuffled.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "btn-option bg-white/10 hover:bg-white/20 border-2 border-white/30 text-white font-bold py-4 px-6 rounded-xl text-lg md:text-xl text-left backdrop-blur-sm w-full transition-all";
+                    btn.innerText = opt.text;
+                    btn.onclick = () => this.handleChoice(opt);
+                    this.ui.containerChoice.appendChild(btn);
+                });
+            },
+            handleChoice: function(option) {
+                const btns = this.ui.containerChoice.querySelectorAll('button');
+                btns.forEach(b => b.disabled = true);
+                if(option.type === 'correct') {
+                    this.handleSuccess("¡Correcto!", option.feedback);
+                } else {
+                    this.handleFail(option.type === 'logic_fail' ? "¡Error Lógico!" : "¡Error Gramatical!", option.feedback);
+                }
+            },
+
+            // --- BUILDER LOGIC ---
+            setupBuilderLevel: function(level) {
+                this.ui.containerBuilder.classList.remove('hidden');
+                this.ui.containerBuilder.classList.add('flex');
+                this.ui.question.innerText = "Ordena la frase:";
+                this.ui.builderDrop.innerHTML = '';
+                this.ui.builderDrop.appendChild(this.ui.builderPlaceholder);
+                this.ui.builderPlaceholder.style.display = 'block';
+                this.ui.builderPool.innerHTML = '';
+                this.currentBuilder = [];
+                const shuffled = [...level.words].sort(() => Math.random() - 0.5);
+                shuffled.forEach((word, index) => {
+                    const chip = document.createElement('div');
+                    chip.className = "word-chip bg-yellow-400 text-purple-900 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-yellow-300 active:scale-95 text-lg";
+                    chip.innerText = word;
+                    chip.onclick = (e) => this.addWordToBuilder(word, chip);
+                    this.ui.builderPool.appendChild(chip);
+                });
+            },
+            addWordToBuilder: function(word, chipElement) {
+                sound.place();
+                this.ui.builderPlaceholder.style.display = 'none';
+                chipElement.classList.add('used');
+                const dropChip = document.createElement('div');
+                dropChip.className = "bg-white text-gray-900 font-bold py-2 px-4 rounded-lg shadow-sm animate-pop-in";
+                dropChip.innerText = word;
+                this.ui.builderDrop.appendChild(dropChip);
+                this.currentBuilder.push(word);
+            },
+            resetBuilder: function() {
+                sound.click();
+                this.currentBuilder = [];
+                this.ui.builderDrop.innerHTML = '';
+                this.ui.builderDrop.appendChild(this.ui.builderPlaceholder);
+                this.ui.builderPlaceholder.style.display = 'block';
+                const chips = this.ui.builderPool.querySelectorAll('.word-chip');
+                chips.forEach(c => c.classList.remove('used'));
+            },
+            checkBuilder: function() {
+                const level = levels[this.levelIdx];
+                if(this.currentBuilder.join(' ') === level.correctOrder.join(' ')) {
+                    this.handleSuccess("¡Frase Perfecta!", level.feedback, 150);
+                } else {
+                    this.handleFail("Orden Incorrecto", "Esa frase no tiene sentido. Intenta de nuevo.", true);
+                    this.resetBuilder();
+                }
+            },
+
+            // --- INPUT LOGIC (NEW) ---
+            setupInputLevel: function(level) {
+                this.ui.containerInput.classList.remove('hidden');
+                this.ui.containerInput.classList.add('flex');
+                this.ui.question.innerText = level.question;
+                this.ui.inputField.value = '';
+                this.ui.inputField.focus();
+            },
+            checkInput: function() {
+                const level = levels[this.levelIdx];
+                const val = this.ui.inputField.value.trim().toLowerCase();
+                
+                // Check if valid
+                if(level.answers.includes(val)) {
+                    this.handleSuccess("¡Escrito Correctamente!", level.feedback, 200);
+                } else {
+                    this.handleFail("Incorrecto", `La forma correcta era: "${level.answers[0]}". Cuidado con las tildes.`);
+                }
+            },
+
+            // --- BINARY LOGIC (NEW) ---
+            setupBinaryLevel: function(level) {
+                this.ui.containerBinary.classList.remove('hidden');
+                this.ui.containerBinary.classList.add('grid');
+                this.ui.question.innerText = level.question;
+            },
+            checkBinary: function(userSaysCorrect) {
+                const level = levels[this.levelIdx];
+                // User wins if their judgment matches reality (e.g. they say Incorrect, and sentence IS incorrect)
+                const userWon = (userSaysCorrect === level.isCorrect);
+
+                if(userWon) {
+                    this.handleSuccess("¡Juicio Acertado!", level.feedback, 150);
+                } else {
+                    this.handleFail("Juicio Erróneo", "Tu detector de gramática falló esta vez.");
+                }
+            },
+
+            // --- HANDLERS ---
+            handleSuccess: function(title, msg, points=100) {
+                sound.correct();
+                this.score += points;
+                this.showFeedback(true, title, msg);
+            },
+            handleFail: function(title, msg, allowRetry=false) {
+                this.lives--;
+                this.updateUI();
+                if(this.lives <= 0) {
+                    sound.die();
+                    setTimeout(() => this.gameOver(msg), 1000);
+                } else {
+                    sound.wrong();
+                    this.showFeedback(false, title, msg);
+                }
+            },
+            showFeedback: function(success, title, msg) {
+                const overlay = this.ui.feedback;
+                const emoji = document.getElementById('feedback-emoji');
+                const t = document.getElementById('feedback-title');
+                const m = document.getElementById('feedback-message');
+                const btn = document.getElementById('next-btn');
+
+                emoji.innerText = success ? "🎉" : "⚠️";
+                t.innerText = title;
+                t.className = `text-3xl font-black mb-2 uppercase tracking-wider ${success ? 'text-green-400' : 'text-red-400'}`;
+                m.innerText = msg;
+
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+
+                btn.onclick = () => {
+                    sound.click();
+                    if(success) {
+                        this.levelIdx++;
+                        this.loadLevel();
+                    } else {
+                        overlay.classList.add('hidden');
+                        overlay.classList.remove('flex');
+                        // Re-enable choice buttons if needed
+                        if(levels[this.levelIdx].type === 'choice') {
+                             const btns = this.ui.containerChoice.querySelectorAll('button');
+                             btns.forEach(b => b.disabled = false);
+                        }
+                    }
+                };
+            },
+            gameOver: function(finalMsg) {
+                document.getElementById('gameover-msg').innerText = finalMsg || "Fin del juego.";
+                this.showScreen('gameover');
+            },
+            victory: function() {
+                document.getElementById('final-score').innerText = this.score;
+                sound.play('square', 400, 800, 0.1);
+                triggerConfetti();
+                this.showScreen('victory');
+            }
+        };
+
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const particles = Array.from({length: 100}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                color: `hsl(${Math.random()*360}, 100%, 50%)`,
+                size: Math.random() * 10 + 5,
+                speed: Math.random() * 5 + 2
+            }));
+            function animate() {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    if(p.y > canvas.height) p.y = -20;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+            setTimeout(() => ctx.clearRect(0,0, canvas.width, canvas.height), 4000);
+        }
+
+        window.onload = () => game.init();
+    </script>
+</body>
+</html>

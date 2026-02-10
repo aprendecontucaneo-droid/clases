@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase Tucaneo Academy: El Mundo en Comparación</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: #f8f9fa; 
+            --text-main: #2c3e50; 
+        }
+        body { background-color: var(--background); font-family: 'Lato', sans-serif; overflow-x: hidden; }
+
+        /* --- DRAWER (HERRAMIENTAS) --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.3);
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column; text-align: left;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn {
+            position: absolute; top: 12px; right: 12px; z-index: 20001;
+            background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%;
+            border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+        }
+        #safe-close-btn:hover { transform: scale(1.1); }
+
+        /* --- UI GLOBAL --- */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        
+        /* INPUTS */
+        .interactive-input {
+            background: #fff8e1; border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+            border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+            padding: 4px; font-size: 0.9em; width: 140px;
+        }
+        .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+        
+        /* ESTILOS ESPECIFICOS DE CLASE */
+        .exercise-card {
+            background: white; border-radius: 12px; border-left: 6px solid var(--accent);
+            padding: 20px; margin: 10px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left;
+        }
+        
+        /* ESTILO BASE DE TABLA */
+        .conj-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            margin: 20px 0; 
+            font-size: 0.8em; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        .conj-table th { background-color: var(--primary); color: white; padding: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .conj-table td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; background: white; }
+        .conj-table tr:last-child td { border-bottom: none; }
+        .conj-table tr:nth-child(even) td { background-color: #f9fcf9; }
+        .conj-table td strong { color: var(--text-main); }
+        
+        /* Vector Style Helpers */
+        .vector-container { display: flex; justify-content: center; align-items: center; gap: 20px; }
+        .vector-icon { font-size: 100px; color: var(--primary); filter: drop-shadow(2px 2px 0 var(--accent)); }
+        
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 900px) {
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 5px; }
+            .nav-btn { 
+                padding: 6px 8px; font-size: 10px; border-radius: 12px; 
+                background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer;
+            }
+            .nav-btn.whiteboard { background: var(--accent); order: 1; }
+            .nav-btn.download { order: 2; }
+            .nav-btn.exit { background: #555; order: 3; }
+            .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+            
+            #floating-cta { 
+                background: white; color: var(--primary); border: 1px solid var(--primary);
+                padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+                left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .reveal { font-size: 16px; }
+            .reveal h1 { font-size: 1.6em; margin-top: 60px; }
+            .grid-responsive { display: flex; flex-direction: column; gap: 10px; }
+            .img-container { max-height: 200px; }
+        }
+
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+                padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .nav-btn.whiteboard { background-color: var(--accent); }
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--text-main); }
+            .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+            .nav-btn:hover { transform: translateY(-2px); }
+            
+            #floating-cta {
+                bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+                padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            #floating-cta:hover { background: var(--primary); color: white; }
+            .reveal { font-size: 24px; }
+            .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; }
+            .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+            .img-container { width: 100%; max-height: 400px; object-fit: contain; }
+        }
+        .sentence-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 10px; width: 100%; margin-bottom: 10px; }
+        @media print { #fixed-logo, #top-nav, #floating-cta, #tucaneo-drawer { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()" title="Cerrar">✕</button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Herramientas" class="btn-icon">
+            Herramientas
+        </button>
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+            PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Diapositiva 1: Portada -->
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h1>El Mundo en Comparación</h1>
+                        <h3 class="text-orange-500">¿Qué prefieres?</h3>
+                        <div class="mt-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+                            <p class="font-bold text-gray-700">Nivel A2</p>
+                            <p class="text-gray-600 mt-2"><strong>Meta:</strong> Aprender a comparar situaciones, lugares y objetos para expresar opiniones personales.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="flex gap-8 mb-4">
+                            <div class="text-center">
+                                <i class="fa-solid fa-city text-6xl text-blue-500"></i>
+                                <p class="text-sm mt-2 font-bold text-gray-500">Ciudad</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fa-solid fa-tree text-6xl text-green-600"></i>
+                                <p class="text-sm mt-2 font-bold text-gray-500">Pueblo</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-earth-americas text-9xl text-green-700 opacity-80"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 2: Rompehielo -->
+            <section>
+                <h2>¿Perro o Gato?</h2>
+                <p class="mb-6">Observa y usa los adjetivos para opinar.</p>
+                <div class="grid grid-cols-2 gap-8 items-center">
+                    <div class="bg-orange-50 p-6 rounded-xl border-2 border-orange-200 text-center">
+                        <i class="fa-solid fa-dog text-8xl text-orange-600 mb-4"></i>
+                        <p class="font-bold text-xl">Golden Retriever</p>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 text-center">
+                        <i class="fa-solid fa-cat text-8xl text-blue-600 mb-4"></i>
+                        <p class="font-bold text-xl">Gato Dormilón</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <span class="bg-white px-4 py-2 rounded-full shadow text-green-700 font-bold border border-green-200">Rápido</span>
+                    <span class="bg-white px-4 py-2 rounded-full shadow text-blue-700 font-bold border border-blue-200">Tranquilo</span>
+                    <span class="bg-white px-4 py-2 rounded-full shadow text-orange-700 font-bold border border-orange-200">Divertido</span>
+                    <span class="bg-white px-4 py-2 rounded-full shadow text-purple-700 font-bold border border-purple-200">Independiente</span>
+                </div>
+            </section>
+
+            <!-- Diapositiva 3: Tabla Gramatical 1 -->
+            <section>
+                <h2>Estructuras de Desigualdad</h2>
+                <p>Para comparar dos cosas diferentes.</p>
+                <table class="conj-table">
+                    <thead>
+                        <tr>
+                            <th width="40%">Estructura</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Más</strong> + [adj/sus] + <strong>que</strong></td>
+                            <td>El avión es <strong>más rápido que</strong> el tren.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Menos</strong> + [adj/sus] + <strong>que</strong></td>
+                            <td>Medellín es <strong>menos grande que</strong> Lima.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-orange-100"><strong>IRREGULARES</strong></td>
+                            <td class="bg-orange-50 text-left pl-8">
+                                <ul class="list-disc ml-4">
+                                    <li>Bueno → <strong>Mejor</strong></li>
+                                    <li>Malo → <strong>Peor</strong></li>
+                                    <li>Viejo → <strong>Mayor</strong></li>
+                                    <li>Joven → <strong>Menor</strong></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Diapositiva 4: Práctica Mecánica A -->
+            <section>
+                <h2>Completa las comparaciones</h2>
+                <div class="text-left bg-white p-6 rounded-xl shadow-md space-y-4 text-xl">
+                    <div class="flex items-center gap-4 border-b pb-2">
+                        <i class="fa-solid fa-car text-red-500"></i> vs <i class="fa-solid fa-bicycle text-blue-500"></i>
+                        <div class="ml-4">
+                            El coche es <input type="text" class="interactive-input" placeholder="..."> (caro) <input type="text" class="interactive-input" placeholder="..."> la bicicleta.
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 border-b pb-2">
+                        <i class="fa-solid fa-burger text-orange-500"></i> vs <i class="fa-solid fa-carrot text-green-500"></i>
+                        <div class="ml-4">
+                            La hamburguesa es <input type="text" class="interactive-input" placeholder="..."> (sana) <input type="text" class="interactive-input" placeholder="..."> la ensalada.
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 border-b pb-2">
+                        <i class="fa-solid fa-mobile-screen text-gray-800"></i> vs <i class="fa-solid fa-phone text-gray-400"></i>
+                        <div class="ml-4">
+                            El iPhone es <input type="text" class="interactive-input" placeholder="..."> (moderno) <input type="text" class="interactive-input" placeholder="..."> el teléfono viejo.
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i class="fa-solid fa-person-running text-green-600"></i> vs <i class="fa-solid fa-smoking text-gray-500"></i>
+                        <div class="ml-4">
+                            Correr es <input type="text" class="interactive-input" placeholder="irregular"> (bueno) <input type="text" class="interactive-input" placeholder="..."> fumar.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 5: Práctica Contextualizada -->
+            <section>
+                <h2>Lee y Compara</h2>
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-800 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                        <i class="fa-solid fa-building text-gray-700 text-9xl absolute -right-4 -bottom-4 opacity-50"></i>
+                        <h3 class="text-white text-2xl border-b border-gray-600 pb-2 mb-2">Ciudad A (Metrópolis)</h3>
+                        <ul class="space-y-2 text-lg">
+                            <li><i class="fa-solid fa-users text-blue-400"></i> 10 millones hab.</li>
+                            <li><i class="fa-solid fa-car text-red-400"></i> Mucho tráfico</li>
+                            <li><i class="fa-solid fa-landmark text-yellow-400"></i> Muchos museos</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-100 text-green-900 p-6 rounded-xl shadow-lg relative overflow-hidden">
+                        <i class="fa-solid fa-tree text-green-200 text-9xl absolute -right-4 -bottom-4 opacity-50"></i>
+                        <h3 class="text-green-800 text-2xl border-b border-green-300 pb-2 mb-2">Ciudad B (Pueblo)</h3>
+                        <ul class="space-y-2 text-lg">
+                            <li><i class="fa-solid fa-users text-green-600"></i> 5,000 habitantes</li>
+                            <li><i class="fa-solid fa-wind text-blue-400"></i> Aire puro</li>
+                            <li><i class="fa-solid fa-face-smile text-orange-500"></i> Gente amable</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <p class="font-bold">Crea 3 frases comparando las ciudades:</p>
+                    <p class="text-gray-500 italic text-sm mt-1">Ej: La ciudad A tiene más habitantes que la B.</p>
+                </div>
+            </section>
+
+            <!-- Diapositiva 6: Tabla Gramatical 2 -->
+            <section>
+                <h2>Igualdad</h2>
+                <p>¿Cuándo las cosas son iguales?</p>
+                <table class="conj-table" style="font-size: 0.9em;">
+                    <thead>
+                        <tr>
+                            <th>Estructura</th>
+                            <th>Uso</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tan</strong> + [adj] + <strong>como</strong></td>
+                            <td>Adjetivos</td>
+                            <td>La comida de Santiago es <strong>tan</strong> rica <strong>como</strong> la de Lima.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tanto/a/os/as</strong> + [sus] + <strong>como</strong></td>
+                            <td>Cantidades</td>
+                            <td>Madrid tiene <strong>tantos</strong> parques <strong>como</strong> Londres.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Igual de</strong> + [adj] + <strong>que</strong></td>
+                            <td>Alternativa</td>
+                            <td>Mi casa es <strong>igual de</strong> grande <strong>que</strong> la tuya.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Diapositiva 7: Práctica Mecánica B -->
+            <section>
+                <h2>Práctica de Igualdad</h2>
+                <div class="grid grid-cols-2 gap-8 mb-4">
+                    <div class="bg-white p-4 rounded-lg shadow flex items-center justify-center gap-4">
+                        <i class="fa-solid fa-mug-hot text-4xl text-brown-600"></i> Café Colombia
+                        <span class="text-2xl">=</span>
+                        Café Brasil <i class="fa-solid fa-mug-hot text-4xl text-brown-600"></i>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow flex items-center justify-center gap-4">
+                        <i class="fa-solid fa-sack-dollar text-4xl text-green-600"></i> Luis
+                        <span class="text-2xl">=</span>
+                        Pedro <i class="fa-solid fa-sack-dollar text-4xl text-green-600"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-left space-y-3 text-lg">
+                    <p>1. El café de Colombia es <input class="interactive-input w-24"> (rico) <input class="interactive-input w-24"> el de Brasil.</p>
+                    <p>2. Luis tiene <input class="interactive-input w-24"> (dinero) <input class="interactive-input w-24"> Pedro.</p>
+                    <p>3. Ana corre <input class="interactive-input w-24"> (rápido) <input class="interactive-input w-24"> su hermana.</p>
+                    <p>4. Esta película es <input class="interactive-input w-24"> (interesante) <input class="interactive-input w-24"> el libro.</p>
+                </div>
+            </section>
+
+            <!-- Diapositiva 8: Detective de Errores -->
+            <section>
+                <h2><i class="fa-solid fa-magnifying-glass text-orange-500"></i> Detective de Errores</h2>
+                <p class="mb-6">¡Cuidado! Encuentra y corrige el error.</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-yellow-100 p-4 rounded-lg shadow rotate-1 relative">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                        <p class="font-handlee text-xl text-gray-700">"Mi hermano es <span class="text-red-600 font-bold decoration-wavy underline">más mejor</span> que yo en fútbol."</p>
+                    </div>
+                    <div class="bg-yellow-100 p-4 rounded-lg shadow -rotate-1 relative">
+                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                        <p class="font-handlee text-xl text-gray-700">"Nueva York es tan grande <span class="text-red-600 font-bold decoration-wavy underline">que</span> Ciudad de México."</p>
+                    </div>
+                    <div class="bg-yellow-100 p-4 rounded-lg shadow rotate-1 relative">
+                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                        <p class="font-handlee text-xl text-gray-700">"Tengo <span class="text-red-600 font-bold decoration-wavy underline">tanto</span> libros como tú."</p>
+                    </div>
+                    <div class="bg-yellow-100 p-4 rounded-lg shadow -rotate-1 relative">
+                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">4</div>
+                        <p class="font-handlee text-xl text-gray-700">"El invierno es <span class="text-red-600 font-bold decoration-wavy underline">más mal</span> que el verano."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 9: Superlativos -->
+            <section>
+                <h2>Superlativos: Grado Máximo</h2>
+                <div class="grid grid-cols-2 gap-8 text-left h-full items-center">
+                    <div class="bg-purple-100 p-6 rounded-xl border-l-8 border-purple-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i class="fa-solid fa-microphone-lines text-5xl text-purple-600"></i>
+                            <h3 class="m-0 text-purple-800">Relativo</h3>
+                        </div>
+                        <p class="text-lg">El/La más + adjetivo + de...</p>
+                        <hr class="border-purple-300 my-2">
+                        <p class="italic text-gray-600">"Michael Jackson es <strong>el cantante más famoso de</strong> los 80."</p>
+                    </div>
+                    
+                    <div class="bg-blue-100 p-6 rounded-xl border-l-8 border-blue-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i class="fa-solid fa-brain text-5xl text-blue-600"></i>
+                            <h3 class="m-0 text-blue-800">Absoluto</h3>
+                        </div>
+                        <p class="text-lg">Adjetivo + -ísimo/a</p>
+                        <hr class="border-blue-300 my-2">
+                        <p class="italic text-gray-600">"Einstein es <strong>inteligentísimo</strong>."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 10: Escenario Roleplay -->
+            <section>
+                <h2>Agencia de Viajes</h2>
+                <p>Eres un cliente exigente. Compara los destinos.</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Tarjeta Caribe -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                        <div class="h-32 bg-yellow-200 flex items-center justify-center">
+                            <i class="fa-solid fa-umbrella-beach text-6xl text-orange-500"></i>
+                        </div>
+                        <div class="p-4 text-left">
+                            <h3 class="text-xl font-bold mb-2">Caribe</h3>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fa-solid fa-sun text-yellow-500"></i> Mucho sol</li>
+                                <li><i class="fa-solid fa-water text-blue-400"></i> Playa relajante</li>
+                                <li><i class="fa-solid fa-dollar-sign text-red-500"></i> <strong>$$$$</strong> (Caro)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Tarjeta Alpes -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                        <div class="h-32 bg-blue-200 flex items-center justify-center">
+                            <i class="fa-solid fa-person-skiing text-6xl text-white"></i>
+                        </div>
+                        <div class="p-4 text-left">
+                            <h3 class="text-xl font-bold mb-2">Los Alpes</h3>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fa-regular fa-snowflake text-blue-400"></i> Nieve y Esquí</li>
+                                <li><i class="fa-solid fa-mountain text-gray-600"></i> Aventura</li>
+                                <li><i class="fa-solid fa-dollar-sign text-green-500"></i> <strong>$$</strong> (Barato)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-green-50 p-3 rounded-lg border border-green-300 text-sm">
+                    <strong>Misión:</strong> Usa 2 desigualdades, 1 igualdad y 1 superlativo.
+                </div>
+            </section>
+
+            <!-- Diapositiva 11: Producción Libre -->
+            <section>
+                <h2>¿Cómo ha cambiado el mundo?</h2>
+                <div class="grid grid-cols-2 gap-10 items-center justify-center mb-8">
+                    <div class="opacity-70 grayscale hover:grayscale-0 transition duration-500 text-center">
+                        <i class="fa-solid fa-map text-8xl text-gray-600 mb-2"></i>
+                        <h3 class="text-gray-600">1990</h3>
+                        <p class="text-sm">Mapas de papel, Teléfonos fijos</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-mobile-screen-button text-8xl text-blue-600 mb-2"></i>
+                        <h3 class="text-blue-600">2024</h3>
+                        <p class="text-sm">GPS, Smartphones, Apps</p>
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <p class="font-bold mb-2">Preguntas guía:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>¿Es la tecnología <strong>más fácil</strong> ahora?</li>
+                        <li>¿Es la comunicación <strong>más rápida</strong> hoy?</li>
+                        <li>¿Eran los coches <strong>más bonitos</strong> antes?</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Diapositiva 12: Cierre -->
+            <section>
+                <div class="max-w-3xl mx-auto">
+                    <h1>¡Excelente Trabajo!</h1>
+                    <p class="text-xl text-gray-600 mb-8">Ya eres un experto comparando.</p>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-lg text-left">
+                        <h3 class="text-orange-500 border-b pb-2 mb-4"><i class="fa-solid fa-check-double"></i> Resumen:</h3>
+                        <ul class="space-y-3 text-lg mb-6">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Desigualdad (Más/Menos... que)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Irregulares (Mejor/Peor/Mayor/Menor)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Igualdad (Tan... como)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Superlativos (-ísimo)</li>
+                        </ul>
+                        
+                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                            <p class="font-bold text-orange-800"><i class="fa-solid fa-pencil"></i> Tarea:</p>
+                            <p class="text-orange-700">Escribe 3 comparaciones sobre tus compañeros usando superlativos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- REACT LOGIC (WHITEBOARD & VOCAB) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = {
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
+            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+
+        function VocabModule() {
+            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
+            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
+            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
+            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
+            const copy = () => {
+                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
+                if(!text) return alert("Lista vacía");
+                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
+            };
+            return (
+                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
+                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
+                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
+                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
+                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
+                </div>
+            );
+        }
+
+        function WhiteboardModule() {
+            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
+            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
+            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
+            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const generateId = () => Math.random().toString(36).substr(2, 9);
+            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
+            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+            useLayoutEffect(() => {
+                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
+                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
+                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
+                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
+                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
+                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
+                elements.forEach(el => {
+                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
+                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
+                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
+                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
+                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
+                });
+                ctx.restore();
+            }, [elements, size, panOffset]);
+            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
+            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+            const handleDown = (e) => {
+                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
+                if(tool==='selection') { setIsPanning(true); return; }
+                const {x,y} = getPos(e);
+                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
+                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+            };
+            const handleMove = (e) => {
+                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
+                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+            };
+            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
+            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
+            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+            return (
+                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
+                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
+                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
+                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
+                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
+                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
+                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+                    </div>
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
+                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+                </div>
+            );
+        }
+
+        function App() {
+            const [tab, setTab] = useState('board');
+            const close = () => window.toggleDrawer();
+            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            return (
+                <div className="h-full flex flex-col bg-slate-50">
+                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                        <div className="flex-1"></div>
+                    </div>
+                    <div className="flex-1 relative overflow-hidden">
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+        Reveal.initialize({
+            controls: true, progress: true, center: true, hash: false, history: false,
+            width: isMobile ? 360 : 1200, height: isMobile ? 600 : 700,
+            margin: isMobile ? 0.05 : 0.04, minScale: 0.2, maxScale: 2.0,
+            transition: 'slide', backgroundTransition: 'fade', overview: false
+        });
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+    </script>
+</body>
+</html>
+```

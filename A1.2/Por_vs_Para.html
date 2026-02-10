@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Clase Tucaneo: Zoom Manual</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&family=Handlee&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* ESTILOS BASE */
+        :root { --primary: #10b981; --accent: #f59e0b; --text-main: #1f2937; --bg-light: #f8fafc; --danger: #ef4444; --info: #3b82f6; }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; overflow: hidden; }
+        
+        /* Drawer y UI Base */
+        #tucaneo-drawer { position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        #safe-close-btn:hover { transform: scale(1.1); }
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; }
+        
+        /* BARRA DE NAVEGACIÓN */
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; }
+        #floating-cta { position: fixed; bottom: 20px; left: 30px; z-index: 5000; font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px; }
+        
+        /* Reveal JS Ajustes */
+        .reveal { color: var(--text-main); font-size: 24px; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: var(--primary); text-transform: none; font-weight: 700; }
+        .reveal section { display: flex !important; flex-direction: column; justify-content: flex-start; height: 100vh; overflow-y: auto; padding-top: 80px !important; padding-bottom: 40px !important; }
+        .reveal section::-webkit-scrollbar { width: 6px; }
+        .reveal section::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.1); border-radius: 4px;}
+        .reveal img, .reveal video, .reveal iframe { max-width: 100%; height: auto; max-height: 60vh; object-fit: contain; }
+        
+        /* Componentes Visuales */
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); margin-bottom: 30px; text-align: left; }
+        .clean-input { border: none; border-bottom: 2px solid #cbd5e1; background: transparent; font-family: 'Handlee', cursive; font-size: 1.1em; color: var(--accent); text-align: left; width: 100%; transition: 0.3s; padding: 5px; }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
+        .eng-pill { background: #f1f5f9; color: #64748b; font-size: 0.65em; text-transform: uppercase; letter-spacing: 1px; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .word-bank { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        .word-chip { background: #fffbeb; color: var(--accent); border: 1px dashed var(--accent); padding: 5px 15px; border-radius: 20px; font-family: 'Handlee'; font-size: 0.9em; }
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; width: 100%; padding: 0 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; margin-top: 20px; }
+        
+        /* Botones */
+        .nav-btn { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none; }
+        .nav-btn.whiteboard { background-color: var(--accent); }
+        .nav-btn.zoom { background-color: #6366f1; }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #374151; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+        .nav-btn.zoom.active { background-color: #4338ca; box-shadow: inset 0 3px 6px rgba(0,0,0,0.3); border: 2px solid #818cf8; }
+
+        /* Estilos Pizarra */
+        .no-select { user-select: none; -webkit-user-select: none; }
+        .cursor-eraser { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="white" stroke="black" stroke-width="1"/></svg>') 10 10, auto; }
+        .fade-in { animation: fadeIn 0.15s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Móvil */
+        @media (max-width: 900px) { 
+            #tucaneo-drawer { width: 100vw; right: -100vw; } 
+            .grid-responsive, .grid-3 { grid-template-columns: 1fr; gap: 30px; } 
+            .reveal { font-size: 18px; } 
+            #fixed-logo { width: 100px; top: 15px; left: 15px; } 
+            #top-nav { top: 15px; right: 15px; gap: 6px; } 
+            .nav-btn { padding: 8px 12px; font-size: 12px; }
+            .nav-btn span { display: none; } 
+            .glass-card { padding: 25px; } 
+            .reveal section { padding-top: 70px !important; } 
+        }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY</a>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Acercar"><i class="fas fa-search-plus"></i> <span>Zoom +</span></button>
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard"><i class="fas fa-pen"></i> <span>Pizarra</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- (Ejemplo: <section> ... </section>) -->
+             <section data-background-image="https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?auto=format&fit=crop&q=80" data-background-opacity="0.4">
+                <div class="glass-card" style="text-align: center; max-width: 900px; margin: 0 auto; border-top: 5px solid var(--accent); padding: 50px;">
+                    <!-- Logo Tucaneo (Opcional si ya está fijo en la pantalla, pero aquí queda bien como marca de la slide) -->
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo" style="width: 120px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+                    
+                    <span style="display: block; color: var(--accent); font-weight: 900; letter-spacing: 3px; font-size: 0.9em; text-transform: uppercase; margin-bottom: 10px;">Nivel A2+</span>
+                    
+                    <h1 style="font-size: 3.5em; margin: 10px 0; color: var(--text-main); line-height: 1.1;">Por vs. Para:<br><span style="color: var(--primary);">Desbloqueando la Lógica</span></h1>
+                    
+                    <div style="width: 80px; height: 5px; background: var(--primary); margin: 30px auto; border-radius: 10px;"></div>
+                    
+                    <p style="font-size: 1.4em; color: #4b5563; font-style: italic;">
+                        "¿Miras hacia atrás (Causa) o miras hacia adelante (Propósito)?"
+                    </p>
+                </div>
+
+                
+            </section>
+
+            <!-- DIAPOSITIVA 2: Activación -->
+            <section data-transition="fade">
+    <div class="glass-card w-full max-w-6xl mx-auto h-full flex flex-col relative overflow-hidden">
+        
+        <div class="mb-6 text-center">
+            <h3 class="text-3xl font-bold text-[var(--primary)] font-playfair mb-2">Activación: El Matiz Importante</h3>
+            <p class="text-gray-500 text-sm italic font-lato">¿Notas la diferencia lógica entre estas dos situaciones?</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow items-center">
+
+            <div class="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
+                <div class="h-48 overflow-hidden relative group">
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80" 
+                         alt="Pareja boda" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-2 left-2 bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Motivo / Pasado
+                    </div>
+                </div>
+                <div class="p-5 text-center flex-grow flex flex-col justify-center">
+                    <p class="text-xl text-gray-800 mb-2 font-lato">"Se casaron <b class="text-red-500 text-2xl font-playfair mx-1">por</b> amor."</p>
+                    <p class="text-sm text-gray-400 italic">(El sentimiento ya existía antes de la acción)</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
+                <div class="h-48 overflow-hidden relative group">
+                    <img src="https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?auto=format&fit=crop&w=800&q=80" 
+                         alt="Familia feliz" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute top-2 left-2 bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Objetivo / Futuro
+                    </div>
+                </div>
+                <div class="p-5 text-center flex-grow flex flex-col justify-center">
+                    <p class="text-xl text-gray-800 mb-2 font-lato">"Se casaron <b class="text-blue-500 text-2xl font-playfair mx-1">para</b> tener familia."</p>
+                    <p class="text-sm text-gray-400 italic">(Mirando hacia adelante / Propósito)</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col gap-3 shadow-sm shrink-0">
+            
+            <div class="flex flex-col md:flex-row items-center gap-3 w-full">
+                <label class="text-amber-800 font-bold text-sm whitespace-nowrap"><i class="fas fa-comments mr-2"></i>Discusión:</label>
+                <input type="text" class="clean-input bg-white/50 border-b border-amber-300 w-full text-sm p-2 text-gray-700 focus:bg-white transition-colors" placeholder="¿Cuál frase se siente más romántica y por qué? Escribe aquí...">
+            </div>
+
+            <div class="flex gap-3 text-xs text-amber-700/80 italic border-t border-amber-200/50 pt-2 mt-1">
+                <i class="fas fa-lightbulb text-amber-500 mt-0.5"></i>
+                <span>
+                    <strong>Nota Profesor:</strong> Online: Pide votación en el chat. Presencial: Lluvia de ideas rápida. Enfócate en la dirección del tiempo (La flecha hacia atrás vs la flecha hacia adelante).
+                </span>
+            </div>
+        </div>
+
+    </div>
+</section>
+            <!-- DIAPOSITIVA 3: Pizarra Teórica 1 -->
+            <section>
+                <h3>Pizarra Teórica: Movimiento y Tiempo</h3>
+                
+                <!-- Comparison Grid -->
+                <div class="grid-responsive" style="gap: 20px; align-items: stretch;">
+                    
+                    <!-- POR Column -->
+                    <div class="glass-card" style="padding: 25px; border-left: 5px solid #ef4444; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="color: #ef4444; font-size: 1.5em; margin: 0; font-weight:900;">POR</h4>
+                            <i class="fas fa-sync-alt" style="color: #ef4444; opacity: 0.3; font-size: 1.5em;"></i>
+                        </div>
+                        <span class="eng-pill" style="align-self: flex-start; background: #fee2e2; color: #b91c1c;">Through / During / By</span>
+                        
+                        <ul style="list-style: none; padding: 0; margin-top: 20px; font-size: 0.8em; flex-grow: 1;">
+                            <li style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <i class="fas fa-route" style="color: #ef4444; margin-top: 4px;"></i>
+                                <div>
+                                    <strong style="color: #1f2937;">Movimiento:</strong> Through a place.<br>
+                                    <em style="color:#6b7280; font-size: 0.9em;">"Camino por el parque."</em>
+                                </div>
+                            </li>
+                            <li style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <i class="fas fa-hourglass-half" style="color: #ef4444; margin-top: 4px;"></i>
+                                <div>
+                                    <strong style="color: #1f2937;">Tiempo:</strong> Duration.<br>
+                                    <em style="color:#6b7280; font-size: 0.9em;">"Estudié por 3 meses."</em>
+                                </div>
+                            </li>
+                            <li style="display: flex; gap: 10px;">
+                                <i class="fas fa-phone" style="color: #ef4444; margin-top: 4px;"></i>
+                                <div>
+                                    <strong style="color: #1f2937;">Medio:</strong> By means of.<br>
+                                    <em style="color:#6b7280; font-size: 0.9em;">"Hablamos por teléfono."</em>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- PARA Column -->
+                    <div class="glass-card" style="padding: 25px; border-left: 5px solid #3b82f6; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="color: #3b82f6; font-size: 1.5em; margin: 0; font-weight:900;">PARA</h4>
+                            <i class="fas fa-bullseye" style="color: #3b82f6; opacity: 0.3; font-size: 1.5em;"></i>
+                        </div>
+                        <span class="eng-pill" style="align-self: flex-start; background: #dbeafe; color: #1e40af;">To / Deadline</span>
+                        
+                        <ul style="list-style: none; padding: 0; margin-top: 20px; font-size: 0.8em; flex-grow: 1;">
+                            <li style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <i class="fas fa-map-pin" style="color: #3b82f6; margin-top: 4px;"></i>
+                                <div>
+                                    <strong style="color: #1f2937;">Movimiento:</strong> Destination.<br>
+                                    <em style="color:#6b7280; font-size: 0.9em;">"Voy para la universidad."</em>
+                                </div>
+                            </li>
+                            <li style="display: flex; gap: 10px;">
+                                <i class="fas fa-calendar-check" style="color: #3b82f6; margin-top: 4px;"></i>
+                                <div>
+                                    <strong style="color: #1f2937;">Tiempo:</strong> Deadline.<br>
+                                    <em style="color:#6b7280; font-size: 0.9em;">"La tarea es para el viernes."</em>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Student Explanation & Teacher Note -->
+                <div class="grid-responsive" style="gap: 20px; margin-top: 20px;">
+                    <!-- Explanation -->
+                    <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px; border: 1px solid #e5e7eb; font-size: 0.8em; text-align: left;">
+                        <p style="margin: 5px 0;"><i class="fas fa-arrow-right" style="color:#ef4444"></i> <strong>POR</strong> = The journey or process.</p>
+                        <p style="margin: 5px 0;"><i class="fas fa-arrow-right" style="color:#3b82f6"></i> <strong>PARA</strong> = The finish line or result.</p>
+                    </div>
+
+                    <!-- Teacher Note -->
+                    <div style="background: #fffbeb; padding: 15px; border-radius: 12px; border: 1px dashed #f59e0b; font-size: 0.75em; color: #b45309; display: flex; gap: 10px; align-items: start;">
+                        <i class="fas fa-lightbulb" style="margin-top: 3px;"></i>
+                        <div>
+                            <strong>Nota Profesor:</strong> 
+                            Usa tus manos. <span style="color:#ef4444; font-weight:bold;">Por</span> es un movimiento circular o continuo. <span style="color:#3b82f6; font-weight:bold;">Para</span> es una flecha directa a un punto.
+                        </div>
+                    </div>
+                </div>
+            </section>
+<!-- DIAPOSITIVA 4: Activación -->
+            <section>
+    <h3>Práctica Mecánica A: Navegando el Mapa</h3>
+    <p style="text-align: center; color: #6b7280; font-size: 0.8em; margin-bottom: 20px;">
+        Escribe <b style="color:#ef4444">Por</b> o <b style="color:#3b82f6">Para</b> según el contexto lógico.
+    </p>
+
+    <!-- Contenedor Grid para 2 columnas en PC -->
+    <div class="grid-responsive" style="align-items: start; gap: 20px;">
+        
+        <!-- COLUMNA 1 (Izquierda) -->
+        <div class="glass-card" style="padding: 25px; font-size: 0.85em; margin-bottom: 0;">
+            
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">1.</span>
+                    <span>El tren sale</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #3b82f6;" placeholder="___">
+                    <span>Canadá hoy.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #dbeafe; color: #1e40af;"><i class="fas fa-map-pin"></i> Destination</span>
+            </div>
+
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">2.</span>
+                    <span>Caminamos</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444;" placeholder="___">
+                    <span>el parque.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #fee2e2; color: #b91c1c;"><i class="fas fa-route"></i> Through</span>
+            </div>
+
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">3.</span>
+                    <span>Estuve allí</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444;" placeholder="___">
+                    <span>cinco días.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #fee2e2; color: #b91c1c;"><i class="fas fa-hourglass-half"></i> Duration</span>
+            </div>
+
+            <div style="margin-bottom: 0;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">4.</span>
+                    <span>Es el informe</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #3b82f6;" placeholder="___">
+                    <span>el lunes.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #dbeafe; color: #1e40af;"><i class="fas fa-calendar-check"></i> Deadline</span>
+            </div>
+        </div>
+
+        <!-- COLUMNA 2 (Derecha) -->
+        <div class="glass-card" style="padding: 25px; font-size: 0.85em; margin-bottom: 0;">
+            
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">5.</span>
+                    <span>Hablamos</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444;" placeholder="___">
+                    <span>Skype anoche.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #fee2e2; color: #b91c1c;"><i class="fas fa-laptop"></i> Means</span>
+            </div>
+
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">6.</span>
+                    <span>Pagué $20</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444;" placeholder="___">
+                    <span>la pizza.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #fee2e2; color: #b91c1c;"><i class="fas fa-hand-holding-usd"></i> Exchange</span>
+            </div>
+
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">7.</span>
+                    <span>El regalo es</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #3b82f6;" placeholder="___">
+                    <span>mi madre.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #dbeafe; color: #1e40af;"><i class="fas fa-gift"></i> Recipient</span>
+            </div>
+             <div style="margin-bottom: 0;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color:#9ca3af; font-weight:bold;">8.</span>
+                    <span>Gracias</span>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444;" placeholder="___">
+                    <span>venir hoy.</span>
+                </div>
+                <span class="eng-pill" style="margin-top: 5px; font-size: 0.6em; background: #fee2e2; color: #b91c1c;"><i class="fas fa-heart"></i> Reason/Thanks</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultados (Ocultos inicialmente, aparecen con click) -->
+    <div class="fragment fade-up" style="margin-top: 20px; background: #ecfdf5; border: 1px solid #10b981; color: #065f46; padding: 10px; border-radius: 10px; text-align: center; font-size: 0.7em;">
+        <strong><i class="fas fa-check-circle"></i> Clave:</strong> 
+        1.Para | 2.Por | 3.Por | 4.Para | 5.Por | 6.Por | 7.Para | 8.Por
+    </div>
+
+    <!-- Nota Profesor -->
+    <div style="margin-top: 15px; background: #fffbeb; padding: 10px 15px; border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.75em; color: #b45309; display: flex; gap: 10px; align-items: center;">
+        <i class="fas fa-poll"></i>
+        <div>
+            <strong>Nota Online:</strong> Lanza una encuesta (Poll) para la #3 (Duración) y #4 (Fecha límite), suelen confundirse.
+        </div>
+    </div>
+</section>
+
+<!-- DIAPOSITIVA 5: Activación -->
+
+<section>
+    <h3>Práctica Contextualizada: "El Turista Confundido"</h3>
+    
+    <!-- Instrucciones Bilingües -->
+    <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center;">
+        <p style="margin: 0; font-size: 0.85em; color: #0c4a6e;">
+            <i class="fas fa-info-circle"></i> <strong>Instructions:</strong> Look at the image and the situation. Choose the most logical option (A or B) to complete the idea.
+        </p>
+        <p style="margin: 5px 0 0 0; font-size: 0.7em; color: #64748b;">
+            (Lee la situación y elige la opción más lógica).
+        </p>
+    </div>
+
+    <!-- Contenedor de 3 Columnas -->
+    <div class="grid-3" style="gap: 15px;">
+        
+        <!-- SITUACIÓN 1 -->
+        <div class="glass-card" style="padding: 15px; text-align: center; display: flex; flex-direction: column; margin-bottom: 0;">
+            <!-- Imagen 1 -->
+            <div style="width: 100%; height: 120px; overflow: hidden; border-radius: 8px; margin-bottom: 10px;">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80" alt="Mercado callejero" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            
+            <h5 style="color: #1f2937; font-size: 0.85em; margin-bottom: 5px; font-weight: bold;">Situation 1</h5>
+            <p style="font-size: 0.7em; color: #6b7280; font-style: italic; margin-bottom: 15px; flex-grow: 1; line-height: 1.2;">
+                You are describing your <b>route</b> through the city, NOT your final destination.
+            </p>
+            
+            <div style="text-align: left; font-size: 0.75em; display: flex; flex-direction: column; gap: 6px;">
+                <div style="padding: 6px 10px; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;" onclick="this.style.background='#fee2e2'; this.style.borderColor='#ef4444';">
+                    A) Voy <b>para</b> el mercado.
+                </div>
+                <div class="fragment" data-fragment-index="1" style="padding: 6px 10px; border: 1px solid #10b981; background: #ecfdf5; border-radius: 6px; color: #065f46; font-weight: bold;">
+                    B) Paso <b>por</b> el mercado. <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- SITUACIÓN 2 -->
+        <div class="glass-card" style="padding: 15px; text-align: center; display: flex; flex-direction: column; margin-bottom: 0;">
+            <!-- Imagen 2 -->
+            <div style="width: 100%; height: 120px; overflow: hidden; border-radius: 8px; margin-bottom: 10px;">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Playa vacaciones" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <h5 style="color: #1f2937; font-size: 0.85em; margin-bottom: 5px; font-weight: bold;">Situation 2</h5>
+            <p style="font-size: 0.7em; color: #6b7280; font-style: italic; margin-bottom: 15px; flex-grow: 1; line-height: 1.2;">
+                You are talking about the <b>duration</b> of your beach vacation.
+            </p>
+            
+            <div style="text-align: left; font-size: 0.75em; display: flex; flex-direction: column; gap: 6px;">
+                <div style="padding: 6px 10px; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;" onclick="this.style.background='#fee2e2'; this.style.borderColor='#ef4444';">
+                    A) Voy a la playa <b>para</b> dos semanas.
+                </div>
+                <div class="fragment" data-fragment-index="2" style="padding: 6px 10px; border: 1px solid #10b981; background: #ecfdf5; border-radius: 6px; color: #065f46; font-weight: bold;">
+                    B) Voy a la playa <b>por</b> dos semanas. <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- SITUACIÓN 3 -->
+        <div class="glass-card" style="padding: 15px; text-align: center; display: flex; flex-direction: column; margin-bottom: 0;">
+            <!-- Imagen 3 -->
+            <div style="width: 100%; height: 120px; overflow: hidden; border-radius: 8px; margin-bottom: 10px;">
+                <img src="https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=400&q=80" alt="Correo aéreo" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <h5 style="color: #1f2937; font-size: 0.85em; margin-bottom: 5px; font-weight: bold;">Situation 3</h5>
+            <p style="font-size: 0.7em; color: #6b7280; font-style: italic; margin-bottom: 15px; flex-grow: 1; line-height: 1.2;">
+                You need to send a letter quickly using a specific <b>mode of transport</b>.
+            </p>
+            
+            <div style="text-align: left; font-size: 0.75em; display: flex; flex-direction: column; gap: 6px;">
+                <div class="fragment" data-fragment-index="3" style="padding: 6px 10px; border: 1px solid #10b981; background: #ecfdf5; border-radius: 6px; color: #065f46; font-weight: bold;">
+                    A) Envíala <b>por</b> correo aéreo. <i class="fas fa-check"></i>
+                </div>
+                <div style="padding: 6px 10px; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;" onclick="this.style.background='#fee2e2'; this.style.borderColor='#ef4444';">
+                    B) Envíala <b>para</b> correo aéreo.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Feedback Contextual -->
+    <div class="fragment fade-up" style="margin-top: 20px; display: flex; justify-content: space-around; font-size: 0.7em; color: #4b5563;">
+        <span class="eng-pill" style="background: #fee2e2; color: #b91c1c;">1. Movement Through</span>
+        <span class="eng-pill" style="background: #fee2e2; color: #b91c1c;">2. Duration</span>
+        <span class="eng-pill" style="background: #fee2e2; color: #b91c1c;">3. Means/Mode</span>
+    </div>
+
+</section>
+            <!-- DIAPOSITIVA 6: Activación -->
+
+            <section>
+    <h3>Pizarra Teórica 2: El "Porqué" y el "Para qué"</h3>
+    <p style="text-align: center; color: #6b7280; font-size: 0.8em; margin-bottom: 30px;">
+        Usos abstractos: Mirando atrás vs. Mirando adelante
+    </p>
+
+    <div class="grid-responsive" style="align-items: stretch; gap: 20px;">
+        
+        <!-- COLUMNA POR (Looking Back) -->
+        <div class="glass-card" style="padding: 25px; border-left: 5px solid #ef4444; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 style="color: #ef4444; font-size: 1.4em; margin: 0; font-weight:900;">POR</h4>
+                <i class="fas fa-history" style="color: #ef4444; opacity: 0.2; font-size: 2em;"></i>
+            </div>
+            <span class="eng-pill" style="background: #fee2e2; color: #b91c1c;">Looking Back / Exchange</span>
+
+            <ul style="list-style: none; padding: 0; margin-top: 20px; font-size: 0.85em;">
+                <li style="margin-bottom: 15px; display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-bolt" style="color: #ef4444; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Causa / Motivo:</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">Because of, due to.</span><br>
+                        <em style="color:#ef4444; font-size: 0.9em;">"Por el tráfico", "Por amor".</em>
+                    </div>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-exchange-alt" style="color: #ef4444; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Intercambio:</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">In exchange for.</span><br>
+                        <em style="color:#ef4444; font-size: 0.9em;">"Te doy 10 pesos por el libro".</em>
+                    </div>
+                </li>
+                <li style="display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-pen-nib" style="color: #ef4444; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Agente (Voz Pasiva):</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">Passive voice agent.</span><br>
+                        <em style="color:#ef4444; font-size: 0.9em;">"Escrito por García Márquez".</em>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- COLUMNA PARA (Looking Forward) -->
+        <div class="glass-card" style="padding: 25px; border-left: 5px solid #3b82f6; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 style="color: #3b82f6; font-size: 1.4em; margin: 0; font-weight:900;">PARA</h4>
+                <i class="fas fa-binoculars" style="color: #3b82f6; opacity: 0.2; font-size: 2em;"></i>
+            </div>
+            <span class="eng-pill" style="background: #dbeafe; color: #1e40af;">Looking Forward / Recipient</span>
+
+            <ul style="list-style: none; padding: 0; margin-top: 20px; font-size: 0.85em;">
+                <li style="margin-bottom: 15px; display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-graduation-cap" style="color: #3b82f6; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Propósito:</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">In order to + Infinitive.</span><br>
+                        <em style="color:#3b82f6; font-size: 0.9em;">"Estudio para aprender".</em>
+                    </div>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-gift" style="color: #3b82f6; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Destinatario:</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">Recipient.</span><br>
+                        <em style="color:#3b82f6; font-size: 0.9em;">"El regalo es para ti".</em>
+                    </div>
+                </li>
+                <li style="display: flex; gap: 10px; align-items: start;">
+                    <i class="fas fa-comment-dots" style="color: #3b82f6; margin-top: 4px;"></i>
+                    <div>
+                        <strong style="color: #1f2937;">Opinión:</strong><br>
+                        <span style="font-size: 0.9em; color: #6b7280;">Opinion.</span><br>
+                        <em style="color:#3b82f6; font-size: 0.9em;">"Para mí, es importante".</em>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- REGLA DE ORO BOX -->
+    <div style="margin-top: 20px; background: #fff7ed; border: 2px dashed #f97316; padding: 15px; border-radius: 12px; text-align: center;">
+        <h5 style="color: #c2410c; margin: 0 0 10px 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-star"></i> Golden Rule</h5>
+        
+        <div style="display: flex; justify-content: center; flex-direction: column; gap: 5px; font-size: 0.85em; color: #4b5563;">
+            <p style="margin: 0;">If you can substitute it with <b>"Because of"</b> → Use <b style="color:#ef4444">POR</b></p>
+            <p style="margin: 0;">If you can substitute it with <b>"In order to"</b> → Use <b style="color:#3b82f6">PARA</b></p>
+        </div>
+        
+        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #fed7aa; font-size: 0.8em; color: #9a3412; font-style: italic; display: flex; justify-content: center; align-items: center; gap: 15px;">
+            <span><i class="fas fa-arrow-left"></i> <b>Por</b> looks back at the reason.</span>
+            <span><b>Para</b> looks forward to the goal. <i class="fas fa-arrow-right"></i></span>
+        </div>
+    </div>
+</section>
+
+<!-- DIAPOSITIVA 7: Activación -->
+
+<section>
+    <h3>Práctica Mecánica B: Traducción Mental</h3>
+    <p style="text-align: center; color: #6b7280; font-size: 0.8em; margin-bottom: 30px;">
+        Mira la pista en inglés, tradúcela mentalmente y escribe la preposición.
+    </p>
+
+    <div class="grid-responsive" style="gap: 20px;">
+        
+        <!-- EJERCICIO 1: Alaska (Causa) -->
+        <div class="glass-card" style="padding: 15px; margin-bottom: 0; display: flex; gap: 15px; align-items: center;">
+            <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1483921020237-60f297228844?auto=format&fit=crop&w=150&q=80" alt="Nieve frío" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex-grow: 1;">
+                <p style="font-size: 0.75em; color: #64748b; margin-bottom: 5px;">
+                    "No fuimos a Alaska <span style="background:#e2e8f0; padding: 2px 6px; border-radius: 4px; font-style: italic; color: #475569;">due to the cold</span>."
+                </p>
+                <div style="display: flex; align-items: baseline; gap: 5px; font-size: 0.9em;">
+                    <i class="fas fa-arrow-right" style="color: #cbd5e1; font-size: 0.8em;"></i>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444; font-weight: bold;" placeholder="___">
+                    <span>el frío.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- EJERCICIO 2: Piano (Propósito) -->
+        <div class="glass-card" style="padding: 15px; margin-bottom: 0; display: flex; gap: 15px; align-items: center;">
+            <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=150&q=80" alt="Piano" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex-grow: 1;">
+                <p style="font-size: 0.75em; color: #64748b; margin-bottom: 5px;">
+                    "Practico el piano <span style="background:#e2e8f0; padding: 2px 6px; border-radius: 4px; font-style: italic; color: #475569;">in order to play well</span>."
+                </p>
+                <div style="display: flex; align-items: baseline; gap: 5px; font-size: 0.9em;">
+                    <i class="fas fa-arrow-right" style="color: #cbd5e1; font-size: 0.8em;"></i>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #3b82f6; font-weight: bold;" placeholder="___">
+                    <span>tocar bien.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- EJERCICIO 3: Dinero (Intercambio) -->
+        <div class="glass-card" style="padding: 15px; margin-bottom: 0; display: flex; gap: 15px; align-items: center;">
+            <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=150&q=80" alt="Dinero pago" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex-grow: 1;">
+                <p style="font-size: 0.75em; color: #64748b; margin-bottom: 5px;">
+                    "Pagué 10 mil pesos <span style="background:#e2e8f0; padding: 2px 6px; border-radius: 4px; font-style: italic; color: #475569;">in exchange for</span> el cuaderno."
+                </p>
+                <div style="display: flex; align-items: baseline; gap: 5px; font-size: 0.9em;">
+                    <i class="fas fa-arrow-right" style="color: #cbd5e1; font-size: 0.8em;"></i>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #ef4444; font-weight: bold;" placeholder="___">
+                    <span>el cuaderno.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- EJERCICIO 4: Playa (Opinión) -->
+        <div class="glass-card" style="padding: 15px; margin-bottom: 0; display: flex; gap: 15px; align-items: center;">
+            <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=150&q=80" alt="Costa caliente" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex-grow: 1;">
+                <p style="font-size: 0.75em; color: #64748b; margin-bottom: 5px;">
+                    "<span style="background:#e2e8f0; padding: 2px 6px; border-radius: 4px; font-style: italic; color: #475569;">In my opinion</span>, la costa es muy caliente."
+                </p>
+                <div style="display: flex; align-items: baseline; gap: 5px; font-size: 0.9em;">
+                    <i class="fas fa-arrow-right" style="color: #cbd5e1; font-size: 0.8em;"></i>
+                    <input type="text" class="clean-input" style="width: 50px; text-align: center; color: #3b82f6; font-weight: bold;" placeholder="___">
+                    <span>mí, la costa...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESPUESTAS (Ocultas) -->
+    <div class="fragment fade-up" style="margin-top: 25px; background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 8px; text-align: center; font-size: 0.8em; color: #065f46;">
+        <strong><i class="fas fa-check-circle"></i> Clave:</strong> 
+        1. Por (Causa) | 2. Para (Propósito) | 3. Por (Intercambio) | 4. Para (Opinión)
+    </div>
+
+    <!-- NOTA PROFESOR -->
+    <div style="margin-top: 15px; background: #fffbeb; padding: 10px 15px; border-radius: 8px; border-left: 4px solid #f59e0b; font-size: 0.75em; color: #b45309; display: flex; gap: 10px; align-items: center;">
+        <i class="fas fa-laptop-code"></i>
+        <div>
+            <strong>Actividad Online:</strong> Pide que escriban solo la preposición en el chat a la cuenta de 3.
+        </div>
+    </div>
+</section>
+
+<!-- DIAPOSITIVA 8: Activación -->
+
+<!-- DIAPOSITIVA 8: DETECTIVE DE ERRORES -->
+<section data-transition="slide">
+    <div class="glass-card w-full max-w-5xl mx-auto h-full flex flex-col relative overflow-hidden">
+        
+        <!-- Encabezado con Icono -->
+        <div class="flex items-center gap-5 mb-6 border-b border-gray-200 pb-4">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center shadow-sm shrink-0">
+                <i class="fas fa-search text-3xl text-[var(--accent)]"></i>
+            </div>
+            <div class="w-full">
+                <div class="flex justify-between items-center w-full">
+                    <h2 class="text-3xl m-0 text-[var(--primary)] font-bold">Detective de Errores</h2>
+                    <span class="bg-gray-800 text-white text-xs px-3 py-1 rounded-full uppercase tracking-widest font-bold">Nivel Avanzado</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1 font-lato">Analiza el contexto, encuentra el error y corrígelo.</p>
+            </div>
+        </div>
+
+        <!-- Contenedor de Frases (Grid 2 columnas para aprovechar espacio) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 flex-grow overflow-y-auto pr-2">
+
+            <!-- Caso 1 -->
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <p class="text-lg text-gray-800 font-bold mb-1">"Trabajo <span class="text-[var(--info)] underline decoration-2 decoration-wavy">para</span> ti porque te quiero."</p>
+                <p class="text-xs text-gray-400 italic mb-3"><i class="fas fa-tag mr-1"></i> Contexto: Soy tu empleado</p>
+                
+                <div class="fragment bg-green-50 border-l-4 border-[var(--primary)] p-2 rounded-r text-sm">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-check-circle text-[var(--primary)] mt-1"></i>
+                        <div>
+                            <span class="font-bold text-[var(--primary)]">Correcto.</span>
+                            <p class="m-0 text-gray-600 text-xs">"Para" indica el destinatario final o el jefe.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso 2 -->
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <p class="text-lg text-gray-800 font-bold mb-1">"Trabajo <span class="text-[var(--info)] underline decoration-2 decoration-wavy">por</span> ti porque estás enfermo."</p>
+                <p class="text-xs text-gray-400 italic mb-3"><i class="fas fa-tag mr-1"></i> Contexto: Te estoy cubriendo el turno</p>
+                
+                <div class="fragment bg-green-50 border-l-4 border-[var(--primary)] p-2 rounded-r text-sm">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-check-circle text-[var(--primary)] mt-1"></i>
+                        <div>
+                            <span class="font-bold text-[var(--primary)]">Correcto.</span>
+                            <p class="m-0 text-gray-600 text-xs">"Por" indica intercambio, sustitución o "en lugar de".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso 3 -->
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <p class="text-lg text-gray-800 font-bold mb-1">"Compré este regalo <span class="text-[var(--danger)] underline decoration-2 decoration-wavy">por</span> mi novia."</p>
+                <p class="text-xs text-gray-400 italic mb-3"><i class="fas fa-tag mr-1"></i> Contexto: Es para su cumpleaños</p>
+                
+                <div class="fragment bg-red-50 border-l-4 border-[var(--danger)] p-2 rounded-r text-sm">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-times-circle text-[var(--danger)] mt-1"></i>
+                        <div>
+                            <span class="font-bold text-[var(--danger)]">Incorrecto.</span>
+                            <p class="m-0 text-gray-600 text-xs">Debe ser <strong>"Para"</strong> (Destinatario del objeto).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso 4 -->
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <p class="text-lg text-gray-800 font-bold mb-1">"<span class="text-[var(--info)] underline decoration-2 decoration-wavy">Para</span> ser extranjera, hablas muy bien."</p>
+                <p class="text-xs text-gray-400 italic mb-3"><i class="fas fa-tag mr-1"></i> Contexto: Comparación / Opinión</p>
+                
+                <div class="fragment bg-green-50 border-l-4 border-[var(--primary)] p-2 rounded-r text-sm">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-check-circle text-[var(--primary)] mt-1"></i>
+                        <div>
+                            <span class="font-bold text-[var(--primary)]">Correcto.</span>
+                            <p class="m-0 text-gray-600 text-xs">"Para" implica comparación ("Considerando que ella es...").</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Nota Profesor -->
+        <div class="fragment mt-auto bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3 shadow-sm">
+            <i class="fas fa-lightbulb text-[var(--accent)] text-xl mt-1 animate-pulse"></i>
+            <div>
+                <strong class="font-handlee text-[var(--accent)] text-lg block leading-none mb-1">Nota del Profesor:</strong>
+                <p class="text-sm text-gray-700 m-0 leading-tight">La diferencia entre trabajar "para" (jefe/meta) y "por" (causa/sustitución) es vital para dominar el nivel B1.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- DIAPOSITIVA 9: Activación -->
+
+<!-- DIAPOSITIVA 9: EXPRESIONES IDIOMÁTICAS (BONUS) -->
+<section data-transition="zoom">
+    <div class="glass-card w-full max-w-6xl mx-auto h-full flex flex-col relative overflow-hidden">
+        
+        <!-- ENCABEZADO CON INSTRUCCIONES EN INGLÉS -->
+        <div class="flex flex-col md:flex-row items-center gap-5 mb-6 border-b border-[var(--accent)] pb-4">
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center shadow-lg shrink-0 border-2 border-[var(--accent)] animate-bounce">
+                <i class="fas fa-star text-3xl text-[var(--accent)]"></i>
+            </div>
+            <div class="w-full text-center md:text-left">
+                <div class="flex flex-col md:flex-row justify-between items-center w-full gap-2">
+                    <h2 class="text-3xl m-0 text-[var(--text-main)] font-bold font-playfair">Expresiones Idiomáticas</h2>
+                    <span class="bg-[var(--accent)] text-white text-sm px-4 py-1 rounded-full uppercase tracking-widest font-bold shadow-md transform rotate-2">Bonus Round</span>
+                </div>
+                <!-- Instrucción destacada en Inglés -->
+                <div class="mt-2 bg-blue-50 text-blue-800 px-3 py-2 rounded-lg border border-blue-100 inline-block w-full md:w-auto">
+                    <i class="fas fa-language mr-2"></i>
+                    <span class="font-bold font-lato">INSTRUCTION:</span> 
+                    Connect the Spanish expression with its English meaning.
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENIDO RESPONSIVE (2 COLUMNAS EN PC) -->
+        <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 px-2 overflow-y-auto content-start">
+            
+            <!-- ITEM A -->
+            <div class="flex flex-col justify-between bg-white p-4 rounded-xl shadow-sm border-l-4 border-[var(--primary)] hover:shadow-md transition-all h-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-gray-200 text-gray-600 font-bold w-6 h-6 flex items-center justify-center rounded-full text-xs">A</span>
+                    <span class="text-xl font-bold text-gray-800">Por supuesto</span>
+                    <span class="text-xs ml-auto opacity-50">🇪🇸</span>
+                </div>
+                <div class="w-full h-px bg-gray-100 my-2"></div>
+                <div class="fragment flex items-center justify-between">
+                    <span class="text-xs opacity-50">🇬🇧</span>
+                    <span class="font-handlee text-2xl text-[var(--info)] font-bold">(2) Of course</span>
+                </div>
+            </div>
+
+            <!-- ITEM B -->
+            <div class="flex flex-col justify-between bg-white p-4 rounded-xl shadow-sm border-l-4 border-[var(--accent)] hover:shadow-md transition-all h-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-gray-200 text-gray-600 font-bold w-6 h-6 flex items-center justify-center rounded-full text-xs">B</span>
+                    <span class="text-xl font-bold text-gray-800">Por fin</span>
+                    <span class="text-xs ml-auto opacity-50">🇪🇸</span>
+                </div>
+                <div class="w-full h-px bg-gray-100 my-2"></div>
+                <div class="fragment flex items-center justify-between">
+                    <span class="text-xs opacity-50">🇬🇧</span>
+                    <span class="font-handlee text-2xl text-[var(--info)] font-bold">(3) Finally</span>
+                </div>
+            </div>
+
+            <!-- ITEM C -->
+            <div class="flex flex-col justify-between bg-white p-4 rounded-xl shadow-sm border-l-4 border-[var(--danger)] hover:shadow-md transition-all h-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-gray-200 text-gray-600 font-bold w-6 h-6 flex items-center justify-center rounded-full text-xs">C</span>
+                    <span class="text-xl font-bold text-gray-800">Para siempre</span>
+                    <span class="text-xs ml-auto opacity-50">🇪🇸</span>
+                </div>
+                <div class="w-full h-px bg-gray-100 my-2"></div>
+                <div class="fragment flex items-center justify-between">
+                    <span class="text-xs opacity-50">🇬🇧</span>
+                    <span class="font-handlee text-2xl text-[var(--info)] font-bold">(4) Forever</span>
+                </div>
+            </div>
+
+            <!-- ITEM D -->
+            <div class="flex flex-col justify-between bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 hover:shadow-md transition-all h-full">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-gray-200 text-gray-600 font-bold w-6 h-6 flex items-center justify-center rounded-full text-xs">D</span>
+                    <span class="text-xl font-bold text-gray-800">Por lo general</span>
+                    <span class="text-xs ml-auto opacity-50">🇪🇸</span>
+                </div>
+                <div class="w-full h-px bg-gray-100 my-2"></div>
+                <div class="fragment flex items-center justify-between">
+                    <span class="text-xs opacity-50">🇬🇧</span>
+                    <span class="font-handlee text-2xl text-[var(--info)] font-bold">(1) Generally</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER: DRILL -->
+        <div class="mt-4 bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-center gap-4 shadow-sm shrink-0">
+            <div class="bg-indigo-100 p-2 rounded-full hidden md:block">
+                <i class="fas fa-microphone-alt text-indigo-600 text-xl"></i>
+            </div>
+            <div>
+                <strong class="font-handlee text-indigo-600 text-lg block leading-none mb-1">Drill de Pronunciación:</strong>
+                <p class="text-sm text-gray-600 m-0">Haz que repitan estas frases rápidamente 3 veces para ganar fluidez.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- DIAPOSITIVA 10: ESCENARIO - PLANEANDO EL VIAJE -->
+<section data-transition="slide">
+    <div class="glass-card w-full max-w-6xl mx-auto h-full flex flex-col relative overflow-hidden">
+        
+        <!-- HEADER -->
+        <div class="flex items-center gap-5 mb-6 border-b border-[var(--primary)] pb-4">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center shadow-lg shrink-0 border-2 border-[var(--primary)]">
+                <i class="fas fa-plane-departure text-3xl text-[var(--primary)]"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl m-0 text-[var(--text-main)] font-bold font-playfair">Escenario: Planeando el Viaje</h2>
+                <p class="text-gray-500 text-sm mt-1 font-lato">Actividad de producción oral en parejas.</p>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 flex-grow overflow-y-auto px-2">
+            
+            <!-- LEFT: CHECKLIST (REQUISITOS) -->
+            <div class="flex flex-col gap-4">
+                <div class="bg-blue-50 text-blue-800 p-4 rounded-xl border border-blue-100 shadow-sm">
+                    <h3 class="font-bold text-lg mb-1 flex items-center gap-2 m-0">
+                        <i class="fas fa-users"></i> Instrucciones:
+                    </h3>
+                    <p class="text-sm m-0 opacity-80">En parejas, planifiquen un viaje incluyendo estos 5 puntos:</p>
+                </div>
+
+                <ul class="space-y-3 mt-2">
+                    <!-- Item 1 -->
+                    <li class="fragment flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border-l-4 border-[var(--primary)] hover:translate-x-1 transition-transform">
+                        <span class="bg-green-100 text-[var(--primary)] font-bold px-2 py-1 rounded text-xs uppercase w-16 text-center shrink-0 shadow-sm">Para</span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-bold text-gray-800 text-base">1. Destination</span>
+                            <span class="text-xs text-gray-500 italic">¿A dónde van?</span>
+                        </div>
+                    </li>
+                    <!-- Item 2 -->
+                    <li class="fragment flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border-l-4 border-[var(--accent)] hover:translate-x-1 transition-transform">
+                        <span class="bg-amber-100 text-[var(--accent)] font-bold px-2 py-1 rounded text-xs uppercase w-16 text-center shrink-0 shadow-sm">Por</span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-bold text-gray-800 text-base">2. Duration</span>
+                            <span class="text-xs text-gray-500 italic">¿Cuánto tiempo?</span>
+                        </div>
+                    </li>
+                    <!-- Item 3 -->
+                    <li class="fragment flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border-l-4 border-[var(--accent)] hover:translate-x-1 transition-transform">
+                        <span class="bg-amber-100 text-[var(--accent)] font-bold px-2 py-1 rounded text-xs uppercase w-16 text-center shrink-0 shadow-sm">Por</span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-bold text-gray-800 text-base">3. Reason</span>
+                            <span class="text-xs text-gray-500 italic">Vacation or Work? (Causa)</span>
+                        </div>
+                    </li>
+                    <!-- Item 4 -->
+                    <li class="fragment flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border-l-4 border-[var(--accent)] hover:translate-x-1 transition-transform">
+                        <span class="bg-amber-100 text-[var(--accent)] font-bold px-2 py-1 rounded text-xs uppercase w-16 text-center shrink-0 shadow-sm">Por</span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-bold text-gray-800 text-base">4. Budget</span>
+                            <span class="text-xs text-gray-500 italic">Exchange / Cost ($)</span>
+                        </div>
+                    </li>
+                     <!-- Item 5 -->
+                    <li class="fragment flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border-l-4 border-[var(--primary)] hover:translate-x-1 transition-transform">
+                        <span class="bg-green-100 text-[var(--primary)] font-bold px-2 py-1 rounded text-xs uppercase w-16 text-center shrink-0 shadow-sm">Para</span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-bold text-gray-800 text-base">5. Goal / Activity</span>
+                            <span class="text-xs text-gray-500 italic">To see / To eat (Propósito)</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- RIGHT: EXAMPLE CARD -->
+            <div class="flex flex-col justify-center items-center">
+                <div class="fragment bg-[#fffbeb] p-8 rounded-xl shadow-lg border border-gray-200 rotate-1 transform transition-all hover:rotate-0 hover:scale-105 relative max-w-md">
+                    <!-- Pin Icon decoration -->
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-red-500 text-3xl drop-shadow-md z-10">
+                        <i class="fas fa-thumbtack"></i>
+                    </div>
+                    
+                    <h4 class="font-handlee text-gray-400 text-center text-xl mb-6 border-b border-gray-300 pb-2">Ejemplo</h4>
+                    
+                    <p class="font-playfair text-2xl text-gray-800 leading-relaxed text-center italic">
+                        "Vamos <strong class="text-[var(--primary)] underline decoration-wavy decoration-2">para</strong> Argentina <strong class="text-[var(--accent)] underline decoration-wavy decoration-2">por</strong> dos semanas. <br><br>
+                        Vamos <strong class="text-[var(--accent)] underline decoration-wavy decoration-2">por</strong> trabajo, pero también <strong class="text-[var(--primary)] underline decoration-wavy decoration-2">para</strong> comer carne."
+                    </p>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-gray-300 flex justify-center gap-6 text-3xl text-gray-300">
+                         <i class="fas fa-passport hover:text-[var(--primary)] transition-colors"></i>
+                         <i class="fas fa-plane hover:text-[var(--accent)] transition-colors"></i>
+                         <i class="fas fa-camera hover:text-[var(--info)] transition-colors"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    
+
+    </div>
+</section>
+
+
+<!-- DIAPOSITIVA 11: RESUMEN Y PRÓXIMOS PASOS -->
+
+<!-- DIAPOSITIVA 12 (FINAL): RESUMEN Y PRÓXIMOS PASOS - DISEÑO MEJORADO -->
+<section data-transition="zoom">
+    
+    <!-- CONTENEDOR PRINCIPAL CON IMAGEN DE FONDO -->
+    <!-- Usamos 'bg-cover' y un overlay blanco para asegurar legibilidad -->
+    <div class="glass-card w-full max-w-7xl mx-auto h-full flex flex-col relative overflow-hidden"
+         style="background-image: url('https://tucaneo.com/wp-content/uploads/2025/12/Captura-de-pantalla-2025-12-01-123236.png'); background-size: cover; background-position: center;">
+        
+        <!-- CAPA BLANCA SEMITRANSPARENTE (OVERLAY) -->
+        <!-- Esto permite que el texto se lea perfecto sobre la imagen -->
+        <div class="absolute inset-0 bg-white/95 z-0"></div>
+
+        <!-- CONTENIDO (Z-INDEX 10 PARA ESTAR SOBRE EL FONDO) -->
+        <div class="relative z-10 flex flex-col h-full px-4 py-2">
+
+            <!-- HEADER COMPACTO -->
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4 shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center shadow-lg shrink-0 text-white">
+                        <i class="fas fa-clipboard-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl m-0 text-[var(--text-main)] font-bold font-playfair">Resumen Final</h2>
+                        <p class="text-gray-500 text-xs mt-0 font-lato uppercase tracking-widest">Cheat Sheet & Next Steps</p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- GRID PRINCIPAL DE 3 COLUMNAS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow overflow-y-auto content-start">
+                
+                <!-- COLUMNA 1: POR (THE JOURNEY) -->
+                <div class="fragment bg-amber-50 rounded-xl border-t-4 border-[var(--accent)] shadow-sm p-5 hover:shadow-md transition-shadow flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-[var(--accent)] font-bold text-2xl m-0">POR</h3>
+                        <span class="text-xs font-bold text-gray-400 bg-white px-2 py-1 rounded border border-gray-100 uppercase">The Journey</span>
+                    </div>
+                    <ul class="space-y-3 flex-grow">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-arrow-right text-[var(--accent)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Causa</strong> (Because of)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-exchange-alt text-[var(--accent)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Intercambio</strong> (Money/Thanks)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-clock text-[var(--accent)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Duración</strong> (Period of time)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-route text-[var(--accent)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>A través de</strong> (Through)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- COLUMNA 2: PARA (THE GOAL) -->
+                <div class="fragment bg-emerald-50 rounded-xl border-t-4 border-[var(--primary)] shadow-sm p-5 hover:shadow-md transition-shadow flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-[var(--primary)] font-bold text-2xl m-0">PARA</h3>
+                        <span class="text-xs font-bold text-gray-400 bg-white px-2 py-1 rounded border border-gray-100 uppercase">The Goal</span>
+                    </div>
+                    <ul class="space-y-3 flex-grow">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-bullseye text-[var(--primary)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Propósito</strong> (In order to)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-user text-[var(--primary)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Destinatario</strong> (For you)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-hourglass-end text-[var(--primary)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Fecha Límite</strong> (Deadline)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-map-marker-alt text-[var(--primary)] mt-1 text-sm"></i>
+                            <span class="text-sm text-gray-700"><strong>Destino</strong> (To a place)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- COLUMNA 3: TAREA (NEXT STEPS) -->
+                <div class="fragment bg-white rounded-xl border-2 border-dashed border-gray-300 p-5 shadow-sm hover:border-gray-400 transition-colors flex flex-col relative">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-600 text-white px-3 py-0.5 rounded text-xs font-bold uppercase tracking-widest shadow-sm">
+                        Homework
+                    </div>
+                    
+                    <h4 class="text-center font-bold text-gray-800 text-lg mb-4 mt-2">Tu Trabajo Ideal</h4>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 mb-4 italic text-center border border-gray-100">
+                        "Escribe un párrafo corto explicando tu trabajo soñado."
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase">
+                            <i class="fas fa-check-circle text-green-500"></i> Requisitos:
+                        </div>
+                        <p class="text-sm ml-5 m-0 text-gray-700">Usa <strong>3 veces "Por"</strong></p>
+                        <p class="text-sm ml-5 m-0 text-gray-700">Usa <strong>3 veces "Para"</strong></p>
+                    </div>
+
+                    <div class="mt-auto text-center">
+                        <span class="text-xs text-gray-400">Toma una captura de pantalla <i class="fas fa-camera ml-1"></i></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER: CIERRE -->
+            <div class="mt-6 border-t border-gray-200 pt-4 text-center shrink-0">
+                <div class="inline-flex items-center gap-3 bg-white px-6 py-2 rounded-full shadow-sm border border-gray-100">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-sm font-handlee text-gray-600">
+                        "Would you like me to send you a 'Cheat Sheet' PDF? <strong>Great job today!</strong>"
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+            
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { 
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, 
+            Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, 
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, 
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, 
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, 
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, 
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, 
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, 
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, 
+            Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, 
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, 
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div> <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">{selectedId ? 'EDITAR' : 'GROSOR'}</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? '¿?' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-black transition-colors flex-shrink-0">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-orange-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none" style={{ font: `${Math.max(12, strokeWidth * 4)}px sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escribe..." /> </div> )} </div> ); }
+        function App() { const [tab, setTab] = useState('board'); const close = () => window.toggleDrawer(); useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []); return ( <div className="h-full flex flex-col bg-slate-50"> <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6"> <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button> <div className="flex-1"></div> </div> <div className="flex-1 relative overflow-hidden"> <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> </div> </div> ); }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        const isMobile = window.innerWidth < 900;
+        
+        // Inicialización de Reveal (sin plugins complicados)
+        Reveal.initialize({
+            controls: true, 
+            progress: true, 
+            center: true, 
+            width: 1200, height: 900,
+            margin: isMobile ? 0.02 : 0.04,
+            minScale: 0.1, maxScale: 3.0,
+            touch: true,
+            transition: 'slide', 
+            backgroundTransition: 'fade'
+        });
+
+        // Toggle del Menú Lateral
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+
+        // --- LÓGICA DE ZOOM MANUAL (FUERZA BRUTA) ---
+        function forceZoom() {
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            
+            // Verificamos si ya tiene nuestro zoom
+            if (container.style.transform === 'scale(1.35)') {
+                // APAGAR ZOOM
+                container.style.transform = '';
+                container.style.transformOrigin = '';
+                btn.classList.remove('active');
+            } else {
+                // ENCENDER ZOOM
+                // 1.35 significa 35% más grande. 
+                // Usamos 'center top' para que no se pierda el contenido de arriba
+                container.style.transform = 'scale(1.35)';
+                container.style.transformOrigin = 'center top'; 
+                container.style.transition = 'transform 0.3s ease-out';
+                btn.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

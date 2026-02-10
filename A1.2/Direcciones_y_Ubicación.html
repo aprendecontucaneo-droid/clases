@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- ESTILOS VISUALES (TROPICAL - ESQUELETO 15) --- */
+        :root { 
+            --primary: #004d40; /* Verde Selva */
+            --accent: #ff6f00;  /* Naranja Atardecer */
+            --text-main: #1f2937; 
+            --bg-light: #fefce8; /* Crema Suave */
+            --danger: #ef4444; 
+        }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+        
+        /* Drawer y Pizarra */
+        #tucaneo-drawer { position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        #safe-close-btn:hover { transform: scale(1.1); }
+        
+        /* UI Flotante */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 100px; z-index: 5000; transition: all 0.3s ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; transition: all 0.3s ease; }
+        #floating-cta { position: fixed; bottom: 20px; left: 30px; z-index: 5000; font-size: 12px; color: var(--primary); text-decoration: none; letter-spacing: 1px; font-weight: bold; opacity: 0.7; }
+        
+        /* Reveal JS Base (Tipografía Tropical) */
+        .reveal { color: var(--text-main); font-size: 22px; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: var(--primary); text-transform: none; font-weight: 700; }
+        
+        /* ESTADO NORMAL (Slide centered) */
+        .reveal section { 
+            display: flex !important; 
+            flex-direction: column; 
+            justify-content: center; 
+            height: 100%; 
+            padding: 0 !important;
+        }
+
+        /* --- MODO ZOOM / SCROLL (PC) --- */
+        .reveal.is-zoomed {
+            overflow-y: scroll !important;
+            overflow-x: hidden !important;
+            background: var(--bg-light);
+        }
+        .reveal.is-zoomed .slides {
+            transform: none !important;
+            width: 100% !important;
+            height: auto !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 100px 0 150px 0 !important;
+            text-align: center !important;
+            overflow: visible !important;
+            inset: 0 !important;
+        }
+        .reveal.is-zoomed section.present {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            height: auto !important;
+            width: 90% !important;
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            transform: none !important;
+            text-align: left !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px; /* Tropical Rounding */
+            padding: 40px !important;
+            top: auto !important;
+            left: auto !important;
+        }
+        .reveal.is-zoomed section:not(.present) { display: none !important; }
+        .reveal.is-zoomed::-webkit-scrollbar { width: 12px; }
+        .reveal.is-zoomed::-webkit-scrollbar-track { background: var(--bg-light); }
+        .reveal.is-zoomed::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; border: 3px solid var(--bg-light); }
+
+        /* --- ESTILOS DE COMPONENTES (TROPICALIZADOS) --- */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8); 
+            border-radius: 20px; /* Redondeado Tropical */
+            padding: 30px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+            text-align: left; 
+            margin: 0 auto; 
+            width: 100%;
+        }
+        
+        .clean-input { 
+            border: none; border-bottom: 2px solid #e5e7eb; background: rgba(255,255,255,0.5); font-family: 'Handlee', cursive; font-size: 1.2em; color: var(--accent); text-align: left; width: 100%; transition: 0.3s; padding: 10px; border-radius: 10px; cursor: text; 
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; width: 100%; padding: 0 10px; }
+        
+        /* Botones Nav (Redondos) */
+        .nav-btn { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 12px; padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none; letter-spacing: 1px; }
+        .nav-btn.zoom { background-color: var(--accent); color: white; }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #64748b; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .nav-btn.zoom.active { background-color: #fff; color: var(--accent); border: 2px solid var(--accent); }
+
+        .cursor-eraser { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="white" stroke="black" stroke-width="1"/></svg>') 10 10, auto; }
+
+        /* Helpers Tablas */
+        .number-table { width: 100%; text-align: left; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
+        .number-table th { border-bottom: 2px solid var(--accent); color: var(--primary); font-family: 'Playfair Display', serif; padding: 8px; font-size: 1.1em; font-weight: bold; }
+        .number-table td { background: white; border-radius: 10px; padding: 12px; color: var(--text-main); font-family: 'Lato', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .pronunciation { font-style: italic; color: #94a3b8; font-size: 0.9em; margin-left: 10px; font-family: 'Handlee', cursive; }
+
+        /* UI Móvil */
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.1s; display: none; }
+        #back-to-top { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: opacity 0.3s, transform 0.3s; opacity: 0; pointer-events: none; }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        /* --- ZONA MÓVIL CRÍTICA (CORREGIDA PARA TUCANEO) --- */
+        @media (max-width: 1024px) {
+            html, body { 
+                height: auto !important; 
+                overflow-x: hidden !important;
+                overflow-y: auto !important; 
+                -webkit-overflow-scrolling: touch; 
+                background: var(--bg-light) !important;
+            }
+
+            /* Ajustes de UI flotante para móvil */
+            #fixed-logo { width: 60px; top: 10px; left: 10px; } 
+            #top-nav { top: 10px; right: 10px; gap: 5px; } 
+            .nav-btn span { display: none; } 
+            .nav-btn { padding: 8px; width: 32px; height: 32px; justify-content: center; }
+            
+            /* Ocultar herramientas de PC */
+            #btn-zoom, .nav-btn.whiteboard, #premium-dock { display: none !important; } 
+            #scroll-progress { display: block; }
+            #back-to-top { display: flex; }
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+
+            /* --- REVEAL JS RESET TOTAL PARA MÓVIL --- */
+            /* Esto convierte las diapositivas en bloques normales de página web */
+            .reveal { 
+                overflow: visible !important; 
+                position: relative !important; 
+                width: 100% !important;
+                height: auto !important; 
+                touch-action: pan-y !important; 
+                background: transparent !important; 
+            }
+            .reveal .slides { 
+                display: block !important; 
+                position: static !important; 
+                height: auto !important; 
+                width: 100% !important; 
+                transform: none !important; 
+                margin: 0 !important; 
+                text-align: left !important; 
+                overflow: visible !important;
+                inset: 0 !important;
+                padding-top: 60px !important; /* Espacio para el logo */
+            }
+            .reveal .slides section { 
+                display: block !important; 
+                opacity: 1 !important; 
+                visibility: visible !important; 
+                position: relative !important; 
+                height: auto !important; 
+                min-height: auto !important;
+                width: 100% !important; 
+                padding: 20px 15px 40px 15px !important; 
+                border-bottom: 1px solid #e2e8f0; 
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+            }
+            
+            /* --- ARREGLO DE COMPONENTES INTERNOS --- */
+            /* Forzar que las tarjetas de vidrio no se desborden */
+            .glass-card { 
+                padding: 15px !important; 
+                margin-bottom: 20px !important; 
+                box-shadow: none !important; 
+                border: 1px solid #cbd5e1 !important; 
+                width: 100% !important;
+            } 
+            
+            /* Convertir las grillas de Tailwind en columnas verticales */
+            .grid, .grid-responsive { 
+                display: flex !important; 
+                flex-direction: column !important; 
+                gap: 15px !important; 
+            }
+            
+            /* Arreglar alturas fijas (h-full, h-[400px]) que rompen el móvil */
+            .lg\:col-span-7, .lg\:col-span-8, .lg\:col-span-5, .lg\:col-span-4 {
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+            }
+            
+            /* El mapa y elementos con altura fija específica */
+            .h-\[400px\], .h-72, .h-\[500px\] {
+                height: 350px !important; /* Altura segura para móvil */
+            }
+
+            /* Ajuste de textos */
+            .reveal h1 { font-size: 1.8em !important; line-height: 1.1 !important; }
+            .reveal h2 { font-size: 1.5em !important; }
+            .reveal p, .reveal li { font-size: 16px !important; }
+            
+            /* Inputs accesibles */
+            input, textarea, .clean-input, select { 
+                font-size: 16px !important; /* Evita zoom automático en iPhone */
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">FUNDAMENTOS NUMÉRICOS</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+           <section data-background-gradient="linear-gradient(to bottom, #f8fafc, #e2e8f0)">
+    <div class="h-full w-full flex flex-col items-center justify-center p-6 box-border">
+        <div class="border-2 border-slate-300 w-full h-full flex flex-col items-center justify-between p-8 bg-white/50 rounded-lg shadow-sm max-w-5xl">
+            
+            <div class="mt-4">
+                <div style="font-family: 'Cinzel', serif; letter-spacing: 6px;" class="text-2xl text-amber-700 font-bold uppercase border-b-2 border-amber-700 pb-2">
+                    Tucaneo Academy A2
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2 class="text-5xl md:text-6xl font-bold text-slate-900 mb-4 font-playfair tracking-tight">
+                    Navegando <br> <span class="text-slate-700">La Ciudad</span>
+                </h2>
+                <p class="text-xl text-slate-500 font-light mt-4">Asking for & Giving Directions</p>
+            </div>
+            
+            <div class="flex items-center gap-8 bg-white p-6 rounded-xl shadow-md border-l-8 border-amber-700 w-full max-w-3xl">
+                <div class="text-center border-r border-slate-200 pr-8">
+                    <span class="block text-sm text-slate-400 uppercase tracking-widest font-bold">SESIÓN</span>
+                    <span class="text-5xl font-bold text-amber-700 font-mono">06</span>
+                </div>
+                <div class="text-left flex-1">
+                    <p class="text-2xl font-bold text-slate-800 mb-1">¿Dónde queda...?</p>
+                    <p class="text-lg text-slate-600 italic">Goal: Guide a client to your office or find the courthouse.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-5xl mx-auto">
+        <div class="flex items-center gap-4 mb-6 border-b border-slate-200 pb-2">
+            <i class="fas fa-map-marker-alt text-2xl text-amber-700"></i>
+            <h3 class="m-0 text-2xl text-slate-800">Lugares Importantes (Key Places)</h3>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-university text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">El Banco</p>
+                <p class="text-xs text-slate-500 italic">The Bank</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-prescription-bottle-alt text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">La Farmacia</p>
+                <p class="text-xs text-slate-500 italic">The Pharmacy</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-shopping-bag text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">El Centro Comercial</p>
+                <p class="text-xs text-slate-500 italic">The Mall</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-balance-scale text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">El Juzgado / La Corte</p>
+                <p class="text-xs text-slate-500 italic">The Court</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-bread-slice text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">La Panadería</p>
+                <p class="text-xs text-slate-500 italic">The Bakery</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-gas-pump text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">La Gasolinera</p>
+                <p class="text-xs text-slate-500 italic">Gas Station</p>
+            </div>
+             <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-parking text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">El Parqueadero</p>
+                <p class="text-xs text-slate-500 italic">Parking Lot</p>
+            </div>
+             <div class="bg-white p-4 rounded shadow-sm border border-slate-200 hover:border-amber-500 transition group">
+                <i class="fas fa-church text-3xl text-slate-400 group-hover:text-amber-600 mb-2"></i>
+                <p class="font-bold text-slate-800">La Iglesia</p>
+                <p class="text-xs text-slate-500 italic">The Church</p>
+            </div>
+        </div>
+        
+        <div class="mt-6 bg-amber-50 p-4 rounded text-sm text-slate-700 flex gap-3 items-center">
+            <i class="fas fa-info-circle text-amber-600 text-xl"></i>
+            <div>
+                <strong>Tip:</strong> In Colombia, we often use <span class="text-amber-700 font-bold">"La Droguería"</span> instead of "La Farmacia".
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="grid-responsive max-w-6xl mx-auto">
+        <div class="glass-card border-t-4 border-blue-500">
+            <h3 class="text-blue-800 text-xl mb-4 font-bold">Informal (Tú)</h3>
+            <p class="text-slate-500 text-sm mb-4">For friends, family, or people your age on the street.</p>
+            
+            <ul class="space-y-4">
+                <li class="bg-blue-50 p-3 rounded">
+                    <p class="font-bold text-slate-800">Disculpa...</p>
+                    <p class="text-xs text-blue-600">Excuse me...</p>
+                </li>
+                <li class="bg-blue-50 p-3 rounded">
+                    <p class="font-bold text-slate-800">¿Sabes dónde está...?</p>
+                    <p class="text-xs text-blue-600">Do you know where... is?</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="glass-card border-t-4 border-amber-600">
+            <h3 class="text-amber-800 text-xl mb-4 font-bold">Formal (Usted)</h3>
+            <p class="text-slate-500 text-sm mb-4">For clients, judges, elderly people, or to be polite.</p>
+            
+            <ul class="space-y-4">
+                <li class="bg-amber-50 p-3 rounded">
+                    <p class="font-bold text-slate-800">Disculp<span class="text-red-500 font-bold">e</span> / Perdón...</p>
+                    <p class="text-xs text-amber-700">Excuse me / Pardon...</p>
+                </li>
+                <li class="bg-amber-50 p-3 rounded">
+                    <p class="font-bold text-slate-800">¿Podría decirme cómo llegar a...?</p>
+                    <p class="text-xs text-amber-700">Could you tell me how to get to...?</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="mt-8 max-w-3xl mx-auto text-center">
+        <div class="inline-block bg-slate-800 text-white px-6 py-2 rounded-full shadow-lg">
+            <span class="font-mono text-amber-400 font-bold">QUEDAR</span> = <span class="font-mono text-white font-bold">ESTAR</span> (Location)
+        </div>
+        <p class="mt-2 text-slate-600">¿Dónde <span class="font-bold text-amber-700">queda</span> el banco? = ¿Dónde <span class="font-bold text-blue-700">está</span> el banco?</p>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-6xl mx-auto flex flex-col h-full justify-center">
+        
+        <h3 class="text-center text-slate-800 mb-4 text-xl">Acciones de Movimiento (Reference)</h3>
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-3 rounded shadow-sm text-center border-b-4 border-green-500">
+                <i class="fas fa-arrow-up text-2xl text-green-500 mb-1"></i>
+                <div class="font-bold text-slate-800 text-sm">Sigue / Ve</div>
+                <div class="text-[10px] text-slate-500">Go straight</div>
+            </div>
+            <div class="bg-white p-3 rounded shadow-sm text-center border-b-4 border-blue-500">
+                <i class="fas fa-share text-2xl text-blue-500 mb-1 transform -scale-x-100"></i>
+                <div class="font-bold text-slate-800 text-sm">Gira Izquierda</div>
+                <div class="text-[10px] text-slate-500">Turn Left</div>
+            </div>
+            <div class="bg-white p-3 rounded shadow-sm text-center border-b-4 border-blue-500">
+                <i class="fas fa-share text-2xl text-blue-500 mb-1"></i>
+                <div class="font-bold text-slate-800 text-sm">Gira Derecha</div>
+                <div class="text-[10px] text-slate-500">Turn Right</div>
+            </div>
+            <div class="bg-white p-3 rounded shadow-sm text-center border-b-4 border-amber-500">
+                <i class="fas fa-road text-2xl text-amber-500 mb-1"></i>
+                <div class="font-bold text-slate-800 text-sm">Cuadra(s)</div>
+                <div class="text-[10px] text-slate-500">City Block(s)</div>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 p-6 rounded-xl border border-slate-300">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="m-0 text-slate-700 font-bold"><i class="fas fa-motorcycle text-amber-600 mr-2"></i>Mission: The Delivery</h4>
+                <span class="text-xs bg-slate-200 px-2 py-1 rounded text-slate-500">Analyize the path below</span>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 mb-6 bg-white p-4 rounded-lg shadow-inner overflow-x-auto">
+                
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-motorcycle text-slate-800 text-xl"></i>
+                    <span class="text-[10px] font-bold">START</span>
+                </div>
+
+                <i class="fas fa-long-arrow-alt-right text-slate-300"></i>
+                
+                <div class="bg-green-100 px-2 py-1 rounded text-center border border-green-300">
+                    <span class="block text-xs font-bold text-green-800">2 Blocks</span>
+                    <i class="fas fa-arrow-up text-green-600"></i>
+                </div>
+
+                <i class="fas fa-long-arrow-alt-right text-slate-300"></i>
+
+                <div class="bg-blue-100 px-2 py-1 rounded text-center border border-blue-300">
+                    <span class="block text-xs font-bold text-blue-800">Turn Right</span>
+                    <i class="fas fa-share text-blue-600"></i>
+                </div>
+
+                <i class="fas fa-long-arrow-alt-right text-slate-300"></i>
+
+                <div class="bg-green-100 px-2 py-1 rounded text-center border border-green-300">
+                    <span class="block text-xs font-bold text-green-800">1 Block</span>
+                    <i class="fas fa-arrow-up text-green-600"></i>
+                </div>
+                
+                <i class="fas fa-long-arrow-alt-right text-slate-300"></i>
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-home text-amber-600 text-xl"></i>
+                    <span class="text-[10px] font-bold text-amber-700">GOAL</span>
+                </div>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-2 font-bold text-center">Which set of instructions matches the path?</p>
+            
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="react('error')" class="text-left w-full bg-white p-3 rounded border-2 border-transparent hover:border-slate-400 hover:bg-slate-50 transition flex items-center gap-3 group">
+                    <div class="bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-500 group-hover:bg-slate-300 group-hover:text-slate-700 transition">A</div>
+                    <div class="text-sm text-slate-600 group-hover:text-slate-900">
+                        "Sigue derecho dos cuadras, <strong class="text-slate-800">gira a la izquierda</strong> y camina una cuadra."
+                    </div>
+                </button>
+
+                <button onclick="react('applause')" class="text-left w-full bg-white p-3 rounded border-2 border-transparent hover:border-slate-400 hover:bg-slate-50 transition flex items-center gap-3 group">
+                    <div class="bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-500 group-hover:bg-slate-300 group-hover:text-slate-700 transition">B</div>
+                    <div class="text-sm text-slate-600 group-hover:text-slate-900">
+                        "Sigue derecho dos cuadras, <strong class="text-slate-800">gira a la derecha</strong> y camina una cuadra."
+                    </div>
+                </button>
+
+                <button onclick="react('error')" class="text-left w-full bg-white p-3 rounded border-2 border-transparent hover:border-slate-400 hover:bg-slate-50 transition flex items-center gap-3 group">
+                    <div class="bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-slate-500 group-hover:bg-slate-300 group-hover:text-slate-700 transition">C</div>
+                    <div class="text-sm text-slate-600 group-hover:text-slate-900">
+                        "Sigue derecho <strong class="text-slate-800">una cuadra</strong>, gira a la derecha y camina <strong class="text-slate-800">dos cuadras</strong>."
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-5xl mx-auto overflow-hidden">
+        <div class="flex items-center gap-4 mb-6 border-b border-slate-200 pb-4">
+            <div class="bg-amber-100 p-3 rounded-full text-amber-700">
+                <i class="fas fa-book-open text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-slate-800 m-0">Preposiciones de Lugar</h3>
+                <p class="text-slate-500 m-0">Vocabulary Guide: Where is it?</p>
+            </div>
+        </div>
+
+        <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
+            <table class="w-full text-left border-collapse bg-white">
+                <thead>
+                    <tr class="bg-slate-800 text-white text-sm uppercase tracking-wider">
+                        <th class="p-4 font-bold border-b-2 border-amber-500 w-1/3">Español</th>
+                        <th class="p-4 font-bold border-b-2 border-amber-500 w-1/3">English Meaning</th>
+                        <th class="p-4 font-bold border-b-2 border-amber-500 text-center">Visual Logic</th>
+                    </tr>
+                </thead>
+                <tbody class="text-slate-700">
+                    <tr class="border-b border-slate-100 hover:bg-amber-50 transition">
+                        <td class="p-4 font-bold text-lg">Al lado de</td>
+                        <td class="p-4 italic text-slate-500">Next to / Beside</td>
+                        <td class="p-4 text-center text-xl">
+                            <i class="fas fa-square text-slate-300"></i><i class="fas fa-map-marker-alt text-amber-600 ml-1"></i>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-amber-50 transition bg-slate-50">
+                        <td class="p-4 font-bold text-lg">Enfrente de</td>
+                        <td class="p-4 italic text-slate-500">Opposite / Facing<br><span class="text-xs text-red-400 not-italic">(Not just "in front", usually across a street)</span></td>
+                        <td class="p-4 text-center text-xl">
+                            <i class="fas fa-building text-slate-400"></i>
+                            <i class="fas fa-arrows-alt-h text-xs text-slate-300 mx-1"></i>
+                            <i class="fas fa-building text-amber-600"></i>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-amber-50 transition">
+                        <td class="p-4 font-bold text-lg">Entre</td>
+                        <td class="p-4 italic text-slate-500">Between</td>
+                        <td class="p-4 text-center text-xl">
+                            <i class="fas fa-square text-slate-300"></i>
+                            <span class="text-amber-700 font-bold mx-1">X</span>
+                            <i class="fas fa-square text-slate-300"></i>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-amber-50 transition bg-slate-50">
+                        <td class="p-4 font-bold text-lg">En la esquina</td>
+                        <td class="p-4 italic text-slate-500">On the corner</td>
+                        <td class="p-4 text-center text-xl">
+                            <i class="far fa-square text-slate-300 text-2xl relative">
+                                <i class="fas fa-circle text-amber-600 absolute -top-1 -right-1 text-xs"></i>
+                            </i>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-100 hover:bg-amber-50 transition">
+                        <td class="p-4 font-bold text-lg">Detrás de</td>
+                        <td class="p-4 italic text-slate-500">Behind</td>
+                        <td class="p-4 text-center text-xl">
+                            <div class="relative inline-block">
+                                <i class="fas fa-square text-slate-300 text-2xl z-10 relative"></i>
+                                <i class="fas fa-user text-amber-600 text-xs absolute top-0 -right-2 z-0 opacity-50"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 flex gap-4 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <i class="fas fa-lightbulb text-blue-500 text-2xl mt-1"></i>
+            <div>
+                <h4 class="font-bold text-blue-900 m-0 text-sm uppercase">Grammar Tip:</h4>
+                <p class="text-blue-800 text-sm m-0">
+                    Remember to use the verb <strong>ESTAR</strong> for location.<br>
+                    <span class="font-mono text-slate-500">"El banco <strong class="text-green-600">está</strong> al lado del cine."</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-5xl mx-auto">
+        <div class="flex justify-between items-end mb-4 border-b border-slate-200 pb-2">
+            <div>
+                <h3 class="text-2xl text-slate-800 m-0"><i class="fas fa-map-marked-alt text-amber-700 mr-2"></i>Ubicación Exacta</h3>
+                <p class="text-sm text-slate-500 mt-1"><strong>Instructions:</strong> Analyze the map layout. Choose the correct preposition.</p>
+            </div>
+            <div class="text-xs font-mono bg-slate-100 px-2 py-1 rounded text-slate-400">Nivel A2</div>
+        </div>
+        
+        <div class="relative bg-slate-300 h-72 w-full rounded-xl mb-6 border-4 border-slate-400 overflow-hidden shadow-inner perspective-1000">
+            
+            <div class="absolute top-[40%] left-0 w-full h-20 bg-slate-500 border-y-4 border-slate-600 flex items-center justify-center z-0">
+                <span class="text-slate-400 font-bold tracking-[1em] opacity-50 text-2xl">AVENIDA CENTRAL</span>
+            </div>
+            
+            <div class="absolute top-4 left-4 w-32 h-24 bg-indigo-100 border-b-8 border-r-4 border-indigo-300 rounded-lg flex flex-col items-center justify-center shadow-2xl z-10 transform hover:-translate-y-1 transition">
+                <div class="bg-indigo-600 text-white text-[10px] px-2 rounded-full absolute -top-2">HOTEL</div>
+                <i class="fas fa-bed text-3xl text-indigo-500"></i>
+            </div>
+
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-24 bg-white border-b-8 border-r-4 border-slate-300 rounded-lg flex flex-col items-center justify-center shadow-2xl z-10">
+                <i class="fas fa-plus text-red-500 text-3xl mb-1"></i>
+                <span class="font-bold text-slate-700 text-xs">FARMACIA</span>
+            </div>
+
+            <div class="absolute top-4 right-4 w-32 h-24 bg-orange-50 border-b-8 border-r-4 border-orange-200 rounded-lg flex flex-col items-center justify-center shadow-2xl z-10">
+                <i class="fas fa-coffee text-3xl text-orange-700"></i>
+                <span class="font-bold text-orange-800 text-xs mt-1">CAFÉ</span>
+            </div>
+
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-64 h-24 bg-green-100 border-t-8 border-green-300 rounded-xl flex items-center justify-center shadow-lg z-10">
+                <i class="fas fa-tree text-green-700 text-2xl mr-4"></i>
+                <span class="font-bold text-green-800 tracking-widest">PARQUE CENTRAL</span>
+                <i class="fas fa-tree text-green-700 text-2xl ml-4"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div class="bg-white p-4 rounded border border-slate-200 shadow-sm">
+                <p class="text-slate-700 font-medium mb-3">1. La farmacia está ___________ el hotel y el café.</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="react('error')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">lejos de</button>
+                    <button onclick="react('applause')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">entre</button>
+                    <button onclick="react('error')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">sobre</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded border border-slate-200 shadow-sm">
+                <p class="text-slate-700 font-medium mb-3">2. El parque está ___________ la farmacia.</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="react('applause')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">enfrente de</button>
+                    <button onclick="react('error')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">al lado de</button>
+                    <button onclick="react('error')" class="text-xs py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">detrás de</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded border border-slate-200 shadow-sm md:col-span-2">
+                <div class="flex items-center justify-between">
+                    <p class="text-slate-700 font-medium">3. El Hotel está en la ___________.</p>
+                    <div class="flex gap-2">
+                        <button onclick="react('error')" class="px-6 py-2 text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">cuadra</button>
+                        <button onclick="react('applause')" class="px-6 py-2 text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">esquina</button>
+                        <button onclick="react('error')" class="px-6 py-2 text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold rounded border border-slate-200 shadow-sm transition hover:border-slate-400">avenida</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="h-full w-full flex flex-col p-4 max-w-7xl mx-auto">
+        <div class="text-center mb-4">
+            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Challenge Final</span>
+            <h3 class="font-playfair text-slate-900 text-3xl mt-2">El GPS Humano 📍</h3>
+            <p class="text-slate-500 font-handlee text-sm">Ayuda al turista a llegar a la Corte. Elige las opciones correctas.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-center">
+            
+            <div class="lg:col-span-7 h-[400px] bg-slate-200 rounded-3xl border-8 border-slate-800 relative shadow-2xl overflow-hidden group">
+                <div class="absolute inset-0 bg-[#e5e7eb] opacity-50 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                
+                <div class="absolute top-0 left-1/3 w-20 h-full bg-white border-x-4 border-slate-300 flex flex-col items-center justify-center">
+                    <span class="text-slate-300 font-bold rotate-90 tracking-widest whitespace-nowrap opacity-50">AVENIDA COLOMBIA</span>
+                </div>
+                <div class="absolute top-1/3 left-0 w-full h-20 bg-white border-y-4 border-slate-300 flex items-center justify-center">
+                    <span class="text-slate-300 font-bold tracking-widest opacity-50">CALLE 5</span>
+                </div>
+
+                <div class="absolute bottom-4 left-[25%] w-16 h-16 bg-blue-500 rounded-full border-4 border-white shadow-lg z-10 flex items-center justify-center animate-bounce">
+                    <i class="fas fa-user text-white text-2xl"></i>
+                </div>
+                <div class="absolute bottom-2 left-[25%] translate-y-full text-xs font-bold text-slate-600 bg-white px-2 rounded">TÚ</div>
+
+                <div class="absolute top-[35%] left-[10%] w-24 h-20 bg-red-100 border-2 border-red-400 rounded-lg flex flex-col items-center justify-center z-10">
+                    <i class="fas fa-fire-extinguisher text-red-500 text-2xl"></i>
+                    <span class="text-[10px] font-bold text-red-800">Bomberos</span>
+                </div>
+
+                <div class="absolute bottom-10 right-10 w-24 h-24 bg-indigo-100 border-2 border-indigo-400 rounded-lg flex flex-col items-center justify-center opacity-60 z-0">
+                    <i class="fas fa-hotel text-indigo-400 text-3xl"></i>
+                </div>
+
+                <div class="absolute top-10 right-[10%] w-28 h-24 bg-amber-100 border-b-8 border-amber-600 rounded-lg flex flex-col items-center justify-center shadow-xl z-10 transform group-hover:scale-105 transition">
+                    <div class="absolute -top-3 bg-amber-600 text-white text-[10px] font-bold px-2 py-1 rounded">META</div>
+                    <i class="fas fa-balance-scale text-4xl text-amber-800"></i>
+                    <span class="font-bold text-xs mt-1 text-amber-900">LA CORTE</span>
+                </div>
+
+                <div id="tourist-dot" class="absolute w-8 h-8 bg-emerald-500 rounded-full border-2 border-white shadow-lg z-50 transition-all duration-[2000ms] ease-in-out flex items-center justify-center" style="bottom: 25px; left: 36%; transform: translate(-50%, 0);">
+                    <i class="fas fa-arrow-up text-white text-xs" id="tourist-arrow"></i>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-xl border border-slate-200 relative">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-xl"></div>
+
+                <div class="mt-4 mb-6 flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+                        <i class="fas fa-robot text-2xl text-slate-600"></i>
+                    </div>
+                    <div class="bg-slate-100 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl text-sm text-slate-600 italic">
+                        "Estoy en la Avenida Colombia. ¿Cómo llego a la Corte?"
+                    </div>
+                </div>
+                
+                <div class="space-y-4 font-handlee text-lg" id="gps-form">
+                    
+                    <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-blue-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">1</span>
+                        <select id="step1" class="bg-transparent font-bold text-slate-700 outline-none w-full cursor-pointer hover:text-blue-600">
+                            <option value="">(Acción)...</option>
+                            <option value="wrong">Gira a la izquierda</option>
+                            <option value="correct">Sigue derecho</option>
+                            <option value="wrong">Para aquí</option>
+                        </select>
+                        <span class="text-sm text-slate-500">por la Avenida.</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-blue-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">2</span>
+                        <span class="text-sm text-slate-500">En la Calle 5,</span>
+                        <select id="step2" class="bg-transparent font-bold text-slate-700 outline-none w-full cursor-pointer hover:text-blue-600">
+                            <option value="">(Dirección)...</option>
+                            <option value="correct">gira a la derecha</option>
+                            <option value="wrong">gira a la izquierda</option>
+                            <option value="wrong">sigue derecho</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-blue-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">3</span>
+                        <span class="text-sm text-slate-500">La corte está</span>
+                        <select id="step3" class="bg-transparent font-bold text-slate-700 outline-none w-full cursor-pointer hover:text-blue-600">
+                            <option value="">(Ubicación)...</option>
+                            <option value="wrong">lejos de</option>
+                            <option value="correct">al final de</option>
+                            <option value="wrong">debajo de</option>
+                        </select>
+                        <span class="text-sm text-slate-500">la calle.</span>
+                    </div>
+
+                </div>
+
+                <div id="feedback-msg" class="hidden mt-4 text-center font-bold text-emerald-600 animate-pulse">
+                    ¡Calculando ruta...! 🚗💨
+                </div>
+
+                <button onclick="startNavigation()" class="mt-6 w-full bg-emerald-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-1 transition flex items-center justify-center gap-2 text-lg">
+                    <i class="fas fa-location-arrow"></i> INICIAR RUTA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.startNavigation = function() {
+            const s1 = document.getElementById('step1');
+            const s2 = document.getElementById('step2');
+            const s3 = document.getElementById('step3');
+            const dot = document.getElementById('tourist-dot');
+            const arrow = document.getElementById('tourist-arrow');
+            const feedback = document.getElementById('feedback-msg');
+
+            // Reset styles
+            [s1, s2, s3].forEach(s => s.parentElement.classList.remove('border-red-500', 'bg-red-50', 'border-emerald-500', 'bg-emerald-50'));
+
+            // Check answers
+            let correct = true;
+            if(s1.value !== 'correct') { s1.parentElement.classList.add('border-red-500', 'bg-red-50'); correct = false; }
+            else { s1.parentElement.classList.add('border-emerald-500', 'bg-emerald-50'); }
+
+            if(s2.value !== 'correct') { s2.parentElement.classList.add('border-red-500', 'bg-red-50'); correct = false; }
+            else { s2.parentElement.classList.add('border-emerald-500', 'bg-emerald-50'); }
+
+            if(s3.value !== 'correct') { s3.parentElement.classList.add('border-red-500', 'bg-red-50'); correct = false; }
+            else { s3.parentElement.classList.add('border-emerald-500', 'bg-emerald-50'); }
+
+            if(correct) {
+                if(window.react) window.react('success'); // Sound
+                feedback.innerText = "¡Ruta encontrada! Iniciando navegación...";
+                feedback.classList.remove('hidden');
+                
+                // ANIMATION SEQUENCE
+                // 1. Reset Position (Bottom Leftish)
+                dot.style.transition = "all 1s linear";
+                dot.style.bottom = "25px";
+                dot.style.left = "36%";
+                arrow.className = "fas fa-arrow-up text-white text-xs";
+
+                // 2. Move UP (Sigue derecho)
+                setTimeout(() => {
+                    dot.style.bottom = "65%"; // Move up to intersection
+                }, 100);
+
+                // 3. Turn Right (Gira a la derecha)
+                setTimeout(() => {
+                    arrow.className = "fas fa-arrow-right text-white text-xs"; // Rotate arrow visually
+                    dot.style.left = "85%"; // Move right
+                }, 1100);
+
+                // 4. Arrive (Meta)
+                setTimeout(() => {
+                    dot.style.bottom = "80%"; // Little adjustment to hit the door
+                    if(window.react) window.react('confetti');
+                    if(window.react) window.react('applause');
+                    feedback.innerText = "¡Has llegado a tu destino! 🏁";
+                }, 2200);
+
+            } else {
+                if(window.react) window.react('error');
+                feedback.innerText = "Recalculando... Revisa las instrucciones.";
+                feedback.classList.remove('hidden');
+                feedback.classList.add('text-red-500');
+                
+                // Shake effect on button
+                const btn = document.querySelector('button[onclick="startNavigation()"]');
+                btn.classList.add('animate-shake');
+                setTimeout(() => btn.classList.remove('animate-shake'), 500);
+            }
+        };
+    </script>
+</section>
+
+<section>
+    <div class="glass-card max-w-4xl mx-auto border-t-8 border-indigo-600 relative overflow-hidden">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-slate-200 pb-4">
+            <div>
+                <h3 class="text-3xl font-bold text-indigo-900 font-playfair m-0">Adivinanza</h3>
+                <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-1 rounded uppercase tracking-wider">The Riddle</span>
+            </div>
+            <div class="mt-2 md:mt-0 text-right">
+                <p class="text-slate-600 font-bold text-sm"><i class="fas fa-search mr-1"></i> Mission:</p>
+                <p class="text-slate-500 text-sm font-handlee leading-tight">
+                    Read the clues and select the correct place.<br>
+                    <span class="text-xs text-slate-400">(Lee las pistas y selecciona el lugar correcto)</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            
+            <div class="flex-1 bg-[#fffdf0] p-6 rounded-lg shadow-md border border-slate-200 relative rotate-1 transition hover:rotate-0">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-red-400 shadow-sm"></div> <i class="fas fa-quote-left absolute top-4 left-4 text-indigo-200 text-4xl opacity-50"></i>
+                
+                <p class="text-lg text-slate-700 font-serif italic relative z-10 pl-6 leading-relaxed">
+                    "Sal de la oficina. <br>
+                    <span class="font-bold text-indigo-600 border-b border-indigo-200 cursor-help" title="Cross">Cruza</span> la calle y 
+                    <span class="font-bold text-indigo-600 border-b border-indigo-200 cursor-help" title="Turn">gira</span> a la izquierda. <br>
+                    Camina una cuadra.<br>
+                    Está <span class="font-bold text-indigo-600 border-b border-indigo-200 cursor-help" title="Between">entre</span> la panadería y el banco. <br>
+                    Allí compramos medicinas."
+                </p>
+            </div>
+
+            <div class="md:w-1/3 bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                <h4 class="font-bold text-slate-400 text-xs uppercase mb-3 tracking-widest">Vocabulary Help</h4>
+                <ul class="space-y-2 text-slate-600">
+                    <li class="flex justify-between border-b border-slate-200 pb-1">
+                        <span>Cruza</span> <span class="text-slate-400 italic">Cross</span>
+                    </li>
+                    <li class="flex justify-between border-b border-slate-200 pb-1">
+                        <span>Gira</span> <span class="text-slate-400 italic">Turn</span>
+                    </li>
+                    <li class="flex justify-between border-b border-slate-200 pb-1">
+                        <span>Entre</span> <span class="text-slate-400 italic">Between</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="text-center font-bold text-slate-600 mt-8 mb-4">¿Qué lugar es?</p>
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="solveRiddle(this, false)" class="riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-indigo-300 transition-all duration-300 font-bold text-slate-600 group">
+                <span class="group-hover:scale-105 inline-block transition">🛒 El Supermercado</span>
+            </button>
+            
+            <button onclick="solveRiddle(this, true)" class="riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-indigo-300 transition-all duration-300 font-bold text-slate-600 group">
+                <span class="group-hover:scale-105 inline-block transition">💊 La Farmacia</span>
+            </button>
+            
+            <button onclick="solveRiddle(this, false)" class="riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-indigo-300 transition-all duration-300 font-bold text-slate-600 group">
+                <span class="group-hover:scale-105 inline-block transition">✈️ El Aeropuerto</span>
+            </button>
+            
+            <button onclick="solveRiddle(this, false)" class="riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-indigo-300 transition-all duration-300 font-bold text-slate-600 group">
+                <span class="group-hover:scale-105 inline-block transition">🏫 La Escuela</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.solveRiddle = function(btn, isCorrect) {
+            // 1. Resetear todos los botones primero (opcional, para que solo quede uno marcado)
+            const allBtns = document.querySelectorAll('.riddle-btn');
+            allBtns.forEach(b => {
+                b.className = "riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl opacity-50 cursor-not-allowed font-bold text-slate-600";
+                b.disabled = true; // Desactivar para que no sigan haciendo clic
+            });
+
+            // 2. Marcar el seleccionado
+            btn.classList.remove('opacity-50', 'bg-white', 'border-slate-200');
+            btn.classList.add('opacity-100', 'shadow-lg', 'scale-105');
+
+            if(isCorrect) {
+                // ÉXITO
+                btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+                btn.innerHTML += ' <i class="fas fa-check-circle text-emerald-600 ml-2 animate-bounce"></i>';
+                if(window.react) window.react('confetti');
+            } else {
+                // ERROR
+                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'animate-shake');
+                btn.innerHTML += ' <i class="fas fa-times-circle text-red-600 ml-2"></i>';
+                if(window.react) window.react('error');
+                
+                // Dar una oportunidad de reintentar después de 2 seg
+                setTimeout(() => {
+                    allBtns.forEach(b => {
+                        b.className = "riddle-btn p-4 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-indigo-300 transition-all duration-300 font-bold text-slate-600 group";
+                        b.disabled = false;
+                        // Resetear contenido original (quitando iconos)
+                        b.innerHTML = b.innerHTML.split(' <i')[0]; 
+                    });
+                }, 1500);
+            }
+        };
+    </script>
+</section>
+
+<section>
+    <div class="glass-card max-w-6xl mx-auto h-full flex flex-col relative overflow-hidden">
+        
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-slate-200 pb-4 z-10">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-100 p-3 rounded-full text-amber-700">
+                    <i class="fas fa-bus-alt text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="m-0 text-2xl text-slate-800 font-bold">Simulador de Transporte</h3>
+                    <p class="text-xs text-slate-500 font-handlee">Transport Simulator</p>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 px-4 py-2 rounded-lg border border-blue-100 text-right">
+                <p class="text-sm text-blue-900 font-bold"><i class="fas fa-info-circle mr-1"></i> Mission:</p>
+                <p class="text-xs text-blue-700">Analyze the situation and choose the best option.<br>(Analiza la situación y elige la mejor opción)</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 h-full z-10">
+            
+            <div class="md:col-span-4 bg-white/50 p-4 rounded-xl border border-slate-200 flex flex-col justify-center">
+                <h4 class="text-center font-bold text-slate-700 mb-4 uppercase tracking-widest text-sm">Vocabulary Guide</h4>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-3 rounded shadow-sm border-l-4 border-green-500">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i class="fas fa-walking text-green-600"></i>
+                            <span class="font-bold text-slate-800">IR A PIE</span>
+                        </div>
+                        <p class="text-xs text-slate-500 italic">To go on foot / Walk</p>
+                        <p class="text-[10px] text-green-700 mt-1 bg-green-50 px-2 py-1 rounded inline-block">Use for: Short distances, No money, Exercise.</p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded shadow-sm border-l-4 border-blue-500">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i class="fas fa-taxi text-blue-600"></i>
+                            <span class="font-bold text-slate-800">TOMAR</span>
+                        </div>
+                        <p class="text-xs text-slate-500 italic">To take (a vehicle)</p>
+                        <p class="text-[10px] text-blue-700 mt-1 bg-blue-50 px-2 py-1 rounded inline-block">Use for: Taxi, Bus, Train, Uber.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-8 bg-white p-6 rounded-2xl shadow-xl border border-slate-200 relative flex flex-col justify-between" id="transport-game-container">
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span id="transport-lvl-indicator" class="bg-slate-800 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Nivel 1/3</span>
+                    <div class="flex gap-1" id="progress-dots">
+                        <div class="w-3 h-3 rounded-full bg-slate-300 transition-colors"></div>
+                        <div class="w-3 h-3 rounded-full bg-slate-300 transition-colors"></div>
+                        <div class="w-3 h-3 rounded-full bg-slate-300 transition-colors"></div>
+                    </div>
+                </div>
+
+                <div id="transport-scenario" class="flex-1 flex flex-col items-center justify-center text-center animate-fade-in">
+                    <div id="scenario-icon" class="text-6xl mb-4 transition-transform duration-500 hover:scale-110">✈️</div>
+                    <h4 id="scenario-text" class="text-2xl font-bold text-slate-800 mb-2">El aeropuerto está a 30km.</h4>
+                    <p id="scenario-context" class="text-sm text-amber-600 font-bold bg-amber-50 px-4 py-1 rounded-full mb-6">Context: Very far (Muy lejos)</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full" id="transport-options">
+                        </div>
+                </div>
+
+                <div id="transport-winner" class="hidden absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center rounded-2xl animate-fade-in">
+                    <i class="fas fa-ticket-alt text-6xl text-amber-500 mb-4 animate-bounce"></i>
+                    <h3 class="text-3xl font-bold text-slate-800 font-playfair">¡Excelente Viajero!</h3>
+                    <p class="text-slate-600 mb-6">Sabes moverte por la ciudad.</p>
+                    <button onclick="initTransportGame()" class="bg-slate-800 text-white px-6 py-2 rounded-full hover:bg-slate-700 transition font-bold">Reiniciar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de los 3 Niveles
+        const transportLevels = [
+            {
+                // NIVEL 1: Distancia Simple
+                text: "El aeropuerto está a 30 kilómetros.",
+                context: "Context: Very far distance (Muy lejos)",
+                icon: "✈️",
+                options: [
+                    { text: "Voy a pie", correct: false, feedback: "¡No! Es demasiado lejos (Too far)." },
+                    { text: "Tomo un taxi", correct: true, feedback: "Correcto. Es necesario un vehículo." }
+                ]
+            },
+            {
+                // NIVEL 2: Clima (Conditionals logic simplified)
+                text: "El parque está cerca, pero está lloviendo muy fuerte.",
+                context: "Context: Heavy rain (Lluvia fuerte)",
+                icon: "⛈️",
+                options: [
+                    { text: "Tomo un autobús", correct: true, feedback: "Bien. No te quieres mojar (Don't get wet)." },
+                    { text: "Voy a pie", correct: false, feedback: "¡Te vas a mojar! (You will get wet)." }
+                ]
+            },
+            {
+                // NIVEL 3: Restricción (Tricky)
+                text: "El cine está cerca y no tengo dinero.",
+                context: "Context: No money (Sin dinero)",
+                icon: "💸",
+                options: [
+                    { text: "Tomo un taxi", correct: false, feedback: "¡No tienes dinero! (No money)." },
+                    { text: "Voy a pie", correct: true, feedback: "Exacto. Es gratis (It's free)." }
+                ]
+            }
+        ];
+
+        let currentTransportIndex = 0;
+
+        function initTransportGame() {
+            currentTransportIndex = 0;
+            document.getElementById('transport-winner').classList.add('hidden');
+            renderTransportLevel();
+        }
+
+        function renderTransportLevel() {
+            const data = transportLevels[currentTransportIndex];
+            
+            // Actualizar UI Textos
+            document.getElementById('transport-lvl-indicator').innerText = `Nivel ${currentTransportIndex + 1}/3`;
+            document.getElementById('scenario-icon').innerText = data.icon;
+            document.getElementById('scenario-text').innerText = data.text;
+            document.getElementById('scenario-context').innerText = data.context;
+
+            // Actualizar Puntos de Progreso
+            const dots = document.getElementById('progress-dots').children;
+            for(let i=0; i<3; i++) {
+                dots[i].className = i <= currentTransportIndex 
+                    ? "w-3 h-3 rounded-full bg-amber-500 transition-colors" 
+                    : "w-3 h-3 rounded-full bg-slate-300 transition-colors";
+            }
+
+            // Generar Botones
+            const container = document.getElementById('transport-options');
+            container.innerHTML = '';
+
+            data.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full py-4 px-6 bg-white border-2 border-slate-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 text-slate-700 font-bold text-lg transition shadow-sm group flex items-center justify-between";
+                btn.onclick = () => checkTransportAnswer(btn, opt);
+                
+                // Icono dinámico basado en la respuesta
+                const iconClass = opt.text.includes("pie") ? "fa-walking" : "fa-car";
+                
+                btn.innerHTML = `
+                    <span>${opt.text}</span>
+                    <i class="fas ${iconClass} text-slate-300 group-hover:text-blue-500 transition"></i>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function checkTransportAnswer(btn, optionData) {
+            // Desactivar todos los botones para evitar doble click
+            const allBtns = document.getElementById('transport-options').querySelectorAll('button');
+            allBtns.forEach(b => b.disabled = true);
+
+            if(optionData.correct) {
+                // CORRECTO
+                btn.classList.remove('border-slate-200', 'hover:border-blue-400', 'hover:bg-blue-50');
+                btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                btn.innerHTML = `<span>${optionData.text}</span> <i class="fas fa-check text-green-600"></i>`;
+                
+                if(window.react) window.react('success');
+
+                setTimeout(() => {
+                    currentTransportIndex++;
+                    if(currentTransportIndex < transportLevels.length) {
+                        renderTransportLevel();
+                    } else {
+                        if(window.react) window.react('confetti');
+                        document.getElementById('transport-winner').classList.remove('hidden');
+                    }
+                }, 1200);
+
+            } else {
+                // INCORRECTO
+                btn.classList.remove('border-slate-200', 'hover:border-blue-400', 'hover:bg-blue-50');
+                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'animate-shake');
+                
+                // Mostrar feedback de error dentro del botón o alerta
+                const originalText = btn.querySelector('span').innerText;
+                btn.innerHTML = `<span class="text-xs">${optionData.feedback}</span> <i class="fas fa-times text-red-600"></i>`;
+                
+                if(window.react) window.react('error');
+
+                setTimeout(() => {
+                    // Resetear para intentar de nuevo
+                    renderTransportLevel(); 
+                }, 2000);
+            }
+        }
+
+        // Iniciar al cargar
+        setTimeout(initTransportGame, 500);
+    </script>
+</section>
+
+<section>
+    <div class="h-full w-full flex flex-col p-4 max-w-7xl mx-auto">
+        
+        <div class="text-center mb-4">
+            <span class="bg-slate-800 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest border border-slate-600">
+                <i class="fas fa-gamepad mr-2"></i> Simulator Mode
+            </span>
+            <h3 class="text-3xl font-bold text-slate-800 mt-2 font-playfair">Taxi Driver: Las Calles</h3>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-start">
+            
+            <div class="lg:col-span-4 flex flex-col gap-4">
+                
+                <div class="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-yellow-800 uppercase text-xs tracking-widest mb-3 border-b border-yellow-200 pb-2">
+                        <i class="fas fa-info-circle mr-1"></i> How to Play
+                    </h4>
+                    <ol class="text-sm text-slate-700 space-y-3 font-handlee">
+                        <li class="flex gap-2">
+                            <span class="bg-white w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border border-slate-200 shadow-sm">1</span>
+                            <span>Lee la instrucción del pasajero. <br><em class="text-slate-400 text-xs">Read the passenger's order.</em></span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="bg-white w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border border-slate-200 shadow-sm">2</span>
+                            <span>Busca el número de la calle. <br><em class="text-slate-400 text-xs">Find the street number (1ª, 2ª, 3ª).</em></span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="bg-white w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs border border-slate-200 shadow-sm">3</span>
+                            <span>Elige: ¿Izquierda o Derecha? <br><em class="text-slate-400 text-xs">Choose: Left or Right?</em></span>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="bg-white border-2 border-slate-800 p-6 rounded-xl shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl">CURRENT MISSION</div>
+                    
+                    <p class="text-xs text-slate-400 font-bold uppercase mb-2">PASSENGER SAYS:</p>
+                    <p id="taxi-instruction" class="text-xl font-bold text-slate-800 leading-snug mb-2">
+                        "..."
+                    </p>
+                    <div class="text-xs text-slate-500 italic bg-slate-50 p-2 rounded border border-slate-100">
+                        <i class="fas fa-language text-slate-400"></i> <span id="taxi-translation">Waiting...</span>
+                    </div>
+
+                    <div id="taxi-feedback" class="mt-4 p-2 text-center rounded font-bold text-sm hidden bg-slate-100"></div>
+                    
+                    <button onclick="nextTaxiLevel()" id="next-btn" class="hidden mt-4 w-full bg-slate-800 text-white py-2 rounded shadow hover:bg-slate-700 transition text-sm font-bold">
+                        Siguiente / Next <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-8 bg-slate-200 h-[500px] rounded-xl border-4 border-slate-400 relative overflow-y-auto shadow-inner p-6 flex flex-col gap-8 items-center scrollbar-hide">
+                
+                <div class="absolute inset-0 left-1/2 -translate-x-1/2 w-4 bg-transparent border-x-2 border-dashed border-slate-400 h-full pointer-events-none opacity-30"></div>
+
+                <div class="w-full max-w-md bg-white p-2 rounded-xl shadow-md border-b-4 border-slate-300 z-10 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-700 text-white px-4 py-1 rounded border-2 border-white shadow-sm text-xs font-bold uppercase tracking-wider">
+                        3ª Calle (Tercera)
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4 px-2">
+                        <button onclick="makeTurn(3, 'left', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-left text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Izquierda</span>
+                        </button>
+                        
+                        <div class="h-1 w-full bg-slate-100 mx-2 rounded"></div>
+
+                        <button onclick="makeTurn(3, 'right', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-right text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Derecha</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-md bg-white p-2 rounded-xl shadow-md border-b-4 border-slate-300 z-10 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-700 text-white px-4 py-1 rounded border-2 border-white shadow-sm text-xs font-bold uppercase tracking-wider">
+                        2ª Calle (Segunda)
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4 px-2">
+                        <button onclick="makeTurn(2, 'left', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-left text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Izquierda</span>
+                        </button>
+                        
+                        <div class="h-1 w-full bg-slate-100 mx-2 rounded"></div>
+
+                        <button onclick="makeTurn(2, 'right', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-right text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Derecha</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-md bg-white p-2 rounded-xl shadow-md border-b-4 border-slate-300 z-10 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-700 text-white px-4 py-1 rounded border-2 border-white shadow-sm text-xs font-bold uppercase tracking-wider">
+                        1ª Calle (Primera)
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4 px-2">
+                        <button onclick="makeTurn(1, 'left', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-left text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Izquierda</span>
+                        </button>
+                        
+                        <div class="h-1 w-full bg-slate-100 mx-2 rounded"></div>
+
+                        <button onclick="makeTurn(1, 'right', this)" class="turn-btn flex flex-col items-center gap-1 group p-2 rounded hover:bg-slate-100 transition w-24">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition">
+                                <i class="fas fa-arrow-right text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 group-hover:text-emerald-600 uppercase">Derecha</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-auto mb-4 bg-yellow-400 text-slate-900 p-2 rounded border-2 border-slate-800 shadow-lg text-center w-32 animate-bounce">
+                    <i class="fas fa-taxi text-2xl"></i>
+                    <p class="text-[10px] font-bold uppercase">Tu Taxi</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const taxiLevels = [
+            { street: 2, side: 'right', text: 'Gira a la <span class="text-emerald-600">derecha</span> en la <span class="text-emerald-600">segunda</span> calle.', trans: 'Turn right on the 2nd street.' },
+            { street: 3, side: 'left', text: 'Gira a la <span class="text-emerald-600">izquierda</span> en la <span class="text-emerald-600">tercera</span> calle.', trans: 'Turn left on the 3rd street.' },
+            { street: 1, side: 'right', text: 'Gira a la <span class="text-emerald-600">derecha</span> en la <span class="text-emerald-600">primera</span> calle.', trans: 'Turn right on the 1st street.' }
+        ];
+
+        let currentTaxiLvl = 0;
+
+        function loadTaxiLevel() {
+            const data = taxiLevels[currentTaxiLvl];
+            document.getElementById('taxi-instruction').innerHTML = data.text;
+            document.getElementById('taxi-translation').innerText = data.trans;
+            
+            // Reset UI
+            document.getElementById('taxi-feedback').className = "mt-4 p-2 text-center rounded font-bold text-sm hidden";
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // Limpiar estilos de botones anteriores
+            document.querySelectorAll('.turn-btn div').forEach(div => {
+                div.className = "w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition";
+            });
+        }
+
+        window.makeTurn = function(street, side, btn) {
+            const target = taxiLevels[currentTaxiLvl];
+            const feedback = document.getElementById('taxi-feedback');
+            const iconContainer = btn.querySelector('div');
+
+            if (street === target.street && side === target.side) {
+                // Correcto
+                if(window.react) window.react('success');
+                
+                // Estilo visual de éxito
+                iconContainer.className = "w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white border-2 border-green-600 shadow-lg scale-110 transition";
+                
+                feedback.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> ¡Correcto! Buen trabajo.</span>';
+                feedback.className = "mt-4 p-2 text-center rounded font-bold text-sm bg-green-50 border border-green-200 animate-fade-in";
+                feedback.classList.remove('hidden');
+                
+                if (currentTaxiLvl < taxiLevels.length - 1) {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                } else {
+                    if(window.react) window.react('confetti');
+                    feedback.innerHTML += '<br><span class="text-amber-500 mt-2 block">¡Eres un experto! 🚖</span>';
+                }
+
+            } else {
+                // Incorrecto
+                if(window.react) window.react('error');
+                
+                iconContainer.className = "w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white border-2 border-red-600 shadow-lg animate-shake";
+                
+                let errorMsg = "";
+                if(street !== target.street) errorMsg = "Wrong street number (Número incorrecto).";
+                else errorMsg = "Wrong direction (Dirección incorrecta).";
+
+                feedback.innerHTML = `<span class="text-red-500"><i class="fas fa-times-circle"></i> Error: ${errorMsg}</span>`;
+                feedback.className = "mt-4 p-2 text-center rounded font-bold text-sm bg-red-50 border border-red-200 animate-shake";
+                feedback.classList.remove('hidden');
+
+                setTimeout(() => {
+                    // Reset visual simple
+                    iconContainer.className = "w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border-2 border-slate-200 group-hover:border-emerald-500 group-hover:text-emerald-600 transition";
+                }, 1000);
+            }
+        };
+
+        window.nextTaxiLevel = function() {
+            currentTaxiLvl++;
+            loadTaxiLevel();
+        }
+
+        // Init
+        setTimeout(loadTaxiLevel, 500);
+    </script>
+</section>
+
+<section>
+    <div class="h-full w-full flex flex-col p-4 max-w-6xl mx-auto">
+        
+        <div class="text-center mb-6">
+            <span class="bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                <i class="fas fa-gavel mr-1"></i> Logic Game
+            </span>
+            <h3 class="text-3xl font-bold text-slate-800 mt-2 font-playfair">El Juez de Distancias</h3>
+            <p class="text-slate-500 text-sm font-handlee">Distance Judge: Is it walkable or do you need a ride?</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-start">
+            
+            <div class="lg:col-span-4 space-y-4">
+                
+                <div class="bg-blue-50 border-2 border-blue-200 p-4 rounded-xl">
+                    <h4 class="font-bold text-blue-900 uppercase text-xs tracking-widest mb-3 border-b border-blue-200 pb-2">
+                        <i class="fas fa-info-circle mr-1"></i> How to Play
+                    </h4>
+                    <p class="text-sm text-slate-700 mb-2">Read the card and decide:</p>
+                    <ul class="text-sm text-slate-600 space-y-2 font-handlee">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-walking text-green-600 mt-1"></i>
+                            <span><strong>CERCA (Near):</strong> You can walk easily. (Under 10-15 mins).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-plane text-red-500 mt-1"></i>
+                            <span><strong>LEJOS (Far):</strong> You need a car, bus, or plane. Impossible to walk.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-slate-400 uppercase text-xs tracking-widest mb-2">Keywords</h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-slate-50 p-1 rounded">Cuadra = <span class="text-slate-400 italic">Block</span></div>
+                        <div class="bg-slate-50 p-1 rounded">Vuelo = <span class="text-slate-400 italic">Flight</span></div>
+                        <div class="bg-slate-50 p-1 rounded">Esquina = <span class="text-slate-400 italic">Corner</span></div>
+                        <div class="bg-slate-50 p-1 rounded">País = <span class="text-slate-400 italic">Country</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 h-full">
+                
+                <div class="bg-white h-[400px] rounded-3xl shadow-2xl border-4 border-slate-100 relative flex flex-col items-center justify-center p-8 overflow-hidden transition-all" id="game-card-container">
+                    
+                    <div class="absolute top-0 left-0 w-full h-2 bg-slate-100">
+                        <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+
+                    <div class="absolute top-6 right-6 text-xs font-bold text-slate-300 uppercase tracking-widest" id="question-counter">
+                        Card 1/5
+                    </div>
+
+                    <div id="card-content" class="text-center animate-fade-in w-full">
+                        <div id="card-icon" class="text-7xl mb-6 drop-shadow-md">🏃</div>
+                        <h2 id="card-text" class="text-4xl font-bold text-slate-800 mb-2 font-playfair">"5 minutos a pie"</h2>
+                        <p id="card-hint" class="text-slate-400 text-sm italic">(5 minutes walking)</p>
+                    </div>
+
+                    <div id="feedback-overlay" class="hidden absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center animate-fade-in">
+                        <div id="feedback-icon" class="text-6xl mb-4"></div>
+                        <h3 id="feedback-title" class="text-3xl font-bold mb-2"></h3>
+                        <p id="feedback-desc" class="text-slate-600 font-handlee text-lg"></p>
+                    </div>
+
+                    <div id="final-screen" class="hidden absolute inset-0 bg-indigo-600 z-30 flex flex-col items-center justify-center text-white animate-fade-in">
+                        <i class="fas fa-trophy text-6xl text-yellow-400 mb-6 animate-bounce"></i>
+                        <h3 class="text-4xl font-bold font-playfair mb-2">¡Juez Experto!</h3>
+                        <p class="text-indigo-200 mb-8 font-handlee text-xl">Dominas las distancias en español.</p>
+                        <button onclick="initDistanceGame()" class="bg-white text-indigo-700 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition">
+                            Jugar otra vez
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 mt-6">
+                    <button onclick="judgeDistance('cerca')" class="group relative bg-white border-b-4 border-green-500 p-4 rounded-xl shadow-md hover:-translate-y-1 hover:shadow-lg transition active:border-b-0 active:translate-y-1">
+                        <div class="flex flex-col items-center">
+                            <span class="text-3xl mb-1 group-hover:scale-110 transition">🏡</span>
+                            <span class="font-bold text-green-700 text-xl">CERCA</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">It's Close</span>
+                        </div>
+                    </button>
+
+                    <button onclick="judgeDistance('lejos')" class="group relative bg-white border-b-4 border-red-500 p-4 rounded-xl shadow-md hover:-translate-y-1 hover:shadow-lg transition active:border-b-0 active:translate-y-1">
+                        <div class="flex flex-col items-center">
+                            <span class="text-3xl mb-1 group-hover:scale-110 transition">✈️</span>
+                            <span class="font-bold text-red-700 text-xl">LEJOS</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">It's Far</span>
+                        </div>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración del Juego
+        const distanceLevels = [
+            { 
+                text: "Cruzar la calle", 
+                hint: "(Cross the street)", 
+                icon: "🚦", 
+                type: "cerca", 
+                reason: "¡Muy bien! Son solo unos pasos (Just a few steps)." 
+            },
+            { 
+                text: "Viajar a otro país", 
+                hint: "(Travel to another country)", 
+                icon: "🌍", 
+                type: "lejos", 
+                reason: "Exacto. Necesitas un avión (You need a plane)." 
+            },
+            { 
+                text: "A dos cuadras", 
+                hint: "(Two blocks away)", 
+                icon: "🏙️", 
+                type: "cerca", 
+                reason: "Correcto. Puedes caminar (You can walk)." 
+            },
+            { 
+                text: "8 horas en autobús", 
+                hint: "(8 hours by bus)", 
+                icon: "🚌", 
+                type: "lejos", 
+                reason: "¡Uff! Es muy largo el viaje (Very long trip)." 
+            },
+            { 
+                text: "El baño está aquí", 
+                hint: "(The bathroom is here)", 
+                icon: "🚻", 
+                type: "cerca", 
+                reason: "¡Obvio! Está en el mismo lugar (Same place)." 
+            }
+        ];
+
+        let currentCardIndex = 0;
+
+        function initDistanceGame() {
+            currentCardIndex = 0;
+            document.getElementById('final-screen').classList.add('hidden');
+            renderCard();
+        }
+
+        function renderCard() {
+            const data = distanceLevels[currentCardIndex];
+            
+            // Actualizar UI
+            document.getElementById('card-icon').innerText = data.icon;
+            document.getElementById('card-text').innerText = `"${data.text}"`;
+            document.getElementById('card-hint').innerText = data.hint;
+            document.getElementById('question-counter').innerText = `Card ${currentCardIndex + 1}/${distanceLevels.length}`;
+            
+            // Barra de progreso
+            const progress = ((currentCardIndex) / distanceLevels.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Ocultar feedback
+            document.getElementById('feedback-overlay').classList.add('hidden');
+        }
+
+        window.judgeDistance = function(userChoice) {
+            const data = distanceLevels[currentCardIndex];
+            const feedbackOverlay = document.getElementById('feedback-overlay');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackDesc = document.getElementById('feedback-desc');
+
+            feedbackOverlay.classList.remove('hidden');
+
+            if (userChoice === data.type) {
+                // CORRECTO
+                if(window.react) window.react('success');
+                feedbackIcon.innerHTML = '<span class="text-green-500 animate-bounce">✅</span>';
+                feedbackTitle.innerText = "¡Correcto!";
+                feedbackTitle.className = "text-3xl font-bold mb-2 text-green-600";
+                feedbackDesc.innerText = data.reason;
+
+                // Siguiente Nivel automático
+                setTimeout(() => {
+                    currentCardIndex++;
+                    if(currentCardIndex < distanceLevels.length) {
+                        renderCard();
+                    } else {
+                        finishDistanceGame();
+                    }
+                }, 2000);
+
+            } else {
+                // INCORRECTO
+                if(window.react) window.react('error');
+                feedbackIcon.innerHTML = '<span class="text-red-500 animate-shake">❌</span>';
+                feedbackTitle.innerText = "Error de Lógica";
+                feedbackTitle.className = "text-3xl font-bold mb-2 text-red-600";
+                
+                let explanation = "";
+                if(data.type === 'cerca') explanation = "Wait! This is actually close. You can walk.";
+                else explanation = "No way! That's too far to walk.";
+                
+                feedbackDesc.innerText = explanation;
+
+                // Reintentar misma carta
+                setTimeout(() => {
+                    feedbackOverlay.classList.add('hidden');
+                }, 2000);
+            }
+        };
+
+        function finishDistanceGame() {
+            document.getElementById('progress-bar').style.width = "100%";
+            document.getElementById('final-screen').classList.remove('hidden');
+            if(window.react) window.react('confetti');
+            if(window.react) window.react('applause');
+        }
+
+        // Iniciar
+        setTimeout(initDistanceGame, 500);
+    </script>
+</section>
+
+        
+
+<section data-background-gradient="linear-gradient(to bottom right, #3730a3, #1e1b4b)">
+    <div class="h-full w-full flex flex-col items-center justify-center p-6">
+        <div class="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20 max-w-4xl w-full shadow-2xl">
+            <div class="text-center mb-8">
+                <i class="fas fa-map-signs text-5xl text-amber-500 mb-4 animate-pulse"></i>
+                <h2 class="text-4xl font-bold text-white font-playfair">¡SOS! Estoy Perdido</h2>
+                <p class="text-slate-200 mt-2">Useful phrases for when your phone battery dies.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/90 p-4 rounded text-slate-800 hover:bg-amber-50 transition cursor-help relative group shadow-md">
+                    <div class="font-bold text-lg">"Estoy perdido / perdida."</div>
+                    <div class="text-sm text-slate-500">I am lost.</div>
+                    <div class="absolute -top-2 -right-2 bg-amber-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">Essential</div>
+                </div>
+
+                <div class="bg-white/90 p-4 rounded text-slate-800 hover:bg-amber-50 transition cursor-help shadow-md">
+                    <div class="font-bold text-lg">"No soy de aquí."</div>
+                    <div class="text-sm text-slate-500">I am not from here.</div>
+                </div>
+
+                <div class="bg-white/90 p-4 rounded text-slate-800 hover:bg-amber-50 transition cursor-help shadow-md">
+                    <div class="font-bold text-lg">"¿Dónde estamos en el mapa?"</div>
+                    <div class="text-sm text-slate-500">Where are we on the map?</div>
+                </div>
+
+                <div class="bg-white/90 p-4 rounded text-slate-800 hover:bg-amber-50 transition cursor-help shadow-md">
+                    <div class="font-bold text-lg">"Mi celular no tiene batería."</div>
+                    <div class="text-sm text-slate-500">My phone battery is dead.</div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button onclick="react('confetti')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform active:scale-95 border border-amber-500/50">
+                    <i class="fas fa-microphone mr-2"></i> Practice Pronunciation
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="glass-card max-w-3xl mx-auto text-center">
+        <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6 text-amber-700 border-4 border-amber-200">
+            <i class="fas fa-home text-3xl"></i>
+        </div>
+        <h2 class="text-3xl font-bold text-slate-800 font-playfair mb-4">Tarea (Homework)</h2>
+        
+        <div class="bg-white p-6 rounded shadow-inner border border-slate-200 text-left mb-8">
+            <p class="text-lg text-slate-700 mb-4">
+                <strong>Project:</strong> Write specific directions for a client visiting your city.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-slate-600">
+                <li>Choose a starting point (e.g., The Airport or Hotel).</li>
+                <li>Choose a destination (e.g., Your Office or a Restaurant).</li>
+                <li>Use at least <strong>3 verbs</strong> (Gira, Sigue, Cruza).</li>
+                <li>Use at least <strong>2 prepositions</strong> (Al lado de, Enfrente de).</li>
+            </ul>
+        </div>
+
+        <button onclick="react('confetti')" class="px-8 py-3 bg-amber-700 text-white rounded-sm font-bold shadow-md hover:bg-amber-800 transition uppercase tracking-widest text-sm">
+            <i class="fas fa-check-double mr-2"></i> Finalizar Clase
+        </button>
+    </div>
+</section>
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Colores Tropicales) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#004d40'); /* Verde Tropical */ const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px 'Lato', sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none font-sans" style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escriba aquí..." /> </div> )} </div> ); }
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // --- LÓGICA DE INICIO (HÍBRIDA) ---
+        // Detectamos si es móvil por el ancho de pantalla, que es lo más seguro para CSS
+        const isMobile = window.innerWidth < 1024;
+
+        if (isMobile) {
+            console.log("Modo Web Móvil Activado: Reveal.js desactivado para permitir scroll.");
+            document.body.classList.add('is-mobile');
+            
+            // Activamos la barra de progreso de lectura (scroll)
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                
+                const progressBar = document.getElementById('scroll-progress');
+                if(progressBar) progressBar.style.width = scrolled + '%';
+                
+                const btnTop = document.getElementById('back-to-top');
+                if(btnTop) (winScroll > 300) ? btnTop.classList.add('visible') : btnTop.classList.remove('visible');
+            });
+            
+            // Importante: NO inicializamos Reveal.js en móvil. 
+            // Dejamos que el CSS del PASO 1 controle el diseño vertical.
+
+        } else {
+            // MODO PC: Presentación normal
+            Reveal.initialize({
+                controls: true, 
+                progress: true, 
+                center: true, 
+                hash: false,
+                width: 1200, 
+                height: 720, 
+                margin: 0.04, 
+                minScale: 0.1, 
+                maxScale: 2.0, // Limitamos el zoom máximo para que no se rompa en pantallas gigantes
+                transition: 'slide', 
+                backgroundTransition: 'fade', 
+                background: '#fefce8',
+                disableLayout: false // Permitimos que Reveal controle el layout en PC
+            });
+        }
+
+        // Helpers de UI
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+        function forceZoom() {
+            if (isMobile) return; 
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            
+            container.classList.toggle('is-zoomed');
+
+            if (container.classList.contains('is-zoomed')) {
+                btn.classList.add('active');
+                container.scrollTop = 0;
+            } else {
+                btn.classList.remove('active');
+                Reveal.layout(); 
+            }
+        }
+
+        // Sonidos y Efectos
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            // Intento seguro de reproducción
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado por el navegador (interacción requerida)"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        if(typeof confetti === 'function') {
+                             confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                             confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                             if (Date.now() < end) requestAnimationFrame(frame);
+                        }
+                    }());
+                    break;
+                case 'applause':
+                    if(typeof confetti === 'function') {
+                        confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    }
+                    break;
+                case 'error': 
+                    // Vibración si es móvil
+                    if(navigator.vibrate) navigator.vibrate(200);
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

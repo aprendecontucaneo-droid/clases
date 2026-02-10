@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+    /* =========================================
+       1. VARIABLES Y BASE (VISIBILIDAD ALTA)
+       ========================================= */
+    :root { 
+        --primary: #004d40; 
+        --accent: #ff6f00;  
+        --text-main: #0f172a; /* Texto casi negro para máximo contraste */
+        --text-secondary: #334155; /* Gris oscuro (antes era muy claro) */
+        --bg-light: #fefce8; 
+        --danger: #ef4444; 
+    }
+    
+    /* Mantenemos la magia del Zoom Nativo */
+    html, body { 
+        background-color: var(--bg-light); 
+        font-family: 'Lato', sans-serif;
+        height: 100%;
+        overflow-y: auto !important; /* CRÍTICO: NO BORRAR */
+    }
+
+    /* =========================================
+       2. REVEAL.JS - TIPOGRAFÍA (COMPACTA Y LEGIBLE)
+       ========================================= */
+    /* Bajamos un poco la base para que no se sienta "gigante" */
+    .reveal { color: var(--text-main); font-size: 28px; font-weight: 500; }
+    
+    /* Títulos */
+    .reveal h1 { font-size: 2.5em !important; line-height: 1.1 !important; color: var(--primary); margin-bottom: 0.5em !important; }
+    .reveal h2 { font-size: 1.8em !important; color: var(--primary); font-weight: 800; margin-bottom: 0.6em !important; }
+    .reveal h3 { font-size: 1.4em !important; font-weight: 700; color: var(--text-main); }
+    
+    /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
+    /* Forzamos un color mucho más oscuro y un peso semi-negrita */
+    /* SOLUCIÓN AL TEXTO GRIS INVISIBLE (CORREGIDO) */
+    
+    /* 1. Para los tamaños: Solo mejoramos el peso (gordura), NO forzamos el color */
+    .reveal .text-sm, 
+    .reveal .text-xs {
+        font-weight: 600 !important; 
+        opacity: 0.95 !important;
+    }
+
+    /* --- PARCHE DE CONTRASTE INTELIGENTE (V3) --- */
+    
+    /* 1. REGLA BASE: Texto general se vuelve blanco en fondos oscuros */
+    /* Esto arregla que no se vea "Strategy Guide" o los párrafos */
+    .bg-slate-800, 
+    [class*="bg-[#004d40]"] {
+        color: rgba(255,255,255,0.95) !important;
+    }
+    
+    /* Aplicamos blanco a los elementos de texto base */
+    .bg-slate-800 h1, .bg-slate-800 h2, .bg-slate-800 h3, .bg-slate-800 p, .bg-slate-800 li,
+    [class*="bg-[#004d40]"] h1, [class*="bg-[#004d40]"] h2, [class*="bg-[#004d40]"] p {
+        color: #ffffff !important;
+    }
+
+    /* 2. REGLA DE PERSONALIDAD: ¡Respetar los colores bonitos! */
+    /* Si un elemento tiene un color específico, esta regla gana sobre la blanca */
+    
+    /* Naranja Tucaneo */
+    .text-\[\#ea580c\], [class*="text-[#ea580c]"] { color: #ea580c !important; }
+    
+    /* Verde Tucaneo */
+    .text-\[\#004d40\], [class*="text-[#004d40]"] { color: #004d40 !important; }
+    
+    /* Colores de Acento (Amarillos, Verdes claros) */
+    .text-yellow-400 { color: #facc15 !important; }
+    .text-emerald-200 { color: #a7f3d0 !important; }
+    .text-orange-200 { color: #fed7aa !important; }
+
+    /* --- CORRECCIÓN DE VISIBILIDAD DE TEXTO --- */
+    /* Aquí está el truco: Redefinimos los grises para que sean MÁS OSCUROS */
+    
+    /* El "gris subtítulo" ahora es gris oscuro */
+    .text-slate-400 { color: #475569 !important; } 
+    
+    /* El "gris texto" ahora es casi negro */
+    .text-slate-500 { color: #1e293b !important; }
+
+    /* 3. REGLA DE SEGURIDAD: Si dice 'text-white', que sea BLANCO sí o sí */
+    .reveal .text-white, 
+    .reveal .text-slate-50, 
+    .reveal .text-gray-50 {
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
+    
+    .reveal .text-sm { font-size: 0.85em !important; }
+    .reveal .text-xs { font-size: 0.75em !important; }
+
+    /* =========================================
+       3. ESTILO DE TARJETAS (CORREGIDO Y SEGURO)
+       ========================================= */
+    /* Modificado para permitir colores de fondo (como el verde) */
+    .glass-card {
+        /* Eliminamos la orden agresiva de transparencia */
+        backdrop-filter: blur(8px);       /* Efecto borroso bonito */
+        -webkit-backdrop-filter: blur(8px); /* Para Safari/iPhone */
+        
+        /* El resto lo dejamos que Tailwind lo controle en el HTML */
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Tarjetas internas: Más compactas y definidas */
+    .card {
+        background: white;
+        border-radius: 16px; 
+        padding: 2rem; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0; 
+    }
+/* =========================================
+       4. LAYOUT CONTROLADO (SCROLL + ARREGLO DE TÍTULOS)
+       ========================================= */
+    .reveal .slides { 
+        width: 100% !important; 
+        height: 100% !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        pointer-events: none; 
+    }
+    
+    .reveal section { 
+        height: 100vh !important;      
+        overflow-y: auto !important;   
+        overflow-x: hidden !important;
+        display: block !important;     
+        
+        /* AUMENTÉ ESTO: 100px arriba para bajar todo y que respete el menú */
+        padding: 100px 20px 80px 20px !important; 
+        
+        pointer-events: auto !important;
+        box-sizing: border-box; 
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* --- REGLA MÁGICA NUEVA --- */
+    /* Esto obliga al contenido a empezar desde arriba, anulando el 'justify-center' de Tailwind */
+    .reveal section > div {
+        height: auto !important;       /* Permite que crezca hacia abajo */
+        min-height: 100% !important;   
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important; /* ¡CLAVE! Alinea al inicio, no al centro */
+    }
+
+    /* AQUÍ ESTÁ EL TRUCO DE LA PROPORCIÓN: */
+    .slide-container {
+        width: 90% !important;
+        max-width: 1200px !important;
+        margin: 0 auto;
+    }
+    
+    /* =========================================
+       5. INPUTS VISIBLES (IGUAL QUE ANTES)
+       ========================================= */
+    .clean-input { 
+        width: 100%;
+        background: #f8fafc; 
+        border: 2px solid #cbd5e1;
+        border-radius: 8px; 
+        padding: 12px 16px; 
+        font-family: 'Handlee', cursive;
+        font-size: 1.1em; 
+        color: var(--primary) !important;
+        font-weight: bold; 
+        outline: none;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+    .clean-input:focus { 
+        border-color: var(--accent); 
+        background: #fff; 
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .clean-input::placeholder { 
+        color: #64748b !important; 
+        font-family: 'Lato', sans-serif; 
+        font-size: 0.9em; 
+        font-weight: 500; 
+    }
+
+    /* =========================================
+       6. UI Y UTILIDADES
+       ========================================= */
+    #tucaneo-drawer { position: fixed; top: 0; right: -150vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s; display: flex; flex-direction: column; }
+    #tucaneo-drawer.is-open { right: 0 !important; }
+    #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    
+    #fixed-logo { position: fixed; top: 30px; left: 40px; width: 100px; z-index: 5000; }
+    #top-nav { position: fixed; top: 30px; right: 40px; z-index: 5000; display: flex; gap: 15px; }
+    #floating-cta { position: fixed; bottom: 30px; left: 40px; z-index: 5000; font-size: 12px; color: var(--primary); font-weight: bold; opacity: 0.8; letter-spacing: 1px; }
+    
+    .nav-btn { padding: 8px 20px; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; border: none; font-weight: bold; font-size: 13px; text-decoration: none; }
+    .nav-btn.zoom { display: none !important; } 
+    .nav-btn.download { background-color: var(--primary); }
+    .nav-btn.exit { background-color: #64748b; }
+
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 6px; background: var(--accent); width: 0%; z-index: 9999; }
+    #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; }
+    #back-to-top.visible { display: flex; }
+
+ 
+    /* =========================================
+       7. MÓVIL: SOLUCIÓN FINAL (SCROLL REAL)
+       ========================================= */
+    @media (max-width: 1024px) {
+        
+        /* 1. FORZAR SCROLL EN EL CUERPO (La clave para que baje) */
+
+        /* --- ¡ESTO HACE VISIBLES LOS EJERCICIOS! --- */
+    .reveal .fragment {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+
+        html, body {
+            height: auto !important;
+            min-height: 100% !important;
+            overflow-y: scroll !important; /* Fuerza la barra de scroll */
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+            position: relative !important;
+        }
+
+        /* 2. DESACTIVAR REVEAL.JS (Convertir en lista vertical) */
+        .reveal {
+            height: auto !important;
+            overflow: visible !important;
+            position: relative !important;
+            touch-action: auto !important;
+        }
+
+        .reveal .slides {
+            position: static !important; /* Deja de flotar */
+            width: 100% !important;
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important; /* Apilar uno tras otro */
+            padding: 20px 15px 150px 15px !important; /* Espacio extra abajo */
+            transform: none !important;
+            top: auto !important;
+            left: auto !important;
+            pointer-events: none; /* El contenedor no bloquea, los hijos sí */
+        }
+
+        /* 3. CADA DIAPOSITIVA ES UN BLOQUE */
+        .reveal section {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            top: auto !important;
+            height: auto !important;
+            min-height: auto !important;
+            margin-bottom: 40px !important; /* Espacio entre diapositivas */
+            pointer-events: auto !important; /* ¡Habilitar interacción! */
+            transform: none !important;
+        }
+
+        /* 4. ELEMENTOS INTERNOS (Para que no se salgan) */
+        .slide-container, .card, .glass-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 5. INPUTS FUNCIONALES */
+        .clean-input {
+            pointer-events: auto !important;
+            z-index: 5000 !important; /* Asegurar que esté encima */
+            font-size: 16px !important;
+            background: #fff !important;
+            width: 100% !important;
+        }
+
+        /* 6. ARREGLAR GRILLAS (Todo en una columna) */
+        .grid, .grid-cols-2, .md\:grid-cols-2, .lg\:grid-cols-12 {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+
+        /* 7. LIMPIEZA VISUAL */
+        .reveal h1 { font-size: 2.2em !important; margin-top: 20px !important; }
+        .reveal img { max-height: 250px !important; width: auto !important; margin: 0 auto !important; }
+        
+        /* Ocultar controles de PC */
+        #btn-zoom, .nav-btn.zoom, #premium-dock, .reveal .controls, .reveal .progress { 
+            display: none !important; 
+        }
+        
+        /* Ajustar barra superior */
+        #fixed-logo { width: 60px; top: 10px; left: 10px; }
+        #top-nav { top: 10px; right: 10px; }
+        .nav-btn { width: 36px; height: 36px; padding: 0; justify-content: center; }
+        .nav-btn span { display: none; }
+    }
+
+    /* --- PARCHE DE CONTRASTE (CORREGIDO) --- */
+    
+    /* Usamos este selector especial para que el navegador entienda el color hexadecimal */
+    [class*="bg-[#004d40]"] h1, 
+    [class*="bg-[#004d40]"] h2, 
+    [class*="bg-[#004d40]"] h3, 
+    [class*="bg-[#004d40]"] p, 
+    [class*="bg-[#004d40]"] i, 
+    [class*="bg-[#004d40]"] span,
+    [class*="bg-[#004d40]"] li,
+    [class*="bg-[#004d40]"] .text-sm,
+    [class*="bg-[#004d40]"] .text-xs,
+    [class*="bg-[#004d40]"] .text-gray-400,
+    [class*="bg-[#004d40]"] .text-gray-500 {
+        color: #ffffff !important; /* BLANCO OBLIGATORIO */
+        opacity: 1 !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    /* También aplicamos la corrección para el color primario de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary h3, .bg-primary p, .bg-primary span, .bg-primary i {
+        color: #ffffff !important;
+    }
+
+    /* Opcional: Si usas la clase 'bg-primary' de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary p {
+        color: #ffffff !important;
+    }
+</style>
+
+   
+
+
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO.COM</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center items-center">
+        <div class="glass-card p-10 text-center relative overflow-hidden border-t-8 border-[#ea580c] max-w-4xl w-full">
+            
+            <div class="flex justify-center mb-6">
+                <span class="py-2 px-6 rounded-full bg-emerald-100 text-[#004d40] text-sm font-bold tracking-widest uppercase shadow-sm">
+                    Grammar Lab A1
+                </span>
+            </div>
+            
+            <h1 class="text-6xl md:text-7xl font-black text-[#004d40] mb-4 font-serif tracking-tight">
+                Ser <span class="text-[#ea580c] italic font-light">vs</span> Estar
+            </h1>
+            
+            <p class="text-2xl text-slate-600 mb-10 leading-relaxed font-light">
+                The eternal dilemma. <br>
+                Identity (<span class="text-[#004d40] font-bold">Ser</span>) vs. State (<span class="text-[#ea580c] font-bold">Estar</span>).
+            </p>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-[#004d40] text-white p-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition-transform">
+                    <i class="fas fa-fingerprint text-3xl mb-2 opacity-80"></i>
+                    <strong class="block text-2xl tracking-wider">SER</strong>
+                    <span class="text-emerald-200 text-sm font-medium uppercase">Permanent Traits</span>
+                </div>
+                <div class="bg-[#ea580c] text-white p-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition-transform">
+                    <i class="fas fa-thermometer-half text-3xl mb-2 opacity-80"></i>
+                    <strong class="block text-2xl tracking-wider">ESTAR</strong>
+                    <span class="text-orange-100 text-sm font-medium uppercase">Temporary States</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center items-center">
+        
+        <h2 class="text-4xl font-bold text-slate-800 mb-6">The "To Be" Dilemma</h2>
+        
+        <p class="text-xl text-slate-600 mb-10 max-w-2xl text-center">
+            In English, you have one verb: <strong>"To Be"</strong>. <br>
+            You say: <em>"I <strong>am</strong> Juan"</em> and <em>"I <strong>am</strong> tired."</em> <br>
+            <span class="text-sm text-slate-400 mt-2 block">(Same verb, different meanings.)</span>
+        </p>
+
+        <div class="relative w-full max-w-4xl flex flex-col md:flex-row justify-between items-center gap-8">
+            
+            <div class="bg-slate-800 text-white p-6 rounded-full w-40 h-40 flex items-center justify-center text-center shadow-xl z-10 border-4 border-slate-200">
+                <div>
+                    <span class="block text-xs uppercase tracking-widest opacity-70">English</span>
+                    <strong class="text-3xl">TO BE</strong>
+                </div>
+            </div>
+
+            <div class="hidden md:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 -z-0"></div>
+            <div class="hidden md:block absolute top-1/2 left-40 w-4 h-4 bg-slate-300 rounded-full transform -translate-y-1/2"></div>
+            <div class="hidden md:block absolute top-1/2 right-40 w-4 h-4 bg-slate-300 rounded-full transform -translate-y-1/2"></div>
+
+            <div class="flex gap-10 z-10 w-full md:w-auto justify-center">
+                
+                <div class="glass-card p-6 w-48 text-center border-t-8 border-[#004d40] hover:scale-110 transition-transform cursor-default">
+                    <h3 class="text-2xl font-black text-[#004d40] mb-2">SER</h3>
+                    <p class="text-sm text-slate-600">Identity & Origin</p>
+                    <div class="mt-3 bg-emerald-50 text-[#004d40] text-xs py-1 px-2 rounded font-mono">"I am Juan"</div>
+                </div>
+
+                <div class="glass-card p-6 w-48 text-center border-t-8 border-[#ea580c] hover:scale-110 transition-transform cursor-default">
+                    <h3 class="text-2xl font-black text-[#ea580c] mb-2">ESTAR</h3>
+                    <p class="text-sm text-slate-600">State & Location</p>
+                    <div class="mt-3 bg-orange-50 text-[#ea580c] text-xs py-1 px-2 rounded font-mono">"I am tired"</div>
+                </div>
+
+            </div>
+        </div>
+
+        <p class="mt-12 bg-yellow-50 text-yellow-800 px-6 py-3 rounded-lg border border-yellow-200 text-sm font-bold shadow-sm">
+            <i class="fas fa-lightbulb mr-2"></i> In Spanish, we must choose the correct verb for the context.
+        </p>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        <div class="flex items-center gap-4 mb-6 border-b border-emerald-100 pb-4">
+            <div class="w-12 h-12 rounded-full bg-[#004d40] text-white flex items-center justify-center font-bold shadow-lg text-xl">1</div>
+            <div>
+                <h2 class="text-3xl font-bold text-[#004d40] m-0">Verb 1: SER (Identity)</h2>
+                <p class="text-slate-500 text-sm font-bold">The permanent "To Be".</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-center">
+            
+            <div class="flex flex-col gap-6">
+                <div class="bg-white p-6 rounded-xl border-l-8 border-[#004d40] shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i class="fas fa-info-circle text-[#004d40]"></i> The Concept
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Think of <strong>SER</strong> as a permanent label. We use it to define <em>what</em> or <em>who</em> something is.
+                    </p>
+                    <div class="mt-4 bg-emerald-50 p-3 rounded-lg text-[#004d40] font-bold text-sm">
+                        "If it doesn't change easily, use SER."
+                    </div>
+                </div>
+                
+                <div class="text-center opacity-20">
+                    <i class="fas fa-id-card text-9xl text-[#004d40]"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-0 overflow-hidden flex flex-col shadow-xl transform hover:scale-[1.02] transition-transform">
+                <div class="bg-[#004d40] p-4 text-center">
+                    <h3 class="text-white text-xl font-black m-0 tracking-widest uppercase">MEMORIZE THIS</h3>
+                </div>
+                <div class="p-6 bg-white">
+                    <ul class="space-y-4 text-xl">
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">I am</span>
+                            <span class="font-black text-[#004d40] text-2xl">YO SOY</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">You are</span>
+                            <span class="font-black text-[#004d40] text-2xl">TÚ ERES</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2 bg-emerald-50 -mx-6 px-6 py-3">
+                            <span class="text-slate-500 text-sm font-bold uppercase w-24">He/She is</span>
+                            <span class="font-black text-[#004d40] text-3xl">ES</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">We are</span>
+                            <span class="font-black text-[#004d40] text-2xl">SOMOS</span>
+                        </li>
+                        <li class="flex justify-between items-center pt-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">They are</span>
+                            <span class="font-black text-[#004d40] text-2xl">SON</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-[#004d40] mb-2">When to use it? (Part 1)</h2>
+            <p class="text-slate-500 font-bold">Category: <span class="bg-[#004d40] text-white px-2 py-1 rounded text-sm uppercase">Identity & Origin</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full content-start">
+            
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#004d40] flex flex-col">
+                <div class="mb-4">
+                    <span class="text-xs font-black text-slate-300 uppercase tracking-widest">USE #1</span>
+                    <h3 class="text-xl font-bold text-[#004d40]">Identification</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 flex-grow">
+                    Use SER to introduce yourself or others (Names & Relationships).
+                </p>
+                <div class="space-y-2 font-handlee text-lg">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "Yo <strong>soy</strong> Ana."
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "Ellos <strong>son</strong> amigos."
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#004d40] flex flex-col">
+                <div class="mb-4">
+                    <span class="text-xs font-black text-slate-300 uppercase tracking-widest">USE #2</span>
+                    <h3 class="text-xl font-bold text-[#004d40]">Profession</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 flex-grow">
+                    Jobs define who you are. <br>
+                    <span class="text-orange-500 text-xs font-bold">*Tip: Don't use "un/una" for jobs.</span>
+                </p>
+                <div class="space-y-2 font-handlee text-lg">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "Ella <strong>es</strong> doctora."
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "Nosotros <strong>somos</strong> estudiantes."
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#004d40] flex flex-col">
+                <div class="mb-4">
+                    <span class="text-xs font-black text-slate-300 uppercase tracking-widest">USE #3</span>
+                    <h3 class="text-xl font-bold text-[#004d40]">Origin (From)</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 flex-grow">
+                    Where are you from? <br>
+                    Always use the formula: <strong>SER + DE</strong>.
+                </p>
+                <div class="space-y-2 font-handlee text-lg">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "Yo <strong>soy de</strong> Colombia."
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <i class="fas fa-check text-green-500 mr-2"></i> "¿<strong>Eres de</strong> España?"
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-[#004d40] mb-2">When to use it? (Part 2)</h2>
+            <p class="text-slate-500 font-bold">Category: <span class="bg-[#004d40] text-white px-2 py-1 rounded text-sm uppercase">Description & Stuff</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+            
+            <div class="glass-card p-6 bg-white relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-100 rounded-full opacity-50"></div>
+                <h3 class="text-xl font-bold text-[#004d40] mb-3 flex items-center gap-2">
+                    <i class="fas fa-palette"></i> Description
+                </h3>
+                <p class="text-slate-500 text-sm mb-4">
+                    Use SER for physical traits (color, size) or personality. These are considered "essential" traits.
+                </p>
+                
+                <ul class="space-y-3">
+                    <li class="flex items-center justify-between p-2 border-b border-slate-100">
+                        <span class="text-slate-400 text-sm italic">The car is red.</span>
+                        <span class="font-bold text-slate-700">"El auto <strong>es</strong> rojo."</span>
+                    </li>
+                    <li class="flex items-center justify-between p-2 border-b border-slate-100">
+                        <span class="text-slate-400 text-sm italic">You are tall.</span>
+                        <span class="font-bold text-slate-700">"Tú <strong>eres</strong> alto."</span>
+                    </li>
+                    <li class="flex items-center justify-between p-2">
+                        <span class="text-slate-400 text-sm italic">They are nice.</span>
+                        <span class="font-bold text-slate-700">"Ellos <strong>son</strong> simpáticos."</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-card p-6 bg-white relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-100 rounded-full opacity-50"></div>
+                <h3 class="text-xl font-bold text-[#004d40] mb-3 flex items-center gap-2">
+                    <i class="fas fa-gem"></i> Material & Possession
+                </h3>
+                <p class="text-slate-500 text-sm mb-4">
+                    What is it made of? Whose is it? <br>
+                    Again, use the formula: <strong>SER + DE</strong>.
+                </p>
+                
+                <ul class="space-y-3">
+                    <li class="flex items-center justify-between p-2 border-b border-slate-100">
+                        <span class="text-slate-400 text-sm italic">It is plastic.</span>
+                        <span class="font-bold text-slate-700">"<strong>Es de</strong> plástico."</span>
+                    </li>
+                    <li class="flex items-center justify-between p-2 border-b border-slate-100">
+                        <span class="text-slate-400 text-sm italic">It is wood.</span>
+                        <span class="font-bold text-slate-700">"La mesa <strong>es de</strong> madera."</span>
+                    </li>
+                    <li class="flex items-center justify-between p-2">
+                        <span class="text-slate-400 text-sm italic">It is Maria's.</span>
+                        <span class="font-bold text-slate-700">"El libro <strong>es de</strong> María."</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        
+        <div class="mt-6 text-center">
+            <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-xs font-bold border border-yellow-200">
+                💡 Tip: If you can ask "Whose is it?" or "Where are you from?", always use SER.
+            </span>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        <div class="flex items-center gap-4 mb-6 border-b border-orange-100 pb-4">
+            <div class="w-12 h-12 rounded-full bg-[#ea580c] text-white flex items-center justify-center font-bold shadow-lg text-xl">2</div>
+            <div>
+                <h2 class="text-3xl font-bold text-[#ea580c] m-0">Verb 2: ESTAR (State)</h2>
+                <p class="text-slate-500 text-sm font-bold">The temporary "To Be".</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-center">
+            
+            <div class="glass-card p-0 overflow-hidden flex flex-col shadow-xl transform hover:scale-[1.02] transition-transform order-2 md:order-1">
+                <div class="bg-[#ea580c] p-4 text-center">
+                    <h3 class="text-white text-xl font-black m-0 tracking-widest uppercase">MEMORIZE THIS</h3>
+                </div>
+                <div class="p-6 bg-white relative">
+                    <div class="absolute top-3 right-3 bg-yellow-100 text-yellow-800 text-[10px] uppercase font-black px-2 py-1 rounded border border-yellow-200">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Watch accents!
+                    </div>
+
+                    <ul class="space-y-4 text-xl">
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">I am</span>
+                            <span class="font-black text-[#ea580c] text-2xl">YO ESTOY</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">You are</span>
+                            <span class="font-black text-[#ea580c] text-2xl">TÚ ESTÁS</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2 bg-orange-50 -mx-6 px-6 py-3">
+                            <span class="text-slate-500 text-sm font-bold uppercase w-24">He/She is</span>
+                            <span class="font-black text-[#ea580c] text-3xl">ESTÁ</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">We are</span>
+                            <span class="font-black text-[#ea580c] text-2xl">ESTAMOS</span>
+                        </li>
+                        <li class="flex justify-between items-center pt-2">
+                            <span class="text-slate-400 text-sm font-bold uppercase w-24">They are</span>
+                            <span class="font-black text-[#ea580c] text-2xl">ESTÁN</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-6 order-1 md:order-2">
+                <div class="bg-white p-6 rounded-xl border-l-8 border-[#ea580c] shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt text-[#ea580c]"></i> The Concept
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Think of <strong>ESTAR</strong> as a "status update". We use it to talk about <em>states</em>, <em>emotions</em>, and <em>locations</em>.
+                    </p>
+                    <div class="mt-4 bg-orange-50 p-3 rounded-lg text-[#ea580c] font-bold text-sm">
+                        "If it changes or moves, use ESTAR."
+                    </div>
+                </div>
+                
+                <div class="text-center opacity-20">
+                    <i class="fas fa-battery-half text-9xl text-[#ea580c]"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-[#ea580c] mb-2">Use #1: Location</h2>
+            <p class="text-slate-500 font-bold">Category: <span class="bg-[#ea580c] text-white px-2 py-1 rounded text-sm uppercase">Position & Place</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+            
+            <div class="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 flex flex-col justify-center">
+                <h3 class="text-2xl font-bold text-slate-700 mb-4">"Where is it?"</h3>
+                <p class="text-slate-600 text-lg mb-6">
+                    Even if a building is permanent (it doesn't move), its <strong>location</strong> always uses ESTAR.
+                </p>
+                <div class="bg-slate-100 p-4 rounded-xl border-l-4 border-slate-400">
+                    <span class="block font-bold text-slate-800 text-sm uppercase mb-1">Preposition Tip:</span>
+                    <p class="text-slate-600 italic">"Look for the word <strong>EN</strong> (in/at)."</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 justify-center">
+                
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-[#ea580c] flex items-center gap-4">
+                    <div class="bg-orange-100 p-3 rounded-full text-[#ea580c]"><i class="fas fa-home text-xl"></i></div>
+                    <div>
+                        <p class="text-sm text-slate-400 uppercase font-bold">I am at home.</p>
+                        <p class="text-xl text-slate-800">"Yo <strong>estoy en</strong> casa."</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-[#ea580c] flex items-center gap-4">
+                    <div class="bg-orange-100 p-3 rounded-full text-[#ea580c]"><i class="fas fa-utensils text-xl"></i></div>
+                    <div>
+                        <p class="text-sm text-slate-400 uppercase font-bold">The restaurant is in the city.</p>
+                        <p class="text-xl text-slate-800">"El restaurante <strong>está en</strong> la ciudad."</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-[#ea580c] flex items-center gap-4">
+                    <div class="bg-orange-100 p-3 rounded-full text-[#ea580c]"><i class="fas fa-users text-xl"></i></div>
+                    <div>
+                        <p class="text-sm text-slate-400 uppercase font-bold">Where are they?</p>
+                        <p class="text-xl text-slate-800">"¿Dónde <strong>están</strong> ellos?"</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-[#ea580c] mb-2">Use #2: How you feel</h2>
+            <p class="text-slate-500 font-bold">Category: <span class="bg-[#ea580c] text-white px-2 py-1 rounded text-sm uppercase">Emotions & Health</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full content-start">
+            
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#ea580c] flex flex-col transform hover:-translate-y-1 transition-transform">
+                <div class="mb-4 text-center">
+                    <div class="w-16 h-16 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-3xl mb-2">😃</div>
+                    <h3 class="text-xl font-bold text-[#ea580c]">Emotions</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 text-center">
+                    Feelings change quickly. Use ESTAR.
+                </p>
+                <div class="space-y-3 font-handlee text-lg">
+                    <div class="p-2 border-b border-slate-100 text-center">
+                        "Estoy feliz." <br><span class="text-xs text-slate-400 sans-serif">(Happy)</span>
+                    </div>
+                    <div class="p-2 text-center">
+                        "Estás triste." <br><span class="text-xs text-slate-400 sans-serif">(Sad)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#ea580c] flex flex-col transform hover:-translate-y-1 transition-transform">
+                <div class="mb-4 text-center">
+                    <div class="w-16 h-16 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-3xl mb-2">🤒</div>
+                    <h3 class="text-xl font-bold text-[#ea580c]">Health</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 text-center">
+                    Health is a temporary state (hopefully!).
+                </p>
+                <div class="space-y-3 font-handlee text-lg">
+                    <div class="p-2 border-b border-slate-100 text-center">
+                        "Ella está enferma." <br><span class="text-xs text-slate-400 sans-serif">(Sick)</span>
+                    </div>
+                    <div class="p-2 text-center">
+                        "Estamos bien." <br><span class="text-xs text-slate-400 sans-serif">(Well/Fine)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-[#ea580c] flex flex-col transform hover:-translate-y-1 transition-transform">
+                <div class="mb-4 text-center">
+                    <div class="w-16 h-16 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-3xl mb-2">🍜</div>
+                    <h3 class="text-xl font-bold text-[#ea580c]">Taste / State</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 text-center">
+                    How something is <em>right now</em> (Food, Temperature).
+                </p>
+                <div class="space-y-3 font-handlee text-lg">
+                    <div class="p-2 border-b border-slate-100 text-center">
+                        "La sopa está fría." <br><span class="text-xs text-slate-400 sans-serif">(Cold)</span>
+                    </div>
+                    <div class="p-2 text-center">
+                        "¡Está delicioso!" <br><span class="text-xs text-slate-400 sans-serif">(Delicious)</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-[95%] mx-auto">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">The Golden Rules: Cheat Sheet</h2>
+            <p class="text-slate-600 text-lg">
+                Memorize these two acronyms to instantly know which verb to pick.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full overflow-hidden">
+            
+            <div class="bg-white rounded-2xl shadow-xl border-t-8 border-[#004d40] flex flex-col h-full overflow-hidden">
+                <div class="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-[#004d40] rounded-lg flex items-center justify-center text-white text-2xl shadow-lg">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-[#004d40] leading-none">SER</h3>
+                            <span class="text-xs font-bold text-slate-400 tracking-[0.3em]">PERMANENT</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-3xl font-black text-slate-200 tracking-widest">DOCTOR</span>
+                    </div>
+                </div>
+
+                <div class="p-4 flex-1 overflow-y-auto space-y-2">
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">D</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Description</span>
+                            <span class="text-xs text-slate-400">Physical & Personality</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"La casa <strong>es</strong> roja."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">O</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Occupation</span>
+                            <span class="text-xs text-slate-400">Jobs / Careers</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"Soy profesora."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">C</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Characteristic</span>
+                            <span class="text-xs text-slate-400">Essential qualities</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"Eres inteligente."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">T</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Time / Origin</span>
+                            <span class="text-xs text-slate-400">Time & "De dónde..."</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"Son las dos."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">O</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Ownership</span>
+                            <span class="text-xs text-slate-400">Possession (De)</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"Es de Juan."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                        <span class="w-8 h-8 rounded bg-[#004d40] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">R</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Relationship</span>
+                            <span class="text-xs text-slate-400">Family / Friends</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#004d40] group-hover:scale-105 transition-transform">"Es mi madre."</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl border-t-8 border-[#ea580c] flex flex-col h-full overflow-hidden">
+                <div class="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-[#ea580c] rounded-lg flex items-center justify-center text-white text-2xl shadow-lg">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-[#ea580c] leading-none">ESTAR</h3>
+                            <span class="text-xs font-bold text-slate-400 tracking-[0.3em]">TEMPORARY</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-3xl font-black text-slate-200 tracking-widest">PLACE</span>
+                    </div>
+                </div>
+
+                <div class="p-4 flex-1 overflow-y-auto space-y-2">
+                    <div class="flex items-center p-2 rounded-lg hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-100 group">
+                        <span class="w-8 h-8 rounded bg-[#ea580c] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">P</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Position</span>
+                            <span class="text-xs text-slate-400">Physical posture</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#ea580c] group-hover:scale-105 transition-transform">"Estoy sentado."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-100 group">
+                        <span class="w-8 h-8 rounded bg-[#ea580c] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">L</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Location</span>
+                            <span class="text-xs text-slate-400">Where is it?</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#ea580c] group-hover:scale-105 transition-transform">"Estamos en Madrid."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-100 group">
+                        <span class="w-8 h-8 rounded bg-[#ea580c] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">A</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Action</span>
+                            <span class="text-xs text-slate-400">Doing something (-ing)</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#ea580c] group-hover:scale-105 transition-transform">"Estoy comiendo."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-100 group">
+                        <span class="w-8 h-8 rounded bg-[#ea580c] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">C</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Condition</span>
+                            <span class="text-xs text-slate-400">Health / State</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#ea580c] group-hover:scale-105 transition-transform">"Está enfermo."</span>
+                    </div>
+                    <div class="flex items-center p-2 rounded-lg hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-100 group">
+                        <span class="w-8 h-8 rounded bg-[#ea580c] text-white flex items-center justify-center font-bold text-sm mr-3 shadow-sm">E</span>
+                        <div class="flex-1">
+                            <span class="block text-sm font-bold text-slate-700">Emotion</span>
+                            <span class="text-xs text-slate-400">Feelings</span>
+                        </div>
+                        <span class="text-sm font-handlee text-[#ea580c] group-hover:scale-105 transition-transform">"Estoy feliz."</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-[95%] mx-auto">
+        
+        <div class="text-center mb-8">
+            <div class="inline-block bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-2 border border-red-200">
+                ⚠️ Special Rule
+            </div>
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">Location of Events</h2>
+            <p class="text-slate-600 text-lg">
+                Be careful! Asking <em>"Where is it?"</em> changes depending on <strong>what</strong> "it" is.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-stretch">
+            
+            <div class="glass-card p-0 flex flex-col rounded-2xl overflow-hidden border-2 border-transparent hover:border-orange-200 transition-colors">
+                <div class="bg-slate-100 p-6 border-b border-slate-200 text-center">
+                    <div class="w-16 h-16 mx-auto bg-[#ea580c] rounded-full flex items-center justify-center text-white text-3xl shadow-lg mb-3">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-700">Physical Things</h3>
+                    <p class="text-sm text-slate-500 uppercase tracking-wide font-bold">People, Buildings, Objects</p>
+                </div>
+                
+                <div class="p-8 bg-white flex-1 flex flex-col justify-center items-center text-center">
+                    <p class="text-slate-600 mb-6 text-lg">
+                        If it has a physical body and occupies space...
+                    </p>
+                    <div class="bg-orange-50 text-[#ea580c] p-6 rounded-xl border border-orange-200 w-full">
+                        <span class="block text-sm font-bold uppercase mb-2 text-slate-400">Use Estar</span>
+                        <p class="text-2xl font-bold">"El libro <span class="border-b-4 border-[#ea580c]">está</span> en la mesa."</p>
+                        <p class="text-sm italic text-slate-500 mt-2">(The book is on the table)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-0 flex flex-col rounded-2xl overflow-hidden border-4 border-[#004d40] relative shadow-2xl transform md:-translate-y-2">
+                <div class="absolute top-0 right-0 bg-[#004d40] text-white px-4 py-2 rounded-bl-xl font-bold text-xs uppercase tracking-wider z-10">
+                    Use SER
+                </div>
+
+                <div class="bg-emerald-50 p-6 border-b border-emerald-100 text-center">
+                    <div class="w-16 h-16 mx-auto bg-[#004d40] rounded-full flex items-center justify-center text-white text-3xl shadow-lg mb-3">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-[#004d40]">Events</h3>
+                    <p class="text-sm text-emerald-700 uppercase tracking-wide font-bold">Parties, Classes, Concerts</p>
+                </div>
+                
+                <div class="p-8 bg-white flex-1 flex flex-col justify-center items-center text-center">
+                    <p class="text-slate-600 mb-6 text-lg">
+                        An event is not a physical object. It <strong>"takes place"</strong> or <strong>"happens"</strong>.
+                    </p>
+                    <div class="bg-[#004d40] text-white p-6 rounded-xl border border-emerald-800 w-full shadow-lg">
+                        <span class="block text-sm font-bold uppercase mb-2 text-emerald-200">Use Ser</span>
+                        <p class="text-2xl font-bold">"La fiesta <span class="border-b-4 border-white">es</span> en mi casa."</p>
+                        <p class="text-sm italic text-emerald-100 mt-2">(The party is/takes place at my house)</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-8 bg-white/80 rounded-xl p-4 border border-slate-200 flex flex-col md:flex-row justify-around items-center gap-4 shadow-sm">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🎸</span>
+                <div>
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Concert (Event)</span>
+                    <span class="text-lg font-bold text-[#004d40]">"El concierto <span class="underline">es</span> en Madrid."</span>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-slate-300 hidden md:block"></div>
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">⚽</span>
+                <div>
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Match (Event)</span>
+                    <span class="text-lg font-bold text-[#004d40]">"El partido <span class="underline">es</span> en el estadio."</span>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-slate-300 hidden md:block"></div>
+            <div class="flex items-center gap-3 opacity-50">
+                <span class="text-2xl">🏟️</span>
+                <div>
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Stadium (Building)</span>
+                    <span class="text-lg font-bold text-[#ea580c]">"El estadio <span class="underline">está</span> en Madrid."</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-[95%] mx-auto">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 m-0">⚡ Rapid Fire Practice</h2>
+                <p class="text-slate-500 text-sm mt-1">Click the correct verb. If you fail, I'll tell you why!</p>
+            </div>
+            <div class="hidden md:block">
+                <span class="bg-slate-100 text-slate-500 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider">8 Challenges</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-full content-start overflow-y-auto pb-20">
+            
+            <div id="card-1" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">👨‍🍳</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Chef</h3>
+                <div id="feedback-1" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(1, 'ser', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(1, 'estar', 'Jobs are permanent identities (Ser).')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-2" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🏥</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">In Hospital</h3>
+                <div id="feedback-2" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(2, 'ser', 'Locations always use Estar.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(2, 'estar', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-3" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🇫🇷</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">From France</h3>
+                <div id="feedback-3" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(3, 'ser', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(3, 'estar', 'Origin (where from) is permanent.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-4" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">😢</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Sad</h3>
+                <div id="feedback-4" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(4, 'ser', 'Emotions change. Use Estar.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(4, 'estar', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-5" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🦒</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Tall</h3>
+                <div id="feedback-5" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(5, 'ser', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(5, 'estar', 'Physical traits are descriptions (Ser).')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-6" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">☕</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Hot (Temp.)</h3>
+                <div id="feedback-6" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(6, 'ser', 'Temperature is a temporary state.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(6, 'estar', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-7" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🪵</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Of Wood</h3>
+                <div id="feedback-7" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(7, 'ser', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(7, 'estar', 'Material (what it is made of) is Ser.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+            <div id="card-8" class="bg-white p-4 rounded-xl shadow border border-slate-200 hover:shadow-md transition-all flex flex-col items-center group relative">
+                <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🏃</div>
+                <h3 class="font-bold text-slate-700 text-sm mb-3 uppercase tracking-wide">Running</h3>
+                <div id="feedback-8" class="hidden text-xs text-red-500 font-bold text-center mb-2 bg-red-50 p-1 rounded w-full"></div>
+                <div class="flex gap-2 w-full mt-auto">
+                    <button onclick="check(8, 'ser', 'Actions in progress use Estar.')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#004d40] hover:text-white transition-all">SER</button>
+                    <button onclick="check(8, 'estar', 'correct')" class="btn-opt flex-1 py-2 rounded-lg border border-slate-300 text-slate-500 font-bold text-xs hover:bg-[#ea580c] hover:text-white transition-all">ESTAR</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function check(id, type, msg) {
+            const card = document.getElementById(`card-${id}`);
+            const feedback = document.getElementById(`feedback-${id}`);
+            const isCorrect = msg === 'correct';
+
+            if (isCorrect) {
+                // ÉXITO
+                if(window.react) window.react('confetti'); // Usa tu función de confeti existente
+                
+                // Estilo visual de éxito
+                card.style.borderColor = (type === 'ser') ? '#004d40' : '#ea580c';
+                card.style.backgroundColor = (type === 'ser') ? '#ecfdf5' : '#fff7ed';
+                
+                // Mostrar mensaje positivo
+                feedback.classList.remove('hidden', 'text-red-500', 'bg-red-50');
+                feedback.classList.add('text-green-600', 'bg-green-100');
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> Correct!';
+                
+                // Desactivar botones
+                const btns = card.querySelectorAll('button');
+                btns.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    if(btn.innerText.toLowerCase() === type) {
+                        btn.style.opacity = '1';
+                        btn.style.backgroundColor = (type === 'ser') ? '#004d40' : '#ea580c';
+                        btn.style.color = 'white';
+                    }
+                });
+
+            } else {
+                // ERROR
+                if(window.react) window.react('error'); // Usa tu función de error existente
+                
+                // Mostrar explicación del error
+                feedback.classList.remove('hidden');
+                feedback.innerText = msg;
+                
+                // Pequeña animación de temblor
+                card.classList.add('animate-pulse');
+                setTimeout(() => card.classList.remove('animate-pulse'), 500);
+            }
+        }
+    </script>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-[95%] mx-auto">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">Practice 2: The Context Lab</h2>
+            <p class="text-slate-600 text-lg">Complete the postcard using <strong class="text-[#004d40]">SER</strong> or <strong class="text-[#ea580c]">ESTAR</strong>.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 h-full items-stretch">
+            
+            <div class="lg:w-1/3 flex flex-col gap-4">
+                <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-xl flex-1">
+                    <h3 class="text-xl font-bold border-b border-slate-600 pb-4 mb-4 flex items-center gap-2">
+                        <i class="fas fa-lightbulb text-yellow-400"></i> Strategy Guide
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-slate-700/50 p-4 rounded-xl border-l-4 border-[#004d40]">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-black text-[#004d40] bg-white px-2 py-1 rounded text-xs">SER</span>
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">Permanent</span>
+                            </div>
+                            <ul class="text-sm space-y-2 text-slate-300">
+                                <li class="flex gap-2"><i class="fas fa-check text-[#004d40]"></i> <span><strong>Description:</strong> "It is big."</span></li>
+                                <li class="flex gap-2"><i class="fas fa-check text-[#004d40]"></i> <span><strong>Origin:</strong> "From Chile."</span></li>
+                                <li class="flex gap-2"><i class="fas fa-check text-[#004d40]"></i> <span><strong>Time:</strong> "It is 3 PM."</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-slate-700/50 p-4 rounded-xl border-l-4 border-[#ea580c]">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-black text-[#ea580c] bg-white px-2 py-1 rounded text-xs">ESTAR</span>
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">Temporary</span>
+                            </div>
+                            <ul class="text-sm space-y-2 text-slate-300">
+                                <li class="flex gap-2"><i class="fas fa-check text-[#ea580c]"></i> <span><strong>Location:</strong> "In the hotel."</span></li>
+                                <li class="flex gap-2"><i class="fas fa-check text-[#ea580c]"></i> <span><strong>Emotion:</strong> "I am happy."</span></li>
+                                <li class="flex gap-2"><i class="fas fa-check text-[#ea580c]"></i> <span><strong>Action:</strong> "Working."</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:w-2/3 relative">
+                <div class="bg-[#fdfbf7] p-8 rounded-xl shadow-2xl h-full border border-stone-200 relative overflow-hidden flex flex-col transform rotate-1 transition hover:rotate-0">
+                    
+                    <div class="absolute top-6 right-6 w-24 h-28 border-4 border-stone-300 flex items-center justify-center opacity-50 rotate-3">
+                        <i class="fas fa-stamp text-4xl text-stone-300"></i>
+                    </div>
+                    <div class="absolute bottom-6 right-1/2 w-1/3 h-px bg-stone-300"></div>
+                    <div class="absolute bottom-12 right-1/2 w-1/3 h-px bg-stone-300"></div>
+                    <div class="absolute bottom-18 right-1/2 w-1/3 h-px bg-stone-300"></div>
+
+                    <div class="font-serif text-xl leading-relaxed text-slate-800 z-10 flex-1 pr-4 lg:pr-32">
+                        <p class="mb-6 font-bold text-[#004d40]">Hola mamá:</p>
+                        
+                        <p class="mb-4">
+                            ¡Saludos desde Barcelona! Yo
+                            <input class="clean-input w-32 inline-block mx-1 text-center font-sans text-[#ea580c] text-lg border-b-2 border-orange-200 bg-orange-50/50" placeholder="(1)...">
+                            muy contento aquí.
+                        </p>
+                        
+                        <p class="mb-4">
+                            Mi hotel
+                            <input class="clean-input w-32 inline-block mx-1 text-center font-sans text-[#ea580c] text-lg border-b-2 border-orange-200 bg-orange-50/50" placeholder="(2)...">
+                            en el centro de la ciudad.
+                        </p>
+                        
+                        <p class="mb-4">
+                            Barcelona
+                            <input class="clean-input w-32 inline-block mx-1 text-center font-sans text-[#004d40] text-lg border-b-2 border-emerald-200 bg-emerald-50/50" placeholder="(3)...">
+                            una ciudad muy grande y bonita.
+                        </p>
+                        
+                        <p class="mb-4">
+                            La comida aquí
+                            <input class="clean-input w-32 inline-block mx-1 text-center font-sans text-[#004d40] text-lg border-b-2 border-emerald-200 bg-emerald-50/50" placeholder="(4)...">
+                            deliciosa (description).
+                        </p>
+
+                        <p class="mt-8 italic text-right font-handlee text-2xl text-slate-500">
+                            Con amor,<br>Diego
+                        </p>
+                    </div>
+
+                    <div class="mt-4 text-left">
+                        <button onclick="react('confetti')" class="bg-[#004d40] text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-emerald-800 transition flex items-center gap-2 text-sm uppercase tracking-wider">
+                            Check Writing <i class="fas fa-pen-nib"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-5xl mx-auto">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">Final Challenge: The Social Bio</h2>
+            <p class="text-slate-600 text-lg">
+                Read Sofia's bio. Context is key! Decide if she is describing <strong>Identity</strong> or a <strong>State</strong>.
+            </p>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-8 h-full justify-center items-center">
+            
+            <div class="bg-white p-0 rounded-3xl shadow-2xl w-full md:w-1/3 overflow-hidden border border-slate-100 transform hover:scale-[1.02] transition-transform duration-500">
+                <div class="h-32 bg-gradient-to-r from-[#004d40] to-[#00695c]"></div>
+                
+                <div class="px-6 pb-6 relative">
+                    <div class="w-24 h-24 rounded-full border-4 border-white shadow-md overflow-hidden absolute -top-12 left-1/2 transform -translate-x-1/2 bg-slate-200">
+                        <img src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <div class="mt-14 text-center">
+                        <h3 class="text-2xl font-black text-slate-800">Sofia M.</h3>
+                        <p class="text-slate-400 text-sm font-bold">@sofi_travels</p>
+                        
+                        <div class="flex justify-center gap-6 my-4 border-t border-b border-slate-100 py-2">
+                            <div><span class="block font-black text-lg text-slate-700">12</span><span class="text-xs text-slate-400 uppercase">Posts</span></div>
+                            <div><span class="block font-black text-lg text-slate-700">1.5k</span><span class="text-xs text-slate-400 uppercase">Followers</span></div>
+                            <div><span class="block font-black text-lg text-slate-700">300</span><span class="text-xs text-slate-400 uppercase">Following</span></div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <span class="px-3 py-1 rounded-full bg-emerald-50 text-[#004d40] text-xs font-bold border border-emerald-100">Student 🎓</span>
+                            <span class="px-3 py-1 rounded-full bg-orange-50 text-[#ea580c] text-xs font-bold border border-orange-100">Traveler ✈️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-200 w-full md:w-2/3 relative">
+                <div class="absolute top-4 right-4 text-slate-300 text-6xl opacity-20 font-serif">"</div>
+                
+                <h3 class="text-lg font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">Edit Biography</h3>
+                
+                <div class="space-y-4 text-xl text-slate-700 leading-loose" id="bio-form">
+                    
+                    <p>
+                        ¡Hola! 👋 Yo
+                        <input id="q1" data-answer="soy" class="clean-input w-28 inline-block mx-1 text-center text-[#004d40] border-b-2 border-slate-300 focus:border-[#004d40]" placeholder="(verb)">
+                        Sofia.
+                    </p>
+
+                    <p>
+                        Yo
+                        <input id="q2" data-answer="soy" class="clean-input w-28 inline-block mx-1 text-center text-[#004d40] border-b-2 border-slate-300 focus:border-[#004d40]" placeholder="(verb)">
+                        de Argentina 🇦🇷, pero ahora
+                        <input id="q3" data-answer="estoy" class="clean-input w-28 inline-block mx-1 text-center text-[#ea580c] border-b-2 border-slate-300 focus:border-[#ea580c]" placeholder="(verb)">
+                        en México.
+                    </p>
+
+                    <p>
+                        México
+                        <input id="q4" data-answer="es" class="clean-input w-28 inline-block mx-1 text-center text-[#004d40] border-b-2 border-slate-300 focus:border-[#004d40]" placeholder="(verb)">
+                        un país muy grande y bonito.
+                    </p>
+
+                    <p>
+                        Hoy, yo
+                        <input id="q5" data-answer="estoy" class="clean-input w-28 inline-block mx-1 text-center text-[#ea580c] border-b-2 border-slate-300 focus:border-[#ea580c]" placeholder="(verb)">
+                        muy feliz 😊 porque la comida aquí
+                        <input id="q6" data-answer="es" class="clean-input w-28 inline-block mx-1 text-center text-[#004d40] border-b-2 border-slate-300 focus:border-[#004d40]" placeholder="(verb)">
+                        deliciosa.
+                    </p>
+
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button onclick="checkBio()" class="bg-slate-800 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-slate-700 transition transform hover:scale-105 flex items-center gap-2">
+                        Save Profile <i class="fas fa-save"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function checkBio() {
+            let score = 0;
+            const total = 6;
+            const inputs = document.querySelectorAll('#bio-form input');
+            
+            inputs.forEach(input => {
+                const userVal = input.value.trim().toLowerCase();
+                const correctVal = input.getAttribute('data-answer');
+                
+                // Limpiar estilos previos
+                input.classList.remove('bg-red-50', 'border-red-500', 'text-red-500', 'bg-green-50', 'border-green-500', 'text-green-600');
+                
+                if (userVal === correctVal) {
+                    score++;
+                    input.classList.add('bg-green-50', 'border-green-500', 'text-green-600');
+                    // Añadir check visual
+                } else {
+                    input.classList.add('bg-red-50', 'border-red-500', 'text-red-500');
+                    // Opcional: Mostrar respuesta correcta brevemente o vibrar
+                }
+            });
+
+            if (score === total) {
+                if(window.react) window.react('confetti');
+                // Bloquear inputs para celebrar
+                inputs.forEach(i => i.disabled = true);
+            } else {
+                if(window.react) window.react('error');
+            }
+        }
+    </script>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-4xl mx-auto">
+        
+        <div class="text-center mb-4">
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">🏆 Elevator Challenge: Hard Mode</h2>
+            <p class="text-slate-600 text-lg">Type the correct conjugation to go up. <span class="text-red-500 font-bold">Watch the accents!</span></p>
+        </div>
+
+        <div class="flex-1 bg-slate-100 rounded-3xl shadow-inner border-4 border-slate-200 relative overflow-hidden flex flex-col justify-center items-center p-4">
+            
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10 bg-white/50 p-2 rounded-full backdrop-blur-sm">
+                <div id="floor-4" class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center font-bold text-white transition-all duration-500 border-2 border-white shadow-sm">4</div>
+                <div id="floor-3" class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center font-bold text-white transition-all duration-500 border-2 border-white shadow-sm">3</div>
+                <div id="floor-2" class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center font-bold text-white transition-all duration-500 border-2 border-white shadow-sm">2</div>
+                <div id="floor-1" class="w-10 h-10 rounded-full bg-[#004d40] flex items-center justify-center font-bold text-white transition-all duration-500 border-4 border-yellow-400 shadow-lg scale-110">1</div>
+            </div>
+
+            <div id="game-card" class="bg-white w-full max-w-lg p-8 rounded-2xl shadow-2xl transform transition-all duration-300 relative z-20">
+                
+                <div class="w-full bg-slate-100 h-2 rounded-full mb-6 overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 w-1/4 transition-all duration-500"></div>
+                </div>
+
+                <div class="text-center mb-6">
+                    <span id="q-category" class="inline-block px-3 py-1 bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-widest rounded-full mb-4">Level 1</span>
+                    
+                    <div class="text-3xl text-slate-800 font-serif leading-relaxed mb-6" id="q-text">
+                        Loading...
+                    </div>
+
+                    <div class="relative w-full max-w-xs mx-auto">
+                        <input type="text" id="user-input" 
+                            class="w-full bg-slate-50 border-b-4 border-slate-300 text-center text-3xl font-bold text-[#004d40] py-3 focus:outline-none focus:border-[#ea580c] transition-colors placeholder-slate-300 lowercase" 
+                            placeholder="type here..." autocomplete="off">
+                        
+                        <div class="flex justify-center gap-2 mt-3">
+                            <button onclick="addChar('á')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">á</button>
+                            <button onclick="addChar('é')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">é</button>
+                            <button onclick="addChar('í')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">í</button>
+                            <button onclick="addChar('ó')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">ó</button>
+                            <button onclick="addChar('ú')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">ú</button>
+                            <button onclick="addChar('ñ')" class="w-8 h-8 rounded bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold transition">ñ</button>
+                        </div>
+                    </div>
+                    
+                    <p id="game-feedback" class="text-sm font-bold mt-4 h-6 text-red-500 opacity-0 transition-opacity">Wrong!</p>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="checkAnswer()" class="bg-[#004d40] text-white px-10 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-emerald-800 hover:scale-105 active:scale-95 transition-all w-full md:w-auto">
+                        SUBIR / GO UP <i class="fas fa-arrow-up ml-2"></i>
+                    </button>
+                </div>
+
+                <div id="winner-screen" class="hidden absolute inset-0 bg-white z-30 flex-col items-center justify-center text-center p-6 animate-fade-in">
+                    <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mb-4 animate-bounce">
+                        <span class="text-5xl">🏆</span>
+                    </div>
+                    <h3 class="text-4xl font-black text-[#004d40] mb-2">MASTER!</h3>
+                    <p class="text-slate-500 mb-6 text-lg">You conquered the verb "To Be".</p>
+                    
+                    <div class="bg-slate-50 p-4 rounded-xl w-full mb-6 border border-slate-100">
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">FINAL SCORE</p>
+                        <p class="text-3xl font-black text-[#ea580c]">4 / 4 Perfect</p>
+                    </div>
+
+                    <button onclick="resetGame()" class="px-8 py-3 bg-slate-800 text-white rounded-full font-bold hover:bg-slate-700 transition shadow-lg">
+                        Play Again 🔄
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="absolute bottom-0 left-0 text-slate-200 opacity-60 text-9xl transform -translate-x-1/2 translate-y-1/3"><i class="fas fa-city"></i></div>
+
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let currentLevel = 1;
+        const totalLevels = 4;
+        
+        // Data: Levels (WRITING MODE)
+        const levels = [
+            { 
+                lvl: 1, 
+                cat: "Profession (Identity)", 
+                html: 'Ella <span class="text-[#004d40] font-bold border-b-2 border-dashed border-[#004d40] px-2">...</span> doctora.', 
+                answer: ['es'], 
+                hint: "She IS. (Permanent identity)" 
+            },
+            { 
+                lvl: 2, 
+                cat: "Location (Where?)", 
+                html: 'Nosotros <span class="text-[#ea580c] font-bold border-b-2 border-dashed border-[#ea580c] px-2">...</span> en el hotel.', 
+                answer: ['estamos'], 
+                hint: "We ARE (Location). Hint: Est..." 
+            },
+            { 
+                lvl: 3, 
+                cat: "Origin (From)", 
+                html: 'Tú <span class="text-[#004d40] font-bold border-b-2 border-dashed border-[#004d40] px-2">...</span> de Colombia.', 
+                answer: ['eres'], 
+                hint: "You ARE (Origin). Hint: Er..." 
+            },
+            { 
+                lvl: 4, 
+                cat: "Emotion (Current State)", 
+                html: 'Yo <span class="text-[#ea580c] font-bold border-b-2 border-dashed border-[#ea580c] px-2">...</span> muy feliz.', 
+                answer: ['estoy'], 
+                hint: "I AM (Feeling). Hint: Est..." 
+            }
+        ];
+
+        function updateUI() {
+            const data = levels[currentLevel - 1];
+            
+            // 1. Update Texts
+            document.getElementById('q-category').innerText = `Level ${data.lvl}: ${data.cat}`;
+            document.getElementById('q-text').innerHTML = data.html;
+            
+            // 2. Clear Input
+            const input = document.getElementById('user-input');
+            input.value = '';
+            input.focus();
+
+            // 3. Update Progress Bar
+            document.getElementById('progress-bar').style.width = `${((currentLevel - 1) / totalLevels) * 100}%`;
+
+            // 4. Update Elevator Indicator
+            for(let i=1; i<=4; i++) {
+                const dot = document.getElementById(`floor-${i}`);
+                if(i === currentLevel) {
+                    dot.className = "w-10 h-10 rounded-full bg-[#004d40] flex items-center justify-center font-bold text-white transition-all duration-500 border-4 border-yellow-400 shadow-lg scale-110";
+                } else if (i < currentLevel) {
+                    dot.className = "w-10 h-10 rounded-full bg-green-200 text-green-800 flex items-center justify-center font-bold transition-all duration-500 border-2 border-white opacity-60";
+                } else {
+                    dot.className = "w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center font-bold text-white transition-all duration-500 border-2 border-white shadow-sm";
+                }
+            }
+
+            // Hide feedback
+            document.getElementById('game-feedback').style.opacity = '0';
+        }
+
+        function checkAnswer() {
+            const data = levels[currentLevel - 1];
+            const input = document.getElementById('user-input');
+            const userVal = input.value.trim().toLowerCase();
+            const feedback = document.getElementById('game-feedback');
+            const card = document.getElementById('game-card');
+
+            if (data.answer.includes(userVal)) {
+                // CORRECT!
+                if(window.react) window.playSound('applause');
+                
+                // Success Visuals
+                input.classList.add('text-green-600', 'border-green-500');
+                
+                setTimeout(() => {
+                    if (currentLevel < totalLevels) {
+                        currentLevel++;
+                        input.classList.remove('text-green-600', 'border-green-500');
+                        // Animation Transition
+                        card.classList.add('-translate-y-20', 'opacity-0');
+                        setTimeout(() => {
+                            updateUI();
+                            card.classList.remove('-translate-y-20', 'opacity-0');
+                            card.classList.add('translate-y-20', 'opacity-0');
+                            setTimeout(() => card.classList.remove('translate-y-20', 'opacity-0'), 50);
+                        }, 300);
+                    } else {
+                        // WINNER
+                        document.getElementById('progress-bar').style.width = '100%';
+                        showWinner();
+                    }
+                }, 600);
+
+            } else {
+                // WRONG!
+                if(window.react) window.playSound('error');
+                
+                // Shake Animation
+                card.classList.add('animate-[wiggle_0.3s_ease-in-out]');
+                input.classList.add('border-red-500', 'bg-red-50');
+                setTimeout(() => {
+                    card.classList.remove('animate-[wiggle_0.3s_ease-in-out]');
+                    input.classList.remove('border-red-500', 'bg-red-50');
+                }, 500);
+
+                // Show Hint
+                feedback.innerText = data.hint;
+                feedback.style.opacity = '1';
+                input.focus();
+            }
+        }
+
+        function addChar(char) {
+            const input = document.getElementById('user-input');
+            input.value += char;
+            input.focus();
+        }
+
+        function showWinner() {
+            if(window.react) window.react('confetti'); 
+            document.getElementById('winner-screen').classList.remove('hidden');
+            document.getElementById('winner-screen').classList.add('flex');
+        }
+
+        function resetGame() {
+            currentLevel = 1;
+            document.getElementById('winner-screen').classList.add('hidden');
+            document.getElementById('winner-screen').classList.remove('flex');
+            updateUI();
+        }
+
+        // Listener for Enter key
+        document.getElementById('user-input').addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        });
+
+        // Initialize
+        setTimeout(updateUI, 100);
+    </script>
+
+    <style>
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+    </style>
+</section>
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center items-center">
+        <h2 class="text-4xl font-bold text-slate-800 mb-10">The "Preposition Hack"</h2>
+
+        <div class="relative w-full max-w-5xl flex flex-col md:flex-row gap-8 items-stretch justify-center">
+            
+            <div class="bg-white p-8 rounded-2xl shadow-xl flex-1 text-center border-b-8 border-[#004d40] hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-24 h-24 bg-[#004d40] text-white rounded-full flex items-center justify-center text-4xl font-black mx-auto mb-6 shadow-lg shadow-emerald-200">
+                    DE
+                </div>
+                <h3 class="text-2xl font-bold text-[#004d40] mb-2 uppercase tracking-wide">FROM / OF</h3>
+                <p class="text-slate-500 mb-6 font-medium">Triggers <strong>SER</strong></p>
+                <div class="bg-emerald-50 p-4 rounded-lg text-left space-y-2 text-[#004d40] font-mono text-sm">
+                    <p>✓ Es de Colombia.</p>
+                    <p>✓ Es de madera.</p>
+                    <p>✓ Es de Juan.</p>
+                </div>
+            </div>
+
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex w-16 h-16 bg-slate-800 text-white rounded-full items-center justify-center font-black border-4 border-white">
+                VS
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-xl flex-1 text-center border-b-8 border-[#ea580c] hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-24 h-24 bg-[#ea580c] text-white rounded-full flex items-center justify-center text-4xl font-black mx-auto mb-6 shadow-lg shadow-orange-200">
+                    EN
+                </div>
+                <h3 class="text-2xl font-bold text-[#ea580c] mb-2 uppercase tracking-wide">IN / AT / ON</h3>
+                <p class="text-slate-500 mb-6 font-medium">Triggers <strong>ESTAR</strong></p>
+                <div class="bg-orange-50 p-4 rounded-lg text-left space-y-2 text-[#ea580c] font-mono text-sm">
+                    <p>✓ Está en casa.</p>
+                    <p>✓ Están en el coche.</p>
+                    <p>✓ Estamos en clase.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-12 w-full max-w-3xl glass-card p-4 flex items-center justify-center gap-4 animate-pulse">
+            <span class="text-slate-600 font-bold">Quick Test:</span>
+            <div class="flex items-center gap-2">
+                <span>"Yo</span>
+                <input class="clean-input w-24 h-10 text-center" placeholder="...">
+                <span><strong>de</strong> Lima."</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col w-full max-w-[95%] mx-auto">
+        
+        <div class="text-center mb-6">
+            <span class="bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-3 inline-block border border-red-200">
+                ⚠️ DANGER ZONE
+            </span>
+            <h2 class="text-4xl font-bold text-[#004d40] mb-2">The "Chameleon" Adjectives</h2>
+            <p class="text-slate-600 text-lg">
+                Watch out! These words <strong>change their meaning</strong> completely depending on the verb.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full overflow-y-auto pb-4">
+            
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-shadow">
+                <div class="bg-slate-50 p-2 text-center border-b border-slate-100">
+                    <h3 class="font-black text-slate-400 text-sm tracking-[0.3em] uppercase">WORD: BUENO</h3>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-[#004d40] text-white flex items-center justify-center text-xl">😇</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#004d40] bg-emerald-50 px-2 py-0.5 rounded">SER BUENO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Good Person</p>
+                        <p class="text-slate-400 text-xs italic">"Angelina es buena." (Kind)</p>
+                    </div>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 bg-orange-50/30">
+                    <div class="w-10 h-10 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-xl">🥵</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#ea580c] bg-orange-100 px-2 py-0.5 rounded">ESTAR BUENO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Hot / Tasty</p>
+                        <p class="text-slate-400 text-xs italic">"Brad está bueno." (Attractive)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-shadow">
+                <div class="bg-slate-50 p-2 text-center border-b border-slate-100">
+                    <h3 class="font-black text-slate-400 text-sm tracking-[0.3em] uppercase">WORD: ABURRIDO</h3>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-[#004d40] text-white flex items-center justify-center text-xl">😴</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#004d40] bg-emerald-50 px-2 py-0.5 rounded">SER ABURRIDO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Boring</p>
+                        <p class="text-slate-400 text-xs italic">"La clase es aburrida." (Personality)</p>
+                    </div>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 bg-orange-50/30">
+                    <div class="w-10 h-10 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-xl">🥱</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#ea580c] bg-orange-100 px-2 py-0.5 rounded">ESTAR ABURRIDO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Bored</p>
+                        <p class="text-slate-400 text-xs italic">"Estoy aburrido hoy." (Mood)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-shadow">
+                <div class="bg-slate-50 p-2 text-center border-b border-slate-100">
+                    <h3 class="font-black text-slate-400 text-sm tracking-[0.3em] uppercase">WORD: RICO</h3>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-[#004d40] text-white flex items-center justify-center text-xl">💰</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#004d40] bg-emerald-50 px-2 py-0.5 rounded">SER RICO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Wealthy</p>
+                        <p class="text-slate-400 text-xs italic">"Elon Musk es rico." (Money)</p>
+                    </div>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 bg-orange-50/30">
+                    <div class="w-10 h-10 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-xl">😋</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#ea580c] bg-orange-100 px-2 py-0.5 rounded">ESTAR RICO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Delicious</p>
+                        <p class="text-slate-400 text-xs italic">"El taco está rico." (Flavor)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-xl transition-shadow">
+                <div class="bg-slate-50 p-2 text-center border-b border-slate-100">
+                    <h3 class="font-black text-slate-400 text-sm tracking-[0.3em] uppercase">WORD: LISTO</h3>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-[#004d40] text-white flex items-center justify-center text-xl">🧠</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#004d40] bg-emerald-50 px-2 py-0.5 rounded">SER LISTO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Smart / Clever</p>
+                        <p class="text-slate-400 text-xs italic">"El niño es listo." (Intelligence)</p>
+                    </div>
+                </div>
+                <div class="flex-1 p-4 flex items-center gap-4 bg-orange-50/30">
+                    <div class="w-10 h-10 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-xl">👍</div>
+                    <div>
+                        <span class="text-xs font-bold text-[#ea580c] bg-orange-100 px-2 py-0.5 rounded">ESTAR LISTO</span>
+                        <p class="text-slate-700 font-bold text-lg leading-tight">Ready</p>
+                        <p class="text-slate-400 text-xs italic">"¡Estoy lista!" (Prepared)</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-4 bg-slate-800 text-white p-4 rounded-xl shadow-lg flex items-center justify-center gap-3">
+            <span class="text-2xl">💡</span>
+            <div>
+                <strong class="block text-yellow-400 uppercase text-xs tracking-widest">Final Hack</strong>
+                <p class="text-sm text-slate-300">If you are confused, ask: <em>"Is it a characteristic (Ser) or a condition (Estar)?"</em></p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center items-center w-full max-w-6xl mx-auto">
+        
+        <h1 class="text-6xl font-black text-[#004d40] mb-4 font-serif tracking-tight text-center">Great Job!</h1>
+        <p class="text-2xl text-slate-500 mb-12 text-center">You have completed the <strong class="text-[#ea580c]">Ser vs. Estar</strong> Lab.</p>
+
+        <div class="flex flex-col md:flex-row gap-12 items-center w-full justify-center px-4">
+            
+            <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-[#004d40] w-full md:w-1/2 transform hover:-translate-y-2 transition-transform duration-500 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 text-slate-100 text-9xl opacity-50 rotate-12 pointer-events-none">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
+
+                <div class="flex items-center gap-4 mb-6 relative z-10">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-3xl shadow-sm text-[#004d40]">
+                        📝
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Your Mission</h3>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">HOMEWORK</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-5 text-lg text-slate-600 relative z-10">
+                    <p>Write a short <strong>WhatsApp bio</strong> for yourself in Spanish (4 sentences):</p>
+                    
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-sm space-y-3 shadow-inner">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-[#004d40] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                            <span>Use <strong>SER</strong> for your Name & Origin.</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="bg-[#ea580c] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                            <span>Use <strong>ESTAR</strong> for your current Location.</span>
+                        </div>
+                        <p class="text-slate-400 italic mt-2 border-t border-slate-200 pt-2">
+                            Ex: "Hola, soy Ana. Soy de Perú. Estoy en casa."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center w-full md:w-1/3 text-center">
+                
+                <div class="relative w-56 h-56 mb-6 group cursor-pointer" onclick="react('confetti')" title="Click me!">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-emerald-100 via-white to-orange-100 rounded-full opacity-60 blur-2xl group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" 
+                         alt="Tucaneo Academy" 
+                         class="relative z-10 w-full h-full object-contain drop-shadow-2xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out">
+                </div>
+
+                <h3 class="text-[#004d40] font-black text-2xl tracking-[0.2em] uppercase mb-1">TUCANEO</h3>
+                <p class="text-[#ea580c] font-handlee font-bold text-lg mb-6">Academy</p>
+
+                <button onclick="window.print()" class="bg-slate-800 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-slate-700 hover:shadow-xl transition-all flex items-center gap-3 group">
+                    <span>Download PDF</span>
+                    <i class="fas fa-download group-hover:translate-y-1 transition-transform"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+           
+
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Colores Tropicales) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#004d40'); /* Verde Tropical */ const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px 'Lato', sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none font-sans" style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escriba aquí..." /> </div> )} </div> ); }
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Desactivando lógica de presentación.");
+            document.body.classList.add('is-mobile');
+            
+            // NO INICIAMOS REVEAL.JS EN MÓVIL
+            // Dejamos que el CSS haga todo el trabajo de scroll vertical.
+            
+            // Barra de progreso manual
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                const progressBar = document.getElementById('scroll-progress');
+                if(progressBar) progressBar.style.width = scrolled + '%';
+                
+                const btn = document.getElementById('back-to-top');
+                if(btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal (Solo aquí)
+            Reveal.initialize({
+                // ... tu configuración de PC ...
+                width: "100%", height: "100%", margin: 0, minScale: 1, maxScale: 1,
+                transition: 'slide', backgroundTransition: 'fade', background: '#fefce8'
+            });
+        }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+       // --- CONTROL INTELIGENTE DE TECLAS (VERSIÓN FINAL) ---
+        function handleZoomNavigation(e) {
+            // 1. Ignorar si el usuario escribe en un input
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+            // 2. Guardamos la posición EXACTA (diapositiva H y V) antes de movernos
+            const indicesBefore = Reveal.getIndices();
+            let actionTriggered = false;
+
+            // 3. Ejecutamos la acción de Reveal
+            if (e.key === 'ArrowLeft') {
+                Reveal.prev();
+                actionTriggered = true;
+            } else if (e.key === 'ArrowRight' || e.code === 'Space') {
+                Reveal.next();
+                actionTriggered = true;
+            }
+
+            // 4. Decidimos si hacer scroll arriba o no
+            if (actionTriggered) {
+                const indicesAfter = Reveal.getIndices();
+
+                // LÓGICA: Si la diapositiva Horizontal (h) o Vertical (v) cambió, es una diapositiva nueva -> SCROLL TOP
+                // Si h y v son iguales, significa que solo cambió el fragmento (f) -> NO SCROLL
+                if (indicesBefore.h !== indicesAfter.h || indicesBefore.v !== indicesAfter.v) {
+                    window.scrollTo(0, 0);
+                }
+                // Si no, nos quedamos quietos para ver la respuesta que acabamos de revelar.
+            }
+        }
+
+        function forceZoom() {
+            if (isMobile) return;
+            
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            const html = document.documentElement;
+            const body = document.body;
+            
+            const isActive = container.classList.contains('is-zoomed');
+
+            if (!isActive) {
+                // --- ACTIVAR ZOOM ---
+                html.classList.add('is-scrollable');
+                body.classList.add('is-scrollable');
+                container.classList.add('is-zoomed');
+                
+                // Apagamos teclado nativo de Reveal y encendemos el nuestro
+                Reveal.configure({ keyboard: false });
+                document.addEventListener('keydown', handleZoomNavigation);
+                
+                btn.classList.add('active');
+
+            } else {
+                // --- DESACTIVAR ZOOM ---
+                window.scrollTo(0, 0);
+                html.classList.remove('is-scrollable');
+                body.classList.remove('is-scrollable');
+                container.classList.remove('is-zoomed');
+                
+                // Restauramos todo
+                Reveal.configure({ keyboard: true });
+                document.removeEventListener('keydown', handleZoomNavigation);
+                Reveal.layout();
+                
+                btn.classList.remove('active');
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error': 
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

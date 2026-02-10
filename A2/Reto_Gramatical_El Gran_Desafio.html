@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumbo a Tucaneo Corp: La Entrevista</title>
+    
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Fuentes y Iconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --corp-blue: #1e3a8a;
+            --corp-gold: #b45309;
+            --corp-gray: #f3f4f6;
+            --tucaneo-green: #047857;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #cbd5e1;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2394a3b8' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .serif-font { font-family: 'Playfair Display', serif; }
+        
+        /* Animaciones */
+        .slide-in { animation: slideIn 0.5s ease-out forwards; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Animación de Temblor para Error */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Animación de Pulso para Éxito */
+        .pulse-success {
+            animation: pulse-green 0.5s ease-in-out;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- SONIDOS ---
+        // Usamos sonidos cortos y efectivos de librerías libres
+        const sounds = {
+            correct: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=success-1-6297.mp3'),
+            wrong: new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3?filename=wrong-answer-129254.mp3'), // Sonido tipo "Buzz" o Error cómico
+            win: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3')
+        };
+        
+        // Ajustar volúmenes
+        sounds.correct.volume = 0.3;
+        sounds.wrong.volume = 0.3;
+        sounds.win.volume = 0.4;
+
+        const playSound = (type) => {
+            if (sounds[type]) {
+                sounds[type].currentTime = 0;
+                sounds[type].play().catch(e => console.log("Audio autoplay bloqueado por navegador", e));
+            }
+        };
+
+        // --- DATOS DEL JUEGO (Orden de respuestas mezclado) ---
+        const stages = [
+            { name: "Recepción", icon: "ph-building-office", desc: "El primer filtro." },
+            { name: "RRHH", icon: "ph-users-three", desc: "Entrevista personal." },
+            { name: "Prueba Técnica", icon: "ph-laptop", desc: "Demuestra lo que sabes." },
+            { name: "Gerencia", icon: "ph-briefcase", desc: "La decisión final." }
+        ];
+
+        const questions = [
+            // FASE 1: RECEPCIÓN
+            {
+                id: 1,
+                stage: 0,
+                type: "dialogue",
+                speaker: "Recepcionista",
+                text: "Buenos días. Para entrar, necesito su identificación. ¿Tiene su documento?",
+                options: [
+                    { text: "Sí, la tengo aquí.", correct: false, error: "'El documento' es masculino (lo)." },
+                    { text: "Sí, lo tengo aquí.", correct: true }, // Correcta en posición 2
+                    { text: "Sí, le tengo aquí.", correct: false, error: "Para objetos usamos 'lo', no 'le'." }
+                ]
+            },
+            {
+                id: 2,
+                stage: 0,
+                type: "fill-gap",
+                speaker: "Recepcionista",
+                context: "La recepcionista te pide llenar un formulario.",
+                sentence: "Por favor, completa este formulario y ______ a mí cuando termines.",
+                options: ["me lo entrega", "entrégamelo", "entregamelo", "entrégaselo"],
+                correct: "entrégamelo", // Correcta en posición 2
+                explanation: "Imperativo (entrega) + a mí (me) + el formulario (lo) -> Entrégamelo."
+            },
+            {
+                id: 3,
+                stage: 0,
+                type: "dialogue",
+                speaker: "Recepcionista",
+                text: "Muy bien. ¿Vas a esperar al gerente en la sala?",
+                options: [
+                    { text: "Sí, le voy a esperar.", correct: false, error: "Incorrecto en este contexto." },
+                    { text: "Sí, voy a esperarla allá.", correct: false, error: "Es 'el gerente' (masculino)." },
+                    { text: "Sí, voy a esperarlo allá.", correct: true } // Correcta en posición 3
+                ],
+                displayOptions: ["Sí, le voy a esperar.", "Sí, voy a esperarla allá.", "Sí, voy a esperarlo allá."]
+            },
+
+            // FASE 2: RRHH
+            {
+                id: 4,
+                stage: 1,
+                type: "dialogue",
+                speaker: "Director de RRHH",
+                text: "Hablemos de motivación. ¿Te interesa este puesto de trabajo?",
+                options: [
+                    { text: "Sí, lo interesa mucho.", correct: false, error: "El verbo interesar funciona como gustar: 'A mí ME interesa'." },
+                    { text: "Sí, te interesa mucho.", correct: false, error: "'Te' es para 'a ti'. Debes decir 'a mí me'." },
+                    { text: "Sí, me interesa mucho.", correct: true } // Correcta en posición 3
+                ]
+            },
+            {
+                id: 5,
+                stage: 1,
+                type: "fill-gap",
+                speaker: "Director de RRHH",
+                context: "Te preguntan por tu Currículum Vitae impreso.",
+                sentence: "¿Tienes el currículum? Por favor, ______ ahora.",
+                options: ["dámelo", "datelo", "dáselo", "melo das"],
+                correct: "dámelo", // Correcta en posición 1
+                explanation: "Imperativo (da) + a mí (me) + el currículum (lo) -> Dámelo."
+            },
+            {
+                id: 6,
+                stage: 1,
+                type: "dialogue",
+                speaker: "Director de RRHH",
+                text: "Nosotros buscamos gente honesta. ¿Siempre dices la verdad a tus jefes?",
+                options: [
+                    { text: "Sí, siempre les la digo.", correct: false, error: "No se puede decir 'les la'. 'Les' cambia a 'se'." },
+                    { text: "Sí, siempre se la digo.", correct: true }, // Correcta en posición 2
+                    { text: "Sí, siempre la les digo.", correct: false, error: "El orden es Indirecto (se) + Directo (la)." }
+                ],
+                displayOptions: ["Sí, siempre les la digo.", "Sí, siempre se la digo.", "Sí, siempre te la digo."]
+            },
+            {
+                id: 7,
+                stage: 1,
+                type: "fill-gap",
+                speaker: "Director de RRHH",
+                context: "Hablando de objetivos futuros.",
+                sentence: "Este puesto es exigente. ¿Tienes ganas de aprender?",
+                options: ["Sí, los tengo.", "Sí, las tengo.", "Sí, lo tengo.", "Sí, la tengo."],
+                correct: "Sí, las tengo.", // Correcta en posición 2
+                explanation: "'Ganas' es femenino plural -> Las tengo."
+            },
+
+            // FASE 3: PRUEBA TÉCNICA
+            {
+                id: 8,
+                stage: 2,
+                type: "dialogue",
+                speaker: "Supervisor",
+                text: "Mira estos correos urgentes. ¿Los estás respondiendo?",
+                options: [
+                    { text: "Sí, estoy respondiéndoles.", correct: false, error: "'Correos' es Objeto Directo -> Los." },
+                    { text: "Sí, estoy respondiéndolos.", correct: true }, // Correcta en posición 2
+                    { text: "Sí, estoy los respondiendo.", correct: false, error: "El pronombre va antes del verbo conjugado o pegado al gerundio, no en el medio." }
+                ],
+                displayOptions: ["Sí, estoy respondiéndoles.", "Sí, estoy respondiéndolos.", "Sí, respondiéndolos estoy."]
+            },
+            {
+                id: 9,
+                stage: 2,
+                type: "fill-gap",
+                speaker: "Supervisor",
+                context: "Te piden enviar un archivo al cliente.",
+                sentence: "El cliente necesita el informe. ¿Vas a enviar el informe al cliente?",
+                options: ["Sí, voy a enviarlole.", "Sí, voy a enviartelo.", "Sí, voy a enviárselo.", "Sí, se voy a enviarlo."],
+                correct: "Sí, voy a enviárselo.", // Correcta en posición 3
+                explanation: "Enviar + a él (se) + el informe (lo) -> Enviárselo."
+            },
+            {
+                id: 10,
+                stage: 2,
+                type: "dialogue",
+                speaker: "Supervisor",
+                text: "¿Conoces esta herramienta de software?",
+                options: [
+                    { text: "Sí, la conozco.", correct: true }, // Correcta en posición 1
+                    { text: "Sí, lo conozco.", correct: false, error: "'Esta herramienta' es femenino (la)." },
+                    { text: "Sí, le conozco.", correct: false, error: "Leísmo incorrecto aquí. Herramienta es cosa -> La." }
+                ],
+                displayOptions: ["Sí, la conozco.", "Sí, lo conozco.", "Sí, las conozco."]
+            },
+            {
+                id: 11,
+                stage: 2,
+                type: "fill-gap",
+                speaker: "Supervisor",
+                context: "Instrucciones sobre una reunión.",
+                sentence: "Tienes que explicar el problema a los compañeros. Tienes que ______.",
+                options: ["explicarleslo", "explicárselo", "explicarlos", "se lo explicar"],
+                correct: "explicárselo", // Correcta en posición 2
+                explanation: "Explicar + a ellos (les->se) + el problema (lo)."
+            },
+
+            // FASE 4: CEO / GERENCIA
+            {
+                id: 12,
+                stage: 3,
+                type: "dialogue",
+                speaker: "CEO de Tucaneo",
+                text: "Veo que tienes mucho talento. ¿Quieres trabajar con nosotros?",
+                options: [
+                    { text: "Sí, quiero hacerla.", correct: false, error: "Hacer + el trabajo (lo, neutro)." },
+                    { text: "Sí, quiero hacerlo.", correct: true }, // Correcta en posición 2
+                    { text: "Sí, lo quiero hacer.", correct: true } 
+                ],
+                displayOptions: ["Sí, quiero hacerla.", "Sí, quiero hacerlo.", "Sí, quiero hacerlos."]
+            },
+            {
+                id: 13,
+                stage: 3,
+                type: "fill-gap",
+                speaker: "CEO de Tucaneo",
+                context: "El CEO te ofrece un café.",
+                sentence: "CEO: Yo preparo muy buen café. ¿Te sirvo uno?\nTú: Sí, por favor, ______.",
+                options: ["sírveme", "sírvemelo", "sírvitelo", "sírvelo"],
+                correct: "sírvemelo", // Correcta en posición 2
+                explanation: "Servir + a mí (me) + uno (lo) -> Sírvemelo."
+            },
+            {
+                id: 14,
+                stage: 3,
+                type: "dialogue",
+                speaker: "CEO de Tucaneo",
+                text: "Si te damos el empleo, ¿vas a ponerte la camiseta de la empresa?",
+                options: [
+                    { text: "Sí, voy a ponérsela.", correct: false, error: "Es tu propia camiseta -> ponerme." },
+                    { text: "Sí, voy a ponértela.", correct: false, error: "Te = a ti. Debes usar 'me'." },
+                    { text: "Sí, voy a ponérmela.", correct: true } // Correcta en posición 3
+                ],
+                displayOptions: ["Sí, voy a ponérsela.", "Sí, voy a ponértela.", "Sí, voy a ponérmela."]
+            },
+            {
+                id: 15,
+                stage: 3,
+                type: "dialogue",
+                speaker: "CEO de Tucaneo",
+                text: "Última pregunta. ¿Me prometes lealtad a la empresa?",
+                options: [
+                    { text: "Sí, se la prometo.", correct: true }, // Correcta en posición 1
+                    { text: "Sí, te la prometo.", correct: false, error: "Trata al CEO de usted -> Se la." },
+                    { text: "Sí, me la prometo.", correct: false, error: "No te la prometes a ti mismo." }
+                ],
+                displayOptions: ["Sí, se la prometo.", "Sí, te la prometo.", "Sí, me la prometo."]
+            }
+        ];
+
+        const firedMessages = [
+            "Seguridad te acompaña a la puerta. Gracias por venir.",
+            "No nos llames, nosotros te llamaremos... o no.",
+            "Tu currículum ha pasado a mejor vida (la trituradora).",
+            "El CEO está un poco decepcionado con esa gramática.",
+            "Vuelve cuando sepas la diferencia entre 'lo' y 'le'.",
+            "Has sido descalificado del proceso de selección."
+        ];
+
+        // --- COMPONENTES ---
+
+        const ProgressBar = ({ currentStage }) => (
+            <div className="w-full bg-white p-4 shadow-md mb-6 rounded-lg border-b-4 border-blue-900">
+                <div className="flex justify-between items-center max-w-4xl mx-auto">
+                    {stages.map((stage, idx) => {
+                        const active = idx === currentStage;
+                        const done = idx < currentStage;
+                        return (
+                            <div key={idx} className={`flex flex-col items-center ${active ? 'opacity-100 scale-110' : (done ? 'opacity-100' : 'opacity-40')} transition-all duration-500`}>
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${active ? 'bg-blue-800 text-white shadow-lg' : (done ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-600')}`}>
+                                    <i className={`ph-fill ${stage.icon} text-xl`}></i>
+                                </div>
+                                <span className={`text-xs font-bold ${active ? 'text-blue-900' : 'text-gray-500'}`}>{stage.name}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+
+        const Lives = ({ count }) => (
+            <div className="fixed top-4 right-4 bg-white px-4 py-2 rounded-full shadow-lg border border-gray-200 flex gap-2 z-50">
+                {[...Array(3)].map((_, i) => (
+                    <i key={i} className={`ph-fill ph-briefcase text-xl ${i < count ? 'text-yellow-600' : 'text-gray-300'}`}></i>
+                ))}
+            </div>
+        );
+
+        const StartScreen = ({ onStart }) => (
+            <div className="min-h-screen flex items-center justify-center p-4">
+                <div className="glass-panel p-8 md:p-12 rounded-xl max-w-lg w-full text-center shadow-2xl slide-in">
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" className="h-20 mx-auto mb-6 opacity-90" onError={(e)=>{e.target.style.display='none'}} />
+                    <h1 className="text-4xl font-bold text-blue-900 mb-2 serif-font">Tucaneo Corp</h1>
+                    <h2 className="text-xl text-gray-600 mb-8 font-light uppercase tracking-widest">Proceso de Selección</h2>
+                    
+                    <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-800 text-left mb-8">
+                        <p className="text-gray-700 mb-2"><strong>Estimado candidato:</strong></p>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            Has sido preseleccionado para una vacante. Deberás superar 4 fases de entrevista. 
+                            El uso correcto del lenguaje (pronombres) es vital. Tienes 3 oportunidades (maletines) antes de ser descartado.
+                        </p>
+                    </div>
+
+                    <input 
+                        id="candidateName"
+                        type="text" 
+                        placeholder="Nombre del Candidato" 
+                        className="w-full bg-white border border-gray-300 text-gray-800 text-lg px-4 py-3 rounded mb-4 focus:outline-none focus:border-blue-800 shadow-inner"
+                    />
+                    
+                    <button 
+                        onClick={() => {
+                            const name = document.getElementById('candidateName').value;
+                            if(name.trim()) onStart(name);
+                        }}
+                        className="w-full bg-blue-900 text-white font-bold py-4 rounded hover:bg-blue-800 transition-all shadow-lg uppercase tracking-wide transform hover:scale-105"
+                    >
+                        Ingresar a Recepción
+                    </button>
+                </div>
+            </div>
+        );
+
+        const GameScreen = ({ question, currentQIndex, totalQ, lives, onAnswer, feedback, stage }) => {
+            return (
+                <div className="min-h-screen pb-20">
+                    <ProgressBar currentStage={stage} />
+                    <Lives count={lives} />
+
+                    <div className="max-w-2xl mx-auto px-4 mt-8">
+                        <div className={`bg-white rounded-lg shadow-2xl overflow-hidden border-t-8 border-blue-900 slide-in ${feedback && !feedback.isCorrect ? 'shake' : ''}`}>
+                            
+                            <div className="bg-gray-100 p-6 flex items-center gap-4 border-b border-gray-200">
+                                <div className="w-16 h-16 rounded-full bg-gray-300 border-2 border-white shadow-md flex items-center justify-center overflow-hidden">
+                                    <i className="ph-fill ph-user text-4xl text-gray-500"></i>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-blue-900 text-lg">{question.speaker}</h3>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide">Fase {stage + 1} de 4</p>
+                                </div>
+                            </div>
+
+                            <div className="p-8">
+                                {question.context && (
+                                    <div className="mb-6 text-sm text-gray-500 italic bg-gray-50 p-2 rounded border border-gray-200">
+                                        <i className="ph-fill ph-info mr-1"></i> {question.context}
+                                    </div>
+                                )}
+
+                                <div className="text-xl md:text-2xl text-gray-800 font-serif leading-relaxed mb-8">
+                                    "{question.type === 'fill-gap' ? question.sentence.split('______').map((part, i) => i === 0 ? part + "______" : part) : question.text}"
+                                </div>
+
+                                <div className="grid gap-3">
+                                    {(question.displayOptions || question.options).map((opt, idx) => {
+                                        const text = typeof opt === 'string' ? opt : opt.text;
+                                        return (
+                                            <button
+                                                key={idx}
+                                                onClick={() => !feedback && onAnswer(text)}
+                                                disabled={!!feedback}
+                                                className={`
+                                                    text-left px-6 py-4 rounded border-2 transition-all duration-200 flex items-center justify-between group
+                                                    ${feedback 
+                                                        ? (text === (typeof question.options[0] === 'string' ? question.correct : question.options.find(o=>o.correct).text)
+                                                            ? 'bg-green-50 border-green-600 text-green-800 pulse-success' 
+                                                            : (text === feedback.selected ? 'bg-red-50 border-red-600 text-red-800' : 'opacity-40 border-gray-100'))
+                                                        : 'bg-white border-gray-200 hover:border-blue-600 hover:shadow-lg hover:scale-[1.02] text-gray-700'
+                                                    }
+                                                `}
+                                            >
+                                                <span className="font-medium text-lg">{text}</span>
+                                                <i className={`ph-bold ${feedback && text === feedback.selected ? (feedback.isCorrect ? 'ph-check-circle text-green-600' : 'ph-x-circle text-red-600') : 'ph-caret-right text-gray-300 group-hover:text-blue-600'} text-2xl`}></i>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
+                            {feedback && (
+                                <div className="bg-gray-800 text-white p-6 animate-pulse-once">
+                                    <div className="flex items-start gap-4">
+                                        <div className={`mt-1 p-2 rounded-full ${feedback.isCorrect ? 'bg-green-500' : 'bg-red-500'}`}>
+                                            <i className={`ph-bold ${feedback.isCorrect ? 'ph-thumbs-up' : 'ph-warning'} text-xl`}></i>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-lg mb-1">{feedback.isCorrect ? "Correcto" : "Incorrecto"}</h4>
+                                            <p className="text-gray-300 text-sm mb-4">{feedback.explanation || feedback.funnyMsg}</p>
+                                            <button 
+                                                onClick={feedback.nextFn}
+                                                className="bg-white text-gray-900 px-6 py-2 rounded font-bold hover:bg-gray-200 transition-colors uppercase text-sm tracking-widest"
+                                            >
+                                                Siguiente
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FiredScreen = ({ onRestart }) => (
+            <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6 text-center text-white slide-in">
+                <div className="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(220,38,38,0.6)] shake">
+                    <i className="ph-fill ph-door-open text-5xl"></i>
+                </div>
+                <h2 className="text-4xl font-bold mb-4 serif-font">Candidatura Rechazada</h2>
+                <p className="text-xl text-gray-400 mb-8 max-w-md mx-auto">"{firedMessages[Math.floor(Math.random() * firedMessages.length)]}"</p>
+                
+                <div className="bg-gray-800 p-6 rounded-lg max-w-sm mx-auto mb-8 border border-gray-700">
+                    <p className="text-sm text-gray-500 uppercase tracking-widest mb-2">Motivo</p>
+                    <p className="font-mono text-yellow-500">Gramática insuficiente (Pronombres)</p>
+                </div>
+
+                <button onClick={onRestart} className="bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 px-8 rounded-full transition-all hover:scale-105">
+                    Intentar de nuevo
+                </button>
+            </div>
+        );
+
+        const HiredScreen = ({ name, onRestart }) => {
+            useEffect(() => {
+                playSound('win');
+                const end = Date.now() + 3000;
+                (function frame() {
+                    confetti({ particleCount: 6, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#b45309', '#1e3a8a'] });
+                    confetti({ particleCount: 6, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#b45309', '#1e3a8a'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            }, []);
+
+            return (
+                <div className="min-h-screen flex items-center justify-center p-4 bg-gray-200">
+                    <div className="bg-white p-10 max-w-3xl w-full shadow-2xl border-t-[20px] border-blue-900 relative slide-in">
+                        <div className="absolute top-4 right-8 opacity-20">
+                            <i className="ph-fill ph-stamp text-9xl text-blue-900 rotate-12"></i>
+                        </div>
+
+                        <div className="text-center mb-12">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" className="h-16 mx-auto mb-6" onError={(e)=>{e.target.style.display='none'}} />
+                            <h1 className="text-3xl font-bold text-gray-800 uppercase tracking-[0.2em] mb-2">Contrato Laboral</h1>
+                            <p className="text-gray-500 text-sm">Documento Oficial Tucaneo Corp</p>
+                        </div>
+
+                        <div className="space-y-6 text-gray-700 font-serif text-lg leading-relaxed px-4 md:px-12">
+                            <p>
+                                Por medio de la presente, se certifica que <strong>{name}</strong> ha superado satisfactoriamente todas las pruebas de selección, demostrando un dominio competente de los pronombres en presente y futuro.
+                            </p>
+                            <p>
+                                Nos complace extenderle una oferta formal para unirse a nuestro equipo.
+                            </p>
+                        </div>
+
+                        <div className="flex justify-between items-end mt-16 px-8">
+                            <div className="text-center">
+                                <div className="w-40 border-b-2 border-gray-400 mb-2"></div>
+                                <p className="text-xs uppercase font-bold text-gray-500">Firma del CEO</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-blue-900 font-bold font-handwriting text-xl mb-2">{new Date().toLocaleDateString()}</div>
+                                <p className="text-xs uppercase font-bold text-gray-500">Fecha de Contratación</p>
+                            </div>
+                        </div>
+
+                        <button onClick={onRestart} className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-blue-900 text-white px-8 py-3 rounded-full shadow-lg hover:bg-blue-800 font-bold text-sm uppercase tracking-wider hover:scale-105 transition-transform">
+                            Nueva Entrevista
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [gameState, setGameState] = useState('welcome');
+            const [playerName, setPlayerName] = useState("");
+            const [qIndex, setQIndex] = useState(0);
+            const [lives, setLives] = useState(3);
+            const [feedback, setFeedback] = useState(null);
+
+            const handleStart = (name) => {
+                setPlayerName(name);
+                setGameState('playing');
+                setQIndex(0);
+                setLives(3);
+                setFeedback(null);
+            };
+
+            const triggerConfetti = () => {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            };
+
+            const handleAnswer = (selectedText) => {
+                const currentQ = questions[qIndex];
+                let isCorrect = false;
+                let errorMsg = null;
+
+                if (typeof currentQ.options[0] === 'string') {
+                     isCorrect = selectedText === currentQ.correct;
+                     errorMsg = isCorrect ? null : `Respuesta correcta: ${currentQ.correct}`;
+                } else {
+                    const optObj = currentQ.options.find(o => o.text === selectedText);
+                    isCorrect = optObj.correct;
+                    errorMsg = optObj.error;
+                }
+
+                // REPRODUCIR SONIDO
+                if (isCorrect) {
+                    playSound('correct');
+                    triggerConfetti(); // Confeti en cada acierto
+                } else {
+                    playSound('wrong');
+                }
+
+                setFeedback({
+                    isCorrect,
+                    selected: selectedText,
+                    explanation: isCorrect ? (currentQ.explanation || "¡Bien dicho!") : (errorMsg || "Respuesta incorrecta."),
+                    nextFn: () => {
+                        setFeedback(null);
+                        if (!isCorrect) {
+                            const newLives = lives - 1;
+                            setLives(newLives);
+                            if (newLives <= 0) {
+                                setGameState('lost');
+                                return;
+                            }
+                        }
+                        if (qIndex < questions.length - 1) {
+                            setQIndex(prev => prev + 1);
+                        } else {
+                            setGameState('won');
+                        }
+                    }
+                });
+            };
+
+            return (
+                <div>
+                    {gameState === 'welcome' && <StartScreen onStart={handleStart} />}
+                    {gameState === 'playing' && (
+                        <GameScreen 
+                            question={questions[qIndex]} 
+                            currentQIndex={qIndex} 
+                            totalQ={questions.length} 
+                            lives={lives} 
+                            onAnswer={handleAnswer} 
+                            feedback={feedback}
+                            stage={questions[qIndex].stage}
+                        />
+                    )}
+                    {gameState === 'lost' && <FiredScreen onRestart={() => setGameState('welcome')} />}
+                    {gameState === 'won' && <HiredScreen name={playerName} onRestart={() => setGameState('welcome')} />}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Crónicas del Tiempo: El Duelo de los Pasados</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* =========================================
+       1. VARIABLES Y BASE (VISIBILIDAD ALTA)
+       ========================================= */
+        :root {
+            --primary: #004d40;
+            --accent: #ff6f00;
+            --text-main: #0f172a;
+            /* Texto casi negro para máximo contraste */
+            --text-secondary: #334155;
+            /* Gris oscuro (antes era muy claro) */
+            --bg-light: #fefce8;
+            --danger: #ef4444;
+        }
+
+        /* Mantenemos la magia del Zoom Nativo */
+        html,
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Lato', sans-serif;
+            height: 100%;
+            overflow-y: auto !important;
+            /* CRÍTICO: NO BORRAR */
+        }
+
+        /* =========================================
+       2. REVEAL.JS - TIPOGRAFÍA (COMPACTA Y LEGIBLE)
+       ========================================= */
+        /* Bajamos un poco la base para que no se sienta "gigante" */
+        .reveal {
+            color: var(--text-main);
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        /* Títulos */
+        .reveal h1 {
+            font-size: 2.5em !important;
+            line-height: 1.1 !important;
+            color: var(--primary);
+            margin-bottom: 0.5em !important;
+        }
+
+        /* --- SKELETON FIX: ENFORCE TAILWIND COLORS --- */
+        /* Overrides Reveal.js specific selectors like '.reveal h1' */
+        .reveal .text-white {
+            color: #ffffff !important;
+        }
+
+        .reveal .text-slate-50 {
+            color: #f8fafc !important;
+        }
+
+        .reveal .text-yellow-200 {
+            color: #fef08a !important;
+        }
+
+        .reveal .text-yellow-300 {
+            color: #fde047 !important;
+        }
+
+        .reveal .text-yellow-400 {
+            color: #facc15 !important;
+        }
+
+        .reveal .text-emerald-100 {
+            color: #d1fae5 !important;
+        }
+
+        .reveal .text-emerald-200 {
+            color: #a7f3d0 !important;
+        }
+
+
+        .reveal h2 {
+            font-size: 1.8em !important;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 0.6em !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.4em !important;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
+        /* Forzamos un color mucho más oscuro y un peso semi-negrita */
+        .reveal .text-sm,
+        .reveal .text-xs,
+        .reveal .text-gray-400,
+        .reveal .text-gray-500 {
+            color: var(--text-secondary) !important;
+            /* Gris Oscuro */
+            font-weight: 600 !important;
+            /* Más gordita la letra */
+            opacity: 0.9 !important;
+            /* Quitamos transparencias */
+        }
+
+        .reveal .text-sm {
+            font-size: 0.85em !important;
+        }
+
+        .reveal .text-xs {
+            font-size: 0.75em !important;
+        }
+
+        /* =========================================
+       3. ESTILO DE TARJETAS (CORREGIDO Y SEGURO)
+       ========================================= */
+        /* Modificado para permitir colores de fondo (como el verde) */
+        .glass-card {
+            /* Eliminamos la orden agresiva de transparencia */
+            backdrop-filter: blur(8px);
+            /* Efecto borroso bonito */
+            -webkit-backdrop-filter: blur(8px);
+            /* Para Safari/iPhone */
+
+            /* El resto lo dejamos que Tailwind lo controle en el HTML */
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Tarjetas internas: Más compactas y definidas */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* =========================================
+       4. LAYOUT CONTROLADO (SCROLL + ARREGLO DE TÍTULOS)
+       ========================================= */
+        .reveal .slides {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            pointer-events: none;
+        }
+
+        .reveal section {
+            height: 100vh !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            display: block !important;
+
+            /* AUMENTÉ ESTO: 100px arriba para bajar todo y que respete el menú */
+            padding: 100px 20px 80px 20px !important;
+
+            pointer-events: auto !important;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- REGLA MÁGICA NUEVA --- */
+        /* Esto obliga al contenido a empezar desde arriba, anulando el 'justify-center' de Tailwind */
+        .reveal section>div {
+            height: auto !important;
+            /* Permite que crezca hacia abajo */
+            min-height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            /* ¡CLAVE! Alinea al inicio, no al centro */
+        }
+
+        /* AQUÍ ESTÁ EL TRUCO DE LA PROPORCIÓN: */
+        .slide-container {
+            width: 90% !important;
+            max-width: 1200px !important;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+       5. INPUTS VISIBLES (IGUAL QUE ANTES)
+       ========================================= */
+        .clean-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Handlee', cursive;
+            font-size: 1.1em;
+            color: var(--primary) !important;
+            font-weight: bold;
+            outline: none;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .clean-input:focus {
+            border-color: var(--accent);
+            background: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .clean-input::placeholder {
+            color: #64748b !important;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        /* =========================================
+       6. UI Y UTILIDADES
+       ========================================= */
+        #tucaneo-drawer {
+            position: fixed;
+            top: 0;
+            right: -150vw;
+            width: 50vw;
+            height: 100vh;
+            background: #fff;
+            z-index: 20000;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
+            transition: right 0.4s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #tucaneo-drawer.is-open {
+            right: 0 !important;
+        }
+
+        #safe-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20001;
+            background: var(--danger);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fixed-logo {
+            position: fixed;
+            top: 30px;
+            left: 40px;
+            width: 100px;
+            z-index: 5000;
+        }
+
+        #top-nav {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            z-index: 5000;
+            display: flex;
+            gap: 15px;
+        }
+
+        #floating-cta {
+            position: fixed;
+            bottom: 30px;
+            left: 40px;
+            z-index: 5000;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: bold;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .nav-btn.zoom {
+            display: none !important;
+        }
+
+        .nav-btn.download {
+            background-color: var(--primary);
+        }
+
+        .nav-btn.exit {
+            background-color: #64748b;
+        }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 6px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 9999;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            cursor: pointer;
+        }
+
+        #back-to-top.visible {
+            display: flex;
+        }
+
+
+        /* =========================================
+       7. MÓVIL: SOLUCIÓN FINAL (SCROLL REAL)
+       ========================================= */
+        @media (max-width: 1024px) {
+
+            /* 1. FORZAR SCROLL EN EL CUERPO (La clave para que baje) */
+
+            /* --- ¡ESTO HACE VISIBLES LOS EJERCICIOS! --- */
+            .reveal .fragment {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+
+            html,
+            body {
+                height: auto !important;
+                min-height: 100% !important;
+                overflow-y: scroll !important;
+                /* Fuerza la barra de scroll */
+                -webkit-overflow-scrolling: touch;
+                /* Scroll suave en iPhone */
+                position: relative !important;
+            }
+
+            /* 2. DESACTIVAR REVEAL.JS (Convertir en lista vertical) */
+            .reveal {
+                height: auto !important;
+                overflow: visible !important;
+                position: relative !important;
+                touch-action: auto !important;
+            }
+
+            .reveal .slides {
+                position: static !important;
+                /* Deja de flotar */
+                width: 100% !important;
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                /* Apilar uno tras otro */
+                padding: 20px 15px 150px 15px !important;
+                /* Espacio extra abajo */
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+                pointer-events: none;
+                /* El contenedor no bloquea, los hijos sí */
+            }
+
+            /* 3. CADA DIAPOSITIVA ES UN BLOQUE */
+            .reveal section {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                top: auto !important;
+                height: auto !important;
+                min-height: auto !important;
+                margin-bottom: 40px !important;
+                /* Espacio entre diapositivas */
+                pointer-events: auto !important;
+                /* ¡Habilitar interacción! */
+                transform: none !important;
+            }
+
+            /* 4. ELEMENTOS INTERNOS (Para que no se salgan) */
+            .slide-container,
+            .card,
+            .glass-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 5. INPUTS FUNCIONALES */
+            .clean-input {
+                pointer-events: auto !important;
+                z-index: 5000 !important;
+                /* Asegurar que esté encima */
+                font-size: 16px !important;
+                background: #fff !important;
+                width: 100% !important;
+            }
+
+            /* 6. ARREGLAR GRILLAS (Todo en una columna) */
+            .grid,
+            .grid-cols-2,
+            .md\:grid-cols-2,
+            .lg\:grid-cols-12 {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+
+            /* 7. LIMPIEZA VISUAL */
+            .mobile-grid-2 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+            }
+
+            .reveal h1 {
+                font-size: 2.2em !important;
+                margin-top: 20px !important;
+            }
+
+            .reveal img {
+                max-height: 250px !important;
+                width: auto !important;
+                margin: 0 auto !important;
+            }
+
+            /* Ocultar controles de PC */
+            #btn-zoom,
+            .nav-btn.zoom,
+            #premium-dock,
+            .reveal .controls,
+            .reveal .progress {
+                display: none !important;
+            }
+
+            /* Ajustar barra superior */
+            #fixed-logo {
+                width: 60px;
+                top: 10px;
+                left: 10px;
+            }
+
+            #top-nav {
+                top: 10px;
+                right: 10px;
+            }
+
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                justify-content: center;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+        }
+
+        /* --- PARCHE DE CONTRASTE (CORREGIDO) --- */
+
+        /* Usamos este selector especial para que el navegador entienda el color hexadecimal */
+        [class*="bg-[#004d40]"] h1,
+        [class*="bg-[#004d40]"] h2,
+        [class*="bg-[#004d40]"] h3,
+        [class*="bg-[#004d40]"] p,
+        [class*="bg-[#004d40]"] i,
+        [class*="bg-[#004d40]"] span,
+        [class*="bg-[#004d40]"] li,
+        [class*="bg-[#004d40]"] .text-sm,
+        [class*="bg-[#004d40]"] .text-xs,
+        [class*="bg-[#004d40]"] .text-gray-400,
+        [class*="bg-[#004d40]"] .text-gray-500 {
+            color: #ffffff !important;
+            /* BLANCO OBLIGATORIO */
+            opacity: 1 !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        /* También aplicamos la corrección para el color primario de Tailwind */
+        .bg-primary h1,
+        .bg-primary h2,
+        .bg-primary h3,
+        .bg-primary p,
+        .bg-primary span,
+        .bg-primary i {
+            color: #ffffff !important;
+        }
+
+        /* --- CORRECCIÓN DEFINITIVA PARA FONDOS OSCUROS (DETECTIVE) --- */
+        /* Esto asegura que cualquier texto dentro de un contenedor oscuro SEA BLANCO, sin importar la regla global */
+        .bg-slate-800 .text-sm,
+        .bg-slate-800 .text-xs,
+        .bg-slate-800 p,
+        .bg-slate-800 h1,
+        .bg-slate-800 h2,
+        .bg-slate-800 h3,
+        .bg-slate-800 .italic {
+            color: rgba(255, 255, 255, 0.95) !important;
+            opacity: 1 !important;
+        }
+
+        /* Y para el texto específicamente coloreado (como Clue #1 en esmeralda), lo respetamos pero brillando */
+        .bg-slate-800 .text-emerald-400 {
+            color: #34d399 !important;
+            /* Verde brillante */
+        }
+
+
+        /* --- CRITICAL CONTRAST FIX FOR DARK CARDS (V2.1 - GLOBAL MANAGE) --- */
+        /* Support for both .class on section AND data-state on parent */
+
+        /* 1. SLATE DARK CARDS */
+        .reveal [class*="bg-slate-800"],
+        .reveal.bg-slate-800,
+        /* data-state support */
+        .reveal [class*="from-slate-800"],
+        .reveal.from-slate-800,
+        /* data-state support */
+        .reveal [class*="from-gray-800"],
+        .reveal [class*="from-zinc-800"],
+        .reveal [class*="from-stone-800"],
+        .reveal [class*="from-neutral-800"] {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+
+        /* 2. PURPLE/INDIGO DARK CARDS */
+        .reveal [class*="from-purple-900"],
+        .reveal.from-purple-900,
+        .reveal [class*="from-indigo-900"],
+        .reveal.from-indigo-900 {
+            background-color: #3b0764 !important;
+            color: #ffffff !important;
+        }
+
+        /* 3. EMERALD/TEAL/BLUE DARK CARDS */
+        .reveal [class*="from-emerald-900"],
+        .reveal.from-emerald-900,
+        .reveal [class*="from-teal-900"],
+        .reveal.from-teal-900 {
+            background-color: #064e3b !important;
+            color: #ffffff !important;
+        }
+
+
+        .reveal [class*="from-blue-900"] {
+            background-color: #1e3a8a !important;
+            /* Fallback Solid Blue-900 */
+            color: #ffffff !important;
+        }
+
+        /* 1. Force Headers to White/Light by default in these cards (Overrides .reveal h3 rule) */
+        .reveal [class*="bg-slate-800"] h1,
+        .reveal.bg-slate-800 h1,
+        .reveal.bg-slate-800 h2,
+        .reveal.bg-slate-800 h3,
+        .reveal [class*="bg-slate-800"] h2,
+        .reveal [class*="bg-slate-800"] h3,
+        .reveal [class*="from-slate-800"] h1,
+        .reveal.from-slate-800 h1,
+        .reveal.from-slate-800 h2,
+        .reveal.from-slate-800 h3,
+        .reveal [class*="from-slate-800"] h2,
+        .reveal [class*="from-slate-800"] h3,
+        .reveal [class*="from-purple-900"] h1,
+        .reveal.from-purple-900 h1,
+        .reveal.from-purple-900 h2,
+        .reveal.from-purple-900 h3,
+        .reveal [class*="from-purple-900"] h2,
+        .reveal [class*="from-purple-900"] h3,
+        .reveal [class*="from-emerald-900"] h1,
+        .reveal.from-emerald-900 h1,
+        .reveal.from-emerald-900 h2,
+        .reveal.from-emerald-900 h3,
+        .reveal [class*="from-emerald-900"] h2,
+        .reveal [class*="from-emerald-900"] h3 {
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            /* Add shadow for better legibility */
+        }
+
+        /* 2. Force .text-sm and .text-xs to Light Slate (Overriding the dark gray rule) */
+        .reveal [class*="bg-slate-800"] .text-sm,
+        .reveal.bg-slate-800 .text-sm,
+        .reveal [class*="bg-slate-800"] .text-xs,
+        .reveal [class*="from-slate-800"] .text-sm,
+        .reveal.from-slate-800 .text-sm,
+        .reveal [class*="from-slate-800"] .text-xs,
+        .reveal [class*="from-purple-900"] .text-sm,
+        .reveal.from-purple-900 .text-sm,
+        .reveal [class*="from-purple-900"] .text-xs,
+        .reveal [class*="from-emerald-900"] .text-sm,
+        .reveal.from-emerald-900 .text-sm,
+        .reveal.from-emerald-900 .text-xs,
+        .reveal [class*="from-emerald-900"] .text-xs {
+            color: #e2e8f0 !important;
+            /* Slate-200 */
+            opacity: 1 !important;
+            font-weight: 500 !important;
+        }
+
+        /* 3. Restore Specific Colors for emphasized text (High Specificity) */
+        /* We use * selector to catch any element inside the dark card with these colors */
+        .reveal [class*="from-slate-800"] .text-orange-400,
+        .reveal [class*="bg-slate-800"] .text-orange-400 {
+            color: #fb923c !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-orange-300 {
+            color: #fdba74 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-emerald-300 {
+            color: #6ee7b7 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-emerald-400 {
+            color: #34d399 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-blue-300 {
+            color: #93c5fd !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-blue-400 {
+            color: #60a5fa !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-cyan-300 {
+            color: #67e8f9 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-teal-300 {
+            color: #5eead4 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-purple-300 {
+            color: #d8b4fe !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-yellow-400 {
+            color: #facc15 !important;
+        }
+
+        /* Purple/Other Dark Cards Exceptions */
+        .reveal [class*="from-purple-900"] .text-orange-300,
+        .reveal [class*="from-purple-900"] .text-orange-400 {
+            color: #fb923c !important;
+        }
+
+        .reveal [class*="from-purple-900"] .text-purple-300 {
+            color: #d8b4fe !important;
+        }
+
+        /* Ensure bold text is white if no other color */
+        .reveal [class*="from-slate-800"] strong,
+        .reveal [class*="bg-slate-800"] strong {
+            color: white !important;
+        }
+
+        /* Opcional: Si usas la clase 'bg-primary' de Tailwind */
+        .bg-primary h1,
+        .bg-primary h2,
+        .bg-primary p {
+            color: #ffffff !important;
+        }
+
+        /* =========================================
+           INLINE TEXT INPUT STYLING
+           ========================================= */
+        .text-input-inline {
+            display: inline-block;
+            min-width: 100px;
+            max-width: 150px;
+            padding: 4px 8px;
+            margin: 0 4px;
+            border: none;
+            border-bottom: 2px solid #10b981;
+            background: transparent;
+            font-size: inherit;
+            font-weight: 600;
+            color: #059669;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .text-input-inline:focus {
+            border-bottom-color: #f97316;
+            background: #fef3c7;
+            transform: scale(1.05);
+        }
+
+        .text-input-inline.correct {
+            border-bottom-color: #10b981;
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .text-input-inline.incorrect {
+            border-bottom-color: #ef4444;
+            background: #fee2e2;
+            color: #dc2626;
+        }
+    </style>
+
+
+
+
+</head>
+
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+        alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO.COM</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i
+                class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i>
+            <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock"
+        class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra"
+                class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span
+                    class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario"
+                class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span
+                    class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta"
+                class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos"
+                class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')"
+                class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110"
+                title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: PORTADA -->
+            <section data-state="from-slate-800" class="bg-slate-800">
+                <div
+                    class="slide-container flex flex-col items-center justify-center h-full text-center relative overflow-hidden">
+
+                    <!-- Background ambient elements -->
+                    <div class="absolute inset-0 pointer-events-none">
+                        <div
+                            class="absolute top-10 left-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse">
+                        </div>
+                        <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"
+                            style="animation-delay: 1s;"></div>
+                        <i
+                            class="fas fa-hourglass-half text-slate-700/20 text-9xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 transform scale-150"></i>
+                    </div>
+
+                    <div class="relative z-10 max-w-5xl w-full">
+                        <!-- Badge -->
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-700/50 border border-slate-600 text-emerald-400 text-sm font-bold tracking-wider uppercase mb-8 backdrop-blur-sm">
+                            <i class="fas fa-layer-group"></i> Nivel B1 • Gramática Épica
+                        </div>
+
+                        <!-- Main Title -->
+                        <h1 class="text-6xl md:text-8xl font-playfair font-black mb-6 leading-none tracking-tight">
+                            <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                                CRÓNICAS
+                            </span>
+                            <br>
+                            <span class="text-white relative inline-block">
+                                DEL TIEMPO
+                                <!-- Decorative underline -->
+                                <svg class="absolute w-full h-3 -bottom-2 left-0 text-cyan-500" viewBox="0 0 100 10"
+                                    preserveAspectRatio="none">
+                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="2" fill="none" />
+                                </svg>
+                            </span>
+                        </h1>
+
+                        <!-- Subtitle / Duel -->
+                        <h2
+                            class="text-3xl md:text-4xl text-slate-300 font-light mb-12 flex items-center justify-center gap-6">
+                            <span class="text-amber-400 font-bold border-b border-amber-400/30 pb-1">El Duelo de los
+                                Pasados</span>
+                        </h2>
+
+                        <!-- Visual Cards Container -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                            <!-- Imperfecto Card -->
+                            <div
+                                class="bg-amber-900/20 border border-amber-700/30 p-6 rounded-2xl backdrop-blur-sm transform hover:-translate-y-2 transition-transform duration-300 group">
+                                <i
+                                    class="fas fa-video text-amber-500 text-4xl mb-3 group-hover:scale-110 transition-transform"></i>
+                                <h3 class="text-amber-400 font-bold text-xl mb-1">IMPERFECTO</h3>
+                                <p class="text-slate-400 text-sm">"Antes vivía..."</p>
+                                <span
+                                    class="block mt-2 text-xs text-amber-500/60 uppercase tracking-widest font-mono">EL
+                                    CONTEXTO</span>
+                            </div>
+
+                            <!-- Indefinido Card -->
+                            <div
+                                class="bg-cyan-900/20 border border-cyan-700/30 p-6 rounded-2xl backdrop-blur-sm transform hover:-translate-y-2 transition-transform duration-300 group">
+                                <i
+                                    class="fas fa-camera-retro text-cyan-500 text-4xl mb-3 group-hover:scale-110 transition-transform"></i>
+                                <h3 class="text-cyan-400 font-bold text-xl mb-1">INDEFINIDO</h3>
+                                <p class="text-slate-400 text-sm">"Ayer viví..."</p>
+                                <span class="block mt-2 text-xs text-cyan-500/60 uppercase tracking-widest font-mono">EL
+                                    HECHO</span>
+                            </div>
+
+                            <!-- Perfecto Card -->
+                            <div
+                                class="bg-emerald-900/20 border border-emerald-700/30 p-6 rounded-2xl backdrop-blur-sm transform hover:-translate-y-2 transition-transform duration-300 group">
+                                <i
+                                    class="fas fa-link text-emerald-500 text-4xl mb-3 group-hover:scale-110 transition-transform"></i>
+                                <h3 class="text-emerald-400 font-bold text-xl mb-1">PERFECTO</h3>
+                                <p class="text-slate-400 text-sm">"Hoy he vivido..."</p>
+                                <span
+                                    class="block mt-2 text-xs text-emerald-500/60 uppercase tracking-widest font-mono">LA
+                                    CONEXIÓN</span>
+                            </div>
+                        </div>
+
+                        <!-- Start Button -->
+                        <button onclick="Reveal.next()"
+                            class="group relative px-8 py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 rounded-full font-bold text-white shadow-[0_0_25px_rgba(52,211,153,0.4)] hover:shadow-[0_0_40px_rgba(52,211,153,0.6)] transition-all transform hover:scale-105 overflow-hidden">
+                            <span class="relative z-10 flex items-center gap-3">
+                                INICIAR BATALLA TEMPORAL <i
+                                    class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </span>
+                            <div
+                                class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: EL MAPA GENERAL -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-8">
+
+                    <!-- Header & Intro -->
+                    <div class="text-center mb-10">
+                        <h2 class="text-6xl font-black text-slate-800 mb-6 uppercase tracking-tight">
+                            El Mapa del Tesoro 🗺️
+                        </h2>
+                        <div
+                            class="bg-white/60 inline-block px-8 py-4 rounded-3xl backdrop-blur-sm border-2 border-slate-200">
+                            <p class="text-3xl text-slate-700 font-medium leading-relaxed max-w-5xl mx-auto">
+                                En español, el pasado no es solo "lo que pasó". <br>
+                                Todo depende de <span
+                                    class="text-emerald-600 font-bold bg-emerald-100 px-2 rounded">CÓMO</span> miras el
+                                evento.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- The 3 Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 items-stretch">
+
+                        <!-- Perfecto Compuesto (Green) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-6 border-b-[12px] border-emerald-500 shadow-xl flex flex-col relative overflow-hidden group hover:-translate-y-2 transition-transform">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <i class="fas fa-link text-8xl text-emerald-900"></i>
+                            </div>
+                            <div class="flex items-center gap-4 mb-6">
+                                <span
+                                    class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-4xl shadow-sm">
+                                    🔗
+                                </span>
+                                <h3 class="text-3xl font-black text-emerald-800 leading-none">El Puente<br><span
+                                        class="text-xl font-medium text-emerald-600">P. Perfecto</span></h3>
+                            </div>
+
+                            <div class="space-y-6 flex-1">
+                                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                                    <p class="text-2xl text-emerald-900 font-bold text-center">"He comido"</p>
+                                </div>
+                                <ul class="space-y-3 text-2xl text-slate-700 font-medium">
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-check text-emerald-500 mt-1"></i>
+                                        <span>Espacio <strong>ABIERTO</strong>.</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-check text-emerald-500 mt-1"></i>
+                                        <span>Conecta con <strong>HOY</strong>.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div
+                                class="mt-6 pt-4 border-t-2 border-emerald-100 text-2xl text-slate-500 italic text-center">
+                                "Ha pasado hace poco."
+                            </div>
+                        </div>
+
+                        <!-- Indefinido (Red) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-6 border-b-[12px] border-red-500 shadow-xl flex flex-col relative overflow-hidden group hover:-translate-y-2 transition-transform">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <i class="fas fa-camera text-8xl text-red-900"></i>
+                            </div>
+                            <div class="flex items-center gap-4 mb-6">
+                                <span
+                                    class="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center text-4xl shadow-sm">
+                                    📸
+                                </span>
+                                <h3 class="text-3xl font-black text-red-800 leading-none">La Foto<br><span
+                                        class="text-xl font-medium text-red-600">P. Indefinido</span></h3>
+                            </div>
+
+                            <div class="space-y-6 flex-1">
+                                <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                                    <p class="text-2xl text-red-900 font-bold text-center">"Comí"</p>
+                                </div>
+                                <ul class="space-y-3 text-2xl text-slate-700 font-medium">
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-circle text-red-500 mt-2 text-sm"></i>
+                                        <span>Espacio <strong>CERRADO</strong>.</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-circle text-red-500 mt-2 text-sm"></i>
+                                        <span>Acción <strong>ÚNICA</strong>.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-6 pt-4 border-t-2 border-red-100 text-2xl text-slate-500 italic text-center">
+                                "Pasó ayer y terminó."
+                            </div>
+                        </div>
+
+                        <!-- Imperfecto (Amber) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-6 border-b-[12px] border-amber-500 shadow-xl flex flex-col relative overflow-hidden group hover:-translate-y-2 transition-transform">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <i class="fas fa-film text-8xl text-amber-900"></i>
+                            </div>
+                            <div class="flex items-center gap-4 mb-6">
+                                <span
+                                    class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center text-4xl shadow-sm">
+                                    🎥
+                                </span>
+                                <h3 class="text-3xl font-black text-amber-800 leading-none">La Película<br><span
+                                        class="text-xl font-medium text-amber-600">P. Imperfecto</span></h3>
+                            </div>
+
+                            <div class="space-y-6 flex-1">
+                                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                                    <p class="text-2xl text-amber-900 font-bold text-center">"Comía"</p>
+                                </div>
+                                <ul class="space-y-3 text-2xl text-slate-700 font-medium">
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-play text-amber-500 mt-2 text-sm"></i>
+                                        <span>El <strong>CONTEXTO</strong>.</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-play text-amber-500 mt-2 text-sm"></i>
+                                        <span>Hábitos <strong>REPETIDOS</strong>.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div
+                                class="mt-6 pt-4 border-t-2 border-amber-100 text-2xl text-slate-500 italic text-center">
+                                "Antes pasaba siempre."
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: PERFECTO VS INDEFINIDO (TIEMPO) -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-8">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-5xl font-black text-slate-800 mb-4 flex items-center justify-center gap-4">
+                            <i class="far fa-clock text-orange-500 animate-pulse"></i>
+                            El Duelo del Tiempo
+                        </h2>
+                        <div
+                            class="bg-white/60 inline-block px-10 py-4 rounded-full border-2 border-slate-300 shadow-sm backdrop-blur-sm">
+                            <p class="text-3xl text-slate-700 font-medium">
+                                ¿El periodo de tiempo está <span class="text-emerald-600 font-bold">VIVO</span> o <span
+                                    class="text-red-600 font-bold">MUERTO</span>?
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Main Comparison Grid -->
+                    <div class="grid grid-cols-2 gap-10 flex-1 items-stretch">
+
+                        <!-- Columna Verde: Tiempo Abierto -->
+                        <div
+                            class="bg-gradient-to-br from-emerald-50 to-white rounded-[2rem] border-4 border-emerald-200 p-8 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all hover:-translate-y-1">
+                            <!-- Label -->
+                            <div
+                                class="absolute top-0 right-0 bg-emerald-500 text-white px-8 py-3 rounded-bl-3xl font-bold text-2xl uppercase tracking-wider shadow-md">
+                                Vivo / Abierto
+                            </div>
+
+                            <div class="mt-10 mb-8 text-center">
+                                <div
+                                    class="w-28 h-28 bg-emerald-100 rounded-full mx-auto flex items-center justify-center text-6xl mb-4 shadow-inner ring-4 ring-emerald-50">
+                                    🔓
+                                </div>
+                                <h3 class="text-5xl font-black text-emerald-800 tracking-tight">Perfecto</h3>
+                                <p class="text-3xl text-emerald-600 mt-2 font-medium">(He cantado)</p>
+                            </div>
+
+                            <div
+                                class="bg-white/80 rounded-2xl p-6 border-l-[10px] border-emerald-500 shadow-sm mb-6 flex-1 backdrop-blur-sm">
+                                <p class="text-3xl text-slate-700 mb-6 leading-relaxed">
+                                    El tiempo <strong>NO ha terminado</strong>. Incluye el momento presente (Ahora).
+                                </p>
+                                <ul class="text-3xl text-slate-600 space-y-4">
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check-circle text-emerald-500"></i> <strong>Hoy</strong></li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check-circle text-emerald-500"></i> <strong>Esta
+                                            semana</strong></li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check-circle text-emerald-500"></i> <strong>Este año</strong>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-emerald-200/40 p-5 rounded-2xl text-center border border-emerald-200">
+                                <p class="text-3xl text-emerald-900 font-bold italic">"Hoy <span
+                                        class="text-emerald-700 decoration-4 underline decoration-emerald-400">he
+                                        trabajado</span> mucho."</p>
+                            </div>
+                        </div>
+
+                        <!-- Columna Roja: Tiempo Cerrado -->
+                        <div
+                            class="bg-gradient-to-br from-red-50 to-white rounded-[2rem] border-4 border-red-200 p-8 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all hover:-translate-y-1">
+                            <!-- Label -->
+                            <div
+                                class="absolute top-0 right-0 bg-red-500 text-white px-8 py-3 rounded-bl-3xl font-bold text-2xl uppercase tracking-wider shadow-md">
+                                Muerto / Cerrado
+                            </div>
+
+                            <div class="mt-10 mb-8 text-center">
+                                <div
+                                    class="w-28 h-28 bg-red-100 rounded-full mx-auto flex items-center justify-center text-6xl mb-4 shadow-inner ring-4 ring-red-50">
+                                    🔒
+                                </div>
+                                <h3 class="text-5xl font-black text-red-800 tracking-tight">Indefinido</h3>
+                                <p class="text-3xl text-red-600 mt-2 font-medium">(Canté)</p>
+                            </div>
+
+                            <div
+                                class="bg-white/80 rounded-2xl p-6 border-l-[10px] border-red-500 shadow-sm mb-6 flex-1 backdrop-blur-sm">
+                                <p class="text-3xl text-slate-700 mb-6 leading-relaxed">
+                                    El tiempo <strong>YA terminó</strong>. No toca el presente. Es historia.
+                                </p>
+                                <ul class="text-3xl text-slate-600 space-y-4">
+                                    <li class="flex items-center gap-3"><i class="fas fa-times-circle text-red-500"></i>
+                                        <strong>Ayer</strong>
+                                    </li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-times-circle text-red-500"></i>
+                                        <strong>La semana pasada</strong>
+                                    </li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-times-circle text-red-500"></i>
+                                        <strong>En 2010</strong>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-red-200/40 p-5 rounded-2xl text-center border border-red-200">
+                                <p class="text-3xl text-red-900 font-bold italic">"Ayer <span
+                                        class="text-red-700 decoration-4 underline decoration-red-400">trabajé</span>
+                                    mucho."</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: IMPERFECTO VS INDEFINIDO (ACCION) -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-8">
+
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <h2 class="text-5xl font-black text-slate-800 mb-4 uppercase tracking-tight">
+                            El Director de Cine 🎬
+                        </h2>
+                        <div
+                            class="bg-white/60 inline-block px-10 py-4 rounded-full border-2 border-slate-300 shadow-sm backdrop-blur-sm">
+                            <p class="text-3xl text-slate-700 font-medium">
+                                Para contar una historia, necesitas <span
+                                    class="text-amber-600 font-bold">ESCENARIO</span> y <span
+                                    class="text-red-600 font-bold">ACCIÓN</span>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Grid -->
+                    <div class="grid grid-cols-2 gap-10 flex-1 items-stretch">
+
+                        <!-- Columna Roja: La Acción (Indefinido) -->
+                        <div
+                            class="bg-white rounded-[2rem] border-b-[12px] border-red-500 p-8 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all shadow-xl">
+                            <div class="flex items-center gap-6 mb-8">
+                                <div
+                                    class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center text-5xl text-red-600 shadow-sm">
+                                    ▶️
+                                </div>
+                                <div>
+                                    <h3 class="text-4xl font-black text-red-800 leading-none">Indefinido</h3>
+                                    <p class="text-2xl text-red-600 font-medium">La Trama (The Plot)</p>
+                                </div>
+                            </div>
+
+                            <p class="text-3xl text-slate-700 mb-8 leading-relaxed font-medium">
+                                Hace <strong>AVANZAR</strong> la historia. <br>
+                                Responde a: <em>"¿Qué pasó después?"</em>
+                            </p>
+
+                            <div class="bg-red-50 p-6 rounded-2xl border-l-8 border-red-500 mb-6 flex-1">
+                                <p class="text-3xl text-slate-600 italic leading-relaxed">
+                                    "El ladrón <strong class="text-red-700 bg-red-100 px-2 rounded">entró</strong>,
+                                    <strong class="text-red-700 bg-red-100 px-2 rounded">robó</strong> el banco y
+                                    <strong class="text-red-700 bg-red-100 px-2 rounded">escapó</strong>."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Columna Ambar: El Escenario (Imperfecto) -->
+                        <div
+                            class="bg-white rounded-[2rem] border-b-[12px] border-amber-500 p-8 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all shadow-xl">
+                            <div class="flex items-center gap-6 mb-8">
+                                <div
+                                    class="w-20 h-20 bg-amber-100 rounded-2xl flex items-center justify-center text-5xl text-amber-600 shadow-sm">
+                                    ⏸️
+                                </div>
+                                <div>
+                                    <h3 class="text-4xl font-black text-amber-800 leading-none">Imperfecto</h3>
+                                    <p class="text-2xl text-amber-600 font-medium">El Contexto (Background)</p>
+                                </div>
+                            </div>
+
+                            <p class="text-3xl text-slate-700 mb-8 leading-relaxed font-medium">
+                                <strong>DETIENE</strong> el tiempo para describir.<br>
+                                Responde a: <em>"¿Cómo era? ¿Qué pasaba?"</em>
+                            </p>
+
+                            <div class="bg-amber-50 p-6 rounded-2xl border-l-8 border-amber-500 mb-6 flex-1">
+                                <p class="text-3xl text-slate-600 italic leading-relaxed">
+                                    "La noche <strong class="text-amber-700 bg-amber-100 px-2 rounded">era</strong>
+                                    oscura y <strong class="text-amber-700 bg-amber-100 px-2 rounded">llovía</strong>
+                                    mucho."
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer Tip -->
+                    <div class="text-center mt-6">
+                        <span class="bg-slate-800 text-white px-6 py-2 rounded-full text-xl font-bold tracking-wide">
+                            💡 REGLA DE ORO: Si la acción mueve el reloj = INDEFINIDO.
+                        </span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SLIDE 5: MARCADORES TEMPORALES -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-6">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-5xl font-black text-slate-800 mb-4 uppercase tracking-tight">
+                            El Semáforo del Tiempo 🚦
+                        </h2>
+                        <div
+                            class="bg-white/60 inline-block px-8 py-3 rounded-full border-2 border-slate-300 shadow-sm backdrop-blur-sm">
+                            <p class="text-3xl text-slate-700 font-medium">
+                                Dime <span class="text-purple-600 font-bold bg-purple-100 px-2 rounded">CUÁNDO</span>
+                                pasó y te diré <span
+                                    class="text-purple-600 font-bold bg-purple-100 px-2 rounded">QUÉ</span> tiempo usar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- The Traffic Light Grid -->
+                    <div class="grid grid-cols-3 gap-6 flex-1 mb-6">
+
+                        <!-- ZONA ROJA (Indefinido) -->
+                        <div
+                            class="bg-red-50 rounded-[2rem] p-6 border-4 border-red-200 text-center flex flex-col shadow-lg transform hover:-translate-y-2 transition-transform">
+                            <div
+                                class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse">
+                            </div>
+                            <h3 class="text-red-700 font-black text-3xl mb-6 tracking-wide uppercase">Terminado<br><span
+                                    class="text-xl text-red-500">(Indefinido)</span></h3>
+
+                            <ul class="space-y-3 text-2xl text-slate-700 font-bold flex-1 text-left pl-4">
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> Ayer</li>
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> Anoche</li>
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> El otro día</li>
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> Hace un año</li>
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> En 1999</li>
+                                <li class="flex items-center gap-2"><span class="text-red-500">•</span> De repente</li>
+                            </ul>
+                        </div>
+
+                        <!-- ZONA VERDE (Perfecto) -->
+                        <div
+                            class="bg-emerald-50 rounded-[2rem] p-6 border-4 border-emerald-200 text-center flex flex-col shadow-2xl scale-105 z-10 relative">
+                            <!-- Badge Highlight -->
+                            <div
+                                class="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md whitespace-nowrap">
+                                ✅ CONECTADO AL PRESENTE
+                            </div>
+
+                            <div
+                                class="w-16 h-16 bg-emerald-500 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(16,185,129,0.6)] animate-pulse">
+                            </div>
+                            <h3 class="text-emerald-700 font-black text-3xl mb-6 tracking-wide uppercase">
+                                Abierto<br><span class="text-xl text-emerald-500">(Perfecto)</span></h3>
+
+                            <ul class="space-y-3 text-2xl text-slate-700 font-bold flex-1 text-left pl-4">
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Hoy</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Esta semana
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Este mes
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Últimamente
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Ya / Todavía
+                                    no</li>
+                                <li class="flex items-center gap-2"><span class="text-emerald-500">•</span> Alguna vez
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- ZONA AMBAR (Imperfecto) -->
+                        <div
+                            class="bg-amber-50 rounded-[2rem] p-6 border-4 border-amber-200 text-center flex flex-col shadow-lg transform hover:-translate-y-2 transition-transform">
+                            <div
+                                class="w-16 h-16 bg-amber-400 rounded-full mx-auto mb-4 shadow-[0_0_20px_rgba(251,191,36,0.6)] animate-pulse">
+                            </div>
+                            <h3 class="text-amber-700 font-black text-3xl mb-6 tracking-wide uppercase">
+                                Repetido<br><span class="text-xl text-amber-500">(Imperfecto)</span></h3>
+
+                            <ul class="space-y-3 text-2xl text-slate-700 font-bold flex-1 text-left pl-4">
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Antes</li>
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> De pequeño/a
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Todos los días
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Normalmente
+                                </li>
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Siempre
+                                    (Hábito)</li>
+                                <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Mientras</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white border-l-[8px] border-purple-500 p-6 rounded-r-2xl shadow-sm max-w-4xl mx-auto w-full flex items-center gap-6">
+                        <i class="fas fa-search-dollar text-purple-500 text-5xl"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-2xl">⚠️ ¡Cuidado con los Camaleones!</h4>
+                            <div class="grid grid-cols-2 gap-8 mt-2">
+                                <div>
+                                    <span class="text-emerald-600 font-bold block text-xl">"SIEMPRE he vivido
+                                        aquí"</span>
+                                    <span class="text-slate-500 text-lg">Continúa hasta hoy (Perfecto).</span>
+                                </div>
+                                <div>
+                                    <span class="text-red-600 font-bold block text-xl">"En 1990 SIEMPRE iba al
+                                        cine"</span>
+                                    <span class="text-slate-500 text-lg">Hábito terminado (Imperfecto).</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: VARIACIÓN REGIONAL -->
+            <section data-state="from-purple-900" class="bg-gradient-to-br from-purple-900 to-slate-900 text-white">
+                <div class="slide-container h-full flex flex-col items-center justify-center">
+                    <h2 class="text-4xl font-bold text-white mb-12 flex items-center gap-4">
+                        <i class="fas fa-globe-americas text-purple-300"></i> Variación Regional <span
+                            class="text-sm bg-purple-700 px-3 py-1 rounded-full border border-purple-500">Importante
+                            B1</span>
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-5xl">
+                        <!-- ESPAÑA -->
+                        <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 relative">
+                            <div
+                                class="absolute -top-6 left-8 bg-red-500 text-white font-bold px-4 py-1 rounded shadow-lg transform -rotate-2">
+                                ESPAÑA 🇪🇸
+                            </div>
+                            <p class="text-purple-200 mb-4 font-semibold">Pasado muy reciente = Perfecto Compuesto</p>
+                            <div class="bg-black/30 p-4 rounded-lg border-l-4 border-red-500 mb-2">
+                                <i class="fas fa-comment-dots text-red-400 mr-2"></i>
+                                "¿Qué <span class="text-emerald-300 font-bold">has dicho</span>?"
+                            </div>
+                            <p class="text-xs text-slate-400 text-right">(Hace 5 minutos)</p>
+                        </div>
+
+                        <!-- LATAM -->
+                        <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 relative">
+                            <div
+                                class="absolute -top-6 left-8 bg-cyan-600 text-white font-bold px-4 py-1 rounded shadow-lg transform rotate-2">
+                                LATINOAMÉRICA 🌎
+                            </div>
+                            <p class="text-purple-200 mb-4 font-semibold">Pasado terminado (aunque reciente) =
+                                Indefinido</p>
+                            <div class="bg-black/30 p-4 rounded-lg border-l-4 border-cyan-500 mb-2">
+                                <i class="fas fa-comment-dots text-cyan-400 mr-2"></i>
+                                "¿Qué <span class="text-yellow-300 font-bold">dijiste</span>?"
+                            </div>
+                            <p class="text-xs text-slate-400 text-right">(Hace 5 minutos)</p>
+
+                            <div class="mt-4 pt-4 border-t border-white/10 text-sm text-slate-300">
+                                <i class="fas fa-info-circle text-purple-400"></i> En LatAm, el Perfecto se usa casi
+                                solo para "experiencias de vida" indefinidas ("Nunca he ido a Tailandia").
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: EJERCICIO 1 (CLASIFICACIÓN) -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-6">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-4xl font-black text-emerald-800 mb-2 uppercase tracking-wide">
+                            <i class="fas fa-stopwatch text-emerald-600 mr-2"></i> Desafío de Velocidad
+                        </h2>
+                        <div
+                            class="bg-white/80 inline-block px-8 py-3 rounded-full border border-emerald-200 shadow-sm backdrop-blur-sm">
+                            <p class="text-2xl text-slate-700 font-medium">
+                                ¿Abierto o Cerrado? Escribe <span
+                                    class="text-emerald-600 font-bold bg-emerald-100 px-2 rounded border border-emerald-300">P</span>
+                                (Perfecto) o <span
+                                    class="text-red-600 font-bold bg-red-100 px-2 rounded border border-red-300">I</span>
+                                (Indefinido).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Exercises Grid (12 Items) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full flex-1 align-content-center"
+                        id="mental-agility-exercises">
+
+                        <!-- Row 1 -->
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">1. Esta mañana</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">2. Ayer</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">3. Hace un rato</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">4. El mes pasado</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">5. Últimamente</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">6. En 2020</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 3 (New) -->
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">7. Ya</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">8. Anoche</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">9. Todavía no</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 4 (New) -->
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">10. El otro día</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">11. Hoy</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="P">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-5 rounded-2xl shadow-md border-b-4 border-slate-200 flex items-center justify-between hover:shadow-lg transition-all group">
+                            <span class="font-bold text-slate-700 text-2xl">12. De repente</span>
+                            <div class="flex items-center gap-3">
+                                <input type="text"
+                                    class="w-14 h-14 text-center text-2xl font-bold uppercase border-2 border-slate-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                                    placeholder="?" maxlength="1" data-correct="I">
+                                <span class="result-icon w-8"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-6">
+                        <button onclick="checkMentalAgility()"
+                            class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-2xl py-4 px-10 rounded-full shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transform hover:scale-105 transition-all outline-none ring-4 ring-emerald-100">
+                            COMPROBAR VELOCIDAD <i class="fas fa-bolt ml-2 text-yellow-300"></i>
+                        </button>
+                        <div id="mental-agility-result" class="mt-4 font-bold text-2xl h-8"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: EJERCICIO 2 (EL RELATO) -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-6">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-4xl font-black text-amber-800 mb-2 uppercase tracking-wide font-playfair">
+                            <i class="fas fa-book-open text-amber-600 mr-2"></i> El Secreto de la Abuela
+                        </h2>
+                        <div
+                            class="bg-white/80 inline-block px-8 py-3 rounded-full border border-amber-200 shadow-sm backdrop-blur-sm">
+                            <p class="text-2xl text-slate-700 font-medium">
+                                Completa la historia con <span class="text-red-600 font-bold">Indefinido</span> (Acción)
+                                o <span class="text-amber-600 font-bold">Imperfecto</span> (Descripción).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Story Container (Ancient Paper Look) -->
+                    <div class="bg-amber-50 p-10 rounded-xl shadow-lg border-2 border-amber-200 max-w-5xl mx-auto leading-loose text-2xl text-slate-800 font-serif relative overflow-hidden"
+                        id="translation-exercises">
+
+                        <!-- Decorative background texture/icon -->
+                        <i
+                            class="fas fa-feather-alt absolute -bottom-10 -right-10 text-9xl text-amber-900/10 rotate-12"></i>
+
+                        <p class="relative z-10 text-justify">
+                            Todo
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(empezar)" data-correct="empezó">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            una noche de tormenta.
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(llover)" data-correct="llovía">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            muchísimo y el viento
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(golpear)" data-correct="golpeaba">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            las ventanas con fuerza. Mi abuela
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(estar)" data-correct="estaba">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            sentada en su sillón favorito. Ella
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(tener)" data-correct="tenía">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            un libro antiguo en las manos. De repente,
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(escuchar)" data-correct="escuchó">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            un ruido extraño en el ático. Aunque
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(tener)" data-correct="tenía">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            miedo,
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(decidir)" data-correct="decidió">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            subir a investigar. Cuando
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(abrir)" data-correct="abrió">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            la puerta, no
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(creer)" data-correct="creyó">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            lo que
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(ver)" data-correct="vio">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>. Allí, en medio del polvo y las telarañas,
+                            <span class="inline-block relative group mx-1">
+                                <input type="text"
+                                    class="text-input-inline w-40 text-center font-bold text-slate-800 bg-white border-b-4 border-amber-300 focus:border-amber-500 outline-none rounded px-2"
+                                    placeholder="(haber)" data-correct="había">
+                                <span
+                                    class="result-feedback absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max z-20 bg-white shadow-xl rounded-lg p-2 text-base hidden group-focus-within:block border border-slate-200"></span>
+                            </span>
+                            un cofre antiguo que brillaba intensamente.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-8">
+                        <button onclick="checkTranslation()"
+                            class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-black text-2xl py-4 px-12 rounded-full shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] transform hover:scale-105 transition-all outline-none ring-4 ring-amber-100">
+                            REVELAR EL SECRETO <i class="fas fa-key ml-2 text-yellow-200"></i>
+                        </button>
+                        <div id="translation-result" class="mt-4 font-bold text-2xl h-8"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: JUEGO DE NIVELES (EXPERIENCIAS) -->
+            <section class="bg-[#fefce8]">
+                <div class="slide-container h-full flex flex-col p-6" id="level-game-container">
+
+                    <!-- Intro Screen -->
+                    <div id="game-intro-screen" class="flex flex-col items-center justify-center h-full text-center">
+                        <h2
+                            class="text-6xl font-black text-purple-800 mb-6 uppercase tracking-tight font-playfair animate-bounce">
+                            🏆 La Escalera de la Fama
+                        </h2>
+                        <p class="text-3xl text-slate-600 mb-10 max-w-3xl leading-relaxed">
+                            Para ser famoso, necesitas <span
+                                class="bg-purple-100 text-purple-700 px-3 rounded font-bold">EXPERIENCIA</span>.
+                            <br>Completa los 5 niveles usando el <b class="text-purple-600">Perfecto Compuesto</b>.
+                        </p>
+                        <button onclick="startGameLevels()"
+                            class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-3xl font-black py-4 px-12 rounded-full shadow-2xl hover:scale-110 transition-transform ring-4 ring-purple-200">
+                            ¡EMPEZAR CARRERA! 🚀
+                        </button>
+                    </div>
+
+                    <!-- Game Interface (Hidden initially) -->
+                    <div id="game-level-interface" class="hidden h-full flex flex-col">
+                        <!-- Header / HUD -->
+                        <div
+                            class="flex justify-between items-center mb-8 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="text-2xl font-bold text-slate-400">NIVEL <span id="current-level-display"
+                                    class="text-purple-600 text-4xl ml-2">1</span>/5</div>
+                            <div class="flex gap-2" id="stars-container">
+                                <!-- Stars will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Question Container -->
+                        <div class="flex-1 flex flex-col items-center justify-center relative">
+
+                            <!-- Question Card -->
+                            <div
+                                class="bg-white p-10 rounded-[2rem] shadow-2xl border-b-8 border-purple-200 w-full max-w-4xl text-center relative z-10">
+                                <div
+                                    class="absolute -top-10 left-1/2 -translate-x-1/2 bg-purple-600 text-white w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg border-4 border-white">
+                                    <i class="fas fa-star" id="level-icon"></i>
+                                </div>
+
+                                <h3 class="text-3xl font-bold text-slate-500 mb-4 mt-8 uppercase tracking-widest"
+                                    id="level-title">Rookie</h3>
+
+                                <p class="text-4xl text-slate-800 font-medium mb-10 leading-normal" id="level-question">
+                                    ¿Tú (estar) ______ en París?
+                                </p>
+
+                                <div class="flex gap-4 justify-center" id="options-area">
+                                    <!-- Options injected via JS -->
+                                </div>
+
+                                <div id="feedback-area" class="mt-6 text-3xl font-bold h-10"></div>
+                            </div>
+
+                            <!-- Character/Mascot Decor -->
+                            <div class="absolute bottom-0 right-10 opacity-20 pointer-events-none">
+                                <i class="fas fa-trophy text-[15rem] text-purple-300"></i>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Victory Screen (Hidden) -->
+                    <div id="game-victory-screen"
+                        class="hidden flex flex-col items-center justify-center h-full text-center">
+                        <i class="fas fa-crown text-8xl text-yellow-400 mb-6 animate-pulse"></i>
+                        <h2 class="text-6xl font-black text-purple-900 mb-6">¡Eres una LEYENDA!</h2>
+                        <p class="text-3xl text-slate-600 mb-10">Has dominado el Arte de la Experiencia.</p>
+                        <button onclick="resetGameCreate()"
+                            class="bg-emerald-500 text-white text-2xl font-bold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-600 transition-colors">
+                            Jugar Otra Vez ↺
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            <script>
+                // Level Game Logic
+                const levels = [
+                    { title: "Turista", question: "¿Tú (estar) ______ en España?", options: ["has estado", "has estido", "has sido"], correct: 0, icon: "fa-plane" },
+                    { title: "Gastrónomo", question: "¿Vosotros (comer) ______ paella?", options: ["habéis comido", "habéis comado", "hamos comido"], correct: 0, icon: "fa-utensils" },
+                    { title: "Aventurero", question: "¿Ella (subir) ______ al Everest?", options: ["ha subado", "ha subido", "he subido"], correct: 1, icon: "fa-mountain" },
+                    { title: "Cinéfilo (Irregular)", question: "¿Nosotros (ver) ______ esa película?", options: ["hemos vido", "hemos visto", "hamos visto"], correct: 1, icon: "fa-film" },
+                    { title: "Superstar (Irregular)", question: "¿Tú (romper) ______ un récord?", options: ["has rompido", "has roto", "eres roto"], correct: 1, icon: "fa-trophy" }
+                ];
+
+                let currentLevelIdx = 0;
+
+                function startGameLevels() {
+                    document.getElementById('game-intro-screen').classList.add('hidden');
+                    document.getElementById('game-level-interface').classList.remove('hidden');
+                    currentLevelIdx = 0;
+                    loadLevel(0);
+                    updateStars();
+                }
+
+                function resetGameCreate() {
+                    document.getElementById('game-victory-screen').classList.add('hidden');
+                    document.getElementById('game-intro-screen').classList.remove('hidden');
+                }
+
+                function loadLevel(idx) {
+                    const level = levels[idx];
+                    document.getElementById('current-level-display').textContent = idx + 1;
+                    document.getElementById('level-title').textContent = level.title;
+                    // Replace parenthesis verb for visual cue if needed, or keep as is
+                    document.getElementById('level-question').innerHTML = level.question.replace(/\((.*?)\)/, '<span class="text-purple-600 font-bold">($1)</span>');
+                    document.getElementById('level-icon').className = `fas ${level.icon}`;
+                    document.getElementById('feedback-area').textContent = '';
+
+                    const optsContainer = document.getElementById('options-area');
+                    optsContainer.innerHTML = '';
+
+                    level.options.forEach((opt, i) => {
+                        const btn = document.createElement('button');
+                        btn.className = "bg-purple-50 border-2 border-purple-200 text-purple-900 text-2xl font-bold py-4 px-8 rounded-xl hover:bg-purple-100 hover:scale-105 transition-all w-1/3 shadow-sm";
+                        btn.textContent = opt;
+                        btn.onclick = () => checkLevelAnswer(i, level.correct);
+                        optsContainer.appendChild(btn);
+                    });
+                }
+
+                function checkLevelAnswer(selected, correct) {
+                    const feedback = document.getElementById('feedback-area');
+                    if (selected === correct) {
+                        feedback.innerHTML = '<span class="text-emerald-500">¡Correcto! <i class="fas fa-check"></i></span>';
+
+                        if (typeof playSound === 'function') playSound('coin');
+
+                        setTimeout(() => {
+                            currentLevelIdx++;
+                            if (currentLevelIdx < levels.length) {
+                                loadLevel(currentLevelIdx);
+                                updateStars();
+                            } else {
+                                showVictory();
+                            }
+                        }, 1000);
+                    } else {
+                        feedback.innerHTML = '<span class="text-red-500">Ups... Inténtalo de nuevo.</span>';
+                        if (typeof playSound === 'function') playSound('error');
+                    }
+                }
+
+                function updateStars() {
+                    const container = document.getElementById('stars-container');
+                    container.innerHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        const icon = document.createElement('i');
+                        icon.className = `fas fa-star text-2xl ${i < currentLevelIdx ? 'text-yellow-400' : 'text-slate-200'}`;
+                        container.appendChild(icon);
+                    }
+                }
+
+                function showVictory() {
+                    document.getElementById('game-level-interface').classList.add('hidden');
+                    document.getElementById('game-victory-screen').classList.remove('hidden');
+                    if (typeof react === 'function') react('confetti');
+                }
+            </script>
+
+            <!-- SLIDE 10: HISTORIA GRÁFICA (STORYTELLER) -->
+            <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+                <div class="slide-container h-full flex flex-col p-6">
+
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <span
+                            class="bg-indigo-600 text-white px-4 py-1 rounded-full text-lg font-bold tracking-widest uppercase mb-4 inline-block shadow-lg border border-indigo-400">
+                            Práctica Final
+                        </span>
+                        <h2
+                            class="text-5xl font-black text-white mb-2 uppercase tracking-wide font-playfair drop-shadow-lg">
+                            <i class="fas fa-bullhorn text-indigo-400 mr-3"></i> ¡Cuenta la Historia!
+                        </h2>
+                        <div
+                            class="bg-white/10 backdrop-blur-md inline-block px-10 py-4 rounded-full border border-white/20 shadow-xl mt-4">
+                            <p class="text-3xl text-indigo-100 font-medium">
+                                Mira las imágenes y narra <b>EL GRAN ROBO</b> pulsando el botón de grabación mental.
+                            </p>
+                            <p class="text-xl text-slate-400 mt-2 font-light">
+                                <i class="fas fa-info-circle"></i> Usa: Imperfecto (Contexto) + Indefinido (Acción)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Comic Strip Container -->
+                    <div class="flex-1 grid grid-cols-4 gap-6 px-4">
+
+                        <!-- Panel 1: Contexto (Imperfecto) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-4 flex flex-col shadow-2xl relative overflow-hidden group hover:scale-105 transition-all duration-300">
+                            <div
+                                class="absolute top-0 left-0 bg-amber-500 text-white px-4 py-2 font-bold rounded-br-2xl z-10 text-xl shadow-md">
+                                1. Contexto</div>
+
+                            <!-- Imagen: Contexto -->
+                            <div
+                                class="flex-1 bg-slate-200 rounded-xl relative overflow-hidden border-2 border-slate-300 mb-4 group-hover:border-amber-400 transition-colors flex items-center justify-center min-h-[200px]">
+                                <img src="img/guardia_durmiendo.png" alt="Guardia durmiendo" class="w-full h-full object-cover rounded-xl" />
+                            </div>
+
+                            <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-500">
+                                <p class="text-slate-500 text-lg uppercase font-bold text-center mb-1">Pista Visual</p>
+                                <p class="text-slate-800 font-bold text-2xl text-center">Noche / Dormir</p>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Acción 1 (Indefinido) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-4 flex flex-col shadow-2xl relative overflow-hidden group hover:scale-105 transition-all duration-300 delay-75">
+                            <div
+                                class="absolute top-0 left-0 bg-red-600 text-white px-4 py-2 font-bold rounded-br-2xl z-10 text-xl shadow-md">
+                                2. Acción</div>
+
+                            <!-- Imagen: Acción -->
+                            <div
+                                class="flex-1 bg-slate-200 rounded-xl relative overflow-hidden border-2 border-slate-300 mb-4 group-hover:border-red-500 transition-colors flex items-center justify-center min-h-[200px]">
+                                <img src="img/ladron_entrando.png" alt="Ladrón entrando" class="w-full h-full object-cover rounded-xl" />
+                            </div>
+
+                            <div class="bg-red-50 p-4 rounded-xl border-l-4 border-red-500">
+                                <p class="text-slate-500 text-lg uppercase font-bold text-center mb-1">Pista Visual</p>
+                                <p class="text-slate-800 font-bold text-2xl text-center">Ladrón / Entrar</p>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Acción 2 (Indefinido) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-4 flex flex-col shadow-2xl relative overflow-hidden group hover:scale-105 transition-all duration-300 delay-100">
+                            <div
+                                class="absolute top-0 left-0 bg-red-600 text-white px-4 py-2 font-bold rounded-br-2xl z-10 text-xl shadow-md">
+                                3. Clímax</div>
+
+                            <!-- Imagen: Clímax -->
+                            <div
+                                class="flex-1 bg-slate-200 rounded-xl relative overflow-hidden border-2 border-slate-300 mb-4 group-hover:border-red-500 transition-colors flex items-center justify-center min-h-[200px]">
+                                <img src="img/robando_diamante.png" alt="Robando diamante" class="w-full h-full object-cover rounded-xl" />
+                            </div>
+
+                            <div class="bg-red-50 p-4 rounded-xl border-l-4 border-red-500">
+                                <p class="text-slate-500 text-lg uppercase font-bold text-center mb-1">Pista Visual</p>
+                                <p class="text-slate-800 font-bold text-2xl text-center">Coger / Diamante</p>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Resolución (Indefinido/Perfecto) -->
+                        <div
+                            class="bg-white rounded-[2rem] p-4 flex flex-col shadow-2xl relative overflow-hidden group hover:scale-105 transition-all duration-300 delay-150">
+                            <div
+                                class="absolute top-0 left-0 bg-emerald-600 text-white px-4 py-2 font-bold rounded-br-2xl z-10 text-xl shadow-md">
+                                4. Final</div>
+
+                            <!-- Imagen: Final -->
+                            <div
+                                class="flex-1 bg-slate-200 rounded-xl relative overflow-hidden border-2 border-slate-300 mb-4 group-hover:border-emerald-500 transition-colors flex items-center justify-center min-h-[200px]">
+                                <img src="img/llegada_policia.png" alt="Llegada policía" class="w-full h-full object-cover rounded-xl" />
+                            </div>
+
+                            <div class="bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-500">
+                                <p class="text-slate-500 text-lg uppercase font-bold text-center mb-1">Pista Visual</p>
+                                <p class="text-slate-800 font-bold text-2xl text-center">Policía / Llegar</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+
+
+            <!-- SLIDE 14: EL JUICIO FINAL (MAIN CHALLENGE & SUMMARY) -->
+            <section class="bg-gradient-to-br from-slate-900 via-indigo-950 to-black text-white">
+                <div class="slide-container h-full flex flex-col p-6 items-center" id="final-judgment-container">
+
+                    <!-- Header with Tucaneo Logo -->
+                    <div class="flex items-center justify-center gap-6 mb-4 w-full">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png"
+                            alt="Tucaneo Logo"
+                            class="h-20 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse-slow">
+                        <div class="text-center">
+                            <h2
+                                class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 uppercase tracking-widest font-playfair mb-1">
+                                El Juicio Final</h2>
+                            <p class="text-2xl text-slate-300 font-light">Demuestra tu maestría en los Tiempos Pasados
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Introduction / Start Screen -->
+                    <div id="final-intro"
+                        class="flex-1 flex flex-col items-center justify-center max-w-4xl text-center">
+                        <div class="bg-white/10 backdrop-blur-md p-10 rounded-[2rem] border border-white/20 shadow-2xl">
+                            <i class="fas fa-gavel text-8xl text-yellow-500 mb-6 block animate-bounce"></i>
+                            <h3 class="text-4xl font-bold text-white mb-6">¿Estás listo para juzgar?</h3>
+                            <p class="text-2xl text-slate-200 mb-8 leading-relaxed">
+                                Aparecerán frases del pasado. Tu misión es <span
+                                    class="text-yellow-400 font-bold">CLASIFICARLAS</span> correctamente en su tribunal
+                                correspondiente:
+                            </p>
+                            <div class="grid grid-cols-3 gap-4 mb-10 text-xl font-bold">
+                                <span
+                                    class="text-amber-400 px-4 py-2 border border-amber-500/50 rounded bg-amber-500/10">🟠
+                                    Imperfecto</span>
+                                <span class="text-red-400 px-4 py-2 border border-red-500/50 rounded bg-red-500/10">🔴
+                                    Indefinido</span>
+                                <span
+                                    class="text-emerald-400 px-4 py-2 border border-emerald-500/50 rounded bg-emerald-500/10">🟢
+                                    Perfecto</span>
+                            </div>
+                            <button onclick="startFinalGame()"
+                                class="bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-3xl font-black py-4 px-16 rounded-full shadow-[0_0_30px_rgba(245,158,11,0.6)] hover:scale-105 transition-transform">
+                                INICIAR JUICIO ⚖️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Interface (Hidden) -->
+                    <div id="final-game" class="hidden flex-1 w-full flex flex-col items-center justify-between">
+
+                        <!-- The Card to Judge -->
+                        <div class="flex-1 flex items-center justify-center w-full my-4 relative perspective-1000">
+                            <div id="judgment-card"
+                                class="bg-white text-slate-900 w-full max-w-2xl min-h-[250px] rounded-[2rem] shadow-2xl flex flex-col items-center justify-center p-8 border-4 border-slate-200 transform transition-all duration-500">
+                                <p class="text-sm text-slate-400 uppercase tracking-widest font-bold mb-4">Caso #<span
+                                        id="case-number">1</span></p>
+                                <h4 id="case-text" class="text-5xl font-black text-center leading-tight">"Ayer fui al
+                                    cine."</h4>
+                                <div id="case-feedback" class="mt-4 text-3xl font-bold h-10"></div>
+                            </div>
+                        </div>
+
+                        <!-- The Tribunals (Buttons) -->
+                        <div class="grid grid-cols-3 gap-6 w-full max-w-6xl mb-6">
+
+                            <button onclick="judgeCase('imp')"
+                                class="group relative bg-amber-900/40 border-2 border-amber-600/50 hover:bg-amber-800/60 hover:border-amber-400 rounded-2xl p-6 transition-all">
+                                <div class="text-amber-400 text-6xl mb-2 group-hover:scale-110 transition-transform"><i
+                                        class="fas fa-camera-retro"></i></div>
+                                <h3 class="text-3xl font-bold text-amber-100">DESCRIPCIÓN</h3>
+                                <p class="text-amber-300/80 text-lg mt-1">(Imperfecto)</p>
+                                <div
+                                    class="absolute inset-0 border-2 border-amber-400 rounded-2xl opacity-0 group-hover:animate-ping">
+                                </div>
+                            </button>
+
+                            <button onclick="judgeCase('ind')"
+                                class="group relative bg-red-900/40 border-2 border-red-600/50 hover:bg-red-800/60 hover:border-red-400 rounded-2xl p-6 transition-all">
+                                <div class="text-red-400 text-6xl mb-2 group-hover:scale-110 transition-transform"><i
+                                        class="fas fa-bolt"></i></div>
+                                <h3 class="text-3xl font-bold text-red-100">ACCIÓN PASADA</h3>
+                                <p class="text-red-300/80 text-lg mt-1">(Indefinido)</p>
+                                <div
+                                    class="absolute inset-0 border-2 border-red-400 rounded-2xl opacity-0 group-hover:animate-ping">
+                                </div>
+                            </button>
+
+                            <button onclick="judgeCase('perf')"
+                                class="group relative bg-emerald-900/40 border-2 border-emerald-600/50 hover:bg-emerald-800/60 hover:border-emerald-400 rounded-2xl p-6 transition-all">
+                                <div class="text-emerald-400 text-6xl mb-2 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-link"></i></div>
+                                <h3 class="text-3xl font-bold text-emerald-100">EXPERIENCIA</h3>
+                                <p class="text-emerald-300/80 text-lg mt-1">(P. Perfecto)</p>
+                                <div
+                                    class="absolute inset-0 border-2 border-emerald-400 rounded-2xl opacity-0 group-hover:animate-ping">
+                                </div>
+                            </button>
+
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full max-w-4xl bg-white/10 rounded-full h-4 mb-4 overflow-hidden">
+                            <div id="final-progress"
+                                class="bg-gradient-to-r from-emerald-400 to-cyan-500 h-full w-0 transition-all duration-500">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <script>
+                // FINAL JUDGMENT LOGIC
+                const cases = [
+                    { text: "Cuando era pequeño, tenía miedo.", type: 'imp', explanation: "Descripción en el pasado (Era/Tenía)." },
+                    { text: "Ayer compré pan.", type: 'ind', explanation: "Acción terminada en tiempo cerrado (Ayer)." },
+                    { text: "Hoy he hablado con Juan.", type: 'perf', explanation: "Acción en tiempo abierto (Hoy)." },
+                    { text: "De repente, empezó a llover.", type: 'ind', explanation: "Interrupción puntual (Empezó)." },
+                    { text: "Nunca he estado en Asia.", type: 'perf', explanation: "Experiencia de vida (Nunca)." },
+                    { text: "La casa era muy grande.", type: 'imp', explanation: "Descripción del escenario (Era)." }
+                ];
+
+                let currentCase = 0;
+                let finalScore = 0;
+
+                function startFinalGame() {
+                    document.getElementById('final-intro').classList.add('hidden');
+                    document.getElementById('final-game').classList.remove('hidden');
+                    showCase();
+                }
+
+                function showCase() {
+                    const c = cases[currentCase];
+                    document.getElementById('case-number').textContent = currentCase + 1;
+                    document.getElementById('case-text').textContent = c.text;
+                    document.getElementById('case-feedback').textContent = '';
+                    document.getElementById('judgment-card').className = "bg-white text-slate-900 w-full max-w-2xl min-h-[250px] rounded-[2rem] shadow-2xl flex flex-col items-center justify-center p-8 border-4 border-slate-200 transform transition-all duration-500 scale-100";
+
+                    // Update Progress
+                    const pct = (currentCase / cases.length) * 100;
+                    document.getElementById('final-progress').style.width = `${pct}%`;
+                }
+
+                function judgeCase(selectedType) {
+                    const correctType = cases[currentCase].type;
+                    const card = document.getElementById('judgment-card');
+                    const feedback = document.getElementById('case-feedback');
+
+                    if (selectedType === correctType) {
+                        finalScore++;
+                        card.classList.remove('border-slate-200');
+                        card.classList.add('border-emerald-500', 'bg-emerald-50');
+                        feedback.innerHTML = '<span class="text-emerald-600">¡CORRECTO! ⚖️</span>';
+                        if (typeof playSound === 'function') playSound('coin');
+                    } else {
+                        card.classList.remove('border-slate-200');
+                        card.classList.add('border-red-500', 'bg-red-50');
+                        feedback.innerHTML = `<span class="text-red-500 text-xl block">${cases[currentCase].explanation}</span>`;
+                        if (typeof playSound === 'function') playSound('error');
+                    }
+
+                    setTimeout(() => {
+                        currentCase++;
+                        if (currentCase < cases.length) {
+                            showCase();
+                        } else {
+                            endFinalGame();
+                        }
+                    }, 1500);
+                }
+
+                function endFinalGame() {
+                    document.getElementById('final-game').innerHTML = `
+                <div class="text-center animate-fade-in-up">
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png" alt="Tucaneo Logo" class="h-32 mx-auto mb-6 drop-shadow-2xl animate-bounce">
+                    <h2 class="text-7xl font-black text-white mb-4">¡VEREDICTO FINAL!</h2>
+                    <p class="text-4xl text-emerald-300 mb-8 font-bold">Puntuación: ${finalScore} / ${cases.length}</p>
+                    <p class="text-2xl text-slate-300 max-w-2xl mb-10 mx-auto">Has completado el entrenamiento de Crónicas del Tiempo. ¡Ahora eres un Maestro del Pasado!</p>
+                    <button onclick="location.reload()" class="bg-white text-indigo-900 text-2xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-indigo-50 transition-colors">
+                        Reiniciar Sistema ↺
+                    </button>
+                </div>
+               `;
+                    document.getElementById('final-progress').style.width = '100%';
+                    if (typeof react === 'function') react('confetti');
+                }
+            </script>
+        </div>
+
+        <script type="text/babel">
+            // --- REACT COMPONENTS (Lógica Corregida) ---
+            const { useState, useEffect, useRef, useLayoutEffect } = React;
+
+            // Iconos
+            const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+            const I = {
+                Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></>} />,
+                Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" /><path d="M22 21H7" /><path d="m5 11 9 9" /></>} />,
+                Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+                Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+                Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" x2="15" y1="20" y2="20" /><line x1="12" x2="12" y1="4" y2="20" /></>} />,
+                Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+                Undo: <Icon p={<><path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" /></>} />,
+                Redo: <Icon p={<><path d="M21 7v6h-6" /><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7" /></>} />,
+                Trash: <Icon p={<><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></>} />,
+                Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></>} />,
+                Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /><path d="m13 13 6 6" /></>} />,
+                Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />} />,
+                Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5" />} />,
+                Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2" />} />
+            };
+
+            const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+            const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+
+            // --- GLOSARIO (Sin cambios) ---
+            function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch { } }, [list]); const add = (e) => { e.preventDefault(); if (!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if (!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(() => alert("Copiado!"), () => setManualCopy(text)); } catch { setManualCopy(text); } }; return (<div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e => e.target.select()} /><button onClick={() => setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e => setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700" /><input value={d} onChange={e => setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500" /><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i, k) => (<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={() => setList(list.filter((_, x) => x !== k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div>); }
+
+            // --- PIZARRA (Corregida) ---
+            function WhiteboardModule() {
+                const [elements, setElements] = useState([]);
+                const [history, setHistory] = useState([]);
+                const [historyStep, setHistoryStep] = useState(0);
+                const [tool, setTool] = useState('pencil');
+                const [action, setAction] = useState('none');
+                const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+                const [writingPos, setWritingPos] = useState(null);
+                const [defaultText, setDefaultText] = useState(''); // Estado para edición
+                const [selectedId, setSelectedId] = useState(null);
+                const [confirmClear, setConfirmClear] = useState(false);
+                const [resizeHandle, setResizeHandle] = useState(null);
+                const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+                const [color, setColor] = useState('#004d40');
+                const [strokeWidth, setStrokeWidth] = useState(3);
+                const [size, setSize] = useState({ w: 0, h: 0 });
+                const [hoverCursor, setHoverCursor] = useState(null);
+                const containerRef = useRef(null);
+                const canvasRef = useRef(null);
+                const textAreaRef = useRef(null);
+                const generateId = () => Math.random().toString(36).substr(2, 9);
+
+                useEffect(() => {
+                    if (!containerRef.current) return;
+                    const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight }));
+                    obs.observe(containerRef.current);
+                    return () => obs.disconnect();
+                }, []);
+
+                useEffect(() => {
+                    if (tool !== 'selection') { setSelectedId(null); setResizeHandle(null); }
+                    if (confirmClear) setConfirmClear(false);
+                    // Si cambiamos de herramienta escribiendo, guardamos
+                    if (action === 'writing' && tool !== 'text') finishWriting();
+                }, [tool]);
+
+                // Enfocar textarea al escribir
+                useEffect(() => {
+                    if (action === 'writing' && textAreaRef.current) {
+                        textAreaRef.current.value = defaultText; // Poner texto existente si es edición
+                        setTimeout(() => {
+                            textAreaRef.current?.focus();
+                            textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight;
+                        }, 10);
+                    }
+                }, [action, writingPos]);
+
+                // Actualizar propiedades al seleccionar
+                useEffect(() => {
+                    if (selectedId && !resizeHandle && action !== 'moving') {
+                        const index = elements.findIndex(el => el.id === selectedId);
+                        if (index !== -1) {
+                            const el = elements[index];
+                            if (el.color !== color || el.strokeWidth !== strokeWidth) {
+                                const newEls = [...elements];
+                                // Recalcular tamaño si es texto
+                                let newW = el.width;
+                                let newH = el.height;
+                                if (el.type === 'text') {
+                                    const fontSize = Math.max(12, strokeWidth * 4);
+                                    const lines = el.text.split('\n');
+                                    newH = lines.length * fontSize * 1.2;
+                                    const maxLineLen = Math.max(...lines.map(l => l.length));
+                                    newW = maxLineLen * fontSize * 0.6;
+                                }
+                                newEls[index] = { ...el, color, strokeWidth, width: newW, height: newH };
+                                setElements(newEls);
+                            }
+                        }
+                    }
+                }, [color, strokeWidth]);
+
+                useEffect(() => {
+                    if (selectedId) {
+                        const el = elements.find(e => e.id === selectedId);
+                        if (el) { setColor(el.color); setStrokeWidth(el.strokeWidth); }
+                    }
+                }, [selectedId]);
+
+                // RENDERIZADO (Con soporte multilínea)
+                useLayoutEffect(() => {
+                    const ctx = canvasRef.current?.getContext('2d');
+                    if (!ctx || size.w === 0) return;
+                    canvasRef.current.width = size.w;
+                    canvasRef.current.height = size.h;
+                    ctx.clearRect(0, 0, size.w, size.h);
+
+                    // Grid
+                    ctx.save();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, size.w, size.h);
+                    ctx.strokeStyle = '#f1f5f9';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    const gridSize = 40;
+                    const offsetX = panOffset.x % gridSize;
+                    const offsetY = panOffset.y % gridSize;
+                    for (let x = offsetX; x < size.w; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, size.h); }
+                    for (let y = offsetY; y < size.h; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(size.w, y); }
+                    ctx.stroke();
+                    ctx.restore();
+
+                    ctx.save();
+                    ctx.translate(panOffset.x, panOffset.y);
+
+                    elements.forEach(el => {
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
+                        if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; }
+                        else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; }
+
+                        if ((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) {
+                            ctx.beginPath();
+                            ctx.moveTo(el.points[0].x, el.points[0].y);
+                            for (let i = 1; i < el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y);
+                            ctx.stroke();
+                        } else if (el.type === 'rectangle') {
+                            ctx.strokeRect(el.x, el.y, el.width, el.height);
+                        } else if (el.type === 'circle') {
+                            ctx.beginPath();
+                            const r = Math.sqrt(Math.pow(el.width, 2) + Math.pow(el.height, 2)) / 2;
+                            ctx.arc(el.x + el.width / 2, el.y + el.height / 2, Math.abs(r), 0, 2 * Math.PI);
+                            ctx.stroke();
+                        } else if (el.type === 'line') {
+                            ctx.beginPath();
+                            ctx.moveTo(el.x, el.y);
+                            ctx.lineTo(el.x + el.width, el.y + el.height);
+                            ctx.stroke();
+                        } else if (el.type === 'text' && el.text) {
+                            const fontSize = Math.max(12, el.strokeWidth * 4);
+                            ctx.font = `${fontSize}px 'Lato', sans-serif`;
+                            ctx.textBaseline = 'top';
+
+                            // LÓGICA DE MULTILÍNEA
+                            const lines = el.text.split('\n');
+                            let maxWidth = 0;
+                            lines.forEach((line, index) => {
+                                ctx.fillText(line, el.x, el.y + (index * fontSize * 1.2));
+                                const m = ctx.measureText(line);
+                                if (m.width > maxWidth) maxWidth = m.width;
+                            });
+
+                            el.width = maxWidth;
+                            el.height = lines.length * fontSize * 1.2;
+                        }
+                    });
+
+                    if (selectedId) {
+                        const el = elements.find(e => e.id === selectedId);
+                        if (el) {
+                            const isPencil = el.type === 'pencil' || el.type === 'eraser';
+                            ctx.strokeStyle = '#ff6f00';
+                            ctx.lineWidth = 1;
+                            ctx.setLineDash([5, 5]);
+                            let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                            if (isPencil) {
+                                const xs = el.points.map(p => p.x); const ys = el.points.map(p => p.y);
+                                bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by;
+                            } else {
+                                if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                                if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                            }
+                            ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10);
+                            ctx.setLineDash([]);
+                            if (!isPencil) {
+                                const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                                ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2;
+                                Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); });
+                            }
+                        }
+                    }
+                    ctx.restore();
+                }, [elements, size, panOffset, selectedId]);
+
+                const updateHistory = (newEls) => {
+                    const newHist = history.slice(0, historyStep + 1);
+                    newHist.push(newEls);
+                    setHistory(newHist);
+                    setHistoryStep(newHist.length - 1);
+                };
+                const undo = () => { if (historyStep > 0) { setHistoryStep(s => s - 1); setElements(history[historyStep - 1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } };
+                const redo = () => { if (historyStep < history.length - 1) { setHistoryStep(s => s + 1); setElements(history[historyStep + 1]); setSelectedId(null); } };
+                const getPos = (e) => {
+                    const rect = canvasRef.current.getBoundingClientRect();
+                    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                    return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y };
+                };
+
+                const isPointInElement = (x, y, el) => {
+                    const padding = 10;
+                    let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                    if (el.type === 'pencil' || el.type === 'eraser') {
+                        const xs = el.points.map(p => p.x); const ys = el.points.map(p => p.y);
+                        bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by;
+                    } else {
+                        if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                        if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                    }
+                    return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding;
+                };
+
+                // MANEJO DE DOBLE CLIC (EDITAR)
+                const handleDoubleClick = (e) => {
+                    const { x, y } = getPos(e);
+                    for (let i = elements.length - 1; i >= 0; i--) {
+                        const el = elements[i];
+                        if (el.type === 'text' && isPointInElement(x, y, el)) {
+                            setDefaultText(el.text);
+                            setWritingPos({ x: el.x, y: el.y });
+                            setTool('text');
+                            setAction('writing');
+                            setColor(el.color);
+                            setStrokeWidth(el.strokeWidth);
+                            const newEls = elements.filter(item => item.id !== el.id);
+                            setElements(newEls);
+                            return;
+                        }
+                    }
+                };
+
+                const handleDown = (e) => {
+                    if (['BUTTON', 'INPUT', 'TEXTAREA', 'LABEL', 'SELECT'].includes(e.target.tagName)) return;
+                    e.preventDefault();
+
+                    const { x, y } = getPos(e);
+
+                    if (tool === 'selection') {
+                        if (selectedId) {
+                            const el = elements.find(e => e.id === selectedId);
+                            if (el && (el.type !== 'pencil' && el.type !== 'eraser')) {
+                                let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                                if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                                if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                                const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                                for (const key in handles) {
+                                    if (isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; }
+                                }
+                            }
+                        }
+                        let foundId = null;
+                        if (selectedId) {
+                            const el = elements.find(e => e.id === selectedId);
+                            if (el && isPointInElement(x, y, el)) foundId = selectedId;
+                        }
+                        if (!foundId) {
+                            for (let i = elements.length - 1; i >= 0; i--) {
+                                if (isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; }
+                            }
+                        }
+                        setSelectedId(foundId);
+                        if (foundId) {
+                            setAction('moving');
+                            const el = elements.find(e => e.id === foundId);
+                            setDragOffset({ x: x - el.x, y: y - el.y });
+                        } else {
+                            setAction('panning');
+                        }
+                        return;
+                    }
+
+                    if (tool === 'text') {
+                        if (action === 'writing') {
+                            finishWriting();
+                        } else {
+                            setDefaultText('');
+                            setAction('writing');
+                            setWritingPos({ x, y });
+                        }
+                        return;
+                    }
+
+                    setAction('drawing');
+                    const newEl = {
+                        id: generateId(),
+                        type: tool,
+                        x, y,
+                        width: 0, height: 0,
+                        color, strokeWidth,
+                        points: (tool === 'pencil' || tool === 'eraser') ? [{ x, y }] : undefined
+                    };
+                    setElements(prev => [...prev, newEl]);
+                };
+
+                const handleMove = (e) => {
+                    const { x, y } = getPos(e);
+                    if (tool === 'selection' && selectedId && action === 'none') {
+                        const el = elements.find(e => e.id === selectedId);
+                        if (el) {
+                            if (el.type !== 'pencil' && el.type !== 'eraser') {
+                                let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                                if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                                if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                                const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                                let cursor = null;
+                                for (const key in handles) { if (isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; }
+                                setHoverCursor(cursor);
+                            }
+                            if (!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); }
+                        } else { setHoverCursor(null); }
+                    } else if (action === 'none') { setHoverCursor(null); }
+
+                    if (action === 'panning') { setPanOffset(p => ({ x: p.x + (e.movementX || 0), y: p.y + (e.movementY || 0) })); return; }
+
+                    if (action === 'moving' && selectedId) {
+                        const els = [...elements];
+                        const index = els.findIndex(e => e.id === selectedId);
+                        const el = els[index];
+                        const newX = x - dragOffset.x;
+                        const newY = y - dragOffset.y;
+                        if (el.type === 'pencil' || el.type === 'eraser') {
+                            const dx = newX - el.x; const dy = newY - el.y;
+                            const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy }));
+                            els[index] = { ...el, x: newX, y: newY, points: newPoints };
+                        } else {
+                            els[index] = { ...el, x: newX, y: newY };
+                        }
+                        setElements(els);
+                        return;
+                    }
+
+                    if (action === 'resizing' && selectedId && resizeHandle) {
+                        const els = [...elements];
+                        const index = els.findIndex(e => e.id === selectedId);
+                        const el = els[index];
+                        if (el.type === 'text') {
+                            let newHeight = el.height;
+                            if (resizeHandle.includes('b')) newHeight = y - el.y;
+                            if (resizeHandle.includes('t')) newHeight = el.y + el.height - y;
+                            if (newHeight < 10) newHeight = 10;
+                            const newStrokeWidth = newHeight / 4;
+                            const lines = el.text.split('\n');
+                            const maxLen = Math.max(...lines.map(l => l.length));
+                            els[index] = {
+                                ...el,
+                                strokeWidth: newStrokeWidth,
+                                height: lines.length * newHeight * 1.2,
+                                width: maxLen * newHeight * 0.6
+                            };
+                        } else {
+                            let newX = el.x, newY = el.y, newW = el.width, newH = el.height;
+                            if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; }
+                            else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; }
+                            else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; }
+                            else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; }
+                            els[index] = { ...el, x: newX, y: newY, width: newW, height: newH };
+                        }
+                        setElements(els);
+                        return;
+                    }
+
+                    if (action === 'drawing') {
+                        const els = [...elements];
+                        const curr = els[els.length - 1];
+                        if (tool === 'pencil' || tool === 'eraser') curr.points.push({ x, y });
+                        else { curr.width = x - curr.x; curr.height = y - curr.y; }
+                        setElements(els);
+                    }
+                };
+
+                const handleUp = () => {
+                    if (action === 'drawing' || action === 'resizing' || action === 'moving') updateHistory(elements);
+                    if (action !== 'writing') { setAction('none'); setResizeHandle(null); }
+                };
+
+                const finishWriting = () => {
+                    if (!textAreaRef.current || !writingPos) {
+                        setAction('none'); setWritingPos(null); return;
+                    }
+                    const text = textAreaRef.current.value.trim();
+                    if (text) {
+                        const fontSize = Math.max(12, strokeWidth * 4);
+                        const lines = text.split('\n');
+                        const totalHeight = lines.length * fontSize * 1.2;
+                        const maxLineLen = Math.max(...lines.map(l => l.length));
+                        const approxWidth = maxLineLen * fontSize * 0.6;
+
+                        const newEls = [...elements, {
+                            id: generateId(),
+                            type: 'text',
+                            x: writingPos.x,
+                            y: writingPos.y,
+                            text, color, strokeWidth,
+                            width: approxWidth,
+                            height: totalHeight
+                        }];
+                        setElements(newEls);
+                        updateHistory(newEls);
+                    }
+                    setAction('none');
+                    setWritingPos(null);
+                    setDefaultText('');
+                };
+
+                const save = () => {
+                    const a = document.createElement('a'); a.download = 'pizarra-tucaneo.png'; a.href = canvasRef.current.toDataURL(); a.click();
+                };
+
+                let cursorClass = 'cursor-crosshair';
+                if (hoverCursor) cursorClass = `cursor-${hoverCursor}`;
+                else if (tool === 'selection') cursorClass = action === 'panning' ? 'cursor-grabbing' : 'cursor-default';
+                else if (tool === 'text') cursorClass = 'cursor-text';
+                else if (tool === 'eraser') cursorClass = 'cursor-eraser';
+
+                return (
+                    <div ref={containerRef}
+                        onDoubleClick={handleDoubleClick}
+                        className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}>
+
+                        <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200">
+                            <button onClick={() => setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool === 'selection' ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                            <div className="w-full h-px bg-gray-200 my-1"></div>
+                            <button onClick={() => setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool === 'eraser' ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button>
+                            {[{ id: 'pencil', i: I.Pencil, t: 'Lápiz' }, { id: 'rectangle', i: I.Square, t: 'Cuadrado' }, { id: 'circle', i: I.Circle, t: 'Círculo' }, { id: 'line', i: I.Line, t: 'Línea' }, { id: 'text', i: I.Type, t: 'Texto' }].map(t => (
+                                <button key={t.id} onClick={() => setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool === t.id ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>
+                            ))}
+                        </div>
+
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto">
+                            <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" />
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span>
+                                <input type="range" min="1" max="20" value={strokeWidth} onChange={e => setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" />
+                            </div>
+                            <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div>
+                            <div className="flex gap-1 flex-shrink-0">
+                                <button onClick={undo} disabled={historyStep < 0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button>
+                                <button onClick={redo} disabled={historyStep >= history.length - 1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button>
+                                <button onClick={() => { if (!confirmClear) { setConfirmClear(true); setTimeout(() => setConfirmClear(false), 3000) } else { setElements([]); setConfirmClear(false); } }} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear ? 'bg-red-500 text-white px-3' : 'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button>
+                            </div>
+                            <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button>
+                        </div>
+
+                        <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" />
+
+                        {action === 'writing' && writingPos && (
+                            <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left || 0), top: writingPos.y + panOffset.y, }}>
+                                <textarea
+                                    ref={textAreaRef}
+                                    onKeyDown={(e) => {
+                                        // Evitar que el evento suba a Reveal.js
+                                        e.stopPropagation();
+                                        // Si es ESC, cerramos, pero ENTER ahora funciona normal (salto de línea)
+                                        if (e.key === 'Escape') finishWriting();
+                                    }}
+                                    onBlur={finishWriting}
+                                    className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-both font-sans"
+                                    style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }}
+                                    placeholder="Escriba aquí..."
+                                />
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            // --- APP PRINCIPAL (Contenedor) ---
+            function App() {
+                const [tab, setTab] = useState('board');
+                const close = () => window.toggleDrawer();
+                useEffect(() => {
+                    const handler = (e) => {
+                        if (e.key.toLowerCase() === 'h' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) close();
+                    };
+                    window.addEventListener('keydown', handler);
+                    const toolHandler = (e) => {
+                        const toolName = e.detail;
+                        setTab(toolName);
+                        const drawer = document.getElementById('tucaneo-drawer');
+                        if (drawer && !drawer.classList.contains('is-open')) {
+                            drawer.classList.add('is-open');
+                        }
+                    };
+                    window.addEventListener('open-tool', toolHandler);
+                    return () => {
+                        window.removeEventListener('keydown', handler);
+                        window.removeEventListener('open-tool', toolHandler);
+                    };
+                }, []);
+                return (
+                    <div className="h-full flex flex-col bg-slate-50">
+                        <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6">
+                            <button onClick={() => setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab === 'board' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                            <button onClick={() => setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab === 'vocab' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-400'}`}>{I.Book} Glosario</button>
+                            <div className="flex-1"></div>
+                        </div>
+                        <div className="flex-1 relative overflow-hidden">
+                            <div className={`absolute inset-0 ${tab === 'board' ? 'z-10' : '-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule /></div>
+                            <div className={`absolute inset-0 ${tab === 'vocab' ? 'z-10' : '-z-10 opacity-0 pointer-events-none'}`}><VocabModule /></div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // RENDERIZADO FINAL
+            const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+            root.render(<App />);
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
+        <script>
+            // Lógica Principal
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isSmallScreen = window.innerWidth < 1024;
+            const isMobile = isTouch || isSmallScreen;
+
+            if (isMobile) {
+                console.log("Modo Móvil: Desactivando lógica de presentación.");
+                document.body.classList.add('is-mobile');
+
+                // NO INICIAMOS REVEAL.JS EN MÓVIL
+                // Dejamos que el CSS haga todo el trabajo de scroll vertical.
+
+                // Barra de progreso manual
+                window.addEventListener('scroll', () => {
+                    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = (winScroll / height) * 100;
+                    const progressBar = document.getElementById('scroll-progress');
+                    if (progressBar) progressBar.style.width = scrolled + '%';
+
+                    const btn = document.getElementById('back-to-top');
+                    if (btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+                });
+            } else {
+                // PC: Iniciamos Reveal (Solo aquí)
+                Reveal.initialize({
+                    // ... tu configuración de PC ...
+                    width: "100%", height: "100%", margin: 0, minScale: 1, maxScale: 1,
+                    transition: 'slide', backgroundTransition: 'fade', background: '#fefce8'
+                });
+            }
+
+            function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+            function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+            // --- CONTROL INTELIGENTE DE TECLAS (VERSIÓN FINAL) ---
+            function handleZoomNavigation(e) {
+                // 1. Ignorar si el usuario escribe en un input
+                if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+                // 2. Guardamos la posición EXACTA (diapositiva H y V) antes de movernos
+                const indicesBefore = Reveal.getIndices();
+                let actionTriggered = false;
+
+                // 3. Ejecutamos la acción de Reveal
+                if (e.key === 'ArrowLeft') {
+                    Reveal.prev();
+                    actionTriggered = true;
+                } else if (e.key === 'ArrowRight' || e.code === 'Space') {
+                    Reveal.next();
+                    actionTriggered = true;
+                }
+
+                // 4. Decidimos si hacer scroll arriba o no
+                if (actionTriggered) {
+                    const indicesAfter = Reveal.getIndices();
+
+                    // LÓGICA: Si la diapositiva Horizontal (h) o Vertical (v) cambió, es una diapositiva nueva -> SCROLL TOP
+                    // Si h y v son iguales, significa que solo cambió el fragmento (f) -> NO SCROLL
+                    if (indicesBefore.h !== indicesAfter.h || indicesBefore.v !== indicesAfter.v) {
+                        window.scrollTo(0, 0);
+                    }
+                    // Si no, nos quedamos quietos para ver la respuesta que acabamos de revelar.
+                }
+            }
+
+            function forceZoom() {
+                if (isMobile) return;
+
+                const container = document.querySelector('.reveal');
+                const btn = document.getElementById('btn-zoom');
+                const html = document.documentElement;
+                const body = document.body;
+
+                const isActive = container.classList.contains('is-zoomed');
+
+                if (!isActive) {
+                    // --- ACTIVAR ZOOM ---
+                    html.classList.add('is-scrollable');
+                    body.classList.add('is-scrollable');
+                    container.classList.add('is-zoomed');
+
+                    // Apagamos teclado nativo de Reveal y encendemos el nuestro
+                    Reveal.configure({ keyboard: false });
+                    document.addEventListener('keydown', handleZoomNavigation);
+
+                    btn.classList.add('active');
+
+                } else {
+                    // --- DESACTIVAR ZOOM ---
+                    window.scrollTo(0, 0);
+                    html.classList.remove('is-scrollable');
+                    body.classList.remove('is-scrollable');
+                    container.classList.remove('is-zoomed');
+
+                    // Restauramos todo
+                    Reveal.configure({ keyboard: true });
+                    document.removeEventListener('keydown', handleZoomNavigation);
+                    Reveal.layout();
+
+                    btn.classList.remove('active');
+                }
+            }
+
+            const sounds = {
+                confetti: new Audio('https://www.myinstants.com/media/sounds/success-sound-effect.mp3'),
+                applause: new Audio('https://www.myinstants.com/media/sounds/kids-cheering.mp3'),
+                error: new Audio('https://www.myinstants.com/media/sounds/error-sound.mp3')
+            };
+
+            function playSound(name) {
+                console.log("Playing sound:", name);
+                if (sounds[name]) {
+                    sounds[name].currentTime = 0;
+                    sounds[name].volume = 0.5;
+                    sounds[name].play().then(() => {
+                        console.log("Sound played successfully");
+                    }).catch(e => {
+                        console.warn("Audio play failed:", e);
+                    });
+                }
+            }
+
+            function react(type) {
+                playSound(type);
+                switch (type) {
+                    case 'confetti':
+                        var duration = 2000; var end = Date.now() + duration;
+                        (function frame() {
+                            confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                            confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                            if (Date.now() < end) requestAnimationFrame(frame);
+                        }());
+                        break;
+                    case 'applause':
+                        confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                        break;
+                    case 'error':
+                        break;
+                }
+            }
+
+            // Mental Agility Check Function
+            function checkMentalAgility() {
+                const inputs = document.querySelectorAll('#mental-agility-exercises input[data-correct]');
+                let correctCount = 0;
+                let totalCount = inputs.length;
+
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                    const resultIcon = input.parentElement.querySelector('.result-icon');
+                    const exerciseDiv = input.parentElement;
+
+                    // Normalize answers (remove accents for comparison)
+                    const normalizeText = (text) => {
+                        return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    };
+
+                    const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer) || userAnswer === correctAnswer;
+
+                    if (isCorrect) {
+                        correctCount++;
+                        resultIcon.innerHTML = '<i class="fas fa-check-circle text-emerald-500 text-xl"></i>';
+                        exerciseDiv.classList.remove('border-red-300', 'bg-red-50');
+                        exerciseDiv.classList.add('border-emerald-300', 'bg-emerald-50');
+                        input.classList.add('text-emerald-700', 'font-bold');
+                    } else {
+                        resultIcon.innerHTML = '<i class="fas fa-times-circle text-red-500 text-xl"></i>';
+                        exerciseDiv.classList.remove('border-emerald-300', 'bg-emerald-50');
+                        exerciseDiv.classList.add('border-red-300', 'bg-red-50');
+                        input.classList.add('text-red-600');
+
+                        // Show correct answer
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('correct-answer')) {
+                            const correctSpan = document.createElement('span');
+                            correctSpan.className = 'correct-answer text-emerald-600 font-bold text-sm ml-2';
+                            correctSpan.textContent = `✓ ${correctAnswer}`;
+                            resultIcon.after(correctSpan);
+                        }
+                    }
+                });
+
+                // Display results
+                const resultDiv = document.getElementById('mental-agility-result');
+                const percentage = Math.round((correctCount / totalCount) * 100);
+
+                if (correctCount === totalCount) {
+                    resultDiv.innerHTML = `<span class="text-emerald-600">🎉 Perfect! ${correctCount}/${totalCount} - ¡Perfecto!</span>`;
+                    react('confetti');
+                } else if (percentage >= 70) {
+                    resultDiv.innerHTML = `<span class="text-orange-600">👍 Good! ${correctCount}/${totalCount} (${percentage}%) - ¡Bien!</span>`;
+                    playSound('applause');
+                } else {
+                    resultDiv.innerHTML = `<span class="text-slate-600">📝 Keep practicing! ${correctCount}/${totalCount} (${percentage}%) - ¡Sigue practicando!</span>`;
+                }
+            }
+
+            // Translation Challenge Check Function
+            function checkTranslation() {
+                const inputs = document.querySelectorAll('#translation-exercises input[data-correct]');
+                let correctCount = 0;
+                let totalCount = inputs.length;
+
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                    const feedbackDiv = input.parentElement.querySelector('.result-feedback');
+                    const exerciseDiv = input.parentElement;
+
+                    // Normalize answers (remove accents and punctuation for comparison)
+                    const normalizeText = (text) => {
+                        return text
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u036f]/g, "")
+                            .replace(/[¿?¡!.,;:]/g, "")
+                            .trim();
+                    };
+
+                    const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer) || userAnswer === correctAnswer;
+
+                    if (isCorrect) {
+                        correctCount++;
+                        feedbackDiv.innerHTML = '<div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 text-lg"></i><span class="text-emerald-600 font-bold text-sm">¡Correcto! / Correct!</span></div>';
+                        exerciseDiv.classList.remove('border-red-300', 'bg-red-50');
+                        exerciseDiv.classList.add('border-emerald-300', 'bg-emerald-50');
+                        input.classList.add('text-emerald-700', 'font-bold');
+                        input.classList.remove('text-red-600');
+                    } else {
+                        feedbackDiv.innerHTML = `<div class="flex flex-col gap-1"><div class="flex items-center gap-2"><i class="fas fa-times-circle text-red-500 text-lg"></i><span class="text-red-600 font-bold text-sm">Incorrecto / Incorrect</span></div><div class="text-emerald-600 font-bold text-sm">✓ ${correctAnswer}</div></div>`;
+                        exerciseDiv.classList.remove('border-emerald-300', 'bg-emerald-50');
+                        exerciseDiv.classList.add('border-red-300', 'bg-red-50');
+                        input.classList.add('text-red-600');
+                        input.classList.remove('text-emerald-700', 'font-bold');
+                    }
+                });
+
+                // Display results
+                const resultDiv = document.getElementById('translation-result');
+                const percentage = Math.round((correctCount / totalCount) * 100);
+
+                if (correctCount === totalCount) {
+                    resultDiv.innerHTML = `<span class="text-emerald-600">🎉 Perfect! ${correctCount}/${totalCount} - ¡Perfecto!</span>`;
+                    react('confetti');
+                } else if (percentage >= 70) {
+                    resultDiv.innerHTML = `<span class="text-orange-600">👍 Good! ${correctCount}/${totalCount} (${percentage}%) - ¡Bien!</span>`;
+                    playSound('applause');
+                } else {
+                    resultDiv.innerHTML = `<span class="text-slate-600">📝 Keep practicing! ${correctCount}/${totalCount} (${percentage}%) - ¡Sigue practicando!</span>`;
+                }
+            }
+
+            // Check Colombia Text Exercise
+            function checkColombiaText() {
+                const inputs = document.querySelectorAll('#colombia-text-exercise .text-input-inline');
+                let correctCount = 0;
+                const totalCount = inputs.length;
+
+                inputs.forEach(input => {
+                    const userAnswer = input.value.trim();
+                    const correctAnswer = input.getAttribute('data-correct');
+
+                    // Normalize text for comparison (case-insensitive)
+                    const normalizeText = (text) => {
+                        return text
+                            .toLowerCase()
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u036f]/g, "")
+                            .trim();
+                    };
+
+                    const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer);
+
+                    // Remove previous classes
+                    input.classList.remove('correct', 'incorrect');
+
+                    if (isCorrect) {
+                        correctCount++;
+                        input.classList.add('correct');
+                    } else {
+                        input.classList.add('incorrect');
+                    }
+                });
+
+                // Display results
+                const resultDiv2 = document.getElementById('colombia-result');
+                const percentage2 = Math.round((correctCount / totalCount) * 100);
+
+                if (correctCount === totalCount) {
+                    resultDiv2.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${totalCount} - Perfect!</span>`;
+                    if (typeof confetti !== 'undefined') {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                } else if (percentage2 >= 70) {
+                    resultDiv2.innerHTML = `<span class="text-orange-600">👍 ¡Bien! ${correctCount}/${totalCount} (${percentage2}%) - Good!</span>`;
+                } else {
+                    resultDiv2.innerHTML = `<span class="text-slate-600">📝 Sigue practicando - ${correctCount}/${totalCount} (${percentage2}%)</span>`;
+                }
+            }
+
+
+            // GENERIC SLIDE CHECKER FUNCTION (FLEXIBLE)
+            function checkSlide(containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                const inputs = container.querySelectorAll('input[data-correct]');
+                let correctCount = 0;
+                const total = inputs.length;
+
+                inputs.forEach(input => {
+                    const userVal = input.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const correctVal = input.getAttribute('data-correct').trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                    // Logic: Exact match OR contains (if correctVal is "120" and user types "120 titles")
+                    let isCorrect = userVal === correctVal;
+
+                    // Allow fuzzy matching for specific known answers
+                    if (!isCorrect) {
+                        // If the correct answer is short (like numbers), require exact match roughly
+                        if (correctVal.length < 3) {
+                            isCorrect = userVal.includes(correctVal);
+                        } else {
+                            // For longer text, check if the core word is present
+                            if (userVal.includes(correctVal)) isCorrect = true;
+                        }
+                    }
+
+                    // Specific overrides based on slide context (hardcoded safety)
+                    if (correctVal === '120') isCorrect = userVal.includes('120');
+                    if (correctVal === '8 horas') isCorrect = userVal.includes('8') || userVal.includes('ocho');
+                    if (correctVal === 'terreno') isCorrect = userVal.includes('terreno') || userVal.includes('economia');
+
+                    const parent = input.parentElement;
+                    let feedback = parent.querySelector('.feedback-icon');
+                    if (!feedback) {
+                        // Try to find it nearby if structure differs
+                        if (input.nextElementSibling && input.nextElementSibling.classList.contains('feedback-icon')) {
+                            feedback = input.nextElementSibling;
+                        } else {
+                            feedback = document.createElement('span');
+                            feedback.className = 'feedback-icon ml-2';
+                            parent.appendChild(feedback);
+                        }
+                    }
+
+                    // Reset Styling
+                    input.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-500', 'bg-red-50', 'text-red-700', 'font-bold');
+                    feedback.innerHTML = '';
+
+                    if (isCorrect) {
+                        correctCount++;
+                        input.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'font-bold');
+                        feedback.innerHTML = '<i class="fas fa-check text-emerald-500"></i>';
+                    } else {
+                        input.classList.add('border-red-500', 'bg-red-50', 'text-red-700');
+                        // Show correct answer tooltip or simple X
+                        feedback.innerHTML = `<i class="fas fa-times text-red-500" title="Respuesta: ${input.getAttribute('data-correct')}"></i>`;
+                    }
+                });
+
+                if (correctCount === total) {
+                    if (typeof react === 'function') react('confetti');
+                } else if (correctCount > 0) {
+                    if (typeof playSound === 'function') playSound('applause');
+                } else {
+                    if (typeof playSound === 'function') playSound('error');
+                }
+            }
+
+        </script>
+        <style>
+            @keyframes spin-slow {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes spin-reverse {
+                from {
+                    transform: rotate(360deg);
+                }
+
+                to {
+                    transform: rotate(0deg);
+                }
+            }
+
+            @keyframes float-up {
+
+                0%,
+                100% {
+                    transform: translateY(0) translateX(-50%);
+                }
+
+                50% {
+                    transform: translateY(-10px) translateX(-50%);
+                }
+            }
+
+            /* Custom Classes for JS injection */
+            .animate-spin-slow {
+                animation: spin-slow 10s linear infinite;
+            }
+
+            .animate-spin-reverse {
+                animation: spin-reverse 8s linear infinite;
+            }
+
+            .animate-shake {
+                animation: shake 0.4s ease-in-out;
+            }
+
+            @keyframes shake {
+
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+
+                25% {
+                    transform: translateX(-5px);
+                }
+
+                75% {
+                    transform: translateX(5px);
+                }
+            }
+        </style>
+
+        <script>
+            // --- GAME LOGIC: ENERGY CORE ---
+            const CoreGame = {
+                state: {
+                    level: 0,
+                    score: 0,
+                    maxLevels: 10,
+                    currentVerb: null,
+                    isLocked: false
+                },
+                data: [
+                    { verb: "HACER", yo: "Hago", distractors: ["Haco", "Haca", "Hacer"] },
+                    { verb: "PONER", yo: "Pongo", distractors: ["Pono", "Pona", "Poni"] },
+                    { verb: "SALIR", yo: "Salgo", distractors: ["Salo", "Sali", "Sala"] },
+                    { verb: "TRAER", yo: "Traigo", distractors: ["Traio", "Trao", "Trae"] },
+                    { verb: "VER", yo: "Veo", distractors: ["Vo", "Voi", "Vi"] },
+                    { verb: "SABER", yo: "Sé", distractors: ["Sabo", "Se", "Sabe"] },
+                    { verb: "DAR", yo: "Doy", distractors: ["Do", "Da", "Dio"] },
+                    { verb: "IR", yo: "Voy", distractors: ["Iro", "Yo", "Va"] },
+                    { verb: "ESTAR", yo: "Estoy", distractors: ["Esto", "Estoy", "Esta"] },
+                    { verb: "CONOCER", yo: "Conozco", distractors: ["Conoco", "Conoce", "Conoca"] }
+                ],
+
+                init: function () {
+                    this.state.level = 0;
+                    this.state.score = 0;
+                    this.state.isLocked = false;
+
+                    // Shuffle data
+                    this.data.sort(() => Math.random() - 0.5);
+
+                    document.getElementById('game-intro').classList.remove('hidden');
+                    document.getElementById('game-interface').classList.add('hidden');
+                    document.getElementById('game-result').classList.add('hidden');
+
+                    // Reset HUD
+                    this.updateHUD();
+                },
+
+                start: function () {
+                    document.getElementById('game-intro').classList.add('hidden');
+                    document.getElementById('game-interface').classList.remove('hidden');
+                    this.loadLevel();
+                },
+
+                loadLevel: function () {
+                    if (this.state.level >= this.state.maxLevels) {
+                        this.endGame();
+                        return;
+                    }
+
+                    this.state.isLocked = false;
+                    const currentData = this.data[this.state.level];
+                    this.state.currentVerb = currentData;
+
+                    // Update HUD
+                    this.updateHUD();
+
+                    // Set Core Verb
+                    const coreOrb = document.getElementById('core-orb');
+                    coreOrb.className = "w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-purple-800 shadow-[0_0_50px_rgba(124,58,237,0.5)] flex items-center justify-center transform transition-all duration-300 z-10 relative overflow-hidden";
+                    document.getElementById('target-verb').innerText = currentData.verb;
+
+                    // Generate Options
+                    const options = [currentData.yo, ...currentData.distractors];
+                    options.sort(() => Math.random() - 0.5);
+
+                    const container = document.getElementById('options-container');
+                    container.innerHTML = '';
+
+                    // Positions for 4 satellites (Top, Right, Bottom, Left) - Handling positioning via translate classes to center them relative to container center
+                    const positions = [
+                        "top-4 left-1/2 -translate-x-1/2",           // Top
+                        "top-1/2 right-4 translate-x-1/2 -translate-y-1/2", // Right
+                        "bottom-4 left-1/2 -translate-x-1/2",        // Bottom
+                        "top-1/2 left-4 -translate-x-1/2 -translate-y-1/2"  // Left
+                    ];
+
+                    options.forEach((opt, index) => {
+                        const btn = document.createElement('button');
+                        // Add some randomness to float animation delay
+                        const delay = Math.random() * 2;
+                        // We use inline style for delay
+                        // Note: 'absolute' positioning with specific coordinate classes
+                        btn.className = `absolute ${positions[index]} pointer-events-auto bg-white hover:bg-purple-50 text-slate-800 font-bold py-3 px-6 rounded-full shadow-lg transform transition-all hover:scale-110 active:scale-95 border-2 border-slate-100`;
+                        btn.innerText = opt;
+                        btn.style.animation = `float-up 3s ease-in-out infinite ${delay}s`; // Use custom keyframe
+
+                        btn.onclick = () => this.handleChoice(opt, btn);
+                        container.appendChild(btn);
+                    });
+                },
+
+                updateHUD: function () {
+                    const levelContainer = document.getElementById('level-indicator');
+                    if (!levelContainer) return;
+                    levelContainer.innerHTML = '';
+                    for (let i = 0; i < this.state.maxLevels; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = `w-2 h-2 rounded-full transition-colors ${i < this.state.level ? 'bg-purple-500' : 'bg-slate-200'}`;
+                        levelContainer.appendChild(dot);
+                    }
+                    const scoreDisplay = document.getElementById('score-display');
+                    if (scoreDisplay) scoreDisplay.innerText = this.state.score.toString().padStart(4, '0');
+                },
+
+                handleChoice: function (choice, btnElement) {
+                    if (this.state.isLocked) return;
+                    this.state.isLocked = true;
+
+                    const correct = this.state.currentVerb.yo;
+                    const coreOrb = document.getElementById('core-orb');
+
+                    // Disable all buttons
+                    const allBtns = document.getElementById('options-container').querySelectorAll('button');
+                    allBtns.forEach(b => b.classList.add('pointer-events-none', 'opacity-50'));
+                    btnElement.classList.remove('opacity-50');
+
+                    if (choice === correct) {
+                        // Correct
+                        this.state.score += 100;
+                        if (typeof playSound === 'function') playSound('confetti');
+
+                        // Visuals
+                        btnElement.classList.remove('bg-white', 'text-slate-800');
+                        btnElement.classList.add('bg-green-500', 'text-white', 'border-green-400', 'scale-125');
+
+                        coreOrb.className = "w-32 h-32 rounded-full bg-gradient-to-br from-green-400 via-emerald-500 to-green-600 shadow-[0_0_50px_rgba(16,185,129,0.8)] flex items-center justify-center transform scale-110 transition-all duration-300 z-10 relative overflow-hidden";
+
+                        setTimeout(() => {
+                            this.state.level++;
+                            this.loadLevel();
+                        }, 1200);
+                    } else {
+                        // Incorrect
+                        if (typeof playSound === 'function') playSound('error');
+                        this.state.score = Math.max(0, this.state.score - 50);
+
+                        btnElement.classList.add('bg-red-500', 'text-white', 'animate-shake');
+
+                        // Shake core
+                        coreOrb.classList.add('animate-shake');
+                        setTimeout(() => coreOrb.classList.remove('animate-shake'), 500);
+
+                        setTimeout(() => {
+                            this.state.isLocked = false;
+                            // Re-enable buttons
+                            allBtns.forEach(b => {
+                                b.classList.remove('pointer-events-none', 'opacity-50', 'bg-red-500', 'text-white', 'animate-shake');
+                                // Reset style if needed, but simplest is just continue
+                                if (b === btnElement) {
+                                    b.classList.add('bg-white', 'text-slate-800');
+                                    b.classList.remove('bg-red-500', 'text-white');
+                                }
+                            });
+                            this.updateHUD();
+                        }, 1000);
+                    }
+                },
+
+                endGame: function () {
+                    document.getElementById('game-interface').classList.add('hidden');
+                    document.getElementById('game-result').classList.remove('hidden');
+                    document.getElementById('final-score').innerText = this.state.score;
+
+                    const msg = document.getElementById('result-message');
+                    if (this.state.score >= 800) {
+                        msg.innerText = "Amazing! The core is fully charged!";
+                        if (typeof react === 'function') react('confetti');
+                    } else {
+                        msg.innerText = "Good effort! Try again for 100% efficiency.";
+                    }
+                }
+            };
+
+            // Expose to global
+            window.CoreGame = CoreGame;
+        </script>
+</body>
+
+</html>

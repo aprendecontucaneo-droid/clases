@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Español - Nivel A2 (Avanzado)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+
+        /* --- ESTILOS GENERALES (PC: MODO ESCRITORIO) --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; 
+            margin: 0; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm 20mm 30mm 20mm; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            overflow: hidden; 
+            margin-bottom: 20px;
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 140px; text-align: center; }
+        .short-input { width: 40px; text-align: center; }
+        .long-input { width: 100%; box-sizing: border-box; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            .page { width: 100%; min-height: auto; padding: 15px 15px 80px 15px; box-shadow: none; margin-bottom: 0; }
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+            .btn-container { position: relative; top: 0; right: 0; flex-direction: row; justify-content: center; width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; border-radius: 0; }
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (Limpio A4)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; padding: 0; margin: 0; display: block; }
+            .page { width: 100%; max-width: 100%; margin: 0; padding: 15mm 15mm; box-shadow: none; border: none; page-break-after: always; min-height: 290mm; }
+            .btn-container, .no-print { display: none !important; }
+            input[type="text"], textarea { background: none !important; border-bottom: 1px solid #000; }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            .img-container, h2, table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="btn-container">
+    <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+    <button class="ui-btn print-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+</div>
+
+<div class="page">
+    <div class="header-top">
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+        <div class="student-info">
+            <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+            <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+        </div>
+    </div>
+
+    <h1>EXAMEN DE ESPAÑOL - NIVEL A2 (AVANZADO)</h1>
+    
+    <div class="img-container">
+        <img src="https://image.pollinations.ai/prompt/spanish_language_grammar_elements_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Gramática Española">
+    </div>
+
+    <h2>PARTE 1: VERBOS IRREGULARES EN PRESENTE SIMPLE</h2>
+    <p class="instruction">Evaluación de cambios de raíz (e-ie, o-ue, e-i) y formas irregulares en "yo".</p>
+
+    <p>1. Completa las siguientes oraciones con la forma correcta del verbo entre paréntesis.</p>
+    <ul>
+        <li>Mi hermano siempre <input type="text" class="inline-input"> (perder - e-ie) las llaves de la casa.</li>
+        <li>¿A qué hora <input type="text" class="inline-input"> (almorzar - o-ue) ustedes normalmente?</li>
+        <li>Yo <input type="text" class="inline-input"> (traer) un vino para la cena de esta noche.</li>
+        <li>El camarero nos <input type="text" class="inline-input"> (servir - e-i) el café muy caliente.</li>
+        <li>Si no entiendes la lección, yo te la <input type="text" class="inline-input"> (repetir - e-i).</li>
+        <li>Los fines de semana, yo <input type="text" class="inline-input"> (salir) con mis amigos al cine.</li>
+        <li>¿Tú <input type="text" class="inline-input"> (preferir - e-ie) vivir en la ciudad o en el campo?</li>
+        <li>Nosotros <input type="text" class="inline-input"> (poder - o-ue) terminar el proyecto mañana.</li>
+    </ul>
+
+    <p>2. Error de concordancia. Encuentra el error en cada frase y escríbela correctamente.</p>
+    <div style="margin-bottom: 10px;">
+        <p>a) Yo conduczco muy bien por la carretera.</p>
+        <input type="text" class="long-input">
+    </div>
+    <div style="margin-bottom: 10px;">
+        <p>b) Ellos jueguen al fútbol todos los martes.</p>
+        <input type="text" class="long-input">
+    </div>
+    <div style="margin-bottom: 10px;">
+        <p>c) ¿Tú queres venir a la fiesta con nosotros?</p>
+        <input type="text" class="long-input">
+    </div>
+
+    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+</div>
+
+<div class="page">
+    <h2>PARTE 2: VERBOS REFLEXIVOS Y RUTINA DIARIA</h2>
+    <p class="instruction">Evaluación del uso de pronombres (me, te, se, nos, os, se) y significado.</p>
+
+    <div class="img-container">
+        <img src="https://image.pollinations.ai/prompt/person_waking_up_morning_routine_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Rutina Diaria">
+    </div>
+
+    <p>3. Transforma estas oraciones utilizando el verbo reflexivo correspondiente.</p>
+    <p><em>Ejemplo: Yo lavo mi cara -> Yo me lavo la cara.</em></p>
+    <ul>
+        <li>Ella pone la ropa a los niños. -> Ella <input type="text" class="inline-input"> rápido.</li>
+        <li>Nosotros despertamos a las 6:00 a.m. -> Nosotros <input type="text" class="inline-input"> a las 6:00 a.m.</li>
+        <li>¿Tú bañas por la mañana? -> ¿Tú <input type="text" class="inline-input"> por la mañana?</li>
+    </ul>
+
+    <p>4. Lectura y gramática. Lee el texto y conjuga los verbos reflexivos.</p>
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+        "Normalmente, Camilo (1) <input type="text" class="inline-input"> (levantarse) a las siete. Primero (2) <input type="text" class="inline-input"> (ducharse) con agua fría para despertar y luego (3) <input type="text" class="inline-input"> (afeitarse). Después, (4) <input type="text" class="inline-input"> (ponerse) su camisa favorita y desayuna. Antes de salir, él (5) <input type="text" class="inline-input"> (lavarse) los dientes. Por la noche, él y su novia (6) <input type="text" class="inline-input"> (acostarse) temprano para leer."
+    </div>
+
+    <h2>PARTE 3: POR vs. PARA</h2>
+    <p class="instruction">Evaluación de usos: causa, finalidad, tiempo, lugar y destinatario.</p>
+
+    <p>5. Escribe la opción correcta (POR o PARA) según el contexto.</p>
+    <table>
+        <tr>
+            <td>Este regalo es <input type="text" class="inline-input"> mi madre, es su cumpleaños.</td>
+            <td>Caminamos <input type="text" class="inline-input"> el parque porque hace un día muy bonito.</td>
+        </tr>
+        <tr>
+            <td>Estudio español <input type="text" class="inline-input"> trabajar en una empresa en Madrid.</td>
+            <td>El tren sale <input type="text" class="inline-input"> la mañana, a las 8:00 exactamente.</td>
+        </tr>
+        <tr>
+            <td>Cambié mi teléfono viejo <input type="text" class="inline-input"> uno nuevo.</td>
+            <td>Gracias <input type="text" class="inline-input"> ayudarme con la mudanza.</td>
+        </tr>
+        <tr>
+            <td>El informe debe estar listo <input type="text" class="inline-input"> el próximo viernes.</td>
+            <td>La velocidad máxima es de 100 kilómetros <input type="text" class="inline-input"> hora.</td>
+        </tr>
+    </table>
+
+    <p>6. Explica brevemente por qué usamos la preposición en estas frases:</p>
+    <p>"Estudio para aprender": <input type="text" class="long-input"></p>
+    <p>"Hago ejercicio por salud": <input type="text" class="long-input"></p>
+
+    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+</div>
+
+<div class="page">
+    <h2>PARTE 4: COMPARATIVOS</h2>
+    <p class="instruction">Evaluación de estructuras: más/menos... que, tan... como y formas irregulares.</p>
+
+    <div class="img-container">
+        <img src="https://image.pollinations.ai/prompt/comparing_size_speed_objects_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Comparativos">
+    </div>
+
+    <p>7. Compara los siguientes elementos utilizando la estructura indicada.</p>
+    <ul>
+        <li>El avión / el coche (superioridad - velocidad): <br> <input type="text" class="long-input"></li>
+        <li>La película / el libro (inferioridad - interesante): <br> <input type="text" class="long-input"></li>
+        <li>El invierno / el verano (igualdad - bonito): <br> <input type="text" class="long-input"></li>
+        <li>Mi hermano / yo (irregular - edad/mayor): <br> <input type="text" class="long-input"></li>
+    </ul>
+
+    <p>8. Escribe un breve párrafo (5-6 líneas) comparando tu vida actual con tu vida hace cinco años. Utiliza al menos tres comparativos diferentes.</p>
+    <textarea></textarea>
+
+    <h2>PARTE 5: PRODUCCIÓN ESCRITA (INTEGRACIÓN)</h2>
+    <p class="instruction">Instrucción: Escribe un correo electrónico a un amigo contándole sobre un nuevo hábito que quieres empezar. Debes incluir un verbo irregular, dos reflexivos, por/para y una comparación.</p>
+    
+    <textarea style="height: 200px;"></textarea>
+
+    <div style="text-align: center; margin-top: 30px; font-weight: bold; color: var(--primary-color);">
+        ¡Mucho éxito en tu examen!
+    </div>
+
+    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+</div>
+
+</body>
+</html>

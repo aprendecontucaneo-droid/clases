@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tucaneo Lab: El Verbo Gustar - A1 Advanced</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: #f8f9fa; 
+            --text-main: #2c3e50; 
+        }
+        body { font-family: 'Lato', sans-serif; }
+
+        /* ESTILOS BASE */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        
+        /* INPUTS Y CAJAS CON TRANSPARENCIA */
+        .interactive-input {
+            background: rgba(255, 248, 225, 0.95); 
+            border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+            border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+            font-size: 0.9em; padding: 5px; min-width: 60px;
+        }
+        .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+        
+        .exercise-row {
+            background: rgba(255, 255, 255, 0.92); /* Fondo semi-transparente */
+            border-radius: 12px; border-left: 5px solid var(--primary);
+            display: flex; align-items: center; flex-wrap: wrap; box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            margin-top: 10px; padding: 10px;
+        }
+        .concept-box { 
+            background: rgba(255, 255, 255, 0.92); /* Fondo semi-transparente */
+            border-radius: 15px; border: 1px solid #eee; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 20px; text-align: left; 
+        }
+
+        .highlight { color: var(--accent); font-weight: bold; }
+        .note { font-size: 0.8em; color: #666; font-style: italic; margin-top: 10px; }
+        
+        /* TABLAS PERSONALIZADAS */
+        .grammar-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; font-size: 0.8em; }
+        .grammar-table th { background-color: var(--primary); color: white; padding: 10px; border-radius: 5px 5px 0 0; }
+        .grammar-table td { 
+            background-color: rgba(255, 255, 255, 0.92); /* Fondo tabla semi-transparente */
+            padding: 10px; border-bottom: 2px solid #eee; vertical-align: middle; 
+        }
+        .grammar-table tr:hover td { background-color: #f1f8e9; }
+
+        /* --- MÓVIL (< 900px) --- */
+        @media screen and (max-width: 900px) {
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 8px; }
+            .nav-btn { 
+                padding: 6px 10px; font-size: 11px; border-radius: 12px; 
+                background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;
+            }
+            .nav-btn.exit { background: var(--accent); }
+            .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+            #floating-cta { 
+                background: white; color: var(--primary); border: 1px solid var(--primary);
+                padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+                left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .reveal { font-size: 18px; }
+            .reveal h1 { font-size: 1.8em; margin-top: 60px; margin-bottom: 20px; }
+            .reveal h2 { font-size: 1.4em; margin-top: 40px; margin-bottom: 20px; }
+            .reveal h3 { font-size: 1.2em; margin-top: 10px; }
+            .grid-responsive { display: flex; flex-direction: column; gap: 10px; justify-content: flex-start; padding-bottom: 40px; }
+            .img-container { max-height: 160px; width: auto; max-width: 100%; display: block; margin: 0 auto; border-radius: 10px; }
+            .exercise-row { padding: 8px 10px; margin-bottom: 6px; font-size: 0.9em; gap: 5px; }
+            .final-slide-container { margin-top: 40px; }
+            .cert-badge { width: 80px; height: 80px; margin: -30px auto 10px auto; border: 4px solid var(--background); }
+            .cert-badge img { width: 50px; }
+            .final-img { max-width: 80%; }
+            .two-col-list { display: flex; flex-direction: column; }
+            .grammar-table { font-size: 0.7em; }
+        }
+     
+        /* --- PC (> 901px) --- */
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+                padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--accent); }
+            .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+            .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+            #floating-cta {
+                bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+                padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+            }
+            #floating-cta:hover { background: var(--primary); color: white; }
+            .reveal { font-size: 24px; }
+            .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; padding-bottom: 5px; }
+            .reveal h2 { font-size: 1.8em; margin-bottom: 30px; color: var(--primary); }
+            .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+            .img-container { width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+            .exercise-row { padding: 12px 20px; margin-bottom: 15px; font-size: 1em; gap: 15px; border-radius: 8px; border-left-width: 4px; }
+            .grid-responsive > div:first-child { display: flex; flex-direction: column; justify-content: center; }
+            .final-slide-container { max-width: 700px; margin: auto; }
+            .final-img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+            .cert-badge { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: -50px auto 20px auto; position: relative; border: 5px solid var(--background); }
+            .cert-badge img { width: 75px; }
+            .two-col-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+        .sentence-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 10px; width: 100%; }
+        @media print { #fixed-logo, #top-nav, #floating-cta { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+    <div id="top-nav">
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+            Descargar PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h1>El Verbo Gustar</h1>
+                        <h3 style="color: var(--accent);">Advanced A1 Lab</h3>
+                        <p>Understanding "Likes" and "Dislikes" in Spanish.</p>
+                        <p style="font-size: 0.8em; margin-top: 20px;">Mastering the backwards logic of Spanish emotion verbs.</p>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/tucan-arcoiris-felicidad.png-scaled-e1765659968484.png"img-container" alt="Intro">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>The "Backwards" Logic</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>In English, we say: <br><strong>"I like the book."</strong></p>
+                        <p>In Spanish, we don't say "I like". We say something closer to:</p>
+                        <div class="concept-box">
+                            <p style="font-size: 1.2em; text-align: center; color: var(--primary);">
+                                "To me is pleasing the book."<br>
+                                <strong>Me gusta el libro.</strong>
+                            </p>
+                        </div>
+                        <p class="note">Notice: "The book" is actually the <u>subject</u> of the sentence!</p>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/Cerebro_espacio.png-scaled-e1765851958139.png"Logic">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>The Ingredients: Pronouns</h2>
+                <p>We do not use <em>Yo, Tú, Él</em>. We use <strong>Indirect Object Pronouns</strong>.</p>
+                <div class="grid-responsive">
+                    <div class="two-col-list" style="width: 100%;">
+                        <div class="concept-box">
+                            <p><strong>A mí</strong> &rarr; <span class="highlight">Me</span> (to me)</p>
+                            <p><strong>A ti</strong> &rarr; <span class="highlight">Te</span> (to you)</p>
+                            <p><strong>A él/ella/Ud.</strong> &rarr; <span class="highlight">Le</span> (to him/her/you)</p>
+                        </div>
+                        <div class="concept-box">
+                            <p><strong>A nosotros</strong> &rarr; <span class="highlight">Nos</span> (to us)</p>
+                            <p><strong>A vosotros</strong> &rarr; <span class="highlight">Os</span> (to you all)</p>
+                            <p><strong>A ellos/ellas/Uds.</strong> &rarr; <span class="highlight">Les</span> (to them)</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/estudiantes_senalando-escuela.png-scaled-e1765852074326.png" class="img-container" alt="Pronouns">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Rule #1: Singular Objects</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>If the thing you like is <strong>singular</strong> (one thing), use <span class="highlight">GUSTA</span>.</p>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Me <strong>gusta</strong> el café.</span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Te <strong>gusta</strong> la música.</span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Nos <strong>gusta</strong> la clase.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/educacion-clase-musica-tarde.png-scaled-e1765851824194.png" class="img-container" alt="Coffee">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice: Singular</h2>
+                <p>Fill in the blank with <strong>gusta</strong>.</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">1. Me <input class="interactive-input" type="text" placeholder="..."> el chocolate.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">2. ¿Te <input class="interactive-input" type="text" placeholder="..."> la película?</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">3. Nos <input class="interactive-input" type="text" placeholder="..."> la idea.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">4. Le <input class="interactive-input" type="text" placeholder="..."> el libro.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Rule #2: Plural Objects</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>If the thing you like is <strong>plural</strong> (more than one), use <span class="highlight">GUSTAN</span>.</p>
+                        <p class="note">The 'n' is added because the subject is plural.</p>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Me <strong>gustan</strong> los libros.</span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Te <strong>gustan</strong> las flores.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/Stack%20of%20books%20colorful%20vector%20flat%20minimal?width=500&height=400&nologo=true" class="img-container" alt="Books">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice: Plural</h2>
+                <p>Fill in the blank with <strong>gustan</strong>.</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">1. Me <input class="interactive-input" type="text" placeholder="..."> los perros.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">2. ¿Te <input class="interactive-input" type="text" placeholder="..."> tus clases?</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">3. Nos <input class="interactive-input" type="text" placeholder="..."> los tacos.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">4. Les <input class="interactive-input" type="text" placeholder="..."> los deportes.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Quick Check: Singular vs Plural</h2>
+                <p>Choose <strong>gusta</strong> or <strong>gustan</strong> based on the noun.</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">1. Me <input class="interactive-input" type="text" placeholder="..."> el hotel. (Singular)</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">2. Me <input class="interactive-input" type="text" placeholder="..."> los hoteles. (Plural)</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">3. Le <input class="interactive-input" type="text" placeholder="..."> las fiestas.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">4. Le <input class="interactive-input" type="text" placeholder="..."> la fiesta.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Rule #3: Verbs (Actions)</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>When talking about activities (verbs), ALWAYS use the singular <span class="highlight">GUSTA</span>.</p>
+                        <p class="note">Even if you list multiple verbs, keep it singular.</p>
+                        <div class="concept-box">
+                            <p><strong>Me gusta viajar.</strong> (I like to travel)</p>
+                            <p><strong>Me gusta escribir y leer.</strong> (I like to write and read)</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/viajera-paris-leyendo.png-scaled-e1765852237663.png" class="img-container" alt="Cooking">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice: Activities</h2>
+                <p>Complete the sentences with <strong>gusta</strong> (verbs) or <strong>gustan</strong> (plural nouns).</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">1. Nos <input class="interactive-input" type="text" placeholder="..."> bailar salsa.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">2. Me <input class="interactive-input" type="text" placeholder="..."> los zapatos nuevos.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">3. Te <input class="interactive-input" type="text" placeholder="..."> estudiar español.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">4. Les <input class="interactive-input" type="text" placeholder="..."> correr por la mañana.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>The Ambiguity of "Le"</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>The pronoun <span class="highlight">Le</span> can mean: To him, To her, To you.</p>
+                        <p>To avoid confusion, we add a "Clarifier" (Prepositional Phrase) at the start.</p>
+                    </div>
+                    <div>
+                        <div class="concept-box">
+                            <p><strong>A él</strong> le gusta el vino.</p>
+                            <p><strong>A ella</strong> le gusta el vino.</p>
+                            <p><strong>A usted</strong> le gusta el vino.</p>
+                            <p><strong>A María</strong> le gusta el vino.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Emphasis for Me & Te</h2>
+                <p>Even though "Me" and "Te" are clear, we can add phrases for emphasis.</p>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="concept-box">
+                            <p><strong>A mí</strong> me gusta el café.</p>
+                            <p class="note">"As for me, I like coffee."</p>
+                        </div>
+                        <div class="concept-box" style="margin-top: 10px;">
+                            <p><strong>A ti</strong> te gustan los gatos.</p>
+                            <p class="note">"As for you, you like cats."</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/Cat%20drinking%20coffee%20funny%20vector%20flat?width=500&height=400&nologo=true" class="img-container" alt="Cats and Coffee">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice: Who likes it? (1/2)</h2>
+                <p>Write the correct clarification phrase (e.g., <em>A mí, A ellos...</em>).</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">1. (To my mom) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> le gusta cocinar.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">2. (To us) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> nos gustan las vacaciones.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">3. (To them) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> les gusta dormir.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">4. (To you - formal) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> le gusta el café.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice: Who likes it? (2/2)</h2>
+                <p>Write the correct clarification phrase.</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">5. (To me) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> me encanta bailar.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">6. (To Juan) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> le duelen los pies.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">7. (To you - informal) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> te molesta el ruido.</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">8. (To the girls) <input class="interactive-input" style="width:120px" type="text" placeholder="..."> les interesan los libros.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>The Negative "No"</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>To say you don't like something, simply place <span class="highlight" style="color: red;">NO</span> before the pronoun.</p>
+                        <div class="concept-box">
+                            <p><strong>No</strong> me gusta cocinar.</p>
+                            <p><strong>No</strong> te gustan las arañas.</p>
+                            <p>A ella <strong>no</strong> le gusta el frío.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/cocina-mujer_y_arana-enojada.png-scaled-e1765852350797.png" class="img-container" alt="Dislike">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Verb: Encantar (To love)</h2>
+                <p>Works exactly like Gustar but stronger. <br><em>"To be enchanting to..."</em></p>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Me <strong>encanta</strong> viajar. (I love to travel)</span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">Me <strong>encantan</strong> los viajes. (I love trips)</span>
+                        </div>
+                        <p class="note">Note: Encantar is strong! Don't usually use it with "No".</p>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/Heart%20eyes%20emoji%20traveling%20vector%20flat?width=500&height=400&nologo=true" class="img-container" alt="Love it">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Verb: Interesar (To interest)</h2>
+                <p>Is it interesting to you?</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">Me <strong>interesa</strong> la historia. (History interests me)</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">Nos <strong>interesan</strong> los idiomas. (Languages interest us)</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">¿Te <strong>interesa</strong> aprender?</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Verb: Doler (To hurt)</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <p>Used for body parts. <br><em>"To me hurts the head."</em></p>
+                        <p class="note">Important: Use "el/la/los/las" (articles), NOT "mi/tu" (possessives) for body parts.</p>
+                        <div class="concept-box">
+                            <p>Me <strong>duele</strong> la cabeza.</p>
+                            <p>Me <strong>duelen</strong> los pies.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/Cute%20character%20with%20headache%20vector%20flat%20minimal?width=500&height=400&nologo=true" class="img-container" alt="Pain">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Verb: Molestar (To bother)</h2>
+                <p>Does it annoy you?</p>
+                <div class="exercise-row">
+                    <span class="sentence-line">Me <strong>molesta</strong> el ruido. (The noise bothers me)</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">¿Te <strong>molestan</strong> los mosquitos?</span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">A él no le <strong>molesta</strong> nada.</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Drill: Translate (1/2)</h2>
+                <p>Translate the sentences mentally or type them.</p>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">1. We like the beach.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">2. She loves dogs.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">3. My feet hurt.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">4. I don't like to cook.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Drill: Translate (2/2)</h2>
+                <p>Keep going! Translate to Spanish.</p>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">5. They are interested in art.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">6. You (informal) like the car.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">7. He is bothered by the heat.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+                <div class="exercise-row">
+                    <div style="width:100%">
+                        <p style="margin:5px 0; font-size:0.9em">8. I love to travel.</p>
+                        <input class="interactive-input" style="width:100%; text-align:left" type="text" placeholder="Type here...">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Visual Summary</h2>
+                <p style="font-size: 0.8em;">Follow this table from left to right to build any sentence.</p>
+                <table class="grammar-table">
+                    <thead>
+                        <tr>
+                            <th style="background:#ddd; color:#555;">Clarifier (Optional)</th>
+                            <th>Pronoun (IOP)</th>
+                            <th>Verb Form</th>
+                            <th>Subject (The "Like")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A mí</td>
+                            <td><strong>Me</strong></td>
+                            <td rowspan="3" style="border-right:1px solid #eee;"><strong>Gusta</strong><br><em>(Singular/Action)</em></td>
+                            <td>el café (Singular)</td>
+                        </tr>
+                        <tr>
+                            <td>A ti</td>
+                            <td><strong>Te</strong></td>
+                            <td>bailar (Verb)</td>
+                        </tr>
+                        <tr>
+                            <td>A él / ella</td>
+                            <td><strong>Le</strong></td>
+                            <td>esta idea (Singular)</td>
+                        </tr>
+                        <tr>
+                            <td>A nosotros</td>
+                            <td><strong>Nos</strong></td>
+                            <td rowspan="3" style="background:rgba(255, 248, 225, 0.9); border-left:3px solid var(--accent);"><strong>Gustan</strong><br><em>(Plural)</em></td>
+                            <td>los libros (Plural)</td>
+                        </tr>
+                        <tr>
+                            <td>A vosotros</td>
+                            <td><strong>Os</strong></td>
+                            <td>las flores (Plural)</td>
+                        </tr>
+                        <tr>
+                            <td>A ellos / ellas</td>
+                            <td><strong>Les</strong></td>
+                            <td>los gatos (Plural)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <div class="final-slide-container">
+                    <h2 style="color: var(--primary); font-family: 'Merriweather', serif; font-size: 2.2em;">Excellent Practice!</h2>
+                    <p class="subtitle" style="font-size: 1.2em; color: var(--text-main);">You have completed the A1+ El Verbo Gustar Lab.</p>
+                    
+                    <div style="position: relative; display: inline-block;">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" alt="Happy" class="final-img">
+                        <div class="cert-badge">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Sello">
+                        </div>
+                    </div>
+                    
+                    <p style="font-size: 1em; color: #777; font-style: italic; margin-top: 10px;">Don't forget to download this PDF for review.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // 1. Array con las 3 imágenes de fondo de la marca
+        const brandBackgrounds = [
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-2-1-1.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-3.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-1-1-e1766103644135.jpg"
+        ];
+
+        // 2. Seleccionar todas las diapositivas
+        const slides = document.querySelectorAll('.reveal .slides > section');
+
+        // 3. Asignar imagen aleatoria a cada una
+        slides.forEach(slide => {
+            const randomImg = brandBackgrounds[Math.floor(Math.random() * brandBackgrounds.length)];
+            
+            // Asignar los atributos de Reveal.js
+            slide.setAttribute('data-background-image', randomImg);
+            slide.setAttribute('data-background-size', 'cover');
+            slide.setAttribute('data-background-position', 'center center');
+        });
+    </script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: false, history: false,
+            
+            // LÓGICA RESPONSIVA CRÍTICA
+            width: isMobile ? 360 : 1200,
+            height: isMobile ? 600 : 700,
+            
+            margin: isMobile ? 0.05 : 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            overview: false
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Clase - El Mercado - Tucaneo Academy</title>
+    
+    <!-- LIBRERÍAS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: #f8f9fa; 
+            --text-main: #2c3e50; 
+        }
+        body { background-color: var(--background); font-family: 'Lato', sans-serif; overflow-x: hidden; }
+
+        /* --- DRAWER (HERRAMIENTAS) --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.3);
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column; text-align: left;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn {
+            position: absolute; top: 12px; right: 12px; z-index: 20001;
+            background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%;
+            border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+        }
+        #safe-close-btn:hover { transform: scale(1.1); }
+
+        /* --- UI GLOBAL --- */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        .reveal p, .reveal li { font-size: 0.85em; line-height: 1.5; }
+        
+        /* INPUTS */
+        .interactive-input {
+            background: #fff8e1; border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+            border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+            padding: 4px; font-size: 0.9em; width: 140px;
+        }
+        .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+        
+        .exercise-container {
+            max-height: 400px; overflow-y: auto; padding-right: 10px;
+        }
+        .exercise-row {
+            background: white; border-radius: 12px; border-left: 5px solid var(--primary);
+            display: flex; align-items: center; flex-wrap: wrap; box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            padding: 10px 15px; margin-bottom: 10px;
+        }
+        .grammar-box {
+            background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 10px; padding: 15px;
+            text-align: left; margin-bottom: 15px; font-size: 0.75em;
+        }
+        .grammar-title { font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
+
+        /* CONVERSATION BOX */
+        .conversation-box {
+            background: #fff3e0; border: 2px dashed var(--accent); border-radius: 15px;
+            padding: 15px; margin-top: 15px; text-align: left; position: relative;
+        }
+        .conversation-badge {
+            position: absolute; top: -12px; left: 20px; background: var(--accent); color: white;
+            font-size: 0.7em; padding: 2px 10px; border-radius: 10px; font-weight: bold;
+        }
+
+        /* MATH TICKET STYLE */
+        .math-ticket {
+            background: #fff; width: 100%; max-width: 400px; margin: auto;
+            padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            font-family: 'Courier New', Courier, monospace;
+            border-top: 10px solid #333; border-bottom: 10px jagged #333;
+            position: relative;
+        }
+        .math-ticket::before {
+            content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px;
+            background: linear-gradient(45deg, transparent 50%, white 50%), linear-gradient(-45deg, transparent 50%, white 50%);
+            background-size: 20px 20px;
+        }
+
+        /* --- ESTILOS DE VIDEO (CRITICOS) --- */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* Ratio 16:9 estricto */
+            height: 0;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            background-color: #000;
+            margin-left: auto; margin-right: auto;
+        }
+        .video-wrapper a {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            text-decoration: none; border: 0; overflow: hidden;
+        }
+        .video-cover-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: center center;
+            transition: transform 0.4s ease-out; transform-origin: center center;
+            z-index: 1;
+        }
+        .video-wrapper:hover .video-cover-img { transform: scale(1.06); }
+        .play-button-overlay {
+            position: relative; z-index: 2;
+            background: #FF0000; width: 68px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+        .video-wrapper:hover .play-button-overlay { transform: scale(1.1); }
+        .play-triangle {
+            width: 0; height: 0; border-top: 10px solid transparent; 
+            border-bottom: 10px solid transparent; border-left: 18px solid white;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 900px) {
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 5px; }
+            .nav-btn { 
+                padding: 6px 8px; font-size: 10px; border-radius: 12px; 
+                background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer;
+            }
+            .nav-btn.whiteboard { background: var(--accent); order: 1; }
+            .nav-btn.download { order: 2; }
+            .nav-btn.exit { background: #555; order: 3; }
+            .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+            
+            #floating-cta { 
+                background: white; color: var(--primary); border: 1px solid var(--primary);
+                padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+                left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .reveal { font-size: 16px; }
+            .reveal h1 { font-size: 1.6em; margin-top: 60px; margin-bottom: 20px; }
+            .grid-responsive { display: flex; flex-direction: column; gap: 10px; justify-content: flex-start; padding-bottom: 40px; }
+            .final-img { max-width: 80%; }
+        }
+
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+                padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .nav-btn.whiteboard { background-color: var(--accent); }
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--text-main); }
+            .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+            .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+            
+            #floating-cta {
+                bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+                padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+            }
+            #floating-cta:hover { background: var(--primary); color: white; }
+            .reveal { font-size: 24px; }
+            .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; padding-bottom: 5px; }
+            .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+            .final-slide-container { max-width: 700px; margin: auto; }
+            .final-img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        }
+        .sentence-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 10px; width: 100%; }
+        @media print { #fixed-logo, #top-nav, #floating-cta, #tucaneo-drawer { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <!-- UI FIJA -->
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()" title="Cerrar">✕</button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Herramientas" class="btn-icon">
+            Herramientas
+        </button>
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+            PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+
+    <!-- CONTENIDO DIAPOSITIVAS -->
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: INTRODUCCIÓN -->
+            <section>
+                <h1>De Compras en el Mercado</h1>
+                <p class="text-xl">Nivel A2 - Vocabulario y Gramática</p>
+                <div class="mt-8 flex justify-center">
+                    <img src="https://image.pollinations.ai/prompt/vector%20illustration%20of%20a%20happy%20spanish%20food%20market%20with%20vegetables%20and%20fruits?width=600&height=400&nologo=true" style="border-radius: 15px; max-width: 60%; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                </div>
+                <p class="mt-4 text-gray-600">Vamos a aprender: Vocabulario de comida, precios, "Gustar" y "Hay".</p>
+            </section>
+
+            <!-- SLIDE 2: VIDEO 1 - TIENDAS Y HAY -->
+            <section>
+                <h2>1. Las Tiendas del Mercado</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="video-wrapper">
+                             <a href="https://www.youtube.com/watch?v=etd0-GwJJ0Y&t=36s" target="_blank" rel="noopener noreferrer">
+                                <img src="https://image.pollinations.ai/prompt/vector%20illustration%20spanish%20meat%20shop%20carniceria%20and%20fish%20shop%20pescaderia?width=800&height=450&nologo=true" class="video-cover-img" alt="Tiendas">
+                                <div class="play-button-overlay"><div class="play-triangle"></div></div>
+                             </a>
+                        </div>
+                        <p style="font-size: 0.8em; font-style: italic;">Mira el video (0:36 - 1:14)</p>
+                        
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">¿Cómo es el mercado en tu ciudad?</p>
+                            <ul class="list-disc ml-5 text-sm text-gray-600 mt-1">
+                                <li>¿Hay carnicerías?</li>
+                                <li>¿Qué tiendas hay cerca de tu casa?</li>
+                                <li>¿Prefieres comprar en el supermercado o en el mercado?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="grammar-box">
+                            <span class="grammar-title">Grammar: HAY (There is/There are)</span>
+                            <p>We use <b>"Hay"</b> to express existence.</p>
+                            <ul class="list-disc ml-4">
+                                <li>En el mercado <b>hay</b> fruta. (There is fruit)</li>
+                                <li><b>Hay</b> muchas tiendas. (There are many shops)</li>
+                            </ul>
+                        </div>
+                        <p class="mb-2"><b>Completa con vocabulario del video:</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. En la carnicería hay <input class="interactive-input" type="text" placeholder="...">.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. En la pescadería hay <input class="interactive-input" type="text" placeholder="...">.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. En el mercado hay muchas <input class="interactive-input" type="text" placeholder="(shops)"> de fruta.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. También hay un <input class="interactive-input" type="text" placeholder="..."> donde puedes comer bien.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. En la frutería <input class="interactive-input" type="text" placeholder="(there is/are)"> fruta fresca.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: VIDEO 2 - PRECIOS Y GUSTAR -->
+            <section>
+                <h2>2. Fruta y el Verbo Gustar</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="video-wrapper">
+                             <a href="https://www.youtube.com/watch?v=etd0-GwJJ0Y&t=84s" target="_blank" rel="noopener noreferrer">
+                                <img src="https://image.pollinations.ai/prompt/vector%20illustration%20cherries%20uvas%20platanos%20fruit%20market%20stand?width=800&height=450&nologo=true" class="video-cover-img" alt="Frutas">
+                                <div class="play-button-overlay"><div class="play-triangle"></div></div>
+                             </a>
+                        </div>
+                        
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">¿Qué te gusta comer?</p>
+                            <ul class="list-disc ml-5 text-sm text-gray-600 mt-1">
+                                <li>¿Te gustan las frutas dulces o ácidas?</li>
+                                <li>¿Te gusta cocinar?</li>
+                                <li>Dime 3 cosas que te gustan y 3 que no te gustan.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="grammar-box">
+                            <span class="grammar-title">Grammar: GUSTAR (To like)</span>
+                            <p><b>Me gusta</b> + Singular (El plátano)<br><b>Me gustan</b> + Plural (Las uvas)</p>
+                        </div>
+                        <p class="mb-2"><b>Completa con "gusta" o "gustan":</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. Me <input class="interactive-input" type="text" placeholder="..."> las cerezas.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. Me <input class="interactive-input" type="text" placeholder="..."> comprar en el mercado.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. No me <input class="interactive-input" type="text" placeholder="..."> gastar mucho dinero.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. Me <input class="interactive-input" type="text" placeholder="..."> las uvas.</div>
+                            </div>
+                             <div class="exercise-row">
+                                 <div class="sentence-line">5. ¿Te <input class="interactive-input" type="text" placeholder="..."> el chocolate?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: SER VS ESTAR -->
+            <section>
+                <h2>3. ¿Ser o Estar?</h2>
+                <div class="grid-responsive">
+                    <div>
+                         <div class="grammar-box">
+                            <span class="grammar-title">Grammar: SER vs ESTAR</span>
+                            <p><b>SER (Description):</b> Las cerezas <b>son</b> caras (siempre).<br>
+                            <b>ESTAR (State/Condition):</b> Las piñas <b>están</b> de oferta (hoy).</p>
+                        </div>
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">Describe tu comida favorita:</p>
+                            <ul class="list-disc ml-5 text-sm text-gray-600 mt-1">
+                                <li>¿Es saludable?</li>
+                                <li>¿Está rica fría o caliente?</li>
+                                <li>¿Es cara o barata en tu país?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2"><b>Elige: Es, Son, Está, Están:</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. Las cerezas <input class="interactive-input" type="text" placeholder="..."> muy caras. (Característica)</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. Las piñas <input class="interactive-input" type="text" placeholder="..."> de oferta hoy. (Estado)</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. La sandía no <input class="interactive-input" type="text" placeholder="..."> cara. (Característica)</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. Los kiwis <input class="interactive-input" type="text" placeholder="..."> verdes. (Color)</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. ¡Esta manzana <input class="interactive-input" type="text" placeholder="..."> deliciosa! (Sabor ahora)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: VIDEO 3 - FRUTAS GRANDES -->
+            <section>
+                <h2>4. Precios de Frutas</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="video-wrapper">
+                             <a href="https://www.youtube.com/watch?v=etd0-GwJJ0Y&t=128s" target="_blank" rel="noopener noreferrer">
+                                <img src="https://image.pollinations.ai/prompt/vector%20illustration%20watermelon%20and%20melon%20fruit%20market?width=800&height=450&nologo=true" class="video-cover-img" alt="Sandía y Melón">
+                                <div class="play-button-overlay"><div class="play-triangle"></div></div>
+                             </a>
+                        </div>
+                         <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">¿Es caro comer sano?</p>
+                            <ul class="list-disc ml-5 text-sm text-gray-600 mt-1">
+                                <li>¿Cuánto cuesta un café en tu ciudad?</li>
+                                <li>¿Las frutas tropicales son caras en tu país?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2"><b>Escucha y escribe el precio (números):</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. El kilo de sandía cuesta <input class="interactive-input" type="text" placeholder="€">.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. El kilo de melón cuesta <input class="interactive-input" type="text" placeholder="€">.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. La piña cuesta <input class="interactive-input" type="text" placeholder="€">.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. El melocotón cuesta <input class="interactive-input" type="text" placeholder="€"> el kilo.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. Los kiwis cuestan <input class="interactive-input" type="text" placeholder="€"> el kilo.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: GRAMÁTICA - DEMOSTRATIVOS -->
+            <section>
+                <h2>5. Demostrativos</h2>
+                <div class="grid-responsive">
+                    <div class="text-left">
+                        <div class="grammar-box">
+                            <span class="grammar-title">Demonstratives</span>
+                            <table class="w-full text-sm">
+                                <tr><td></td><td><b>Aquí (Here)</b></td><td><b>Ahí (There)</b></td></tr>
+                                <tr><td><b>Masc.</b></td><td>Este</td><td>Ese</td></tr>
+                                <tr><td><b>Fem.</b></td><td>Esta</td><td>Esa</td></tr>
+                                <tr><td><b>Plural</b></td><td>Estos/Estas</td><td>Esos/Esas</td></tr>
+                            </table>
+                        </div>
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">Señala cosas en la clase:</p>
+                            <p class="text-sm">"Este bolígrafo es azul", "Esa silla es negra".</p>
+                        </div>
+                    </div>
+                    <div>
+                         <p class="mb-2"><b>Completa con Este, Esta, Ese, Esa...:</b></p>
+                         <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. (Aquí) <input class="interactive-input" type="text" placeholder="..."> tienda es grande.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. (Ahí) <input class="interactive-input" type="text" placeholder="..."> melón es barato.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. (Aquí) <input class="interactive-input" type="text" placeholder="..."> piñas están de oferta.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. (Ahí) <input class="interactive-input" type="text" placeholder="..."> plátanos son de Canarias.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. (Aquí) <input class="interactive-input" type="text" placeholder="..."> frutería me gusta mucho.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: VIDEO 4 - VERDURAS -->
+            <section>
+                <h2>6. Las Verduras</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <div class="video-wrapper">
+                             <a href="https://www.youtube.com/watch?v=etd0-GwJJ0Y&t=200s" target="_blank" rel="noopener noreferrer">
+                                <img src="https://image.pollinations.ai/prompt/vector%20illustration%20lettuce%20potatoes%20tomatoes%20vegetables%20market?width=800&height=450&nologo=true" class="video-cover-img" alt="Verduras">
+                                <div class="play-button-overlay"><div class="play-triangle"></div></div>
+                             </a>
+                        </div>
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">¿Comes verduras?</p>
+                            <ul class="list-disc ml-5 text-sm text-gray-600 mt-1">
+                                <li>¿Te gustan las ensaladas?</li>
+                                <li>¿Qué ingredientes pones en tu ensalada?</li>
+                                <li>¿Te gustan los pimientos?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2"><b>Traduce al español:</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. Potatoes: <input class="interactive-input" type="text" placeholder="..."></div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. Lettuce: <input class="interactive-input" type="text" placeholder="..."></div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. Peppers: <input class="interactive-input" type="text" placeholder="..."></div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. Tomatoes: <input class="interactive-input" type="text" placeholder="..."></div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. Salad: <input class="interactive-input" type="text" placeholder="..."></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: PRESENTE SIMPLE -->
+            <section>
+                <h2>7. Verbos: Necesitar, Querer, Costar</h2>
+                <div class="grid-responsive">
+                    <div class="text-left">
+                         <div class="grammar-box">
+                            <span class="grammar-title">Conjugation (Present)</span>
+                            <p><b>Yo:</b> Necesit-o, Quier-o, Compr-o, Prefier-o<br>
+                            <b>Tú:</b> Necesit-as, Quier-es, Compr-as, Prefier-es<br>
+                            <b>Él/Ella/Cosa:</b> Cuest-a (Singular), Cuest-an (Plural)</p>
+                        </div>
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">¿Qué necesitas esta semana?</p>
+                            <p class="text-sm">"Yo necesito agua y pan, pero quiero comprar chocolate".</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2"><b>Conjuga el verbo entre paréntesis:</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. Hoy (necesitar/yo) <input class="interactive-input" type="text" placeholder="..."> comida.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. Yo (querer) <input class="interactive-input" type="text" placeholder="..."> un kilo de uvas.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. (Preferir/yo) <input class="interactive-input" type="text" placeholder="..."> comer piña.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. Las manzanas (costar) <input class="interactive-input" type="text" placeholder="..."> un euro.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. ¿Cuánto (costar) <input class="interactive-input" type="text" placeholder="..."> el melón?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- SLIDE 9: LISTA DE LA COMPRA -->
+             <section>
+                <h2>8. La Lista de la Compra Final</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/vector%20illustration%20shopping%20list%20paper%20and%20pen?width=600&height=400&nologo=true" style="border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <div class="conversation-box">
+                            <span class="conversation-badge">🗣️ Let's Talk!</span>
+                            <p class="font-bold text-gray-700 mt-2">Tu lista ideal:</p>
+                            <p class="text-sm">Si tienes 20 euros, ¿qué compras para una cena con amigos?</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2"><b>Al final (3:51), ¿qué cantidades compra?</b></p>
+                        <div class="exercise-container">
+                            <div class="exercise-row">
+                                 <div class="sentence-line">1. Uvas: <input class="interactive-input" style="width: 80px;" type="text" placeholder="..."> kilo.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">2. Naranjas: <input class="interactive-input" style="width: 80px;" type="text" placeholder="..."> kilos.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">3. Tomates: <input class="interactive-input" style="width: 80px;" type="text" placeholder="..."> kilo.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">4. Patatas: <input class="interactive-input" style="width: 80px;" type="text" placeholder="..."> kilos.</div>
+                            </div>
+                            <div class="exercise-row">
+                                 <div class="sentence-line">5. Piña: <input class="interactive-input" style="width: 80px;" type="text" placeholder="..."> (cantidad).</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: MATEMÁTICAS EN EL MERCADO (REDISEÑADA) -->
+            <section>
+                <h2>9. Matemáticas en el Mercado</h2>
+                <p>Usa los precios del video para calcular el total.</p>
+                
+                <div class="grid-responsive">
+                    <!-- TICKET VISUAL -->
+                    <div class="math-ticket">
+                        <div style="text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;">
+                            <h3 style="margin:0; font-family:'Courier New'">MERCADO CENTRAL</h3>
+                            <p style="margin:0; font-size: 0.8em;">Fecha: Hoy</p>
+                        </div>
+                        <div style="font-size: 0.7em; line-height: 1.8;">
+                            <p>Melón (1kg) ........... 0.79€</p>
+                            <p>Sandía (1kg) .......... 0.99€</p>
+                            <p>Piña (unidad) ......... 1.50€</p>
+                            <p>Patatas (1kg) ......... 0.99€</p>
+                            <p>Lechuga (unidad) ...... 0.90€</p>
+                            <p>Uvas (1kg) ............ 2.49€</p>
+                        </div>
+                        <div style="border-top: 2px dashed #ccc; margin-top: 10px; padding-top: 10px; text-align: center; font-weight: bold;">
+                            TOTAL: ???
+                        </div>
+                    </div>
+
+                    <!-- EJERCICIOS DE MATEMÁTICAS -->
+                    <div>
+                        <div class="exercise-container" style="max-height: 500px;">
+                             <div class="exercise-row">
+                                <div class="sentence-line">1. 1kg Patatas + 1 Lechuga = <br>
+                                <span class="text-sm text-gray-500 mr-2">0.99 + 0.90 = </span>
+                                <input class="interactive-input" type="text" placeholder="€"></div>
+                            </div>
+                            <div class="exercise-row">
+                                <div class="sentence-line">2. 2kg de Sandía = <br>
+                                <span class="text-sm text-gray-500 mr-2">0.99 x 2 = </span>
+                                <input class="interactive-input" type="text" placeholder="€"></div>
+                            </div>
+                            <div class="exercise-row">
+                                <div class="sentence-line">3. 1 Piña + 1kg Melón = <br>
+                                <span class="text-sm text-gray-500 mr-2">1.50 + 0.79 = </span>
+                                <input class="interactive-input" type="text" placeholder="€"></div>
+                            </div>
+                            <div class="exercise-row">
+                                <div class="sentence-line">4. 1kg Uvas + 1 Lechuga = <br>
+                                <span class="text-sm text-gray-500 mr-2">2.49 + 0.90 = </span>
+                                <input class="interactive-input" type="text" placeholder="€"></div>
+                            </div>
+                            <div class="exercise-row">
+                                <div class="sentence-line">5. Tienes 5€. Compras 1kg Uvas (2.49). <br>¿Cuánto dinero sobra (change)? 
+                                <input class="interactive-input" type="text" placeholder="€"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE FINAL -->
+            <section>
+                <div class="final-slide-container">
+                    <h1>¡Excelente Trabajo!</h1>
+                    <p>Has completado la lección sobre "El Mercado".</p>
+                    <div class="grid-responsive mt-8">
+                        <div>
+                            <h3 class="text-orange-500">Próximos Pasos:</h3>
+                            <ul class="text-left text-sm space-y-2">
+                                <li>Repasa la diferencia entre Ser y Estar.</li>
+                                <li>Escribe tu propia lista de la compra en español.</li>
+                                <li>Usa la herramienta "Vocabulario" para guardar las palabras nuevas.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" class="final-img" alt="Celebración Tucaneo">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- REACT APP (PIZARRA + VOCABULARIO) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = {
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
+            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+
+        function VocabModule() {
+            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
+            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
+            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
+            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
+            const copy = () => {
+                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
+                if(!text) return alert("Lista vacía");
+                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
+            };
+            return (
+                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
+                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
+                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
+                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
+                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
+                </div>
+            );
+        }
+
+        function WhiteboardModule() {
+            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
+            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
+            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
+            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const generateId = () => Math.random().toString(36).substr(2, 9);
+            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
+            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+            useLayoutEffect(() => {
+                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
+                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
+                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
+                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
+                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
+                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
+                elements.forEach(el => {
+                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
+                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
+                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
+                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
+                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
+                });
+                ctx.restore();
+            }, [elements, size, panOffset]);
+            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
+            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+            const handleDown = (e) => {
+                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
+                if(tool==='selection') { setIsPanning(true); return; }
+                const {x,y} = getPos(e);
+                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
+                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+            };
+            const handleMove = (e) => {
+                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
+                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+            };
+            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
+            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
+            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+            return (
+                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
+                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
+                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
+                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
+                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
+                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
+                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+                    </div>
+                    <div className="absolute top-4 left-4 z-40 pointer-events-none opacity-50"><img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-1-e1765224729911.png" className="h-10 w-auto"/></div>
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
+                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+                </div>
+            );
+        }
+
+        function App() {
+            const [tab, setTab] = useState('board');
+            const close = () => window.toggleDrawer();
+            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            return (
+                <div className="h-full flex flex-col bg-slate-50">
+                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                        <div className="flex-1"></div>
+                    </div>
+                    <div className="flex-1 relative overflow-hidden">
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+        Reveal.initialize({
+            controls: true, progress: true, center: true, hash: false, history: false,
+            // LOGICA RESPONSIVA:
+            width: isMobile ? 360 : 1200, height: isMobile ? 600 : 700,
+            margin: isMobile ? 0.05 : 0.04, minScale: 0.2, maxScale: 2.0,
+            transition: 'slide', backgroundTransition: 'fade', overview: false
+        });
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=5.0, minimum-scale=0.1, user-scalable=yes">
+    <title>Clase Tucaneo: Plantilla Maestra</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&family=Handlee&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* --- ESTILOS BASE --- */
+        :root { --primary: #10b981; --accent: #f59e0b; --text-main: #1f2937; --bg-light: #f8fafc; --danger: #ef4444; --info: #3b82f6; }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+        
+        /* Drawer y UI Base */
+        #tucaneo-drawer { position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        #safe-close-btn:hover { transform: scale(1.1); }
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; transition: all 0.3s ease; }
+        
+        /* UX MÓVIL: Barra de Progreso y Volver Arriba */
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--primary); width: 0%; z-index: 9999; transition: width 0.1s; display: none; }
+        #back-to-top { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: var(--text-main); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: opacity 0.3s, transform 0.3s; opacity: 0; pointer-events: none; }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        
+        /* Navegación */
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; transition: all 0.3s ease; }
+        #floating-cta { position: fixed; bottom: 20px; left: 30px; z-index: 5000; font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px; }
+        
+        /* Reveal JS Ajustes */
+        .reveal { color: var(--text-main); font-size: 24px; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: var(--primary); text-transform: none; font-weight: 700; }
+        
+        /* SCROLL VERTICAL SIEMPRE ACTIVO EN LAS SECTION */
+        .reveal section { display: flex !important; flex-direction: column; justify-content: flex-start; height: 100%; padding-top: 80px !important; padding-bottom: 40px !important; }
+
+        /* Componentes Visuales */
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); margin-bottom: 30px; text-align: left; }
+        .clean-input { border: none; border-bottom: 2px solid #cbd5e1; background: transparent; font-family: 'Handlee', cursive; font-size: 1.1em; color: var(--accent); text-align: left; width: 100%; transition: 0.3s; padding: 5px; }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
+        .eng-pill { background: #f1f5f9; color: #64748b; font-size: 0.65em; text-transform: uppercase; letter-spacing: 1px; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; width: 100%; padding: 0 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; margin-top: 20px; }
+        
+        /* Botones */
+        .nav-btn { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none; }
+        .nav-btn.whiteboard { background-color: var(--accent); }
+        .nav-btn.zoom { background-color: #6366f1; }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #374151; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+        .nav-btn.zoom.active { background-color: #4338ca; box-shadow: inset 0 3px 6px rgba(0,0,0,0.3); border: 2px solid #818cf8; }
+
+        /* Estilos Pizarra */
+        .cursor-eraser { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="white" stroke="black" stroke-width="1"/></svg>') 10 10, auto; }
+        .fade-in { animation: fadeIn 0.15s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- MODO MÓVIL Y TABLET (Ajustes Críticos) --- */
+        @media (max-width: 1024px) {
+            /* Drawer Full Screen */
+            #tucaneo-drawer { width: 100vw; right: -100vw; } 
+            
+            /* UI Compacta */
+            #fixed-logo { width: 80px; top: 15px; left: 15px; } 
+            #top-nav { top: 15px; right: 15px; gap: 8px; } 
+            .nav-btn span { display: none; } 
+            .nav-btn { padding: 8px; width: 36px; height: 36px; justify-content: center; }
+            
+            /* Ocultar herramientas pesadas en móvil */
+            #btn-zoom { display: none !important; }
+            .nav-btn.whiteboard { display: none !important; }
+            
+            /* Activar UX Móvil */
+            #scroll-progress { display: block; }
+            #back-to-top { display: flex; }
+
+            /* Layout Vertical Obligatorio */
+            .grid-responsive, .grid-3 { grid-template-columns: 1fr; gap: 20px; } 
+            
+            .reveal section { 
+                height: 100vh !important; 
+                overflow-y: auto !important; 
+                padding-top: 70px !important;
+                display: block !important;
+            }
+            .glass-card { padding: 20px; margin-bottom: 20px; } 
+            
+            /* CORRECCIÓN DE TAMAÑO DE TEXTO (Para que no se vea gigante) */
+            .reveal h1 { font-size: 2em !important; line-height: 1.1 !important; }
+            .reveal h2 { font-size: 1.8em !important; }
+            .reveal h3 { font-size: 1.5em !important; }
+            .reveal p, .reveal li { font-size: 1em !important; }
+        }
+
+        /* Modo Impresión */
+        @media print {
+            #top-nav, #tucaneo-drawer, #safe-close-btn, #btn-zoom, .nav-btn, #floating-cta, #scroll-progress, #back-to-top { display: none !important; }
+            body { background: white; }
+            .reveal { height: auto !important; overflow: visible !important; }
+            .reveal section { page-break-after: always; height: auto !important; padding: 20px !important; }
+            .glass-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Acercar"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard"><i class="fas fa-pen"></i> <span>Pizarra</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+<!-- 1. PORTADA -->
+            <section data-background-image="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80" data-background-opacity="0.4">
+                <div class="glass-card" style="text-align: center; max-width: 800px; margin: 0 auto; border-top: 5px solid var(--accent);">
+                    <div class="eng-pill"><i class="fas fa-bullseye"></i> Goal: Master Negative Expressions</div>
+                    <span style="color: var(--accent); font-weight: 800; letter-spacing: 3px; font-size: 0.8em; text-transform: uppercase; display:block; margin-top:10px;">Nivel B1</span>
+                    <h1 style="font-size: 3.5em; margin: 15px 0;">El Arte de Decir "No"</h1>
+                    <div style="width: 60px; height: 4px; background: var(--primary); margin: 30px auto;"></div>
+                    <p style="font-size: 1.3em; color: #4b5563;">Palabras Negativas y Doble Negación</p>
+                </div>
+            </section>
+
+            <!-- 2. CALENTAMIENTO -->
+            <section>
+                <div style="width: 100%; max-width: 1100px; margin: 0 auto; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="eng-pill"><i class="fas fa-comment"></i> Warm-up activity</div>
+                        <h2 style="font-size: 2.5em; margin: 5px 0;">¿Optimista o Pesimista?</h2>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: stretch; justify-content: center;">
+
+                        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 20px;">
+                            
+                            <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="fas fa-smile-beam" style="font-size: 5em; color: var(--primary); margin-bottom: 15px;"></i>
+                                <h3 style="color: var(--primary); font-size: 1.4em; margin: 0;">¡Sí a todo!</h3>
+                                <span style="font-size: 0.9em; color: #9ca3af;">(Optimista)</span>
+                            </div>
+
+                            <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid #ef4444; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="fas fa-angry" style="font-size: 5em; color: #ef4444; margin-bottom: 15px;"></i>
+                                <h3 style="color: #ef4444; font-size: 1.4em; margin: 0;">¡No a todo!</h3>
+                                <span style="font-size: 0.9em; color: #9ca3af;">(Pesimista)</span>
+                            </div>
+
+                        </div>
+
+                        <div class="glass-card" style="flex: 1.5; min-width: 320px; border-left: 6px solid #ef4444; margin: 0; display: flex; flex-direction: column; justify-content: center; padding: 25px;">
+                            
+                            <div style="background: #fff1f2; padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 2px dashed #fca5a5;">
+                                <p style="font-weight: bold; margin: 0 0 5px 0; color: #991b1b; font-size: 1em;">
+                                    🇪🇸 Misión: Responde "No" usando frases completas.
+                                </p>
+                                <p style="margin: 0; color: #b91c1c; font-size: 0.85em; font-style: italic;">
+                                    🇬🇧 Mission: Answer "NO" using full sentences.
+                                </p>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 20px;">
+                                <div class="question-row">
+                                    <span class="question-label" style="display: block; margin-bottom: 8px; color: #4b5563; font-weight: bold; font-size: 1.1em;">1. ¿Siempre estudias los domingos?</span>
+                                    <input class="clean-input" placeholder="Respuesta completa..." style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1em;">
+                                </div>
+                                <div class="question-row">
+                                    <span class="question-label" style="display: block; margin-bottom: 8px; color: #4b5563; font-weight: bold; font-size: 1.1em;">2. ¿Hay alguien famoso en tu familia?</span>
+                                    <input class="clean-input" placeholder="Respuesta completa..." style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1em;">
+                                </div>
+                                <div class="question-row">
+                                    <span class="question-label" style="display: block; margin-bottom: 8px; color: #4b5563; font-weight: bold; font-size: 1.1em;">3. ¿Tienes algo en tu mochila?</span>
+                                    <input class="clean-input" placeholder="Respuesta completa..." style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1em;">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TEORÍA: OPUESTOS MÁGICOS -->
+            <section>
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="eng-pill"><i class="fas fa-book"></i> Rule: No + Verb + Negative Word</div>
+                        <h2 style="font-size: 2.5em;">Los Opuestos Mágicos</h2>
+                    </div>
+
+                    <div class="glass-card" style="padding: 20px; border-top: 6px solid var(--primary);">
+                        <table class="simple-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-plus"></i> Afirmativo</th>
+                                    <th><i class="fas fa-minus"></i> Negativo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Algo (Something)</td><td>Nada (Nothing)</td></tr>
+                                <tr><td>Alguien (Someone)</td><td>Nadie (No one)</td></tr>
+                                <tr><td>Siempre (Always)</td><td>Nunca / Jamás</td></tr>
+                                <tr><td>Alguno/a (Some)</td><td>Ninguno/a (None)</td></tr>
+                                <tr><td>También (Also)</td><td>Tampoco (Neither)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. PRÁCTICA: ESPEJOS (Hard Mode + Word Bank) -->
+            <section>
+                <div style="max-width: 1000px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                         <div class="eng-pill"><i class="fas fa-random"></i> Transform to negative using the Word Bank</div>
+                        <h2 style="margin-bottom: 10px;">El Juego de los Espejos</h2>
+                    </div>
+                    
+                    <div class="grid-responsive" style="gap: 30px;">
+                        <!-- Columna Afirmativa -->
+                        <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <h4 style="color: var(--primary); font-weight: bold; margin-bottom: 20px;">Luz (Afirmativo)</h4>
+                            <ul style="list-style: none; padding: 0; line-height: 2.5; font-size: 0.9em;">
+                                <li>1. Yo <strong>siempre</strong> desayuno fruta.</li>
+                                <li>2. Veo a <strong>alguien</strong> en la ventana.</li>
+                                <li>3. Tengo <strong>algo</strong> de dinero extra.</li>
+                                <li>4. Mi jefe <strong>también</strong> viene hoy.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Columna Negativa -->
+                        <div class="glass-card" style="border-left: 6px solid #ef4444; margin-bottom: 0;">
+                            <h4 style="color: #ef4444; font-weight: bold; margin-bottom: 20px;">Sombra (Negativo)</h4>
+                            <div class="question-row">
+                                <input class="clean-input" placeholder="1. Transforma la frase...">
+                            </div>
+                            <div class="question-row">
+                                <input class="clean-input" placeholder="2. Transforma la frase...">
+                            </div>
+                            <div class="question-row">
+                                <input class="clean-input" placeholder="3. Transforma la frase...">
+                            </div>
+                            <div class="question-row">
+                                <input class="clean-input" placeholder="4. Transforma la frase...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banco de Palabras -->
+                    <div class="word-bank">
+                        <span style="font-size: 0.8em; color: #666; align-self: center;">BANCO:</span>
+                        <span class="word-chip">Nadie</span>
+                        <span class="word-chip">Nunca</span>
+                        <span class="word-chip">Tampoco</span>
+                        <span class="word-chip">Nada</span>
+                        <span class="word-chip">Jamás</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. CLIENTE INSATISFECHO (SIN EMOJIS, SIN RESPUESTAS) -->
+            <section data-background-image="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80" data-background-opacity="0.15">
+                <div style="max-width: 1100px; margin: 0 auto;">
+                    
+                    <!-- ENCABEZADO + FÓRMULA -->
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div class="eng-pill"><i class="fas fa-user-tie"></i> Roleplay: You hate this hotel!</div>
+                        <h2 style="font-size: 2.2em; margin: 5px 0;">El Cliente Insatisfecho</h2>
+                        
+                        <!-- CHULETA GRAMATICAL VISUAL -->
+                        <div style="background: white; display: inline-flex; align-items: center; gap: 10px; padding: 10px 25px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top: 15px; border: 2px solid var(--primary);">
+                            <span style="font-weight: bold; color: #ef4444;">NO</span>
+                            <i class="fas fa-plus" style="font-size: 0.8em; color: #ccc;"></i>
+                            <span style="background: #f3f4f6; padding: 2px 8px; border-radius: 5px; color: #374151;">VERBO</span>
+                            <i class="fas fa-plus" style="font-size: 0.8em; color: #ccc;"></i>
+                            <span style="font-weight: bold; color: var(--accent);">PALABRA NEGATIVA</span>
+                            <span style="font-size: 0.8em; color: #9ca3af; margin-left: 10px;">(Nada / Nadie / Ninguno)</span>
+                        </div>
+                    </div>
+
+                    <!-- GRID DE SITUACIONES (Limpio) -->
+                    <div class="grid-3" style="gap: 20px;">
+                        
+                        <!-- 1. Comida -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Desea comer <strong>algo</strong>?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                        <!-- 2. Persona -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Busca a <strong>alguien</strong>?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                        <!-- 3. Quejas -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Tiene <strong>alguna</strong> queja?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                        <!-- 4. Animales -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Trae <strong>algún</strong> animal?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                        <!-- 5. Gustos -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Le gustó <strong>algo</strong>?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                        <!-- 6. Gerente -->
+                        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid #ef4444; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <p style="font-weight: bold; color: #6b7280; margin-bottom: 10px;">Recepcionista:</p>
+                            <p style="margin-bottom: 15px; font-size: 0.95em;">"¿Conoce a <strong>algún</strong> gerente?"</p>
+                            <input class="clean-input" placeholder="Escribe tu respuesta...">
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. TEORÍA: NINGUNO (Inglés vs Español) -->
+            <section>
+                <div style="max-width: 1100px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div class="eng-pill"><i class="fas fa-lightbulb"></i> Grammar Hack</div>
+                        <h2 style="font-size: 2.5em; margin-bottom: 10px;">El Dilema: ¿Ningún o Ninguno?</h2>
+                        <p style="color: #666; font-size: 1.1em;">When to drop the "O"? (Apocope)</p>
+                    </div>
+
+                    <div class="grid-responsive" style="align-items: stretch; gap: 30px;">
+                        
+                        <!-- LEFT: ADJECTIVE (Before Noun) -->
+                        <div class="glass-card" style="padding: 30px; border-top: 6px solid var(--primary); display:flex; flex-direction:column;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <h3 style="color: var(--primary); font-weight:bold; font-size:1.6em; margin:0;">1. Ningún</h3>
+                                <span style="background:#ecfdf5; color:#047857; padding:4px 10px; border-radius:10px; font-size:0.7em; font-weight:bold; text-transform:uppercase;">Before Masc. Noun</span>
+                            </div>
+                            
+                            <p style="font-size:1em; margin-bottom:15px; color:#374151;">
+                                <strong>Rule:</strong> Drop the "O" because the noun follows immediately.
+                            </p>
+                            
+                            <div style="background:#f9fafb; padding:20px; border-radius:12px; font-family:'Handlee'; font-size:1.2em; color:#333; border: 1px dashed #d1d5db;">
+                                <p style="margin-bottom:5px;">"No tengo <strong>ningún</strong> <u>amigo</u>."</p>
+                                <p style="color:#6b7280; font-size:0.8em; font-family:'Lato'; font-style:italic; border-top:1px solid #e5e7eb; padding-top:5px; margin-top:5px;">
+                                    <i class="fas fa-language"></i> English equivalent: "I have <strong>NO</strong> friend."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: PRONOUN (Alone) -->
+                        <div class="glass-card" style="padding: 30px; border-top: 6px solid var(--accent); display:flex; flex-direction:column;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <h3 style="color: var(--accent); font-weight:bold; font-size:1.6em; margin:0;">2. Ninguno</h3>
+                                <span style="background:#fffbeb; color:#b45309; padding:4px 10px; border-radius:10px; font-size:0.7em; font-weight:bold; text-transform:uppercase;">Replaces Noun</span>
+                            </div>
+                            
+                            <p style="font-size:1em; margin-bottom:15px; color:#374151;">
+                                <strong>Rule:</strong> Keep the "O" because it stands alone.
+                            </p>
+
+                            <div style="background:#f9fafb; padding:20px; border-radius:12px; font-family:'Handlee'; font-size:1.2em; color:#333; border: 1px dashed #d1d5db;">
+                                <p style="margin-bottom:5px;">"¿Amigos? No tengo <strong>ninguno</strong>."</p>
+                                <p style="color:#6b7280; font-size:0.8em; font-family:'Lato'; font-style:italic; border-top:1px solid #e5e7eb; padding-top:5px; margin-top:5px;">
+                                    <i class="fas fa-language"></i> English equivalent: "I have <strong>NONE</strong>."
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- BOTTOM: FEMININE -->
+                    <div style="text-align: center; margin-top: 25px;">
+                        <div style="background: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display:inline-block; border: 2px solid #fce7f3;">
+                            <span style="color: #db2777; font-weight:bold; margin-right:10px;"><i class="fas fa-venus"></i> FEMININE:</span>
+                            <span style="color: #555;">Always <strong>Ninguna</strong>. It never changes!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. PRÁCTICA: NINGÚN/A -->
+           <section>
+                <div style="width: 100%; max-width: 1100px; margin: 0 auto; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                         <div class="eng-pill"><i class="fas fa-pencil-alt"></i> Practice: Choose Ningún / Ninguno / Ninguna</div>
+                        <h2 style="margin: 5px 0;">¿Cuál es el correcto?</h2>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; justify-content: center;">
+                        
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid #3b82f6;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:#3b82f6;">El Problema (Masc)</span>
+                                <i class="fas fa-mars" style="color:#bfdbfe;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">No tengo ________ problema.</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid #ec4899;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:#ec4899;">La Razón (Fem)</span>
+                                <i class="fas fa-venus" style="color:#fbcfe8;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">No hay ________ razón.</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--accent);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:var(--accent);">Solo (Pronombre)</span>
+                                <i class="fas fa-user" style="color:#fde68a;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">¿Coches? No tengo ________.</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid #3b82f6;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:#3b82f6;">El Día (Masc)</span>
+                                <i class="fas fa-mars" style="color:#bfdbfe;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">No saldré ________ día.</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid #ec4899;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:#ec4899;">La Llamada (Fem)</span>
+                                <i class="fas fa-venus" style="color:#fbcfe8;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">No recibí ________ llamada.</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--accent);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight: bold; font-size: 0.9em; color:var(--accent);">Solo (Ref. Fem)</span>
+                                <i class="fas fa-tshirt" style="color:#fde68a;"></i>
+                            </div>
+                            <p style="color: #666; font-size: 0.85em; margin: 10px 0;">No había ________ (camisas).</p>
+                            <input class="clean-input" style="font-size: 0.9em;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div style="width: 100%; max-width: 1100px; margin: 0 auto; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                         <div class="eng-pill"><i class="fas fa-search"></i> Challenge: Find 4 errors</div>
+                        <h2 style="margin: 5px 0; color: var(--text-main);">Detective de Errores</h2>
+                    </div>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: stretch;">
+                        
+                        <div style="flex: 1.5; min-width: 300px; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
+                            <div style="height: 120px; overflow: hidden; position: relative;">
+                                <img src="https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;">
+                                <div style="position: absolute; bottom: 10px; left: 20px; background: #ef4444; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.8em; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+                                    <i class="fas fa-exclamation-triangle"></i> EVIDENCIA #1
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 25px; position: relative;">
+                                <i class="fas fa-quote-left" style="color: #ef4444; opacity: 0.1; font-size: 3em; position: absolute; top: 10px; right: 20px;"></i>
+                                <p style="font-size: 1.1em; line-height: 1.6; color: #374151; margin: 0;">
+                                    "Hola profe. Yo no tengo <strong>algo</strong> en mi bolsa. <strong>Nadie no</strong> sabe dónde está el tren. Además, no tengo <strong>ningún</strong> idea de cómo llegar. Mi hermano no va, y yo no voy <strong>también</strong>."
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card" style="flex: 1; min-width: 280px; padding: 25px; margin: 0; display: flex; flex-direction: column; justify-content: center; border-left: 6px solid #ef4444;">
+                            <h4 style="margin: 0 0 15px 0; color: #ef4444; font-size: 1em; border-bottom: 2px solid #fee2e2; padding-bottom: 10px;">
+                                <i class="fas fa-clipboard-check"></i> Reporte Policial
+                            </h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div>
+                                    <label style="font-size: 0.75em; color: #6b7280; font-weight: bold; display: block; margin-bottom: 5px;">1. Error: "algo"</label>
+                                    <input class="clean-input" placeholder="Corrección..." style="font-size: 0.9em;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.75em; color: #6b7280; font-weight: bold; display: block; margin-bottom: 5px;">2. Error: "nadie no"</label>
+                                    <input class="clean-input" placeholder="Corrección..." style="font-size: 0.9em;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.75em; color: #6b7280; font-weight: bold; display: block; margin-bottom: 5px;">3. Error: "ningún idea"</label>
+                                    <input class="clean-input" placeholder="Corrección..." style="font-size: 0.9em;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.75em; color: #6b7280; font-weight: bold; display: block; margin-bottom: 5px;">4. Error: "también" (negativo)</label>
+                                    <input class="clean-input" placeholder="Corrección..." style="font-size: 0.9em;">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. SINO / NI / YA NO (El Chisme + Speaking) -->
+          <section>
+                <div style="width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                         <div class="eng-pill"><i class="fas fa-link"></i> Advanced Connectors</div>
+                        <h2 style="margin: 5px 0;">Conectores de Contraste</h2>
+                    </div>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
+                        
+                        <div style="flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 12px; border-top: 5px solid #3b82f6; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <h4 style="color: #3b82f6; font-weight: bold; margin: 0 0 5px 0; font-size: 1.1em;">1. No... Sino</h4>
+                            <p style="font-size: 0.75em; background: #eff6ff; color: #1e3a8a; padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 5px;">Not X, but (rather) Y</p>
+                            <p style="font-size: 0.85em; margin: 0; color: #4b5563;">Corrige una idea anterior.</p>
+                            <p style="font-style: italic; color: #666; font-size: 0.8em; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 5px;">"No es rojo, <strong>sino</strong> azul."</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 12px; border-top: 5px solid #ec4899; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <h4 style="color: #ec4899; font-weight: bold; margin: 0 0 5px 0; font-size: 1.1em;">2. Ni... Ni...</h4>
+                            <p style="font-size: 0.75em; background: #fdf2f8; color: #831843; padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 5px;">Neither... Nor...</p>
+                            <p style="font-size: 0.85em; margin: 0; color: #4b5563;">Descarta dos opciones.</p>
+                            <p style="font-style: italic; color: #666; font-size: 0.8em; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 5px;">"No bebo <strong>ni</strong> té <strong>ni</strong> café."</p>
+                        </div>
+
+                        <div style="flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 12px; border-top: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <h4 style="color: var(--primary); font-weight: bold; margin: 0 0 5px 0; font-size: 1.1em;">3. Ya no</h4>
+                            <p style="font-size: 0.75em; background: #ecfdf5; color: #064e3b; padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 5px;">Not anymore</p>
+                            <p style="font-size: 0.85em; margin: 0; color: #4b5563;">Hábito terminado.</p>
+                            <p style="font-style: italic; color: #666; font-size: 0.8em; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 5px;">"<strong>Ya no</strong> vivo allí."</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+
+                        <div class="glass-card" style="flex: 1.5; min-width: 320px; padding: 20px; margin: 0; border-left: 6px solid var(--accent); display: flex; flex-direction: column;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <i class="fas fa-comments" style="font-size: 1.8em; color: var(--accent);"></i>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1em; color: var(--text-main);">El Chisme (Gossip Time)</h4>
+                                    <p style="font-size: 0.7em; color: #666; margin: 0;">Completa la historia de tu ex:</p>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.85em;">
+                                    <span style="font-weight:bold; color:#999;">1.</span>
+                                    <span>No vive en Madrid,</span>
+                                    <input class="clean-input" style="width: 80px; text-align:center; font-size: 0.9em;" placeholder="...">
+                                    <span>en París.</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.85em;">
+                                    <span style="font-weight:bold; color:#999;">2.</span>
+                                    <span>No come</span>
+                                    <input class="clean-input" style="width: 60px; text-align:center; font-size: 0.9em;" placeholder="...">
+                                    <span>carne</span>
+                                    <input class="clean-input" style="width: 60px; text-align:center; font-size: 0.9em;" placeholder="...">
+                                    <span>pollo.</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.85em;">
+                                    <span style="font-weight:bold; color:#999;">3.</span>
+                                    <span>Antes fumaba, pero</span>
+                                    <input class="clean-input" style="width: 80px; text-align:center; font-size: 0.9em;" placeholder="...">
+                                    <span>fuma.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="flex: 1; min-width: 280px; background: #374151; border-radius: 16px; padding: 20px; color: white; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            
+                            <h4 style="color: var(--primary); margin: 0 0 15px 0; font-size: 1em; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-microphone"></i> SPEAKING CHALLENGE
+                            </h4>
+                            
+                            <p style="font-size: 0.85em; opacity: 0.9; margin-bottom: 15px; line-height: 1.4;">
+                                "The New Me": Tell your partner 3 things that changed in your life.
+                            </p>
+                            
+                            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                                <ul style="font-size: 0.75em; color: #e5e7eb; padding-left: 20px; margin: 0; line-height: 1.6;">
+                                    <li>"Yo <strong>ya no</strong>..." (I don't... anymore)</li>
+                                    <li>"No quiero X, <strong>sino</strong> Y" (Not X, but Y)</li>
+                                </ul>
+                            </div>
+
+                            <div style="align-self: flex-end; display: flex; align-items: center; gap: 8px; font-size: 0.8em; color: var(--accent);">
+                                <i class="fas fa-stopwatch"></i> <strong>3 MIN</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 10. ROLEPLAY: CRITICO (Instrucciones en Inglés + Fotos Reales) -->
+            <section data-background-image="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80" data-background-opacity="0.10">
+                <div style="width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="eng-pill"><i class="fas fa-theater-masks"></i> Roleplay: The Hater Critic</div>
+                        <h2 style="font-size: 2.2em; margin: 5px 0; color: var(--text-main);">El Crítico Despiadado</h2>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: stretch; justify-content: center;">
+                        
+                        <div style="flex: 1; min-width: 300px;">
+                            <h4 style="text-align: left; font-size: 1em; color: var(--primary); margin-bottom: 5px; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">
+                                <i class="fas fa-film"></i> 1. Elige tu víctima
+                            </h4>
+                            <p style="text-align: left; margin: -5px 0 15px 0; font-size: 0.75em; color: #9ca3af; font-style: italic;">(Choose a movie to destroy)</p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                <div style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); aspect-ratio: 2/3;">
+                                    <img src="https://images.unsplash.com/photo-1500077423678-25eead48513a?auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; padding: 5px; font-size: 0.7em; text-align: center;">TITANIC</div>
+                                    <div style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; font-weight: bold; font-size: 0.7em; padding: 2px 6px; border-radius: 4px;">0 ★</div>
+                                </div>
+                                <div style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); aspect-ratio: 2/3;">
+                                    <img src="https://images.unsplash.com/photo-1546561892-65bf811416b9?auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; padding: 5px; font-size: 0.7em; text-align: center;">STAR WARS</div>
+                                    <div style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; font-weight: bold; font-size: 0.7em; padding: 2px 6px; border-radius: 4px;">0 ★</div>
+                                </div>
+                                <div style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); aspect-ratio: 2/3;">
+                                    <img src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; padding: 5px; font-size: 0.7em; text-align: center;">POTTER</div>
+                                    <div style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; font-weight: bold; font-size: 0.7em; padding: 2px 6px; border-radius: 4px;">0 ★</div>
+                                </div>
+                            </div>
+                            
+                            <p style="font-size: 0.7em; color: #666; margin-top: 15px; background: #f3f4f6; padding: 10px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                <strong>Misión:</strong> Usa palabras negativas.<br>
+                                <span style="color:#9ca3af; font-style:italic;">Mission: Destroy the movie using negative words.</span>
+                            </p>
+                        </div>
+
+                        <div style="flex: 1.5; min-width: 300px;">
+                             <h4 style="text-align: left; font-size: 1em; color: var(--accent); margin-bottom: 5px; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">
+                                <i class="fas fa-comments"></i> 2. Construye el Diálogo
+                            </h4>
+                            <p style="text-align: left; margin: -5px 0 15px 0; font-size: 0.75em; color: #9ca3af; font-style: italic;">(Build the conversation)</p>
+
+                            <div class="glass-card" style="padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 20px;">
+                                
+                                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                    <div style="background: #e0f2fe; color: #0284c7; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <i class="fas fa-microphone"></i>
+                                    </div>
+                                    <div style="text-align: left;">
+                                        <strong style="font-size: 0.9em; color: #0284c7; display: block;">ALUMNO A (Periodista)</strong>
+                                        <span style="font-size: 0.75em; color: #94a3b8; display: block; margin-bottom: 5px; font-style: italic;">Student A (Journalist)</span>
+                                        
+                                        <ul style="margin: 0; padding-left: 15px; font-size: 0.8em; color: #334155; line-height: 1.5;">
+                                            <li>"¿Te gustó la historia?"</li>
+                                            <li>"¿Había actores interesantes?"</li>
+                                            <li>"¿Recomiendas la película?"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="height: 1px; background: #eee; width: 100%;"></div>
+
+                                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                    <div style="background: #fee2e2; color: #dc2626; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <i class="fas fa-angry"></i>
+                                    </div>
+                                    <div style="text-align: left;">
+                                        <strong style="font-size: 0.9em; color: #dc2626; display: block;">ALUMNO B (El "Hater")</strong>
+                                        <span style="font-size: 0.75em; color: #f87171; display: block; margin-bottom: 5px; font-style: italic;">Student B (The Critic - Use Negatives!)</span>
+
+                                        <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px dashed #fca5a5;">
+                                            <p style="margin: 0 0 5px 0; font-size: 0.8em; color: #991b1b;">
+                                                👎 "No, no me gustó <strong>NADA</strong>."
+                                            </p>
+                                            <p style="margin: 0 0 5px 0; font-size: 0.8em; color: #991b1b;">
+                                                👎 "No vi a <strong>NADIE</strong> interesante."
+                                            </p>
+                                            <p style="margin: 0; font-size: 0.8em; color: #991b1b;">
+                                                👎 "No la recomiendo a <strong>NINGUNA</strong> persona."
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. PRODUCCIÓN -->
+            <section>
+                <div style="max-width: 1000px; margin: 0 auto;">
+                    <div style="text-align: center;">
+                         <div class="eng-pill"><i class="fas fa-comment-dots"></i> Conversation Practice</div>
+                        <h2 style="margin-bottom: 40px;">Mi Semana "Cero"</h2>
+                    </div>
+                    
+                    <div class="grid-3" style="margin-bottom: 40px;">
+                        <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <i class="fas fa-coffee" style="font-size: 2.5em; color: var(--accent); margin-bottom: 15px;"></i>
+                            <h4 style="margin: 0; font-size: 1.1em;">Mañanas</h4>
+                            <p style="color: #9ca3af; font-size: 0.9em;">¿Qué no haces JAMÁS?</p>
+                        </div>
+                        <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <i class="fas fa-home" style="font-size: 2.5em; color: var(--primary); margin-bottom: 15px;"></i>
+                            <h4 style="margin: 0; font-size: 1.1em;">Casa</h4>
+                            <p style="color: #9ca3af; font-size: 0.9em;">¿Hay ALGUIEN bilingüe?</p>
+                        </div>
+                        <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                            <i class="fas fa-shopping-cart" style="font-size: 2.5em; color: #ef4444; margin-bottom: 15px;"></i>
+                            <h4 style="margin: 0; font-size: 1.1em;">Compras</h4>
+                            <p style="color: #9ca3af; font-size: 0.9em;">¿Qué no compras NI en oferta?</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="border-top: none; border-left: 6px solid var(--primary);">
+                        <p style="font-weight: bold; margin-bottom: 15px; color: var(--primary);">Tus Respuestas:</p>
+                        <textarea class="clean-input" style="height: 100px; resize: none; border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px;" placeholder="Ej: Yo nunca tomo café por la mañana..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. CIERRE -->
+            <section data-background-image="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80" data-background-opacity="0.3">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <div class="eng-pill"><i class="fas fa-flag-checkered"></i> Summary & Homework</div>
+                    <h1 style="font-size: 3.5em; color: #333; margin-bottom: 20px;">¡Misión Cumplida!</h1>
+                    
+                    <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); margin-bottom: 40px; text-align: left;">
+                        <h3 style="color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">Resumen:</h3>
+                        <ul style="list-style: none; padding: 0; font-size: 1.2em; color: #4b5563;">
+                            <li style="margin-bottom: 10px;"><i class="fas fa-check" style="color: var(--primary); margin-right: 10px;"></i> Doble Negación (No + Verbo + Nada).</li>
+                            <li><i class="fas fa-check" style="color: var(--primary); margin-right: 10px;"></i> Ningún (Masc) vs Ninguna (Fem).</li>
+                            <li><i class="fas fa-check" style="color: var(--primary); margin-right: 10px;"></i> Uso correcto de "Sino".</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fff7ed; padding: 20px; border-radius: 12px; border: 1px solid #fdba74; margin-bottom: 40px;">
+                        <strong style="color: var(--accent); display: block; margin-bottom: 5px;">TAREA:</strong>
+                        <span style="color: #555;">Escribe 5 frases sobre cambios en tu vida usando "Ya no" y "Sino".</span>
+                    </div>
+
+                    <div style="text-align: center;">
+                         <button class="nav-btn exit" style="margin: 0 auto; font-size: 1.2em; padding: 15px 30px;">
+                            Ticket de Salida: Di una frase negativa
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { 
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, 
+            Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, 
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, 
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, 
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, 
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, 
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, 
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, 
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, 
+            Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, 
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, 
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div> <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">{selectedId ? 'EDITAR' : 'GROSOR'}</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? '¿?' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-black transition-colors flex-shrink-0">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-orange-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none" style={{ font: `${Math.max(12, strokeWidth * 4)}px sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escribe..." /> </div> )} </div> ); }
+        function App() { const [tab, setTab] = useState('board'); const close = () => window.toggleDrawer(); useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []); return ( <div className="h-full flex flex-col bg-slate-50"> <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6"> <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button> <div className="flex-1"></div> </div> <div className="flex-1 relative overflow-hidden"> <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> </div> </div> ); }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // --- DETECCIÓN DE MÓVIL/TABLET MEJORADA ---
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024; // Incluye tablets
+        
+        const isMobile = isTouch || isSmallScreen;
+
+        // Si es móvil, agregamos clase al body para activar CSS específico
+        if (isMobile) {
+            document.body.classList.add('is-mobile');
+            
+            // Lógica para Barra de Progreso y Botón Volver Arriba
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                
+                // Barra
+                const progressBar = document.getElementById('scroll-progress');
+                if(progressBar) progressBar.style.width = scrolled + '%';
+                
+                // Botón
+                const btn = document.getElementById('back-to-top');
+                if(btn) {
+                    if (winScroll > 300) btn.classList.add('visible');
+                    else btn.classList.remove('visible');
+                }
+            });
+        }
+
+        Reveal.initialize({
+            controls: !isMobile, 
+            progress: true, 
+            center: !isMobile, 
+            hash: false,
+            
+            // VITAL: Desactivar layout automático en móvil para permitir zoom nativo
+            disableLayout: isMobile, 
+            
+            width: 1200, 
+            height: 900,
+            margin: 0.04, 
+            minScale: 0.1, 
+            maxScale: 3.0,
+            transition: 'slide', 
+            backgroundTransition: 'fade', 
+            overview: false
+        });
+
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+
+        // FUNCIÓN ZOOM MANUAL (Solo PC)
+        function forceZoom() {
+            if (document.body.classList.contains('is-mobile')) return;
+
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            
+            if (container.style.transform.includes('scale(1.35)')) {
+                container.style.transform = '';
+                container.style.transformOrigin = '';
+                btn.classList.remove('active');
+            } else {
+                container.style.transform = 'scale(1.35)';
+                container.style.transformOrigin = 'center top'; 
+                container.style.transition = 'transform 0.3s ease-out';
+                btn.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

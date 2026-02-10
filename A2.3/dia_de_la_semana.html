@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tucaneo Lab: La Hora en Español</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2E8B57;
+            /* Verde Tucaneo */
+            --accent: #FF8C00;
+            /* Naranja Tropical */
+            --background: #f8f9fa;
+            --text-main: #2c3e50;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+        }
+
+        /* ESTILOS BASE */
+        #fixed-logo {
+            position: fixed;
+            z-index: 5000;
+            transition: all 0.3s;
+        }
+
+        #top-nav {
+            position: fixed;
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+        }
+
+        #floating-cta {
+            position: fixed;
+            z-index: 5000;
+        }
+
+        .reveal {
+            color: var(--text-main);
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+        }
+
+        /* INPUTS Y CAJAS - AHORA CON TRANSPARENCIA */
+        .interactive-input {
+            background: rgba(255, 248, 225, 0.95);
+            /* Transparencia ligera */
+            border: 1px solid #ffe0b2;
+            border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive;
+            color: #d84315;
+            text-align: center;
+            border-radius: 4px;
+            display: inline-block;
+            -webkit-appearance: none;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            min-width: 140px;
+        }
+
+        .interactive-input:focus {
+            background: #fff;
+            border-color: var(--primary);
+            transform: scale(1.05);
+            outline: none;
+        }
+
+        /* Fondo blanco semi-transparente para leer sobre la imagen de fondo */
+        .exercise-row {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            padding: 10px;
+            /* Añadido un poco de relleno */
+        }
+
+        .concept-box {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .small-text {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .table-custom {
+            width: 100%;
+            font-size: 0.8em;
+            border-collapse: collapse;
+        }
+
+        .table-custom th {
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+        }
+
+        .table-custom td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- MÓVIL (< 900px) --- */
+        @media screen and (max-width: 900px) {
+            #fixed-logo {
+                width: 80px;
+                top: 10px;
+                left: 10px;
+            }
+
+            #top-nav {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+                border-radius: 12px;
+                background: var(--primary);
+                color: white;
+                border: none;
+                text-decoration: none;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .nav-btn.exit {
+                background: var(--accent);
+            }
+
+            .btn-icon {
+                width: 12px;
+                height: 12px;
+                filter: brightness(0) invert(1);
+            }
+
+            #floating-cta {
+                background: white;
+                color: var(--primary);
+                border: 1px solid var(--primary);
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-size: 11px;
+                text-decoration: none;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 5px;
+                width: auto;
+                white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .reveal {
+                font-size: 18px;
+            }
+
+            .reveal h1 {
+                font-size: 1.8em;
+                margin-top: 60px;
+                margin-bottom: 20px;
+            }
+
+            .reveal h2 {
+                font-size: 1.4em;
+                margin-top: 40px;
+                margin-bottom: 20px;
+            }
+
+            .reveal h3 {
+                font-size: 1.2em;
+            }
+
+            .grid-responsive {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                justify-content: flex-start;
+                padding-bottom: 40px;
+            }
+
+            .img-container {
+                max-height: 160px;
+                width: auto;
+                max-width: 100%;
+                display: block;
+                margin: 0 auto 15px auto;
+                border-radius: 10px;
+            }
+
+            .exercise-row {
+                padding: 8px 10px;
+                margin-bottom: 6px;
+                font-size: 0.9em;
+                gap: 5px;
+            }
+
+            .concept-box {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+
+            .final-slide-container {
+                margin-top: 40px;
+            }
+
+            .cert-badge {
+                width: 80px;
+                height: 80px;
+                margin: -30px auto 10px auto;
+                border: 4px solid var(--background);
+            }
+
+            .cert-badge img {
+                width: 50px;
+            }
+
+            .final-img {
+                max-width: 80%;
+            }
+        }
+
+        /* --- PC (> 901px) --- */
+        @media screen and (min-width: 901px) {
+            #fixed-logo {
+                width: 160px;
+                top: 20px;
+                left: 30px;
+            }
+
+            #top-nav {
+                top: 30px;
+                right: 30px;
+                gap: 15px;
+            }
+
+            .nav-btn {
+                font-family: 'Lato', sans-serif;
+                font-weight: 700;
+                font-size: 14px;
+                padding: 8px 20px;
+                border-radius: 50px;
+                text-decoration: none;
+                color: white;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s, box-shadow 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .nav-btn.download {
+                background-color: var(--primary);
+            }
+
+            .nav-btn.exit {
+                background-color: var(--accent);
+            }
+
+            .btn-icon {
+                width: 18px;
+                height: 18px;
+                filter: brightness(0) invert(1);
+            }
+
+            .nav-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            #floating-cta {
+                bottom: 20px;
+                left: 20px;
+                background: white;
+                color: var(--primary);
+                font-weight: bold;
+                padding: 10px 25px;
+                border-radius: 30px;
+                border: 2px solid var(--primary);
+                text-decoration: none;
+                font-size: 14px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s;
+            }
+
+            #floating-cta:hover {
+                background: var(--primary);
+                color: white;
+            }
+
+            .reveal {
+                font-size: 24px;
+            }
+
+            .reveal h1 {
+                font-size: 2.2em;
+                border-bottom: 4px solid var(--accent);
+                margin-bottom: 30px;
+                display: inline-block;
+                padding-bottom: 5px;
+            }
+
+            .reveal h2 {
+                font-size: 1.8em;
+                margin-bottom: 30px;
+                color: var(--primary);
+            }
+
+            .grid-responsive {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                text-align: left;
+                padding: 0 20px;
+            }
+
+            .img-container {
+                width: 100%;
+                height: auto;
+                max-height: 450px;
+                object-fit: contain;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            }
+
+            .exercise-row {
+                padding: 12px 20px;
+                margin-bottom: 15px;
+                font-size: 1em;
+                gap: 15px;
+                border-radius: 8px;
+                border-left-width: 4px;
+            }
+
+            .grid-responsive>div:first-child {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .final-slide-container {
+                max-width: 700px;
+                margin: auto;
+            }
+
+            .final-img {
+                width: 100%;
+                max-width: 450px;
+                border-radius: 15px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+
+            .cert-badge {
+                width: 120px;
+                height: 120px;
+                background: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                margin: -50px auto 20px auto;
+                position: relative;
+                border: 5px solid var(--background);
+            }
+
+            .cert-badge img {
+                width: 75px;
+            }
+        }
+
+        .sentence-line {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        @media print {
+
+            #fixed-logo,
+            #top-nav,
+            #floating-cta {
+                display: none !important;
+            }
+        }
+
+        /* --- Nuevos Estilos para Diapositivas --- */
+        .rule-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 6px solid #ddd;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .rule-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .rule-card.singular {
+            border-left-color: var(--accent);
+        }
+
+        .rule-card.singular h3 {
+            color: var(--accent);
+        }
+
+        .rule-card.plural {
+            border-left-color: var(--primary);
+        }
+
+        .rule-card.plural h3 {
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .clock-visual {
+            font-size: 2.5em;
+            margin-right: 15px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+        alt="Logo Tucaneo">
+    <div id="top-nav">
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+            Descargar PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-transition="zoom">
+                <div class="grid-responsive" style="align-items: center; min-height: 500px;">
+                    <div style="text-align: left;">
+                        <div class="concept-box"
+                            style="padding: 40px; border-left: 8px solid var(--accent); background: rgba(255, 255, 255, 0.95); box-shadow: 0 15px 30px rgba(0,0,0,0.1);">
+                            <h1
+                                style="font-size: 3em; margin-bottom: 5px; line-height: 1; text-transform: uppercase; letter-spacing: -2px; color: var(--primary);">
+                                Hablemos <br> <span style="color: var(--accent);">del Tiempo</span></h1>
+                            <hr style="border-top: 3px solid #eee; margin: 20px 0;">
+                            <h3
+                                style="color: #555; font-size: 1.4em; margin: 0 0 15px 0; font-family: 'Lato', sans-serif;">
+                                Telling Time in Spanish</h3>
+                            <p style="font-size: 1.1em; color: #666; margin-bottom: 25px;">Aprende a preguntar y decir
+                                la hora paso a paso con ejercicios interactivos.</p>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span
+                                    style="background: var(--primary); color: white; padding: 6px 16px; border-radius: 50px; font-size: 0.7em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Nivel
+                                    A1</span>
+                                <span
+                                    style="background: #f0f0f0; color: #555; padding: 6px 16px; border-radius: 50px; font-size: 0.7em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Intermedio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: relative; display: flex; justify-content: center;">
+                        <div
+                            style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: var(--accent); border-radius: 50%; opacity: 0.2; filter: blur(20px);">
+                        </div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/tiempo-tucan-reloj-rutina.jpg"
+                            alt="Reloj" class="img-container"
+                            style="max-height: 500px; width: auto; object-fit: contain; border: 8px solid white; border-radius: 20px; transform: rotate(2deg); box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+                        <div
+                            style="position: absolute; bottom: -15px; left: -15px; background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-family: 'Handlee', cursive; color: var(--text-main); transform: rotate(-3deg);">
+                            ¡Es hora de aprender! ⏰
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid-responsive" style="align-items: center;">
+                    <div>
+                        <h2 style="margin-bottom: 30px; font-size: 2.2em; text-align: left;">The Basic Rule <span
+                                style="font-size:0.5em; vertical-align:middle; background:#f0f0f0; padding:5px 10px; border-radius:20px; color:#555;">La
+                                Regla Básica</span></h2>
+
+                        <!-- Singular Rule -->
+                        <div class="rule-card singular">
+                            <div style="display: flex; align-items: center;">
+                                <div class="clock-visual">☝️</div>
+                                <div style="flex-grow: 1;">
+                                    <h3 style="margin: 0; font-size: 1.2em;">1. Singular (1:00)</h3>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">ONLY for 1:00. Just one hour.</p>
+                                </div>
+                            </div>
+                            <hr style="opacity: 0.3; margin: 10px 0;">
+                            <div style="font-size: 1.3em;">
+                                Use <span class="highlight-box" style="background: var(--accent);">Es la...</span>
+                            </div>
+                            <p class="small-text" style="margin-top: 5px;"><em>Example: 1:00 ➔ <strong>Es la</strong>
+                                    una.</em></p>
+                        </div>
+
+                        <!-- Plural Rule -->
+                        <div class="rule-card plural">
+                            <div style="display: flex; align-items: center;">
+                                <div class="clock-visual">🖐️</div>
+                                <div style="flex-grow: 1;">
+                                    <h3 style="margin: 0; font-size: 1.2em;">2. Plural (2:00 - 12:00)</h3>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">For all other hours (2, 3, 4... 12).
+                                    </p>
+                                </div>
+                            </div>
+                            <hr style="opacity: 0.3; margin: 10px 0;">
+                            <div style="font-size: 1.3em;">
+                                Use <span class="highlight-box">Son las...</span>
+                            </div>
+                            <ul class="small-text" style="margin-top: 5px; margin-bottom: 0;">
+                                <li>2:00 ➔ <strong>Son las</strong> dos.</li>
+                                <li>10:00 ➔ <strong>Son las</strong> diez.</li>
+                            </ul>
+                        </div>
+
+                        <div
+                            style="text-align: left; margin-top: 10px; font-size: 0.8em; color: #777; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px; display: inline-block;">
+                            💡 <strong>Tip:</strong> "Hora" is feminine (La hora), so we always use feminine articles:
+                            "La" / "Las".
+                        </div>
+                    </div>
+
+                    <div style="position: relative;">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/reloj-caminar-noche.png-e1765690261819.png"
+                            class="img-container" alt="Singular vs Plural"
+                            style="max-height: 400px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2)); transform: rotate(-2deg); transition: transform 0.5s;">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid-responsive" style="align-items: center;">
+                    <div style="text-align: left;">
+                        <h2>Practice #1: ¿Qué hora es?</h2>
+                        <p style="font-size: 0.9em; margin-bottom: 20px;">
+                            Look at the digital time and choose: <br>
+                            <span class="highlight">Es la</span> (Singular/1:00) or <span class="highlight">Son
+                                las</span> (Plural/2-12).
+                        </p>
+
+                        <!-- Column 1 Exercises -->
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>01:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                una.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>04:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                cuatro.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>11:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                once.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>12:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                doce.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: left; margin-top: 10px;">
+                        <h3 style="font-size: 1.2em; color: var(--accent); margin-bottom: 15px;">More Practice...</h3>
+
+                        <!-- Column 2 Exercises -->
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>02:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                dos.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>05:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                cinco.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>08:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                ocho.
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                <strong>09:00</strong> ➔ <input type="text" class="interactive-input" placeholder="...">
+                                nueve.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h2>AM & PM in Spanish</h2>
+                        <p>Instead of AM/PM, we use phrases "of the...":</p>
+                        <div class="concept-box">
+                            <ul>
+                                <li>☀️ <span class="highlight">de la mañana</span> (Morning)</li>
+                                <li>🌤️ <span class="highlight">de la tarde</span> (Afternoon - until sunset)</li>
+                                <li>🌙 <span class="highlight">de la noche</span> (Night)</li>
+                            </ul>
+                        </div>
+                        <p class="small-text">Example: <em>Son las ocho de la noche (8:00 PM).</em></p>
+                    </div>
+                    <div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                3:00 PM ➔ Son las tres <input type="text" class="interactive-input" placeholder="...">
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                10:00 AM ➔ Son las diez <input type="text" class="interactive-input" placeholder="...">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GAME 1: TIME FACTORY (MINUTES 1-30) -->
+            <section id="slide-time-factory" data-transition="zoom">
+                <style>
+                    /* FACTORY STYLES */
+                    .factory-container {
+                        position: relative;
+                        width: 100%;
+                        height: 500px;
+                        background: #f0f4f8;
+                        border-radius: 20px;
+                        overflow: hidden;
+                        box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.05);
+                        font-family: 'Lato', sans-serif;
+                    }
+
+                    .factory-belt {
+                        position: absolute;
+                        bottom: 100px;
+                        left: 0;
+                        width: 100%;
+                        height: 20px;
+                        background: #333;
+                        background-image: repeating-linear-gradient(45deg, #333 0, #333 10px, #444 10px, #444 20px);
+                        animation: beltMove 1s linear infinite;
+                    }
+
+                    @keyframes beltMove {
+                        from {
+                            background-position: 0 0;
+                        }
+
+                        to {
+                            background-position: 28px 0;
+                        }
+                    }
+
+                    .factory-machine {
+                        position: absolute;
+                        bottom: 120px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 200px;
+                        height: 150px;
+                        background: var(--primary);
+                        border-radius: 20px 20px 0 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 2;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                    }
+
+                    .digital-display {
+                        background: #000;
+                        color: #0f0;
+                        font-family: 'Courier New', monospace;
+                        font-size: 2.5em;
+                        padding: 10px 20px;
+                        border-radius: 10px;
+                        border: 4px solid #555;
+                        box-shadow: 0 0 10px #0f0;
+                    }
+
+                    .clock-item {
+                        position: absolute;
+                        bottom: 125px;
+                        left: -150px;
+                        width: 120px;
+                        height: 120px;
+                        background: white;
+                        border-radius: 50%;
+                        border: 8px solid var(--accent);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bold;
+                        font-size: 1.2em;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                        transition: left 0.5s linear, transform 0.5s;
+                        z-index: 1;
+                    }
+
+                    .clock-item.finished {
+                        left: 120%;
+                    }
+
+                    .factory-ui {
+                        position: absolute;
+                        top: 20px;
+                        width: 100%;
+                        text-align: center;
+                        z-index: 10;
+                    }
+
+                    .input-zone {
+                        margin-top: 350px;
+                        text-align: center;
+                    }
+
+                    .factory-input {
+                        font-size: 1.5em;
+                        padding: 10px 20px;
+                        border: 3px solid var(--primary);
+                        border-radius: 50px;
+                        width: 60%;
+                        text-align: center;
+                        outline: none;
+                        transition: all 0.3s;
+                    }
+
+                    .factory-input:focus {
+                        box-shadow: 0 0 15px var(--primary);
+                    }
+
+                    /* Added shake animation */
+                    .shake {
+                        animation: shake 0.5s;
+                    }
+
+                    @keyframes shake {
+                        0% {
+                            transform: translateX(0);
+                        }
+
+                        25% {
+                            transform: translateX(-5px);
+                        }
+
+                        50% {
+                            transform: translateX(5px);
+                        }
+
+                        75% {
+                            transform: translateX(-5px);
+                        }
+
+                        100% {
+                            transform: translateX(0);
+                        }
+                    }
+
+                    .tucan-guide {
+                        position: absolute;
+                        bottom: 20px;
+                        right: 20px;
+                        width: 100px;
+                        filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
+                    }
+
+                    .speech-bubble {
+                        position: absolute;
+                        bottom: 110px;
+                        right: 80px;
+                        background: white;
+                        padding: 15px;
+                        border-radius: 15px 15px 0 15px;
+                        border: 2px solid var(--primary);
+                        font-size: 0.9em;
+                        width: 180px;
+                        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .score-board {
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--accent);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 20px;
+                        font-weight: bold;
+                        font-size: 1.2em;
+                    }
+                </style>
+
+                <div class="factory-container">
+                    <div class="score-board">Score: <span id="factory-score">0</span>/5</div>
+
+                    <div class="factory-ui">
+                        <h2 style="color:var(--primary); margin:0;">La Fábrica del Tiempo</h2>
+                        <p style="margin:5px 0; color:#666;">Minutes 1-30: Use <strong>"Y"</strong></p>
+                    </div>
+
+                    <div class="factory-machine">
+                        <div class="digital-display" id="machine-display">--:--</div>
+                    </div>
+
+                    <div class="factory-belt"></div>
+
+                    <!-- Dynamic Clock Item -->
+                    <div class="clock-item" id="active-clock">
+                        <img src="https://image.pollinations.ai/prompt/simple%20clock%20face%20vector%20time?width=100&height=100&nologo=true"
+                            style="width:80%; opacity:0.8;">
+                    </div>
+
+                    <div class="input-zone">
+                        <!-- Added 'interactive-input' style concept or keep factory-input. Keeping factory-input as defined in style -->
+                        <input type="text" id="factory-user-input" class="factory-input"
+                            placeholder="Escribe la hora..." autocomplete="off">
+                        <button id="factory-submit-btn"
+                            style="padding: 15px 20px; border-radius: 50%; border:none; background:var(--primary); color:white; font-size:1.2em; cursor:pointer;">➜</button>
+                    </div>
+
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+                        class="tucan-guide">
+                    <div class="speech-bubble" id="factory-msg">
+                        ¡Hola! Say the time using "Son las... y..."
+                    </div>
+                </div>
+
+                <script>
+                    (function () {
+                        // Make normalizeText globally available for other scripts (like Pizza Time)
+                        window.normalizeText = function (text) {
+                            return text.toLowerCase().trim().replace(/[.,!]/g, "").replace(/\s+/g, " ");
+                        };
+
+                        const factoryData = [
+                            { time: "2:10", answer: ["son las dos y diez", "las dos y diez", "dos y diez"] },
+                            { time: "4:05", answer: ["son las cuatro y cinco", "las cuatro y cinco", "cuatro y cinco"] },
+                            { time: "1:20", answer: ["es la una y veinte", "la una y veinte", "una y veinte"] },
+                            { time: "8:25", answer: ["son las ocho y veinticinco", "las ocho y veinticinco", "ocho y veinticinco"] },
+                            { time: "11:10", answer: ["son las once y diez", "las once y diez", "once y diez"] }
+                        ];
+
+                        let factoryIndex = 0;
+                        let factoryScore = 0;
+
+                        // Get Elements safely
+                        const input = document.getElementById('factory-user-input');
+                        const btn = document.getElementById('factory-submit-btn');
+                        const display = document.getElementById('machine-display');
+                        const msg = document.getElementById('factory-msg');
+                        const clock = document.getElementById('active-clock');
+                        const scoreDisplay = document.getElementById('factory-score');
+
+                        function initFactory() {
+                            if (factoryIndex < factoryData.length) {
+                                if (display) display.innerText = factoryData[factoryIndex].time;
+                                if (clock) {
+                                    clock.style.left = "50%"; // Center
+                                    clock.style.transform = "translateX(-50%)";
+                                    clock.classList.remove('finished');
+                                }
+                                if (input) input.value = "";
+
+                                if (msg) {
+                                    msg.innerText = "¡Hola! Say the time using \"Son las... y...\"";
+                                    msg.style.color = "black";
+                                }
+
+                                // Auto focus if visible
+                                if (input && isSlideActive()) {
+                                    setTimeout(() => input.focus(), 100);
+                                }
+                            } else {
+                                // Win condition
+                                if (display) display.innerText = "FIN";
+                                if (msg) {
+                                    msg.innerHTML = "¡Excellent! Factory complete!";
+                                    msg.style.color = "green";
+                                }
+                            }
+                        }
+
+                        function checkFactoryTime() {
+                            if (!input) return;
+                            let userText = input.value;
+                            let correctAnswers = factoryData[factoryIndex].answer;
+                            let normalizedInput = window.normalizeText(userText); // Use the global helper
+
+                            let isCorrect = correctAnswers.some(ans => normalizedInput === ans);
+
+                            if (isCorrect) {
+                                // Success Animation
+                                if (clock) clock.classList.add('finished');
+                                if (msg) {
+                                    msg.innerText = "¡Correcto! Muy bien.";
+                                    msg.style.color = "green";
+                                }
+                                factoryScore++;
+                                if (scoreDisplay) scoreDisplay.innerText = factoryScore;
+
+                                setTimeout(() => {
+                                    factoryIndex++;
+                                    initFactory();
+                                }, 1000);
+
+                            } else {
+                                // Error
+                                if (msg) {
+                                    msg.innerText = "Try again! Remember: " + correctAnswers[0];
+                                    msg.style.color = "red";
+                                }
+                                input.classList.add('shake');
+                                setTimeout(() => input.classList.remove('shake'), 500);
+                            }
+                        }
+
+                        function isSlideActive() {
+                            const slide = document.getElementById('slide-time-factory');
+                            return slide && slide.classList.contains('present');
+                        }
+
+                        // Event Listeners
+                        if (btn) btn.addEventListener('click', checkFactoryTime);
+                        if (input) {
+                            input.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter') checkFactoryTime();
+                            });
+                        }
+
+                        // Initialize
+                        // Try to hook into Reveal.js events if available
+                        if (window.Reveal) {
+                            Reveal.addEventListener('slidechanged', (event) => {
+                                if (event.currentSlide.id === 'slide-time-factory') {
+                                    initFactory();
+                                }
+                            });
+                        }
+
+                        // Initial fallback setup
+                        setTimeout(initFactory, 1000);
+                    })();
+                </script>
+            </section>
+
+            <!-- GAME 2: PIZZA TIME (SPECIAL MINUTES) -->
+            <section id="slide-pizza-time" data-background-color="#FFF3E0">
+                <style>
+                    .pizzeria-stage {
+                        width: 100%;
+                        height: 600px;
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 30px;
+                        padding: 20px;
+                        box-sizing: border-box;
+                        font-family: 'Handlee', cursive;
+                    }
+
+                    .chef-zone {
+                        position: relative;
+                        background: #ffffff;
+                        border-radius: 20px;
+                        border: 4px solid #D84315;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: flex-start;
+                        padding-top: 40px;
+                        overflow: visible;
+                        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .order-zone {
+                        background: #fff;
+                        border-radius: 20px;
+                        border: 4px solid #FF8F00;
+                        padding: 30px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.1);
+                        position: relative;
+                    }
+
+                    /* Pizza Clock */
+                    .pizza-clock-dish {
+                        width: 250px;
+                        height: 250px;
+                        background: #FFCC80;
+                        /* Dough */
+                        border-radius: 50%;
+                        border: 12px solid #E65100;
+                        /* Crust */
+                        position: relative;
+                        margin-bottom: 20px;
+                        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+                        z-index: 5;
+                    }
+
+                    .cheese-layer {
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        right: 10px;
+                        bottom: 10px;
+                        background: #FFECB3;
+                        border-radius: 50%;
+                        border: 2px dashed #FFAB91;
+                    }
+
+                    .pepperoni {
+                        position: absolute;
+                        width: 25px;
+                        height: 25px;
+                        background: #D32F2F;
+                        border-radius: 50%;
+                        opacity: 0.8;
+                        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                    }
+
+                    .pizza-hand {
+                        position: absolute;
+                        bottom: 50%;
+                        left: 50%;
+                        transform-origin: bottom center;
+                        background: #3E2723;
+                        border-radius: 5px;
+                        z-index: 10;
+                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+                        transition: transform 1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+                    }
+
+                    .pizza-hand.hour {
+                        height: 60px;
+                        width: 10px;
+                        margin-left: -5px;
+                    }
+
+                    .pizza-hand.minute {
+                        height: 90px;
+                        width: 6px;
+                        margin-left: -3px;
+                        background: #D84315;
+                    }
+
+                    .center-pin {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 16px;
+                        height: 16px;
+                        background: #3E2723;
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 15;
+                    }
+
+                    /* Ticket Styles */
+                    .order-ticket {
+                        background: #FFF9C4;
+                        padding: 20px;
+                        width: 90%;
+                        border: 1px dashed #333;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                        text-align: center;
+                        margin-bottom: 20px;
+                        transform: rotate(-1deg);
+                        transition: transform 0.3s;
+                    }
+
+                    .order-ticket:hover {
+                        transform: rotate(0deg) scale(1.02);
+                    }
+
+                    .digital-time {
+                        font-size: 3em;
+                        color: #D84315;
+                        font-weight: bold;
+                        font-family: 'Courier New', monospace;
+                        display: block;
+                        margin: 10px 0;
+                    }
+
+                    .input-wrapper {
+                        width: 100%;
+                        position: relative;
+                    }
+
+                    .pizza-input {
+                        width: 100%;
+                        padding: 15px;
+                        font-size: 1.2em;
+                        border: 3px solid #ccc;
+                        border-radius: 12px;
+                        text-align: center;
+                        font-family: inherit;
+                        box-sizing: border-box;
+                        transition: all 0.3s;
+                        background: #FAFAFA;
+                    }
+
+                    .pizza-input:focus {
+                        border-color: #FF8F00;
+                        outline: none;
+                        box-shadow: 0 0 0 4px rgba(255, 143, 0, 0.2);
+                        background: #FFF;
+                    }
+
+                    .check-btn {
+                        background: linear-gradient(to bottom, #43A047, #2E7D32);
+                        color: white;
+                        border: none;
+                        padding: 12px 30px;
+                        font-size: 1.2em;
+                        border-radius: 50px;
+                        margin-top: 15px;
+                        cursor: pointer;
+                        box-shadow: 0 4px 0 #1B5E20;
+                        transition: transform 0.1s;
+                        font-family: 'Handlee', cursive;
+                    }
+
+                    .check-btn:active {
+                        transform: translateY(4px);
+                        box-shadow: 0 0 0 #1B5E20;
+                    }
+
+                    .feedback-msg {
+                        min-height: 40px;
+                        margin-top: 15px;
+                        font-weight: bold;
+                        font-size: 1.3em;
+                    }
+
+                    .progress-dots {
+                        display: flex;
+                        gap: 10px;
+                        margin-top: 20px;
+                    }
+
+                    .p-dot {
+                        width: 15px;
+                        height: 15px;
+                        background: #E0E0E0;
+                        border-radius: 50%;
+                        transition: background 0.3s;
+                    }
+
+                    .p-dot.active {
+                        background: #FF8F00;
+                        transform: scale(1.2);
+                    }
+
+                    .chef-avatar {
+                        width: 180px;
+                        margin-top: auto;
+                        margin-bottom: -10px;
+                        z-index: 20;
+                        filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+                        transition: transform 0.3s;
+                    }
+
+                    /* Shake */
+                    .shake {
+                        animation: shake 0.5s;
+                    }
+
+                    @keyframes shake {
+                        0% {
+                            transform: translateX(0);
+                        }
+
+                        25% {
+                            transform: translateX(-5px);
+                        }
+
+                        50% {
+                            transform: translateX(5px);
+                        }
+
+                        75% {
+                            transform: translateX(-5px);
+                        }
+
+                        100% {
+                            transform: translateX(0);
+                        }
+                    }
+                </style>
+
+                <div class="pizzeria-stage">
+                    <!-- Decoration -->
+                    <h2
+                        style="position: absolute; top: -50px; left: 0; right: 0; color: #D84315; z-index: 10; font-size: 2em; text-align:center; font-family:'Handlee', cursive;">
+                        🍕 Pizzería "El Tiempo" 🇮🇹
+                    </h2>
+
+                    <div class="chef-zone">
+                        <div class="speech-bubble"
+                            style="margin-bottom: 20px; font-size: 1em; padding: 10px; border-radius: 10px; border: 2px solid #333; position: relative; background:white; z-index:30;">
+                            <span id="chef-speech">¡Ciao! Help me box these pizzas on time!</span>
+                        </div>
+
+                        <div class="pizza-clock-dish">
+                            <div class="cheese-layer"></div>
+                            <!-- Pepperonis as hour marks -->
+                            <div class="pepperoni" style="top: 5px; left: 50%; transform: translateX(-50%);"></div>
+                            <div class="pepperoni" style="bottom: 5px; left: 50%; transform: translateX(-50%);"></div>
+                            <div class="pepperoni" style="top: 50%; left: 5px; transform: translateY(-50%);"></div>
+                            <div class="pepperoni" style="top: 50%; right: 5px; transform: translateY(-50%);"></div>
+
+                            <div class="pizza-hand hour" id="pz-hour"></div>
+                            <div class="pizza-hand minute" id="pz-min"></div>
+                            <div class="center-pin"></div>
+                        </div>
+
+                        <img src="https://image.pollinations.ai/prompt/cute%20cartoon%20italian%20chef%20holding%20a%20pizza%20friendly%20mascot%20sticker%20white%20background?width=300&height=300&nologo=true"
+                            class="chef-avatar" id="chef-avatar">
+                    </div>
+
+                    <div class="order-zone">
+                        <div class="order-ticket">
+                            <span style="display:block; font-size:0.8em; color:#777; letter-spacing: 2px;">ORDER #<span
+                                    id="order-num">1</span></span>
+                            <span class="digital-time" id="pz-digital">--:--</span>
+                            <p style="margin:0; font-size:0.9em; color:#D84315;">Use <strong>"cuarto"</strong> or
+                                <strong>"media"</strong>
+                            </p>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <input type="text" id="pz-input" class="pizza-input" placeholder="Son las..."
+                                autocomplete="off">
+                        </div>
+
+                        <button class="check-btn" onclick="checkPizzaOrder()">Entregar 📦</button>
+                        <div class="feedback-msg" id="pz-feedback"></div>
+
+                        <div class="progress-dots" id="pz-progress">
+                            <!-- Dots generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    (function () {
+                        // Data specifically for this game
+                        const pizzaOrders = [
+                            { h: 4, m: 15, text: "4:15", ans: ["son las cuatro y cuarto"] },
+                            { h: 2, m: 30, text: "2:30", ans: ["son las dos y media"] },
+                            { h: 1, m: 15, text: "1:15", ans: ["es la una y cuarto"] },
+                            { h: 9, m: 30, text: "9:30", ans: ["son las nueve y media"] },
+                            { h: 12, m: 15, text: "12:15", ans: ["son las doce y cuarto"] },
+                            { h: 6, m: 30, text: "6:30", ans: ["son las seis y media"] },
+                            { h: 11, m: 15, text: "11:15", ans: ["son las once y cuarto"] },
+                            { h: 1, m: 30, text: "1:30", ans: ["es la una y media"] },
+                        ];
+
+                        let currentIdx = 0;
+
+                        // Expose init function globally so Reveal can call it if needed, or just run it
+                        window.initPizzaGame = function () {
+                            currentIdx = 0;
+                            const container = document.getElementById('pz-progress');
+                            if (!container) return;
+                            container.innerHTML = '';
+
+                            pizzaOrders.forEach((_, i) => {
+                                let d = document.createElement('div');
+                                d.className = 'p-dot';
+                                d.id = `p-dot-${i}`;
+                                container.appendChild(d);
+                            });
+
+                            loadOrder();
+                        };
+
+                        function loadOrder() {
+                            if (currentIdx >= pizzaOrders.length) {
+                                endGame();
+                                return;
+                            }
+
+                            const data = pizzaOrders[currentIdx];
+
+                            document.getElementById('order-num').innerText = currentIdx + 1;
+                            document.getElementById('pz-digital').innerText = data.text;
+                            document.getElementById('pz-input').style.display = 'block';
+                            document.getElementById('pz-input').value = "";
+                            document.getElementById('pz-input').focus();
+                            document.getElementById('pz-feedback').innerText = "";
+
+                            // Reset Chef
+                            document.getElementById('chef-speech').innerText = "Nuevo pedido: " + data.text;
+                            document.getElementById('chef-speech').style.color = "black";
+
+                            // Move Hands
+                            const hDeg = (data.h * 30) + (data.m * 0.5);
+                            const mDeg = data.m * 6;
+
+                            document.getElementById('pz-hour').style.transform = `rotate(${hDeg}deg)`;
+                            document.getElementById('pz-min').style.transform = `rotate(${mDeg}deg)`;
+                        }
+
+                        function normalize(str) {
+                            return str.toLowerCase().trim()
+                                .replace(/[.,!¡¿?]/g, "")
+                                .replace(/\s+/g, " ");
+                        }
+
+                        // Global function for onclick
+                        window.checkPizzaOrder = function () {
+                            const inputElem = document.getElementById('pz-input');
+                            const val = normalize(inputElem.value);
+                            const correctRaw = pizzaOrders[currentIdx].ans;
+
+                            // Allow variations if needed, but currently strict on basic format
+                            const isCorrect = correctRaw.some(ans => val === normalize(ans));
+
+                            const feedback = document.getElementById('pz-feedback');
+                            const chef = document.getElementById('chef-avatar');
+
+                            if (isCorrect) {
+                                feedback.innerText = "¡Mamma Mia! Perfecto! 🤌";
+                                feedback.style.color = "#2E7D32"; // Green
+                                document.getElementById(`p-dot-${currentIdx}`).classList.add('active');
+
+                                // Success Animation
+                                chef.style.transform = "scale(1.2) rotate(10deg)";
+                                setTimeout(() => chef.style.transform = "scale(1) rotate(0deg)", 400);
+
+                                currentIdx++;
+                                setTimeout(loadOrder, 1200);
+                            } else {
+                                feedback.innerText = "No... Try again! (" + correctRaw[0] + ")";
+                                feedback.style.color = "#D32F2F"; // Red
+
+                                inputElem.classList.add('shake');
+                                setTimeout(() => inputElem.classList.remove('shake'), 500);
+
+                                document.getElementById('chef-speech').innerText = "¡Ay caramba! Wrong time!";
+                                document.getElementById('chef-speech').style.color = "red";
+                            }
+                        };
+
+                        function endGame() {
+                            document.getElementById('pz-digital').innerText = "CERRADO";
+                            document.getElementById('pz-feedback').innerHTML = "¡Excellent! All orders delivered.";
+                            document.getElementById('chef-speech').innerText = "Grazie mille! You are hired!";
+                            document.getElementById('chef-speech').style.color = "#E65100";
+                            document.getElementById('pz-input').style.display = 'none';
+                        }
+
+                        // Auto-start
+                        setTimeout(window.initPizzaGame, 1000);
+                    })();
+                </script>
+            </section>
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h2>The "Menos" Zone (31-59)</h2>
+                        <p>When minutes are > 30, we must look to the <strong>NEXT hour</strong>.</p>
+
+                        <div class="concept-box">
+                            <h3 style="margin-top:0; font-size:1.1em; color:var(--primary);">The 3-Step Logic:</h3>
+                            <ol style="font-size:0.9em; margin-bottom:0; text-align: left; margin-left: 1.5em;">
+                                <li><strong>Jump Ahead:</strong> Go to the <em>next</em> hour.</li>
+                                <li><strong>Subtract:</strong> Say "menos" (minus).</li>
+                                <li><strong>Count Down:</strong> How many minutes left?</li>
+                            </ol>
+                            <hr style="margin: 15px 0;">
+                            <p style="text-align:center; font-size:1.2em; margin: 0;">
+                                <span style="opacity:0.6;">3:50</span> ➔
+                                <strong>Son las cuatro menos diez.</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="text-align:center; margin-bottom: 15px;">¡A Practicar!</h3>
+
+                        <!-- Exercise 1 -->
+                        <div class="concept-box"
+                            style="padding: 15px; margin-bottom: 10px; background:white; border-left: 8px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="font-size:1.4em; color:var(--primary);">08:55</strong>
+                                <span class="small-text"
+                                    style="background:#eee; padding:2px 8px; border-radius:4px;">Next: 9:00</span>
+                            </div>
+                            <div style="margin-top:10px; font-size: 0.9em;">
+                                ➔ Son las nueve <input type="text" class="interactive-input" placeholder="menos..."
+                                    style="width: 120px;">
+                            </div>
+                        </div>
+
+                        <!-- Exercise 2 -->
+                        <div class="concept-box"
+                            style="padding: 15px; margin-bottom: 10px; background:white; border-left: 8px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="font-size:1.4em; color:var(--primary);">10:40</strong>
+                                <span class="small-text"
+                                    style="background:#eee; padding:2px 8px; border-radius:4px;">Next: 11:00</span>
+                            </div>
+                            <div style="margin-top:10px; font-size: 0.9em;">
+                                ➔ Son las once <input type="text" class="interactive-input" placeholder="menos..."
+                                    style="width: 120px;">
+                            </div>
+                        </div>
+
+                        <!-- Exercise 3 -->
+                        <div class="concept-box"
+                            style="padding: 15px; margin-bottom: 10px; background:white; border-left: 8px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="font-size:1.4em; color:var(--primary);">12:50</strong>
+                                <span class="small-text"
+                                    style="background:#eee; padding:2px 8px; border-radius:4px;">Next: 1:00</span>
+                            </div>
+                            <div style="margin-top:10px; font-size: 0.9em;">
+                                ➔ <strong style="color:var(--highlight);">Es la</strong> una <input type="text"
+                                    class="interactive-input" placeholder="menos..." style="width: 120px;">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section data-background-color="#0a0a0a" style="color: #00ff41; font-family: 'Courier New', monospace;"
+                id="mission-cronos">
+                <style>
+                    /* TERMINAL STYLES */
+                    .terminal-container {
+                        border: 2px solid #00ff41;
+                        background: rgba(0, 20, 0, 0.9);
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+                        text-align: left;
+                        max-width: 900px;
+                        margin: 0 auto;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .terminal-header {
+                        border-bottom: 1px solid #00ff41;
+                        padding-bottom: 10px;
+                        margin-bottom: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 0.8em;
+                        opacity: 0.8;
+                    }
+
+                    .typewriter-text {
+                        font-size: 1.1em;
+                        line-height: 2;
+                        color: #cfc;
+                    }
+
+                    .cronos-input {
+                        background: transparent;
+                        border: none;
+                        border-bottom: 2px solid #00ff41;
+                        color: #fff;
+                        font-family: 'Courier New', monospace;
+                        font-size: 1em;
+                        width: 100px;
+                        text-align: center;
+                        transition: all 0.3s;
+                    }
+
+                    .cronos-input:focus {
+                        outline: none;
+                        background: rgba(0, 255, 65, 0.1);
+                        box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+                    }
+
+                    .cronos-input.error {
+                        border-bottom-color: #ff0055;
+                        color: #ff0055;
+                        animation: shake 0.4s ease-in-out;
+                    }
+
+                    .cronos-input.success {
+                        border-bottom-color: #00ccff;
+                        color: #00ccff;
+                    }
+
+                    .scan-line {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 5px;
+                        background: rgba(0, 255, 65, 0.3);
+                        opacity: 0.4;
+                        animation: scan 3s linear infinite;
+                        pointer-events: none;
+                    }
+
+                    @keyframes scan {
+                        0% {
+                            top: -10%;
+                        }
+
+                        100% {
+                            top: 110%;
+                        }
+                    }
+
+                    .mission-btn {
+                        background: #003300;
+                        border: 1px solid #00ff41;
+                        color: #00ff41;
+                        padding: 10px 30px;
+                        font-family: 'Courier New', monospace;
+                        font-size: 1.2em;
+                        margin-top: 20px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                    }
+
+                    .mission-btn:hover {
+                        background: #00ff41;
+                        color: #000;
+                        box-shadow: 0 0 15px #00ff41;
+                    }
+
+                    #cronos-reward {
+                        display: none;
+                        margin-top: 20px;
+                        text-align: center;
+                        animation: zoomIn 0.5s;
+                    }
+
+                    .agent-badge {
+                        width: 150px;
+                        height: auto;
+                        border: 4px solid #ffd700;
+                        border-radius: 50%;
+                        box-shadow: 0 0 30px #ffd700;
+                    }
+
+                    @keyframes zoomIn {
+                        from {
+                            transform: scale(0);
+                            opacity: 0;
+                        }
+
+                        to {
+                            transform: scale(1);
+                            opacity: 1;
+                        }
+                    }
+                </style>
+
+                <h2 style="font-family: 'Courier New', monospace; text-shadow: 0 0 10px #00ff41; margin-bottom: 30px;">
+                    🕵️ AGENTE CRONOS: TIMELINE REPAIR
+                </h2>
+
+                <div class="terminal-container">
+                    <div class="scan-line"></div>
+                    <div class="terminal-header">
+                        <span>// SECURE CONNECTION ESTABLISHED</span>
+                        <span>ID: CRONOS-007</span>
+                        <span>STATUS: <span style="color:#ff0055; animation: blink 1s infinite;">CORRUPTED</span></span>
+                    </div>
+
+                    <div class="typewriter-text">
+                        <p style="margin-bottom: 20px; color: #888; font-size: 0.8em;">
+                            INstructionS: Restore the mission log. Use <strong style="color:#fff">SER</strong>
+                            (Identity/Time) or <strong style="color:#fff">ESTAR</strong> (Location/State) and correct
+                            time prepositions.
+                        </p>
+
+                        <p style="text-align: justify;">
+                            "Informe de Misión #404:
+                            <br><br>
+                            Hoy <input type="text" class="cronos-input" data-answer="es" placeholder="[SER]"> martes. El
+                            objetivo <input type="text" class="cronos-input" data-answer="está" placeholder="[ESTAR]">
+                            localizado en el museo antiguo. La operación secreta <input type="text" class="cronos-input"
+                                data-answer="es" placeholder="[SER]"> <input type="text" class="cronos-input"
+                                data-answer="a las" placeholder="[prep]"> ocho en punto de la noche.
+                            <br><br>
+                            Ahora mismo, el reloj de la torre indica que <input type="text" class="cronos-input"
+                                data-answer="son las" placeholder="[plural]"> siete y media. Mi equipo <input
+                                type="text" class="cronos-input" data-answer="está" placeholder="[ESTAR]"> preparado
+                            cerca de la entrada lateral.
+                            <br><br>
+                            Un guardia sospechoso pregunta: '¿Qué hora <input type="text" class="cronos-input"
+                                data-answer="es" placeholder="[SER]">?'
+                            <br>
+                            Yo le respondo rápidamente que el museo cierra <input type="text" class="cronos-input"
+                                data-answer="a la" placeholder="[singular]"> una de la madrugada. Debemos actuar antes
+                            de que sea tarde."
+                        </p>
+                    </div>
+
+                    <div style="text-align: right;">
+                        <button class="mission-btn" onclick="checkCronosMission()">>> EXECUTE REPAIR <<< /button>
+                    </div>
+
+                    <div id="cronos-reward">
+                        <h3 style="color: #ffd700; text-shadow: 0 0 10px #ffd700; margin-top:20px;">MISSION ACCOMPLISHED
+                        </h3>
+                        <p>Timeline Stabilized. Agent Status: ELITE.</p>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+                            class="agent-badge">
+                    </div>
+                </div>
+
+                <script>
+                    function checkCronosMission() {
+                        const inputs = document.querySelectorAll('#mission-cronos .cronos-input');
+                        let allCorrect = true;
+
+                        // Audio Context for Sounds (No external files needed)
+                        const AudioContext = window.AudioContext || window.webkitAudioContext;
+                        const audioCtx = new AudioContext();
+
+                        function playTone(freq, type, duration, delay = 0) {
+                            setTimeout(() => {
+                                const osc = audioCtx.createOscillator();
+                                const gain = audioCtx.createGain();
+                                osc.type = type;
+                                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                                osc.connect(gain);
+                                gain.connect(audioCtx.destination);
+                                osc.start();
+                                osc.stop(audioCtx.currentTime + duration);
+                            }, delay);
+                        }
+
+                        inputs.forEach(input => {
+                            const val = input.value.toLowerCase().trim();
+                            const ans = input.dataset.answer.toLowerCase();
+
+                            // Simple normalization
+                            const cleanVal = val.replace(/[.,!]/g, "");
+
+                            if (cleanVal === ans) {
+                                input.classList.add('success');
+                                input.classList.remove('error');
+                            } else {
+                                allCorrect = false;
+                                input.classList.add('error');
+                                input.classList.remove('success');
+                            }
+                        });
+
+                        if (allCorrect) {
+                            // VICTORY SOUND (Fanfare-ish)
+                            playTone(400, 'sine', 0.2, 0);
+                            playTone(500, 'sine', 0.2, 200);
+                            playTone(800, 'square', 0.4, 400);
+
+                            document.getElementById('cronos-reward').style.display = 'block';
+                            // Scroll to bottom of container if needed
+                            document.querySelector('.terminal-container').scrollTo({ top: 1000, behavior: 'smooth' });
+                        } else {
+                            // FAILURE SOUND (Buzz)
+                            playTone(150, 'sawtooth', 0.4, 0);
+                            playTone(100, 'sawtooth', 0.4, 200);
+                        }
+                    }
+                </script>
+            </section>
+
+            <section>
+                <h2>Practice Set 1: Digital to Text</h2>
+                <p>Convierte la hora digital a español. ¡Cuidado con "y" vs "menos"!</p>
+
+                <div class="exercise-row">
+                    <span class="sentence-line">
+                        <strong style="color:var(--primary);">02:10</strong> ➔ Son las dos <input type="text"
+                            class="interactive-input" placeholder="minutos...">
+                    </span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">
+                        <strong style="color:var(--primary);">04:50</strong> ➔ Son las cinco <input type="text"
+                            class="interactive-input" placeholder="minutos...">
+                    </span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">
+                        <strong style="color:var(--primary);">01:30</strong> ➔ Es la una <input type="text"
+                            class="interactive-input" placeholder="minutos...">
+                    </span>
+                </div>
+                <div class="exercise-row">
+                    <span class="sentence-line">
+                        <strong style="color:var(--primary);">07:45</strong> ➔ Son las ocho <input type="text"
+                            class="interactive-input" placeholder="minutos...">
+                    </span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice Set 2: Train Schedule</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <table class="table-custom">
+                            <tr>
+                                <th>Destino</th>
+                                <th>Hora de Salida</th>
+                            </tr>
+                            <tr>
+                                <td>Madrid</td>
+                                <td>10:15 AM</td>
+                            </tr>
+                            <tr>
+                                <td>Barcelona</td>
+                                <td>02:30 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Valencia</td>
+                                <td>05:45 PM</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <p class="small-text">Responde a las preguntas (Answer the questions):</p>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                ¿A qué hora sale el tren a Madrid? <br>
+                                ➔ A las diez <input type="text" class="interactive-input" placeholder="...">
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                ¿A qué hora sale el tren a Valencia? <br>
+                                ➔ A las seis <input type="text" class="interactive-input" placeholder="...">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice Set 3: Conversation</h2>
+                <p>Completa el diálogo entre Ana y Pedro.</p>
+                <div class="concept-box">
+                    <p><strong>Ana:</strong> ¡Hola Pedro! ¿Tienes hora?</p>
+                    <p><strong>Pedro:</strong> Sí, claro. Son las <input type="text" class="interactive-input"
+                            placeholder="3:20"> y veinte.</p>
+                    <p><strong>Ana:</strong> ¡Uy, es tarde! Mi autobús sale <input type="text" class="interactive-input"
+                            placeholder="at"> las cuatro.</p>
+                    <p><strong>Pedro:</strong> No te preocupes. Tienes cuarenta minutos, <input type="text"
+                            class="interactive-input" placeholder="more or less">.</p>
+                    <p><strong>Ana:</strong> ¡Gracias! Adiós.</p>
+                </div>
+                <img src="https://image.pollinations.ai/prompt/two%20friends%20talking%20cartoon%20speech%20bubbles%20flat%20vector?width=500&height=200&nologo=true"
+                    class="img-container" style="max-height: 150px;">
+            </section>
+
+            <section>
+                <h2>Practice Set 4: Full Translation</h2>
+                <p>Translate the full sentence to Spanish.</p>
+
+                <div class="exercise-row">
+                    <p style="width:100%; margin:0; font-size:0.9em; color:#666;">It is 1:00 PM exactly.</p>
+                    <input type="text" class="interactive-input" style="width: 100%; text-align:left;"
+                        placeholder="Escribe aquí...">
+                </div>
+
+                <div class="exercise-row">
+                    <p style="width:100%; margin:0; font-size:0.9em; color:#666;">The meeting is at 9:30 in the morning.
+                    </p>
+                    <input type="text" class="interactive-input" style="width: 100%; text-align:left;"
+                        placeholder="Escribe aquí...">
+                </div>
+
+                <div class="exercise-row">
+                    <p style="width:100%; margin:0; font-size:0.9em; color:#666;">It is 11:55 (five to twelve).</p>
+                    <input type="text" class="interactive-input" style="width: 100%; text-align:left;"
+                        placeholder="Escribe aquí...">
+                </div>
+            </section>
+
+            <section>
+                <h2>Practice Set 5: My Schedule</h2>
+                <p>Crea frases verdaderas sobre tu rutina.</p>
+                <div class="grid-responsive">
+                    <div>
+                        <p class="small-text">Ejemplo: <em>Yo como a las dos.</em></p>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                (Despertarse) ➔ Yo me levanto a las... <br>
+                                <input type="text" class="interactive-input" style="width: 90%;">
+                            </span>
+                        </div>
+                        <div class="exercise-row">
+                            <span class="sentence-line">
+                                (Dormir) ➔ Yo me duermo a las... <br>
+                                <input type="text" class="interactive-input" style="width: 90%;">
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/dormir-dia_noche.png-e1765690383629.png"
+                            class="img-container" alt="Rutina">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Reto Mental: Logical Time</h2>
+                <p>Lee y responde (Read and answer).</p>
+
+                <div class="exercise-row">
+                    <p style="width:100%; margin:0;">1. The train leaves at <strong>3:50 PM</strong>.</p>
+                    <span class="sentence-line">
+                        (In Spanish): El tren sale a las <input type="text" class="interactive-input"
+                            style="width: 200px;" placeholder="..."> de la tarde.
+                    </span>
+                </div>
+
+                <div class="exercise-row">
+                    <p style="width:100%; margin:0;">2. The class is at <strong>12:45 PM</strong>.</p>
+                    <span class="sentence-line">
+                        (In Spanish): La clase es a la <input type="text" class="interactive-input"
+                            style="width: 200px;" placeholder="..."> de la tarde.
+                    </span>
+                </div>
+
+                <p class="small-text" style="margin-top: 20px;">*Remember: 12:45 is almost 1:00 (Una), so we use
+                    singular "a la".</p>
+            </section>
+
+            <section
+                style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <div class="final-slide-container">
+                    <h2 style="color: var(--primary); font-family: 'Merriweather', serif; font-size: 2.2em;">Excellent
+                        Practice!</h2>
+                    <p class="subtitle" style="font-size: 1.2em; color: var(--text-main);">You have completed the A1 La
+                        Hora Lab.</p>
+
+                    <div style="position: relative; display: inline-block;">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png"
+                            alt="Happy" class="final-img">
+                        <div class="cert-badge">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+                                alt="Sello">
+                        </div>
+                    </div>
+
+                    <p style="font-size: 1em; color: #777; font-style: italic; margin-top: 10px;">Don't forget to
+                        download this PDF for review.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
+    <script>
+        // 1. Array con las imágenes de fondo de la marca
+        const brandBackgrounds = [
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-3.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-2-1.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-1-1.jpg"
+        ];
+
+        // 2. Seleccionar todas las diapositivas
+        const slides = document.querySelectorAll('.reveal .slides > section');
+
+        // 3. Asignar imagen aleatoria a cada una
+        slides.forEach(slide => {
+            const randomImg = brandBackgrounds[Math.floor(Math.random() * brandBackgrounds.length)];
+
+            // Asignar los atributos de Reveal.js
+            slide.setAttribute('data-background-image', randomImg);
+            slide.setAttribute('data-background-size', 'cover');
+            slide.setAttribute('data-background-position', 'center center');
+        });
+    </script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: false, history: false,
+
+            // LÓGICA RESPONSIVA CRÍTICA
+            width: isMobile ? 360 : 1200,
+            height: isMobile ? 600 : 700,
+
+            margin: isMobile ? 0.05 : 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            overview: false
+        });
+    </script>
+
+</body>
+
+</html>

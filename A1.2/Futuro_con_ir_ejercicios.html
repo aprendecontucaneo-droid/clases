@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase Tucaneo - Futuro Próximo A2</title>
+    
+    <!-- LIBRERÍAS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- FUENTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #10b981; /* Verde Tucaneo */
+            --accent: #f59e0b;  /* Naranja Tropical */
+            --error: #ef4444;
+            --text-main: #1f2937; 
+            --bg-light: #f8fafc;
+        }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+
+        /* --- DRAWER --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2);
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 20001;
+            background: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%;
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        #safe-close-btn:hover { transform: scale(1.1); }
+
+        /* --- UI ELEMENTS --- */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; }
+        #floating-cta { 
+            position: fixed; bottom: 20px; left: 30px; z-index: 5000; 
+            font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px;
+        }
+
+        /* --- REVEAL OVERRIDES --- */
+        .reveal { color: var(--text-main); font-size: 24px; }
+        .reveal h1, .reveal h2, .reveal h3 { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--primary); 
+            text-transform: none; 
+            font-weight: 700;
+        }
+        /* Fix for scrollable content */
+        .reveal section { 
+            display: flex !important; 
+            flex-direction: column; 
+            justify-content: center; 
+            height: 100%;
+            overflow-y: auto; /* Allow scrolling if content is too tall */
+            padding: 20px 0;
+        }
+        
+        /* Table Styles for Grammar */
+        .grammar-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px; }
+        .grammar-table th { color: #6b7280; font-weight: 400; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; padding: 10px; }
+        .grammar-table td { background: white; padding: 15px; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; font-size: 1.2em; }
+        .grammar-table tr td:first-child { border-left: 1px solid #e5e7eb; border-top-left-radius: 10px; border-bottom-left-radius: 10px; font-weight: bold; color: var(--text-main); }
+        .grammar-table tr td:last-child { border-right: 1px solid #e5e7eb; border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+
+        /* --- COMPONENTS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .clean-input {
+            border: none; border-bottom: 2px solid #cbd5e1; background: rgba(243, 244, 246, 0.5);
+            font-family: 'Lato', sans-serif; font-size: 1em; color: var(--primary);
+            text-align: center; width: 140px; min-width: 100px; padding: 0 5px;
+            border-radius: 4px 4px 0 0; transition: 0.3s;
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
+
+        /* Exercise Box Helper */
+        .exercise-box {
+            background: white; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        /* --- LAYOUTS --- */
+        .grid-responsive { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; 
+            align-items: center; width: 100%; padding: 0 40px;
+        }
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; }
+
+        /* --- BUTTONS --- */
+        .nav-btn {
+            font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+            padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none;
+        }
+        .nav-btn.whiteboard { background-color: var(--accent); }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #374151; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+            .grid-responsive, .two-cols { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .reveal { font-size: 18px; }
+            #fixed-logo { width: 100px; top: 15px; left: 15px; }
+            #top-nav { top: 15px; right: 15px; }
+            .clean-input { width: 100%; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY</a>
+
+    <!-- MENÚ LATERAL (HERRAMIENTAS) -->
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <!-- BOTONES SUPERIORES -->
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
+            <i class="fas fa-pen"></i> Pizarra
+        </button>
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">
+            <i class="fas fa-sign-out-alt"></i> Salir
+        </a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- 1. PORTADA: VIAJE AL FUTURO -->
+            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/selva-tres_tucanes-conversando_y_senalando.png-scaled-e1765659410991.png" data-background-opacity="0.2">
+                <div class="glass-card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <div style="font-size: 3em; margin-bottom: 10px; color: var(--accent);">
+                        <i class="fas fa-crystal-ball"></i>
+                    </div>
+                    <h1 style="font-size: 3.5em; margin: 15px 0;">¿Qué va a pasar?</h1>
+                    <div style="width: 60px; height: 4px; background: var(--primary); margin: 30px auto;"></div>
+                    <p style="font-size: 1.3em; color: #4b5563;">El Futuro Próximo (A2)</p>
+                    <p style="font-size: 0.9em; color: #6b7280; margin-top: 20px;">Meta: Planear viajes, predecir y organizar.</p>
+                </div>
+            </section>
+
+            <!-- 2. ACTIVACIÓN: LA MALETA -->
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h2 style="margin-bottom: 20px;">La Maleta Misteriosa</h2>
+                        <p class="text-sm text-gray-500 mb-6 flex items-center justify-center gap-2"><i class="fas fa-eye text-primary"></i> Instrucción: Observa los objetos y deduce el destino del viajero.</p>
+                        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.5em; color: #4b5563;">
+                                <div class="flex flex-col items-center gap-2"><i class="fas fa-swimmer text-blue-500"></i> <span class="text-sm">Traje de baño</span></div>
+                                <div class="flex flex-col items-center gap-2"><i class="fas fa-snowflake text-cyan-300"></i> <span class="text-sm">Abrigo Piel</span></div>
+                                <div class="flex flex-col items-center gap-2"><i class="fas fa-table-tennis text-green-500"></i> <span class="text-sm">Raqueta</span></div>
+                                <div class="flex flex-col items-center gap-2"><i class="fas fa-passport text-red-800"></i> <span class="text-sm">Pasaporte</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="glass-card">
+                            <h3 class="text-xl font-bold mb-4 text-gray-700">¿A dónde crees que va?</h3>
+                            <ul class="space-y-4 text-left">
+                                <li><i class="fas fa-question-circle text-orange-400"></i> ¿Invierno o verano?</li>
+                                <li><i class="fas fa-question-circle text-orange-400"></i> ¿Playa o montaña?</li>
+                                <li><i class="fas fa-search text-green-500"></i> ¿Por qué la raqueta y el abrigo?</li>
+                            </ul>
+                            <div class="mt-6">
+                                <input type="text" class="clean-input w-full" placeholder="Escribe tu teoría..." style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TEORÍA: LA FÓRMULA -->
+            <section>
+                <h2>La Fórmula del Futuro</h2>
+                <p class="text-gray-500 mb-6">El motor de tus planes</p>
+                
+                <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+                    <div style="font-size: 2em; margin-bottom: 30px; background: #ecfdf5; padding: 15px; border-radius: 50px; display: inline-block;">
+                        <span class="text-gray-700">IR</span> + <span style="color: var(--error); font-weight: 900;">A</span> + <span class="text-blue-600">INFINITIVO</span>
+                    </div>
+
+                    <table class="grammar-table">
+                        <thead>
+                            <tr>
+                                <th>Sujeto</th>
+                                <th>Verbo IR</th>
+                                <th>Nexo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Yo</td>
+                                <td>Voy</td>
+                                <td rowspan="5" style="vertical-align: middle; color: var(--error); font-weight: 900; font-size: 1.5em;">a</td>
+                                <td rowspan="5" style="vertical-align: middle; font-style: italic; color: #6b7280;">viajar<br>comer<br>dormir</td>
+                            </tr>
+                            <tr><td>Tú</td><td>Vas</td></tr>
+                            <tr><td>Él / Ella</td><td>Va</td></tr>
+                            <tr><td>Nosotros</td><td>Vamos</td></tr>
+                            <tr><td>Ellos</td><td>Van</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. PRÁCTICA MECÁNICA -->
+            <section>
+                <h3>El Fin de Semana de los Otros</h3>
+                <p class="mb-8 text-gray-500 flex items-center justify-center gap-2"><i class="fas fa-pen text-primary"></i> Instrucción: Completa las frases conjugando el verbo IR + a + Infinitivo.</p>
+
+                <!-- Grid mejorada con flex-wrap para evitar cortes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto w-full px-4">
+                    <!-- Item 1 -->
+                    <div class="exercise-box bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-4">
+                        <div class="bg-blue-100 p-3 rounded-full text-blue-600 shrink-0"><i class="fas fa-bed"></i></div>
+                        <div class="text-left flex-1 w-full">
+                            <p class="text-sm text-gray-400">Ella / dormir</p>
+                            <p class="text-lg">Ella <strong>va a dormir</strong> con su perro.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="exercise-box bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-4">
+                        <div class="bg-orange-100 p-3 rounded-full text-orange-600 shrink-0"><i class="fas fa-cookie-bite"></i></div>
+                        <div class="text-left flex-1 w-full">
+                            <p class="text-sm text-gray-400">Nosotros / cocinar</p>
+                            <div class="flex flex-wrap items-center gap-2 text-lg">
+                                <span>Nosotros</span>
+                                <input type="text" class="clean-input" placeholder="...">
+                                <span>galletas.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="exercise-box bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-4">
+                        <div class="bg-red-100 p-3 rounded-full text-red-600 shrink-0"><i class="fas fa-tv"></i></div>
+                        <div class="text-left flex-1 w-full">
+                            <p class="text-sm text-gray-400">Tú / ver</p>
+                            <div class="flex flex-wrap items-center gap-2 text-lg">
+                                <span>Tú</span>
+                                <input type="text" class="clean-input" placeholder="...">
+                                <span>una serie.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="exercise-box bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-4">
+                        <div class="bg-yellow-100 p-3 rounded-full text-yellow-600 shrink-0"><i class="fas fa-beer"></i></div>
+                        <div class="text-left flex-1 w-full">
+                            <p class="text-sm text-gray-400">Ellos / beber</p>
+                            <div class="flex flex-wrap items-center gap-2 text-lg">
+                                <span>Ellos</span>
+                                <input type="text" class="clean-input" placeholder="...">
+                                <span>cerveza.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. PRÁCTICA CONTEXTUALIZADA: AGENDA -->
+            <section>
+                <h3>La Agenda Caótica de Juan</h3>
+                <p class="mb-6 text-gray-500 flex items-center justify-center gap-2"><i class="fas fa-comment-dots text-primary"></i> Instrucción: Transforma las notas cortas en frases completas (Ej: "Juan va a beber...").</p>
+                <div class="grid-responsive mt-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary text-left relative">
+                        <div class="absolute -top-3 -right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">LUNES</div>
+                        <ul class="space-y-6">
+                            <li class="flex items-center gap-4 opacity-50">
+                                <span class="font-bold font-mono">07:00 AM</span>
+                                <span class="border-b border-gray-300 flex-1">Ducha fría</span>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <span class="font-bold font-mono text-primary">08:00 AM</span>
+                                <span class="border-b border-gray-300 flex-1 flex items-center gap-2"><i class="fas fa-coffee"></i> Café</span>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <span class="font-bold font-mono text-primary">10:00 AM</span>
+                                <span class="border-b border-gray-300 flex-1 flex items-center gap-2"><i class="fas fa-table-tennis"></i> Tenis</span>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <span class="font-bold font-mono text-primary">20:00 PM</span>
+                                <span class="border-b border-gray-300 flex-1 flex items-center gap-2"><i class="fas fa-ghost"></i> Cine de terror</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="mb-4 font-bold text-gray-600">Transforma la agenda:</p>
+                        <div class="space-y-4">
+                            <input type="text" class="clean-input w-full text-left" placeholder="A las 8, Juan va a...">
+                            <input type="text" class="clean-input w-full text-left" placeholder="A las 10...">
+                            <input type="text" class="clean-input w-full text-left" placeholder="Por la noche...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. TEORÍA: REFLEXIVOS -->
+            <section>
+                <h2>Profundización: Reflexivos</h2>
+                <div class="two-cols mt-8">
+                    <div class="glass-card">
+                        <h4 class="text-accent font-bold mb-4 uppercase text-sm">Marcadores de Tiempo</h4>
+                        <ul class="text-left space-y-2 text-gray-600">
+                            <li><i class="fas fa-calendar-day text-primary mr-2"></i> Mañana</li>
+                            <li><i class="fas fa-calendar-week text-primary mr-2"></i> Pasado mañana</li>
+                            <li><i class="fas fa-clock text-primary mr-2"></i> Esta noche</li>
+                            <li><i class="fas fa-forward text-primary mr-2"></i> El próximo mes</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card border-2 border-primary">
+                        <h4 class="text-primary font-bold mb-4 uppercase text-sm">Posición del Pronombre</h4>
+                        
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-400 mb-1">Opción A (Antes)</p>
+                            <p class="text-xl"><strong>Me</strong> voy a lavar</p>
+                        </div>
+                        
+                        <div class="w-full h-px bg-gray-200 my-4"></div>
+
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Opción B (Después)</p>
+                            <p class="text-xl">Voy a lavar<strong>me</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. DIÁLOGO -->
+            <section>
+                <h3>Diálogo: María y Luis</h3>
+                <p class="text-sm text-gray-500 mb-6 flex items-center justify-center gap-2"><i class="fas fa-user-friends text-primary"></i> Instrucción: Elige el verbo correcto, conjúgalo y completa el diálogo.</p>
+                <p class="text-xs text-gray-400 mb-6">(Verbos disponibles: levantarse / visitar / ir)</p>
+
+                <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg text-left w-full">
+                    <div class="mb-6 flex gap-4">
+                        <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 font-bold shrink-0">M</div>
+                        <div>
+                            <p class="font-bold text-pink-600">María</p>
+                            <p>"¿Qué vas a hacer el domingo?"</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 flex gap-4 flex-row-reverse text-right">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-bold shrink-0">L</div>
+                        <div class="w-full">
+                            <p class="font-bold text-blue-600">Luis</p>
+                            <p class="flex flex-wrap justify-end items-center gap-1">
+                                "Yo no <input type="text" class="clean-input" placeholder="(visitar)"> a mis padres."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 flex gap-4 flex-row-reverse text-right">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-bold shrink-0">L</div>
+                        <div class="w-full">
+                            <p class="flex flex-wrap justify-end items-center gap-1">
+                                "El domingo <input type="text" class="clean-input" placeholder="(levantarse)"> tarde."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 flex-row-reverse text-right">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-bold shrink-0">L</div>
+                        <div class="w-full">
+                            <p class="flex flex-wrap justify-end items-center gap-1">
+                                "Nosotros <input type="text" class="clean-input" placeholder="(ir)"> al bosque."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. DETECTIVE DE ERRORES -->
+            <section>
+                <div class="flex items-center justify-center gap-4 mb-2">
+                    <i class="fas fa-search text-4xl text-gray-700"></i>
+                    <h2>Detective de Errores</h2>
+                </div>
+                <p class="mb-8 text-gray-500 text-center flex items-center justify-center gap-2"><i class="fas fa-search-plus text-primary"></i> Instrucción: Encuentra el error en cada frase y escribe la versión correcta.</p>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg max-w-4xl mx-auto space-y-6 w-full">
+                    <!-- Fila 1 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between border-b pb-4 gap-4">
+                        <span class="text-red-500 line-through text-xl flex-1 text-center md:text-left">"Yo voy comer pizza."</span>
+                        <div class="flex-1 w-full">
+                             <input type="text" class="clean-input w-full" placeholder="Corrección" style="color: var(--primary);">
+                        </div>
+                    </div>
+                    <!-- Fila 2 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between border-b pb-4 gap-4">
+                        <span class="text-red-500 line-through text-xl flex-1 text-center md:text-left">"Nosotros vamas a viajar."</span>
+                        <div class="flex-1 w-full">
+                             <input type="text" class="clean-input w-full" placeholder="Corrección" style="color: var(--primary);">
+                        </div>
+                    </div>
+                    <!-- Fila 3 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between border-b pb-4 gap-4">
+                        <span class="text-red-500 line-through text-xl flex-1 text-center md:text-left">"¿Qué tu vas a hacer?"</span>
+                        <div class="flex-1 w-full">
+                             <input type="text" class="clean-input w-full" placeholder="Corrección" style="color: var(--primary);">
+                        </div>
+                    </div>
+                    <!-- Fila 4 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <span class="text-red-500 line-through text-xl flex-1 text-center md:text-left">"Van a salir ayer."</span>
+                        <div class="flex-1 w-full">
+                             <input type="text" class="clean-input w-full" placeholder="Corrección" style="color: var(--primary);">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. CAUSA Y EFECTO -->
+            <section>
+                <h3>Lógica Visual: Causa y Efecto</h3>
+                <p class="mb-6 text-gray-500 flex items-center justify-center gap-2"><i class="fas fa-project-diagram text-primary"></i> Instrucción: Escribe la letra (A, B, C, D) que corresponde a cada situación.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full px-4 items-start">
+                    
+                    <!-- Columna Izquierda: Situaciones + Inputs -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-gray-400">
+                        <h4 class="text-gray-500 font-bold uppercase text-sm mb-4 border-b pb-2">1. Situación Actual</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span>1. Cielo gris y oscuro</span>
+                                <input type="text" class="clean-input w-16 font-bold text-center uppercase" placeholder="?">
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span>2. Anillo de diamante</span>
+                                <input type="text" class="clean-input w-16 font-bold text-center uppercase" placeholder="?">
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span>3. Examen mañana</span>
+                                <input type="text" class="clean-input w-16 font-bold text-center uppercase" placeholder="?">
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span>4. Billetes a Egipto</span>
+                                <input type="text" class="clean-input w-16 font-bold text-center uppercase" placeholder="?">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Opciones -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary">
+                        <h4 class="text-primary font-bold uppercase text-sm mb-4 border-b pb-2">2. Futuro Próximo</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg text-green-800">
+                                <span class="font-bold bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-sm text-green-600">A</span>
+                                <span>Va a estudiar toda la noche.</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg text-green-800">
+                                <span class="font-bold bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-sm text-green-600">B</span>
+                                <span>Vamos a ver las pirámides.</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg text-green-800">
+                                <span class="font-bold bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-sm text-green-600">C</span>
+                                <span>Va a pedir matrimonio.</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg text-green-800">
+                                <span class="font-bold bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-sm text-green-600">D</span>
+                                <span>Va a llover.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 10. ROLEPLAY: ADIVINO -->
+            <section>
+                <div style="background: #1e1b4b; padding: 40px; border-radius: 20px; color: white;">
+                    <div style="font-size: 3em; color: #a78bfa; margin-bottom: 20px;"><i class="fas fa-hand-sparkles"></i></div>
+                    <h2 style="color: white; margin-bottom: 10px;">El Adivino</h2>
+                    <p style="color: #c7d2fe; margin-bottom: 20px;">Instrucción: ¡Actúa! Tú eres el adivino. Inventa una predicción creativa para cada tema.</p>
+                    
+                    <div class="mt-8 grid grid-cols-3 gap-4">
+                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                            <i class="fas fa-money-bill-wave text-green-400 text-2xl mb-2"></i>
+                            <p>¿Dinero?</p>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                            <i class="fas fa-plane text-blue-400 text-2xl mb-2"></i>
+                            <p>¿Viajes?</p>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                            <i class="fas fa-language text-yellow-400 text-2xl mb-2"></i>
+                            <p>¿Chino?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. PRODUCCIÓN LIBRE -->
+            <section>
+                <h2>Tus Próximas Vacaciones</h2>
+                <p class="mb-6 text-gray-500 flex items-center justify-center gap-2"><i class="fas fa-microphone text-primary"></i> Instrucción: Responde a las preguntas describiendo tu plan real o ideal.</p>
+                <div class="grid-responsive mt-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80" class="rounded-lg shadow-md object-cover h-32 w-full">
+                        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=300&q=80" class="rounded-lg shadow-md object-cover h-32 w-full">
+                        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=300&q=80" class="rounded-lg shadow-md object-cover h-32 w-full">
+                        <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=300&q=80" class="rounded-lg shadow-md object-cover h-32 w-full">
+                    </div>
+                    <div class="text-left space-y-4">
+                        <h4 class="text-xl font-bold text-gray-700">Cuéntame tu plan (Real o Ideal):</h4>
+                        <ul class="space-y-3 text-lg text-gray-600">
+                            <li><i class="fas fa-map-marker-alt text-red-500 w-8"></i> ¿A dónde vas a ir?</li>
+                            <li><i class="fas fa-users text-blue-500 w-8"></i> ¿Con quién vas a ir?</li>
+                            <li><i class="fas fa-utensils text-green-500 w-8"></i> ¿Qué vas a comer?</li>
+                            <li><i class="fas fa-calendar-check text-purple-500 w-8"></i> ¿Cuándo vas a volver?</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. CIERRE -->
+            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/selva-tres_tucanes-conversando_y_senalando.png-scaled-e1765659410991.png" data-background-opacity="0.2">
+                <div class="glass-card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h2 style="margin-bottom: 30px;">Checklist Mental</h2>
+                    <div class="flex flex-col gap-3 text-left max-w-md mx-auto mb-8 text-lg">
+                        <div class="flex items-center gap-3"><i class="fas fa-check-circle text-primary"></i> <span><strong>Fórmula:</strong> Ir + a + Infinitivo</span></div>
+                        <div class="flex items-center gap-3"><i class="fas fa-check-circle text-primary"></i> <span><strong>Pronombres:</strong> Me voy a... / Voy a ...me</span></div>
+                        <div class="flex items-center gap-3"><i class="fas fa-check-circle text-primary"></i> <span><strong>Marcadores:</strong> Mañana, próximo mes</span></div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <p class="font-bold text-yellow-800"><i class="fas fa-pencil-alt mr-2"></i> Tarea:</p>
+                        <p class="text-yellow-700">Escribe 3 cosas que vas a hacer este finde y 3 que NO vas a hacer.</p>
+                    </div>
+
+                    <div style="margin-top: 40px; color: #9ca3af; font-size: 0.9em; letter-spacing: 1px;">
+                        ¡Nos vemos en la próxima clase!
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- REACT COMPONENTS (PIZARRA + VOCABULARIO) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        
+        const I = {
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
+            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+
+        function VocabModule() {
+            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
+            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
+            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
+            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
+            const copy = () => {
+                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
+                if(!text) return alert("Lista vacía");
+                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
+            };
+            return (
+                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
+                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
+                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
+                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
+                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
+                </div>
+            );
+        }
+
+        function WhiteboardModule() {
+            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
+            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
+            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
+            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const generateId = () => Math.random().toString(36).substr(2, 9);
+            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
+            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+            useLayoutEffect(() => {
+                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
+                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
+                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
+                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
+                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
+                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
+                elements.forEach(el => {
+                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
+                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
+                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
+                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
+                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
+                });
+                ctx.restore();
+            }, [elements, size, panOffset]);
+            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
+            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+            const handleDown = (e) => {
+                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
+                if(tool==='selection') { setIsPanning(true); return; }
+                const {x,y} = getPos(e);
+                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
+                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+            };
+            const handleMove = (e) => {
+                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
+                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+            };
+            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
+            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
+            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+            return (
+                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
+                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
+                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
+                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
+                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
+                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
+                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+                    </div>
+                    <div className="absolute top-4 left-4 z-40 pointer-events-none opacity-50"><img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-1-e1765224729911.png" className="h-10 w-auto"/></div>
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
+                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+                </div>
+            );
+        }
+
+        function App() {
+            const [tab, setTab] = useState('board');
+            const close = () => window.toggleDrawer();
+            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            return (
+                <div className="h-full flex flex-col bg-slate-50">
+                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                        <div className="flex-1"></div>
+                    </div>
+                    <div className="flex-1 relative overflow-hidden">
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+        Reveal.initialize({
+            controls: true, progress: true, center: true, hash: false, history: false,
+            width: isMobile ? 360 : 1200, height: isMobile ? 600 : 700,
+            margin: isMobile ? 0.05 : 0.04, minScale: 0.2, maxScale: 2.0,
+            transition: 'slide', backgroundTransition: 'fade', overview: false
+        });
+
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+    </script>
+</body>
+</html>

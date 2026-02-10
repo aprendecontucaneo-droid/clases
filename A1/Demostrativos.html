@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Demostrativos - Tucaneo Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+
+<style>
+    :root { 
+        --primary: #2E8B57; /* Verde Tucaneo */
+        --accent: #FF8C00;  /* Naranja Tropical */
+        --background: #f8f9fa; 
+        --text-main: #2c3e50; 
+    }
+    body { background-color: var(--background); font-family: 'Lato', sans-serif; }
+
+    /* ESTILOS BASE */
+    #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+    #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+    #floating-cta { position: fixed; z-index: 5000; }
+    .reveal { color: var(--text-main); }
+    .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); text-shadow: 2px 2px 0px rgba(255,255,255,0.8); }
+    
+    /* INPUTS Y CAJAS */
+    .interactive-input {
+        background: #fff8e1; border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+        font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+        border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+        font-size: 0.9em; padding: 5px;
+    }
+    .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+    
+    .exercise-row {
+        background: white; border-radius: 12px; border-left: 5px solid var(--primary);
+        display: flex; align-items: center; flex-wrap: wrap; box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    }
+    
+    .concept-box { background: white; border-radius: 15px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 20px; text-align: left;}
+
+    /* CLASES AUXILIARES */
+    .text-small { font-size: 0.7em; color: #444; font-weight: 600; font-style: italic; }
+    .highlight { color: var(--accent); font-weight: bold; }
+    .vocab-pill { background: #e8f5e9; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8em; }
+    
+    /* Layout de Columnas para Ejercicios Masivos */
+    .two-col-exercises {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        text-align: left;
+    }
+
+    /* --- MÓVIL (< 900px) --- */
+    @media screen and (max-width: 900px) {
+        #fixed-logo { width: 80px; top: 10px; left: 10px; }
+        #top-nav { top: 10px; right: 10px; gap: 8px; }
+        .nav-btn { 
+            padding: 6px 10px; font-size: 11px; border-radius: 12px; 
+            background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;
+        }
+        .nav-btn.exit { background: var(--accent); }
+        .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+        #floating-cta { 
+            background: white; color: var(--primary); border: 1px solid var(--primary);
+            padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+            left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .reveal { font-size: 16px; } 
+        .reveal h1 { font-size: 1.8em; margin-top: 60px; margin-bottom: 20px; }
+        .reveal h2 { font-size: 1.4em; margin-top: 40px; margin-bottom: 15px; }
+        .grid-responsive { display: flex; flex-direction: column; gap: 10px; justify-content: flex-start; padding-bottom: 40px; }
+        .two-col-exercises { grid-template-columns: 1fr; gap: 8px; }
+        .img-container { max-height: 160px; width: auto; max-width: 100%; display: block; margin: 0 auto; border-radius: 10px; }
+        .exercise-row { padding: 6px 10px; margin-bottom: 4px; font-size: 0.9em; gap: 5px; }
+        .final-slide-container { margin-top: 40px; }
+        .cert-badge { width: 80px; height: 80px; margin: -30px auto 10px auto; border: 4px solid var(--background); }
+        .cert-badge img { width: 50px; }
+        .final-img { max-width: 80%; }
+        .concept-box { padding: 10px; }
+    }
+
+    /* --- PC (> 901px) --- */
+    @media screen and (min-width: 901px) {
+        #fixed-logo { width: 160px; top: 20px; left: 30px; }
+        #top-nav { top: 30px; right: 30px; gap: 15px; }
+        .nav-btn {
+            font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+            padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: var(--accent); }
+        .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+        #floating-cta {
+            bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+            padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+        }
+        #floating-cta:hover { background: var(--primary); color: white; }
+        .reveal { font-size: 22px; }
+        .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; padding-bottom: 5px; }
+        .reveal h2 { font-size: 1.8em; margin-bottom: 30px; color: var(--primary); }
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+        .img-container { width: 100%; height: auto; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .exercise-row { padding: 10px 15px; margin-bottom: 10px; font-size: 0.95em; gap: 10px; border-radius: 8px; border-left-width: 4px; }
+        .grid-responsive > div:first-child { display: flex; flex-direction: column; justify-content: center; }
+        .final-slide-container { max-width: 700px; margin: auto; }
+        .final-img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .cert-badge { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: -50px auto 20px auto; position: relative; border: 5px solid var(--background); }
+        .cert-badge img { width: 75px; }
+    }
+    .sentence-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; width: 100%; }
+    @media print { #fixed-logo, #top-nav, #floating-cta { display: none !important; } }
+</style>
+</head>
+<body>
+
+<img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo"><div id="top-nav">
+    <a href="#" class="nav-btn download" onclick="window.print()">
+        <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+        Descargar PDF
+    </a>
+    <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a></div><a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+<div class="reveal">
+    <div class="slides">
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/4.jpg" data-background-opacity="0.15">
+            <div class="grid-responsive">
+                <div>
+                    <h1>Los Demostrativos</h1>
+                    <h3 style="color: var(--text-main);">Level A1 - Beginner</h3>
+                    <p>Demonstrative Adjectives & Pronouns</p>
+                    <p class="text-small">Aprendamos a señalar cosas en español.</p>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/social-dos-tucanes-hablando.jpg" class="img-container" alt="Intro">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/5.jpg" data-background-opacity="0.15">
+            <div class="grid-responsive">
+                <div>
+                    <h2>What are they?</h2>
+                    <div class="concept-box">
+                        <p><strong>Demonstratives</strong> are words we use to point at things. They answer the question "Which one?" (¿Cuál?).</p>
+                        <hr>
+                        <p>In Spanish, we choose the word based on:</p>
+                        <ul>
+                            <li><strong>Distance</strong> (How far is it?)</li>
+                            <li><strong>Gender</strong> (Masculine/Feminine)</li>
+                            <li><strong>Number</strong> (Singular/Plural)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/ciudad-persona-senalando.jpg" class="img-container" alt="Concept">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/6.jpg" data-background-opacity="0.15">
+            <h2>The 3 Zones of Distance</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; max-width: 800px; margin: 0 auto;">
+                
+                <div class="exercise-row" style="width: 100%; border-left: 10px solid var(--primary); background: #e8f5e9;">
+                    <div style="flex:1; text-align: left; padding-left: 10px;">
+                        <h4 style="margin:0; color:var(--primary); font-size: 1.2em;">ZONE 1: AQUÍ (Here)</h4>
+                        <p class="text-small" style="margin: 0;">Very close to me. I can touch it.</p>
+                    </div>
+                    <div style="font-weight: bold; font-size: 1.4em; color: var(--text-main); padding: 10px; background: white; border-radius: 8px;">ESTE / ESTA</div>
+                </div>
+
+                <div class="exercise-row" style="width: 100%; border-left: 10px solid var(--accent); background: #fff3e0;">
+                    <div style="flex:1; text-align: left; padding-left: 10px;">
+                        <h4 style="margin:0; color:var(--accent); font-size: 1.2em;">ZONE 2: AHÍ (There)</h4>
+                        <p class="text-small" style="margin: 0;">Medium distance. Close to you (the listener).</p>
+                    </div>
+                    <div style="font-weight: bold; font-size: 1.4em; color: var(--text-main); padding: 10px; background: white; border-radius: 8px;">ESE / ESA</div>
+                </div>
+
+                <div class="exercise-row" style="width: 100%; border-left: 10px solid #2c3e50; background: #eceff1;">
+                    <div style="flex:1; text-align: left; padding-left: 10px;">
+                        <h4 style="margin:0; color:#2c3e50; font-size: 1.2em;">ZONE 3: ALLÍ / ALLÁ (Over there)</h4>
+                        <p class="text-small" style="margin: 0;">Far from both of us.</p>
+                    </div>
+                    <div style="font-weight: bold; font-size: 1.4em; color: var(--text-main); padding: 10px; background: white; border-radius: 8px;">AQUEL / AQUELLA</div>
+                </div>
+
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/4.jpg" data-background-opacity="0.15">
+            <div class="grid-responsive">
+                <div>
+                    <h2>Zone 1: Near (Cerca)</h2>
+                    <p>Use for things you can touch.</p>
+                    <table style="width: 100%; font-size: 0.9em; border: 1px solid #ddd;">
+                        <tr style="background: var(--primary); color: white;">
+                            <th></th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Masc.</strong></td>
+                            <td>Este (This)</td>
+                            <td>Estos (These)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fem.</strong></td>
+                            <td>Esta (This)</td>
+                            <td>Estas (These)</td>
+                        </tr>
+                    </table>
+                    <p class="text-small" style="margin-top: 20px;">*Careful! "Esto" is only for abstract ideas.</p>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/social-persona-telefono.jpg" class="img-container" alt="Near">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/5.jpg" data-background-opacity="0.15">
+            <div class="grid-responsive">
+                <div>
+                    <h2>Zone 2: Medium (Media)</h2>
+                    <p>Use for things near the listener or a short distance away.</p>
+                    <table style="width: 100%; font-size: 0.9em; border: 1px solid #ddd;">
+                        <tr style="background: var(--accent); color: white;">
+                            <th></th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Masc.</strong></td>
+                            <td>Ese (That)</td>
+                            <td>Esos (Those)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fem.</strong></td>
+                            <td>Esa (That)</td>
+                            <td>Esas (Those)</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <img src="https://image.pollinations.ai/prompt/vector%20illustration%20person%20pointing%20at%20a%20chair%20two%20meters%20away%20simple%20style?width=500&height=400&nologo=true" class="img-container" alt="Medium">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/6.jpg" data-background-opacity="0.15">
+            <div class="grid-responsive">
+                <div>
+                    <h2>Zone 3: Far (Lejos)</h2>
+                    <p>Use for things far away, often outdoors.</p>
+                    <table style="width: 100%; font-size: 0.9em; border: 1px solid #ddd;">
+                        <tr style="background: #2c3e50; color: white;">
+                            <th></th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Masc.</strong></td>
+                            <td>Aquel</td>
+                            <td>Aquellos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fem.</strong></td>
+                            <td>Aquella</td>
+                            <td>Aquellas</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/12/intro-tucan-saludando-feliz.jpg" class="img-container" alt="Far">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/4.jpg" data-background-opacity="0.15">
+            <h2>Look and Choose</h2>
+            <p class="text-small">Select the correct demonstrative based on the context description.</p>
+            
+            <div class="two-col-exercises">
+                <div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: In my hand</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> bolígrafo.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: Touching it</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> camisa.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: Holding keys</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> llaves.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: Wearing them</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> zapatos.
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: Eating it now</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> manzana.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: On my desk</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> papeles.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: Touching my face</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> nariz.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <span class="vocab-pill">Context: In my pocket</span>
+                        <div class="sentence-line">
+                            <input type="text" class="interactive-input" style="width: 50px;"> dinero.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/5.jpg" data-background-opacity="0.15">
+            <h2>Verb SER + Demonstratives</h2>
+            <p class="text-small">Identify people or things. (Example: This is... / That is...)</p>
+            
+            <div class="two-col-exercises">
+                <div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            1. (This) <input type="text" class="interactive-input" style="width: 50px;"> es mi madre.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            2. (That) <input type="text" class="interactive-input" style="width: 50px;"> es un gato.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            3. (These) <input type="text" class="interactive-input" style="width: 50px;"> son libros.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            4. (Those - Far) <input type="text" class="interactive-input" style="width: 50px;"> son aves.
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            5. ¿Qué es (this abstract)? <input type="text" class="interactive-input" style="width: 50px;">?
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            6. (Those - Med) <input type="text" class="interactive-input" style="width: 50px;"> son tuyos.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            7. (That - Far) <input type="text" class="interactive-input" style="width: 50px;"> es Pedro.
+                        </div>
+                    </div>
+                    <div class="exercise-row">
+                        <div class="sentence-line">
+                            8. (This) <input type="text" class="interactive-input" style="width: 50px;"> es café.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/6.jpg" data-background-opacity="0.15">
+            <h2>Mixed Challenge</h2>
+            <p class="text-small">Look at the distance clue in parenthesis.</p>
+
+            <div class="two-col-exercises">
+                <div>
+                    <div class="exercise-row">
+                        1. (Far) <input type="text" class="interactive-input" style="width: 60px;"> casa es blanca.
+                    </div>
+                    <div class="exercise-row">
+                        2. (Near) <input type="text" class="interactive-input" style="width: 60px;"> vasos están sucios.
+                    </div>
+                    <div class="exercise-row">
+                        3. (Medium) <input type="text" class="interactive-input" style="width: 60px;"> mesa es azul.
+                    </div>
+                    <div class="exercise-row">
+                        4. (Far) <input type="text" class="interactive-input" style="width: 60px;"> pájaros vuelan.
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="exercise-row">
+                        5. (Near) <input type="text" class="interactive-input" style="width: 60px;"> chica es Ana.
+                    </div>
+                    <div class="exercise-row">
+                        6. (Medium) <input type="text" class="interactive-input" style="width: 60px;"> lápices son rojos.
+                    </div>
+                    <div class="exercise-row">
+                        7. (Far) <input type="text" class="interactive-input" style="width: 60px;"> árbol es viejo.
+                    </div>
+                    <div class="exercise-row">
+                        8. (Near) <input type="text" class="interactive-input" style="width: 60px;"> zapatos son míos.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/4.jpg" data-background-opacity="0.15">
+            <h2>Preferences</h2>
+            <p class="text-small">Complete with the correct demonstrative.</p>
+
+            <div class="two-col-exercises">
+                <div>
+                    <div class="exercise-row">
+                        1. Me gusta (this) <input type="text" class="interactive-input" style="width: 60px;"> sopa.
+                    </div>
+                    <div class="exercise-row">
+                        2. Odio (that-med) <input type="text" class="interactive-input" style="width: 60px;"> ruido.
+                    </div>
+                    <div class="exercise-row">
+                        3. Quiero (those-far) <input type="text" class="interactive-input" style="width: 60px;"> botas.
+                    </div>
+                    <div class="exercise-row">
+                        4. Prefiero (this) <input type="text" class="interactive-input" style="width: 60px;"> color.
+                    </div>
+                </div>
+                <div>
+                    <div class="exercise-row">
+                        5. Me encanta (that-far) <input type="text" class="interactive-input" style="width: 60px;"> playa.
+                    </div>
+                    <div class="exercise-row">
+                        6. No me gustan (these) <input type="text" class="interactive-input" style="width: 60px;"> fotos.
+                    </div>
+                    <div class="exercise-row">
+                        7. ¿Te gusta (that-med) <input type="text" class="interactive-input" style="width: 60px;"> coche?
+                    </div>
+                    <div class="exercise-row">
+                        8. Amo (these) <input type="text" class="interactive-input" style="width: 60px;"> flores.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/5.jpg" data-background-opacity="0.15">
+            <h2>Find the Error</h2>
+            <p>Mark the sentences that are <strong>incorrect</strong>.</p>
+            
+            <div class="grid-responsive" style="align-items: start;">
+                <div>
+                    <div class="exercise-row" style="display: block; text-align: left;">
+                        <input type="checkbox"> 1. <strong>Este</strong> libro es mío. <br>
+                        <input type="checkbox"> 2. <strong>Esa</strong> chico es alto. (Error)<br>
+                        <input type="checkbox"> 3. <strong>Aquellas</strong> casas son viejas. <br>
+                        <input type="checkbox"> 4. <strong>Estos</strong> zapatos son negros.
+                    </div>
+                    
+                    <div class="exercise-row" style="display: block; text-align: left; margin-top: 15px;">
+                        <input type="checkbox"> 5. <strong>Aquellos</strong> perros ladran. <br>
+                        <input type="checkbox"> 6. <strong>Esta</strong> hombre es mi tío. (Error)<br>
+                        <input type="checkbox"> 7. <strong>Esos</strong> manzanas son rojas. (Error)<br>
+                        <input type="checkbox"> 8. <strong>Aquel</strong> edificio es alto.
+                    </div>
+                </div>
+                <div>
+                    <img src="https://image.pollinations.ai/prompt/vector%20illustration%20student%20looking%20confused%20at%20a%20test%20finding%20errors?width=500&height=400&nologo=true" class="img-container" alt="Finding Errors">
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/6.jpg" data-background-opacity="0.15">
+            <h2>Review: Match</h2>
+            <div class="grid-responsive">
+                <div style="text-align: right;">
+                    <p>1. Cerca (Near) &nbsp; 🟢</p>
+                    <p>2. Lejos (Far) &nbsp; 🔵</p>
+                    <p>3. Media (Medium) &nbsp; 🟠</p>
+                </div>
+                <div style="text-align: left;">
+                    <p>⚪ &nbsp; <input type="text" class="interactive-input" style="width: 40px;"> Ese / Esa</p>
+                    <p>⚪ &nbsp; <input type="text" class="interactive-input" style="width: 40px;"> Aquel / Aquella</p>
+                    <p>⚪ &nbsp; <input type="text" class="interactive-input" style="width: 40px;"> Este / Esta</p>
+                </div>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/4.jpg" data-background-opacity="0.15">
+            <h2>Writing Challenge</h2>
+            <p>Look around you right now. Write 3 sentences.</p>
+            <div class="concept-box" style="height: 250px;">
+                <p class="text-small">Example: Esta silla es cómoda.</p>
+                <textarea style="width: 100%; height: 150px; border: 1px dashed #ccc; padding: 10px; font-family: 'Handlee';" placeholder="Escribe aquí..."></textarea>
+            </div>
+        </section>
+
+        <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/12/5.jpg" data-background-opacity="0.15" style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+            <div class="final-slide-container">
+                <h2 style="color: var(--primary); font-family: 'Merriweather', serif; font-size: 2.2em;">Excellent Practice!</h2>
+                <p class="subtitle" style="font-size: 1.2em; color: var(--text-main);">You have completed the A1 Lab.</p>
+                
+                <div style="position: relative; display: inline-block;">
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" alt="Happy" class="final-img">
+                    <div class="cert-badge">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Sello">
+                    </div>
+                </div>
+                
+                <p style="font-size: 1em; color: #777; font-style: italic; margin-top: 10px;">Don't forget to download this PDF.</p>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script>
+    const isMobile = window.innerWidth < 900;
+
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: false, history: false,
+        
+        // LÓGICA RESPONSIVA
+        width: isMobile ? 360 : 1200,
+        height: isMobile ? 650 : 700, 
+        
+        margin: isMobile ? 0.05 : 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        
+        transition: 'slide',
+        backgroundTransition: 'fade',
+        overview: false
+    });
+</script>
+
+</body>
+</html>

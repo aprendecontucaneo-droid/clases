@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>La Familia - Nivel A2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: #f8f9fa; 
+            --text-main: #2c3e50; 
+        }
+        body { font-family: 'Lato', sans-serif; }
+
+        /* ESTILOS BASE */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        
+        /* INPUTS Y ELEMENTOS INTERACTIVOS - CON TRANSPARENCIA */
+        .interactive-input {
+            background: rgba(255, 248, 225, 0.95); 
+            border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center;
+            border-radius: 4px; display: inline-block; -webkit-appearance: none; transition: all 0.2s;
+            font-size: 0.9em; width: 120px; padding: 5px; margin: 0 5px;
+        }
+        .interactive-input:focus { background: #fff; border-color: var(--primary); transform: scale(1.05); outline: none; }
+        
+        /* Cajas con fondo semi-transparente para leer sobre la imagen */
+        .exercise-row {
+            background: rgba(255, 255, 255, 0.92); /* Transparencia */
+            border-radius: 12px; border-left: 5px solid var(--primary);
+            display: flex; align-items: center; flex-wrap: wrap; box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            text-align: left; padding: 10px 15px; margin-bottom: 10px; gap: 10px;
+        }
+        
+        .concept-box { 
+            background: rgba(255, 255, 255, 0.92); /* Transparencia */
+            border-radius: 15px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+            padding: 20px; text-align: left; margin-bottom: 15px; 
+        }
+        
+        /* Layout mejorado para Vocabulario */
+        .vocab-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            text-align: left; 
+            width: 100%;
+        }
+        .vocab-item { 
+            background: rgba(255, 255, 255, 0.92); /* Transparencia */
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            border-left: 4px solid #eee; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s; 
+        }
+        .vocab-item:hover { transform: translateX(5px); border-left-color: var(--accent); }
+        .es-word { font-weight: bold; color: var(--primary); display: block; font-size: 1.1em; margin-bottom: 2px; }
+        .en-word { font-size: 0.85em; color: #777; font-style: italic; display: block;}
+
+        /* Tarjetas de Preposiciones */
+        .prep-card { 
+            background: rgba(255, 255, 255, 0.92); /* Transparencia */
+            border: 2px solid var(--primary); border-radius: 10px; 
+            padding: 15px 10px; text-align: center; font-weight: bold; color: var(--primary);
+            width: 140px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .prep-sub { display: block; font-size: 0.75em; color: #666; margin-top: 5px; font-weight: normal; font-style: italic; }
+
+        /* Grupos de Intrusos */
+        .intruder-group { 
+            background: rgba(255, 255, 255, 0.92); /* Transparencia */
+            padding: 15px; border-radius: 10px; border: 1px solid #eee; 
+        }
+        .intruder-title { color: var(--primary); font-weight: bold; margin-bottom: 10px; display: block; }
+        .intruder-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.9em; }
+        .intruder-list li { display: inline-block; background: rgba(240, 240, 240, 0.8); padding: 5px 10px; border-radius: 15px; }
+
+        /* --- MÓVIL (< 900px) --- */
+        @media screen and (max-width: 900px) {
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 8px; }
+            .nav-btn { 
+                padding: 6px 10px; font-size: 11px; border-radius: 12px; 
+                background: var(--primary); color: white; border: none; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;
+            }
+            .nav-btn.exit { background: var(--accent); }
+            .btn-icon { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+            #floating-cta { 
+                background: white; color: var(--primary); border: 1px solid var(--primary);
+                padding: 6px 14px; border-radius: 20px; font-size: 11px; text-decoration: none;
+                left: 50%; transform: translateX(-50%); bottom: 5px; width: auto; white-space: nowrap;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .reveal { font-size: 18px; }
+            .reveal h1 { font-size: 1.8em; margin-top: 60px; margin-bottom: 20px; }
+            .reveal h2 { font-size: 1.4em; margin-top: 40px; margin-bottom: 20px; }
+            .grid-responsive { display: flex; flex-direction: column; gap: 10px; justify-content: flex-start; padding-bottom: 40px; }
+            .img-container { max-height: 140px; width: auto; max-width: 100%; display: block; margin: 0 auto; border-radius: 10px; }
+            .exercise-row { padding: 6px 8px; margin-bottom: 5px; font-size: 0.85em; gap: 5px; }
+            .final-slide-container { margin-top: 30px; }
+            .cert-badge { width: 70px; height: 70px; margin: -25px auto 10px auto; border: 3px solid var(--background); }
+            .cert-badge img { width: 40px; }
+            .final-img { max-width: 70%; }
+        }
+
+        /* --- MÓVIL HORIZONTAL (LANDSCAPE) --- */
+        @media screen and (max-width: 900px) and (orientation: landscape) {
+            #fixed-logo, #top-nav, #floating-cta { display: none !important; }
+            .grid-responsive { 
+                display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center; height: 100%;
+                text-align: left; padding-top: 10px;
+            }
+            .reveal h1 { margin-top: 0px; font-size: 1.5em; margin-bottom: 10px; }
+            .reveal h2 { margin-top: 0px; font-size: 1.3em; margin-bottom: 10px; }
+            .img-container { max-height: 220px; }
+            .exercise-row { padding: 4px; font-size: 0.8em; margin-bottom: 5px; }
+        }
+
+        /* --- PC (> 901px) --- */
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+                padding: 8px 20px; border-radius: 50px; text-decoration: none; color: white;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--accent); }
+            .btn-icon { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+            .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.15); }
+            #floating-cta {
+                bottom: 20px; left: 20px; background: white; color: var(--primary); font-weight: bold;
+                padding: 10px 25px; border-radius: 30px; border: 2px solid var(--primary); text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+            }
+            #floating-cta:hover { background: var(--primary); color: white; }
+            .reveal { font-size: 24px; }
+            .reveal h1 { font-size: 2.2em; border-bottom: 4px solid var(--accent); margin-bottom: 30px; display: inline-block; padding-bottom: 5px; }
+            .reveal h2 { font-size: 1.8em; margin-bottom: 30px; color: var(--primary); }
+            .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-content: center; height: 100%; text-align: left; padding: 0 20px; }
+            .img-container { width: 100%; height: auto; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+            .exercise-row { padding: 12px 20px; margin-bottom: 15px; font-size: 1em; gap: 15px; border-radius: 8px; border-left-width: 4px; }
+            .grid-responsive > div:first-child { display: flex; flex-direction: column; justify-content: center; }
+            .final-slide-container { max-width: 700px; margin: auto; }
+            .final-img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+            .cert-badge { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: -50px auto 20px auto; position: relative; border: 5px solid var(--background); }
+            .cert-badge img { width: 75px; }
+        }
+        @media print { #fixed-logo, #top-nav, #floating-cta { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+    <div id="top-nav">
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="PDF" class="btn-icon">
+            Descargar PDF
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h1>La Familia</h1>
+                        <h3 style="color: var(--accent);">Nivel A2 - Práctica Total</h3>
+                        <p style="margin-top: 30px; font-size: 1.2em;">
+                            Vocabulario esencial, verbos importantes (Gustar, Ser, Estar) y gramática práctica.
+                        </p>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/familia-diversa-cena_atardecer.png-scaled-e1765657737330.png" class="img-container" alt="Portada Familia">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>01. Vocabulario: La Familia Básica</h2>
+                <div class="grid-responsive">
+                    <div class="concept-box">
+                        <ul style="line-height: 1.8;">
+                            <li><b>Padre / Madre:</b> Parents</li>
+                            <li><b>Hijo / Hija:</b> Son / Daughter</li>
+                            <li><b>Abuelo / Abuela:</b> Grandfather / Grandmother</li>
+                            <li><b>Hermano / Hermana:</b> Brother / Sister</li>
+                            <li><b>Tío / Tía:</b> Uncle / Aunt</li>
+                            <li><b>Primo / Prima:</b> Cousin</li>
+                            <li><b>Sobrino / Sobrina:</b> Nephew / Niece</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/vector%20illustration%20simple%20family%20tree%20icons%20connected%20flat%20design%20green%20and%20orange?width=500&height=400&nologo=true" class="img-container" alt="Árbol genealógico simple">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>02. Vocabulario: Familia Política</h2>
+                <div class="grid-responsive">
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/vector%20illustration%20wedding%20couple%20with%20inlaws%20flat%20design%20vector%20style?width=500&height=400&nologo=true" class="img-container" alt="Familia Política">
+                    </div>
+                    <div class="concept-box">
+                        <p>Personas por matrimonio:</p>
+                        <ul style="line-height: 1.8;">
+                            <li><b>Suegro / Suegra:</b> Father/Mother-in-law</li>
+                            <li><b>Yerno:</b> Son-in-law</li>
+                            <li><b>Nuera:</b> Daughter-in-law</li>
+                            <li><b>Cuñado / Cuñada:</b> Brother/Sister-in-law</li>
+                            <li><b>Padrastro / Madrastra:</b> Stepfather / Stepmother</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>03. Práctica de Vocabulario</h2>
+                <p style="margin-bottom: 20px;">Escribe quién es la persona.</p>
+                
+                <div class="drill-grid">
+                    <div class="exercise-row">1. El padre de mi padre es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">2. La hija de mi hermano es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">3. El esposo de mi hermana es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">4. La madre de mi esposo es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">5. El hijo de mi padrastro es mi <input class="interactive-input" style="width: 110px;"></div>
+                    <div class="exercise-row">6. La esposa de mi hijo es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">7. El hermano de mi madre es mi <input class="interactive-input" style="width: 100px;"></div>
+                    <div class="exercise-row">8. Los hijos de mis tíos son mis <input class="interactive-input" style="width: 100px;"></div>
+                </div>
+            </section>
+
+            <section>
+                <h2>04. Ser vs. Estar</h2>
+                <div class="grid-responsive">
+                    <div class="concept-box">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">SER (Identidad/Características)</h4>
+                        <ul>
+                            <li>Descripción física/personalidad.</li>
+                            <li>Profesión.</li>
+                            <li>Origen / Nacionalidad.</li>
+                            <li>Relación (Es mi padre).</li>
+                        </ul>
+                    </div>
+                    <div class="concept-box">
+                        <h4 style="color: var(--accent); margin-bottom: 10px;">ESTAR (Estados/Ubicación)</h4>
+                        <ul>
+                            <li>Ubicación (Dónde está).</li>
+                            <li>Estados de ánimo (Feliz, triste).</li>
+                            <li>Condiciones temporales (Enfermo, cansado).</li>
+                            <li>Estado civil (Casado, divorciado).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>05. Práctica: ¿Ser o Estar?</h2>
+                <p style="margin-bottom: 20px;">Completa con la conjugación correcta (soy, estoy, es, está, son, están).</p>
+
+                <div class="drill-grid">
+                    <div class="exercise-row">1. Mi madre <input class="interactive-input"> muy alta e inteligente.</div>
+                    <div class="exercise-row">2. Hoy mis hijos <input class="interactive-input"> cansados del colegio.</div>
+                    <div class="exercise-row">3. Nosotros <input class="interactive-input"> hermanos gemelos.</div>
+                    <div class="exercise-row">4. ¿Dónde <input class="interactive-input"> tus abuelos ahora?</div>
+                    <div class="exercise-row">5. Nuestra casa <input class="interactive-input"> bastante grande.</div>
+                    <div class="exercise-row">6. La sopa <input class="interactive-input"> fría en este momento.</div>
+                    <div class="exercise-row">7. Ellos <input class="interactive-input"> de Argentina.</div>
+                    <div class="exercise-row">8. Mi prima <input class="interactive-input"> muy feliz por su boda.</div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h2>06. Hay vs. Estar</h2>
+                        <p><b>Hay (Haber):</b> Existencia (There is/are).<br><b>Estar:</b> Ubicación específica.</p>
+                        <div class="exercise-row">1. En el jardín <input class="interactive-input" style="width:60px;"> dos niños.</div>
+                        <div class="exercise-row">2. Los niños <input class="interactive-input" style="width:60px;"> jugando fútbol.</div>
+                        <div class="exercise-row">3. No <input class="interactive-input" style="width:60px;"> perros aquí.</div>
+                        <div class="exercise-row">4. El banco <input class="interactive-input" style="width:60px;"> detrás de ellos.</div>
+                        <div class="exercise-row">5. <input class="interactive-input" style="width:60px;"> árboles verdes.</div>
+                    </div>
+                    <div>
+                        <img src="https://image.pollinations.ai/prompt/vector%20illustration%20garden%20scene%20kids%20playing%20ball%20trees%20bench%20flat%20design?width=500&height=400&nologo=true" class="img-container" alt="Jardín">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>07. Práctica Rápida: Hay / Está / Están</h2>
+                
+                <div class="drill-grid">
+                    <div class="exercise-row">1. En mi ciudad <input class="interactive-input" style="width:60px;"> muchos parques.</div>
+                    <div class="exercise-row">2. El parque central <input class="interactive-input" style="width:60px;"> en el centro.</div>
+                    <div class="exercise-row">3. ¿Dónde <input class="interactive-input" style="width:60px;"> mis llaves?</div>
+                    <div class="exercise-row">4. Sobre la mesa <input class="interactive-input" style="width:60px;"> un libro.</div>
+                    <div class="exercise-row">5. Mis padres <input class="interactive-input" style="width:60px;"> en el trabajo.</div>
+                    <div class="exercise-row">6. En la nevera no <input class="interactive-input" style="width:60px;"> leche.</div>
+                    <div class="exercise-row">7. ¿Cuántas personas <input class="interactive-input" style="width:60px;"> en tu familia?</div>
+                    <div class="exercise-row">8. Madrid <input class="interactive-input" style="width:60px;"> en España.</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>08. Los Demostrativos</h2>
+                <div class="grid-responsive">
+                    <div class="concept-box" style="text-align: center;">
+                        <h4 style="color: var(--primary);">Aquí (Cerca)</h4>
+                        <p><b>Este</b> hombre</p>
+                        <p><b>Esta</b> mujer</p>
+                        <p><b>Estos / Estas</b></p>
+                    </div>
+                    <div class="concept-box" style="text-align: center;">
+                        <h4 style="color: var(--accent);">Ahí (Media)</h4>
+                        <p><b>Ese</b> hombre</p>
+                        <p><b>Esa</b> mujer</p>
+                        <p><b>Esos / Esas</b></p>
+                    </div>
+                    <div class="concept-box" style="text-align: center;">
+                        <h4 style="color: #d32f2f;">Allí (Lejos)</h4>
+                        <p><b>Aquel</b> hombre</p>
+                        <p><b>Aquella</b> mujer</p>
+                        <p><b>Aquellos / Aquellas</b></p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>09. Práctica de Demostrativos</h2>
+                <p>Completa según la distancia indicada.</p>
+                
+                <div class="drill-grid">
+                    <div class="exercise-row">1. (Aquí) <input class="interactive-input" style="width:60px;"> carta es para mi padre.</div>
+                    <div class="exercise-row">2. (Allí) <input class="interactive-input" style="width:70px;"> árbol es muy antiguo.</div>
+                    <div class="exercise-row">3. (Ahí) Pásame <input class="interactive-input" style="width:60px;"> plato, por favor.</div>
+                    <div class="exercise-row">4. (Aquí) Me gustan <input class="interactive-input" style="width:60px;"> zapatos.</div>
+                    <div class="exercise-row">5. (Allí) ¿Ves <input class="interactive-input" style="width:70px;"> montañas?</div>
+                    <div class="exercise-row">6. (Ahí) <input class="interactive-input" style="width:60px;"> chica es mi prima.</div>
+                    <div class="exercise-row">7. (Aquí) <input class="interactive-input" style="width:60px;"> libro es interesante.</div>
+                    <div class="exercise-row">8. (Lejos) <input class="interactive-input" style="width:70px;"> coche es rojo.</div>
+                </div>
+            </section>
+
+            <section>
+                <div class="grid-responsive">
+                    <div>
+                        <h2>10. El Verbo Gustar</h2>
+                        <p>Recuerda: Usamos pronombres especiales (me, te, le, nos, les).</p>
+                        <div class="concept-box">
+                            <ul style="list-style: none; padding: 0;">
+                                <li>(A mí) <b>Me gusta</b> el café.</li>
+                                <li>(A ti) <b>Te gusta</b> leer.</li>
+                                <li>(A él) <b>Le gusta</b> la música.</li>
+                                <li>(A nosotros) <b>Nos gusta</b> viajar.</li>
+                                <li>(A ellos) <b>Les gusta</b> comer.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/12/nino-jugando-dulceria-mediodia.png-scaled-e1765692444939.png" class="img-container" alt="Gustos">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>11. Ejercicios con Gustar</h2>
+                <p>Escribe el pronombre (me, te, le...) y el verbo (gusta/gustan).</p>
+                
+                <div class="drill-grid">
+                    <div class="exercise-row">1. A mi padre <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> el fútbol.</div>
+                    <div class="exercise-row">2. A mis hermanas <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> las fiestas.</div>
+                    <div class="exercise-row">3. A nosotros <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> cocinar.</div>
+                    <div class="exercise-row">4. ¿A ti <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> los gatos?</div>
+                    <div class="exercise-row">5. A mi abuela no <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> el ruido.</div>
+                    <div class="exercise-row">6. A ellos <input class="interactive-input" style="width:40px;"> <input class="interactive-input" style="width:70px;"> estudiar español.</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>12. Encantar e Interesar</h2>
+                <p>Funcionan igual que Gustar. (Encantar = Gustar mucho).</p>
+                
+                <div class="drill-grid">
+                    <div class="exercise-row">1. A mi tío le <input class="interactive-input" style="width:100px;"> (encantar) los coches.</div>
+                    <div class="exercise-row">2. A mis primos les <input class="interactive-input" style="width:100px;"> (interesar) el arte.</div>
+                    <div class="exercise-row">3. A mi madre le <input class="interactive-input" style="width:100px;"> (encantar) las flores.</div>
+                    <div class="exercise-row">4. A nosotros nos <input class="interactive-input" style="width:100px;"> (interesar) viajar.</div>
+                    <div class="exercise-row">5. A mí me <input class="interactive-input" style="width:100px;"> (encantar) el chocolate.</div>
+                    <div class="exercise-row">6. A ellos les <input class="interactive-input" style="width:100px;"> (molestar) el tráfico.</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>13. Mezcla: Ser, Estar y Gustar</h2>
+                <p>Elige el verbo correcto para cada situación.</p>
+                <div class="drill-grid">
+                    <div class="exercise-row">1. Mi hermano <input class="interactive-input"> inteligente (Ser).</div>
+                    <div class="exercise-row">2. A mi hermano le <input class="interactive-input"> leer (Gustar).</div>
+                    <div class="exercise-row">3. Mis padres <input class="interactive-input"> en casa (Estar).</div>
+                    <div class="exercise-row">4. A mis padres les <input class="interactive-input"> la música (Gustar).</div>
+                    <div class="exercise-row">5. Nosotros <input class="interactive-input"> estudiantes (Ser).</div>
+                    <div class="exercise-row">6. A nosotros nos <input class="interactive-input"> estudiar (Gustar).</div>
+                    <div class="exercise-row">7. Tú <input class="interactive-input"> muy amable (Ser).</div>
+                    <div class="exercise-row">8. A ti te <input class="interactive-input"> ayudar (Gustar).</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>14. Historia Familiar</h2>
+                <div class="concept-box" style="line-height: 2.2; font-size: 1.1em;">
+                    "Hola. Me llamo Ana. En mi familia <input class="interactive-input" style="width:60px;"> (Haber) cuatro personas. Mi padre <input class="interactive-input" style="width:50px;"> (Ser) médico y <input class="interactive-input" style="width:60px;"> (Tener) 50 años. A él le <input class="interactive-input" style="width:70px;"> (Gustar) el tenis. Mi madre <input class="interactive-input" style="width:50px;"> (Estar) trabajando ahora. Nosotros <input class="interactive-input" style="width:80px;"> (Vivir) en Madrid. <input class="interactive-input" style="width:60px;"> (Este/Esta) casa es pequeña pero <input class="interactive-input" style="width:50px;"> (Ser) muy bonita."
+                </div>
+            </section>
+
+            <section>
+                <h2>15. Encuentra el Error</h2>
+                <p>Escribe la frase correcta.</p>
+                
+                <div class="concept-box">
+                    <p style="color: #c62828;">❌ 1. Mi padre es en la oficina.</p>
+                    <p>✅ <input class="interactive-input" style="width: 90%;"></p>
+                    
+                    <p style="color: #c62828; margin-top: 15px;">❌ 2. Yo gusto la pizza.</p>
+                    <p>✅ <input class="interactive-input" style="width: 90%;"></p>
+                    
+                    <p style="color: #c62828; margin-top: 15px;">❌ 3. En la fiesta son muchas personas.</p>
+                    <p>✅ <input class="interactive-input" style="width: 90%;"></p>
+                    
+                    <p style="color: #c62828; margin-top: 15px;">❌ 4. Este casa es bonita.</p>
+                    <p>✅ <input class="interactive-input" style="width: 90%;"></p>
+                </div>
+            </section>
+
+            <section style="display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <div class="final-slide-container">
+                    <h2 style="color: var(--primary); font-family: 'Merriweather', serif; font-size: 2.2em;">¡Excelente Trabajo!</h2>
+                    <p class="subtitle" style="font-size: 1.2em; color: var(--text-main);">Has completado la lección de Familia A2.</p>
+                    
+                    <div style="position: relative; display: inline-block;">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" alt="Happy" class="final-img">
+                        <div class="cert-badge">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Sello">
+                        </div>
+                    </div>
+                    
+                    <p style="font-size: 1.1em; color: #777; font-style: italic; margin-top: 15px;">Descarga el PDF para guardar tus respuestas.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // 1. Array con las 3 imágenes de fondo de la marca
+        const brandBackgrounds = [
+            "https://tucaneo.com/wp-content/uploads/2025/12/1.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/2.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/3.jpg"
+        ];
+
+        // 2. Seleccionar todas las diapositivas
+        const slides = document.querySelectorAll('.reveal .slides > section');
+
+        // 3. Asignar imagen aleatoria a cada una
+        slides.forEach(slide => {
+            const randomImg = brandBackgrounds[Math.floor(Math.random() * brandBackgrounds.length)];
+            
+            // Asignar los atributos de Reveal.js
+            slide.setAttribute('data-background-image', randomImg);
+            slide.setAttribute('data-background-size', 'cover');
+            slide.setAttribute('data-background-position', 'center center');
+        });
+    </script>
+    <script>
+        const isMobile = window.innerWidth < 900;
+
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: false, history: false,
+            
+            // CONFIGURACIÓN RESPONSIVA MEJORADA
+            width: 1200,
+            height: 750,
+            
+            margin: isMobile ? 0.02 : 0.04,
+            minScale: 0.1,
+            maxScale: 2.5,
+            
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            overview: false
+        });
+    </script>
+</body>
+</html>

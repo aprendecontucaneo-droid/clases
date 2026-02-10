@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+    /* =========================================
+       1. VARIABLES Y BASE (VISIBILIDAD ALTA)
+       ========================================= */
+    :root { 
+        --primary: #004d40; 
+        --accent: #ff6f00;  
+        --text-main: #0f172a; /* Texto casi negro para máximo contraste */
+        --text-secondary: #334155; /* Gris oscuro (antes era muy claro) */
+        --bg-light: #fefce8; 
+        --danger: #ef4444; 
+    }
+    
+    /* Mantenemos la magia del Zoom Nativo */
+    html, body { 
+        background-color: var(--bg-light); 
+        font-family: 'Lato', sans-serif;
+        height: 100%;
+        overflow-y: auto !important; /* CRÍTICO: NO BORRAR */
+    }
+
+    /* =========================================
+       2. REVEAL.JS - TIPOGRAFÍA (COMPACTA Y LEGIBLE)
+       ========================================= */
+    /* Bajamos un poco la base para que no se sienta "gigante" */
+    .reveal { color: var(--text-main); font-size: 28px; font-weight: 500; }
+    
+    /* Títulos */
+    .reveal h1 { font-size: 2.5em !important; line-height: 1.1 !important; color: var(--primary); margin-bottom: 0.5em !important; }
+    .reveal h2 { font-size: 1.8em !important; color: var(--primary); font-weight: 800; margin-bottom: 0.6em !important; }
+    .reveal h3 { font-size: 1.4em !important; font-weight: 700; color: var(--text-main); }
+    
+    /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
+    /* Forzamos un color mucho más oscuro y un peso semi-negrita */
+    .reveal .text-sm, 
+    .reveal .text-xs,
+    .reveal .text-gray-400, 
+    .reveal .text-gray-500 { 
+        color: var(--text-secondary) !important; /* Gris Oscuro */
+        font-weight: 600 !important; /* Más gordita la letra */
+        opacity: 0.9 !important; /* Quitamos transparencias */
+    }
+    
+    .reveal .text-sm { font-size: 0.85em !important; }
+    .reveal .text-xs { font-size: 0.75em !important; }
+
+    /* =========================================
+       3. ESTILO DE TARJETAS (CORREGIDO Y SEGURO)
+       ========================================= */
+    /* Modificado para permitir colores de fondo (como el verde) */
+    .glass-card {
+        /* Eliminamos la orden agresiva de transparencia */
+        backdrop-filter: blur(8px);       /* Efecto borroso bonito */
+        -webkit-backdrop-filter: blur(8px); /* Para Safari/iPhone */
+        
+        /* El resto lo dejamos que Tailwind lo controle en el HTML */
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Tarjetas internas: Más compactas y definidas */
+    .card {
+        background: white;
+        border-radius: 16px; 
+        padding: 2rem; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0; 
+    }
+/* =========================================
+       4. LAYOUT CONTROLADO (SCROLL + ARREGLO DE TÍTULOS)
+       ========================================= */
+    .reveal .slides { 
+        width: 100% !important; 
+        height: 100% !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        pointer-events: none; 
+    }
+    
+    .reveal section { 
+        height: 100vh !important;      
+        overflow-y: auto !important;   
+        overflow-x: hidden !important;
+        display: block !important;     
+        
+        /* AUMENTÉ ESTO: 100px arriba para bajar todo y que respete el menú */
+        padding: 100px 20px 80px 20px !important; 
+        
+        pointer-events: auto !important;
+        box-sizing: border-box; 
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* --- REGLA MÁGICA NUEVA --- */
+    /* Esto obliga al contenido a empezar desde arriba, anulando el 'justify-center' de Tailwind */
+    .reveal section > div {
+        height: auto !important;       /* Permite que crezca hacia abajo */
+        min-height: 100% !important;   
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important; /* ¡CLAVE! Alinea al inicio, no al centro */
+    }
+
+    /* AQUÍ ESTÁ EL TRUCO DE LA PROPORCIÓN: */
+    .slide-container {
+        width: 90% !important;
+        max-width: 1200px !important;
+        margin: 0 auto;
+    }
+    
+    /* =========================================
+       5. INPUTS VISIBLES (IGUAL QUE ANTES)
+       ========================================= */
+    .clean-input { 
+        width: 100%;
+        background: #f8fafc; 
+        border: 2px solid #cbd5e1;
+        border-radius: 8px; 
+        padding: 12px 16px; 
+        font-family: 'Handlee', cursive;
+        font-size: 1.1em; 
+        color: var(--primary) !important;
+        font-weight: bold; 
+        outline: none;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+    .clean-input:focus { 
+        border-color: var(--accent); 
+        background: #fff; 
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .clean-input::placeholder { 
+        color: #64748b !important; 
+        font-family: 'Lato', sans-serif; 
+        font-size: 0.9em; 
+        font-weight: 500; 
+    }
+
+    /* =========================================
+       6. UI Y UTILIDADES
+       ========================================= */
+    #tucaneo-drawer { position: fixed; top: 0; right: -150vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s; display: flex; flex-direction: column; }
+    #tucaneo-drawer.is-open { right: 0 !important; }
+    #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    
+    #fixed-logo { position: fixed; top: 30px; left: 40px; width: 100px; z-index: 5000; }
+    #top-nav { position: fixed; top: 30px; right: 40px; z-index: 5000; display: flex; gap: 15px; }
+    #floating-cta { position: fixed; bottom: 30px; left: 40px; z-index: 5000; font-size: 12px; color: var(--primary); font-weight: bold; opacity: 0.8; letter-spacing: 1px; }
+    
+    .nav-btn { padding: 8px 20px; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; border: none; font-weight: bold; font-size: 13px; text-decoration: none; }
+    .nav-btn.zoom { display: none !important; } 
+    .nav-btn.download { background-color: var(--primary); }
+    .nav-btn.exit { background-color: #64748b; }
+
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 6px; background: var(--accent); width: 0%; z-index: 9999; }
+    #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; }
+    #back-to-top.visible { display: flex; }
+
+ 
+    /* =========================================
+       7. MÓVIL: SOLUCIÓN FINAL (SCROLL REAL)
+       ========================================= */
+    @media (max-width: 1024px) {
+        
+        /* 1. FORZAR SCROLL EN EL CUERPO (La clave para que baje) */
+
+        /* --- ¡ESTO HACE VISIBLES LOS EJERCICIOS! --- */
+    .reveal .fragment {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+
+        html, body {
+            height: auto !important;
+            min-height: 100% !important;
+            overflow-y: scroll !important; /* Fuerza la barra de scroll */
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+            position: relative !important;
+        }
+
+        /* 2. DESACTIVAR REVEAL.JS (Convertir en lista vertical) */
+        .reveal {
+            height: auto !important;
+            overflow: visible !important;
+            position: relative !important;
+            touch-action: auto !important;
+        }
+
+        .reveal .slides {
+            position: static !important; /* Deja de flotar */
+            width: 100% !important;
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important; /* Apilar uno tras otro */
+            padding: 20px 15px 150px 15px !important; /* Espacio extra abajo */
+            transform: none !important;
+            top: auto !important;
+            left: auto !important;
+            pointer-events: none; /* El contenedor no bloquea, los hijos sí */
+        }
+
+        /* 3. CADA DIAPOSITIVA ES UN BLOQUE */
+        .reveal section {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            top: auto !important;
+            height: auto !important;
+            min-height: auto !important;
+            margin-bottom: 40px !important; /* Espacio entre diapositivas */
+            pointer-events: auto !important; /* ¡Habilitar interacción! */
+            transform: none !important;
+        }
+
+        /* 4. ELEMENTOS INTERNOS (Para que no se salgan) */
+        .slide-container, .card, .glass-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 5. INPUTS FUNCIONALES */
+        .clean-input {
+            pointer-events: auto !important;
+            z-index: 5000 !important; /* Asegurar que esté encima */
+            font-size: 16px !important;
+            background: #fff !important;
+            width: 100% !important;
+        }
+
+        /* 6. ARREGLAR GRILLAS (Todo en una columna) */
+        .grid, .grid-cols-2, .md\:grid-cols-2, .lg\:grid-cols-12 {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+
+        /* 7. LIMPIEZA VISUAL */
+        .reveal h1 { font-size: 2.2em !important; margin-top: 20px !important; }
+        .reveal img { max-height: 250px !important; width: auto !important; margin: 0 auto !important; }
+        
+        /* Ocultar controles de PC */
+        #btn-zoom, .nav-btn.zoom, #premium-dock, .reveal .controls, .reveal .progress { 
+            display: none !important; 
+        }
+        
+        /* Ajustar barra superior */
+        #fixed-logo { width: 60px; top: 10px; left: 10px; }
+        #top-nav { top: 10px; right: 10px; }
+        .nav-btn { width: 36px; height: 36px; padding: 0; justify-content: center; }
+        .nav-btn span { display: none; }
+    }
+
+    /* --- PARCHE DE CONTRASTE (CORREGIDO) --- */
+    
+    /* Usamos este selector especial para que el navegador entienda el color hexadecimal */
+    [class*="bg-[#004d40]"] h1, 
+    [class*="bg-[#004d40]"] h2, 
+    [class*="bg-[#004d40]"] h3, 
+    [class*="bg-[#004d40]"] p, 
+    [class*="bg-[#004d40]"] i, 
+    [class*="bg-[#004d40]"] span,
+    [class*="bg-[#004d40]"] li,
+    [class*="bg-[#004d40]"] .text-sm,
+    [class*="bg-[#004d40]"] .text-xs,
+    [class*="bg-[#004d40]"] .text-gray-400,
+    [class*="bg-[#004d40]"] .text-gray-500 {
+        color: #ffffff !important; /* BLANCO OBLIGATORIO */
+        opacity: 1 !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    /* También aplicamos la corrección para el color primario de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary h3, .bg-primary p, .bg-primary span, .bg-primary i {
+        color: #ffffff !important;
+    }
+
+    /* Opcional: Si usas la clase 'bg-primary' de Tailwind */
+    .bg-primary h1, .bg-primary h2, .bg-primary p {
+        color: #ffffff !important;
+    }
+</style>
+
+   
+
+
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO.COM</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+
+
+
+            
+
+
+
+<section>
+    <div class="slide-container flex flex-col items-center justify-center h-full text-center">
+        
+        <div class="glass-card bg-white/95 p-8 rounded-3xl border-t-8 border-[#004d40] shadow-2xl max-w-2xl transform transition-all hover:scale-[1.01]">
+            
+            <div class="mb-8 overflow-hidden rounded-2xl shadow-md border border-gray-100 relative h-48 md:h-64">
+                <img src="https://cdn.pixabay.com/photo/2021/08/19/17/18/numbers-6558560_960_720.jpg" 
+                     alt="Números y Matemáticas" 
+                     class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+
+            <h1 class="text-6xl font-bold text-[#004d40] mb-2 font-serif tracking-tight">Los Números</h1>
+            
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="h-px w-12 bg-[#ff6f00]"></div>
+                <p class="text-xl text-gray-500 font-medium uppercase tracking-widest">From Zero to Infinity</p>
+                <div class="h-px w-12 bg-[#ff6f00]"></div>
+            </div>
+
+            <p class="text-xl text-slate-700 leading-relaxed mb-8">
+                In this lesson, we will learn how to <strong class="text-[#004d40]">count</strong>, <strong class="text-[#004d40]">buy things</strong>, and tell our <strong class="text-[#004d40]">age</strong> in Spanish.
+            </p>
+
+            <div class="animate-bounce">
+                <span class="bg-[#ff6f00] text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-orange-200">
+                    <i class="fas fa-arrow-down mr-2"></i> Let's Start
+                </span>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<section>
+    <div class="slide-container">
+        <h2 class="text-xl font-bold text-[#004d40] mb-4 border-l-8 border-[#ff6f00] pl-4">1. The Unique Numbers (0-15)</h2>
+        
+        <p class="text-gray-700 mb-4 text-sm">The first 15 numbers have unique names. You just have to memorize them!</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">0</span>
+                <span class="text-[#004d40] font-bold text-sm">Cero</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">1</span>
+                <span class="text-[#004d40] font-bold text-sm">Uno</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">2</span>
+                <span class="text-[#004d40] font-bold text-sm">Dos</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">3</span>
+                <span class="text-[#004d40] font-bold text-sm">Tres</span>
+            </div>
+
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">4</span>
+                <span class="text-[#004d40] font-bold text-sm">Cuatro</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">5</span>
+                <span class="text-[#004d40] font-bold text-sm">Cinco</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">6</span>
+                <span class="text-[#004d40] font-bold text-sm">Seis</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">7</span>
+                <span class="text-[#004d40] font-bold text-sm">Siete</span>
+            </div>
+
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">8</span>
+                <span class="text-[#004d40] font-bold text-sm">Ocho</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">9</span>
+                <span class="text-[#004d40] font-bold text-sm">Nueve</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">10</span>
+                <span class="text-[#004d40] font-bold text-sm">Diez</span>
+            </div>
+            
+            <div class="bg-orange-50 p-2 rounded-xl shadow-sm border-l-4 border-orange-400 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">11</span>
+                <span class="text-[#004d40] font-bold text-sm">Once</span>
+            </div>
+            <div class="bg-orange-50 p-2 rounded-xl shadow-sm border-l-4 border-orange-400 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">12</span>
+                <span class="text-[#004d40] font-bold text-sm">Doce</span>
+            </div>
+            <div class="bg-orange-50 p-2 rounded-xl shadow-sm border-l-4 border-orange-400 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">13</span>
+                <span class="text-[#004d40] font-bold text-sm">Trece</span>
+            </div>
+            <div class="bg-orange-50 p-2 rounded-xl shadow-sm border-l-4 border-orange-400 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">14</span>
+                <span class="text-[#004d40] font-bold text-sm">Catorce</span>
+            </div>
+            <div class="bg-orange-50 p-2 rounded-xl shadow-sm border-l-4 border-orange-400 hover:scale-105 transition-transform">
+                <span class="block text-xl font-bold text-gray-800">15</span>
+                <span class="text-[#004d40] font-bold text-sm">Quince</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center">
+        <h2 class="text-3xl font-bold text-[#004d40] mb-6 border-l-8 border-[#ff6f00] pl-4 font-serif">
+            2. The "Fusion" Rule (16-29)
+        </h2>
+        
+        <p class="text-x1 text-slate-700 mb-6 w-full text-center">
+            Numbers between 16 and 29 are special. Instead of three words, they fuse into <strong>one single word</strong>.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            
+            <div class="glass-card bg-blue-50/80 p-4 rounded-2xl border-2 border-blue-100 relative overflow-visible">
+                <div class="absolute -top-3 left-6 bg-blue-600 text-white px-3 py-0.5 rounded-full text-xs font-bold shadow-lg">16 - 19</div>
+                
+                <h3 class="text-xl font-bold text-blue-800 mb-2 text-center">The "Z" changes to "C"</h3>
+                
+                <div class="flex items-center justify-center gap-2 text-lg font-mono text-gray-600 mb-1">
+                    <span>Die<strong class="text-red-500">z</strong></span>
+                    <span>+</span>
+                    <span>y</span>
+                    <span>+</span>
+                    <span>seis</span>
+                </div>
+                
+                <div class="flex justify-center my-1">
+                    <i class="fas fa-arrow-down text-blue-400 text-xl animate-bounce"></i>
+                </div>
+
+                <div class="bg-white p-2 rounded-xl shadow-inner text-center">
+                    <span class="text-2xl font-bold text-[#004d40]">
+                        Die<span class="text-red-500">c</span>i<span class="text-blue-600">séis</span>
+                    </span>
+                    <p class="text-xs text-gray-400 mt-1 italic">Don't forget the accent on 16!</p>
+                </div>
+            </div>
+
+            <div class="glass-card bg-emerald-50/80 p-4 rounded-2xl border-2 border-emerald-100 relative overflow-visible">
+                <div class="absolute -top-3 left-6 bg-emerald-600 text-white px-3 py-0.5 rounded-full text-xs font-bold shadow-lg">21 - 29</div>
+                
+                <h3 class="text-xl font-bold text-emerald-800 mb-2 text-center">The "E" changes to "I"</h3>
+                
+                <div class="flex items-center justify-center gap-2 text-lg font-mono text-gray-600 mb-1">
+                    <span>Veint<strong class="text-red-500">e</strong></span>
+                    <span>+</span>
+                    <span>y</span>
+                    <span>+</span>
+                    <span>dos</span>
+                </div>
+
+                <div class="flex justify-center my-1">
+                    <i class="fas fa-arrow-down text-emerald-400 text-xl animate-bounce"></i>
+                </div>
+
+                <div class="bg-white p-2 rounded-xl shadow-inner text-center">
+                    <span class="text-2xl font-bold text-[#004d40]">
+                        Veint<span class="text-red-500">i</span><span class="text-emerald-600">dós</span>
+                    </span>
+                    <p class="text-xs text-gray-400 mt-1 italic">Accents on 22, 23, and 26.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col relative">
+        <div class="mb-4 text-center">
+            <h2 class="text-3xl font-bold text-[#004d40] font-serif">
+                <i class="fas fa-stopwatch text-red-500 mr-2"></i> Fusion Speed Quiz
+            </h2>
+            <p class="text-gray-600 text-sm md:text-base mt-1">
+                Select the correct written form for each number. Remember the <strong>One Word</strong> rule!
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-6xl mx-auto mb-16">
+            
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">17</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Diecisiete</button>
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Diez y siete</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">22</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veinte y dos</button>
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintidós</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">26</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintiséis</button>
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintiseis</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">19</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Diez y nueve</button>
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Diecinueve</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">23</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintitrés</button>
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veinte tres</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">18</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Dieci ocho</button>
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Dieciocho</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">29</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintinueve</button>
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veinte nueve</button>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-[#004d40] text-white rounded-full flex items-center justify-center text-lg font-bold mb-2">25</div>
+                <div class="w-full space-y-2">
+                    <button onclick="checkQuiz(this, false)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veintecinco</button>
+                    <button onclick="checkQuiz(this, true)" class="w-full py-1 px-2 rounded border hover:bg-gray-50 text-sm font-bold text-gray-700 transition-all">Veinticinco</button>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function checkQuiz(btn, isCorrect) {
+                // Bloquear botones hermanos
+                const parent = btn.parentElement;
+                const buttons = parent.querySelectorAll('button');
+                buttons.forEach(b => b.disabled = true);
+                
+                if (isCorrect) {
+                    btn.classList.remove('text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600', 'shadow-md');
+                    btn.innerHTML = '✔ ' + btn.innerText;
+                    try { react('applause'); } catch(e) {}
+                } else {
+                    btn.classList.remove('text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                    btn.innerHTML = '✘ ' + btn.innerText;
+                    try { react('error'); } catch(e) {}
+                }
+            }
+        </script>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center">
+        <h2 class="text-2xl font-bold text-[#004d40] mb-4 border-l-8 border-[#ff6f00] pl-4 font-serif">
+            3. The "Separated" Rule (30-99)
+        </h2>
+        
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-xl mb-6 shadow-sm">
+            <p class="text-sm text-slate-800">
+                <i class="fas fa-smile-beam text-yellow-600 mr-2"></i> Good news! From 30 onwards, we stop fusing words. 
+                We use <strong>three separate words</strong> connected by the bridge <span class="bg-white px-2 py-0.5 rounded border border-yellow-300 font-bold text-[#ff6f00]">"y"</span>.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-4 h-full">
+            
+            <div class="lg:col-span-7 glass-card bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-[#004d40] text-base mb-3 flex items-center gap-2">
+                    <i class="fas fa-layer-group"></i> The Tens (Decenas)
+                </h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">30</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Treinta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">40</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Cuarenta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">50</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Cincuenta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">60</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Sesenta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">70</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Setenta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors">
+                        <span class="font-bold text-lg text-slate-700">80</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Ochenta</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border hover:border-emerald-300 transition-colors col-span-2 w-1/2 mx-auto">
+                        <span class="font-bold text-lg text-slate-700">90</span>
+                        <span class="text-[#004d40] font-semibold text-sm">Noventa</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col gap-4">
+                <div class="bg-[#004d40] p-4 rounded-2xl text-white shadow-lg text-center h-full flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 text-8xl text-white opacity-5 -rotate-12 select-none font-serif">&</div>
+                    
+                    <p class="text-xs font-bold tracking-widest uppercase opacity-70 mb-4">The Magic Formula</p>
+                    
+                    <div class="flex items-center justify-center gap-2 text-lg font-serif">
+                        <div class="flex flex-col">
+                            <span>Tens</span>
+                            <span class="text-[10px] font-sans opacity-50">(30...)</span>
+                        </div>
+                        <span class="text-[#ff6f00] font-bold text-2xl">+</span>
+                        <div class="bg-white text-[#004d40] w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-lg z-10 text-lg">
+                            y
+                        </div>
+                        <span class="text-[#ff6f00] font-bold text-2xl">+</span>
+                        <div class="flex flex-col">
+                            <span>Unit</span>
+                            <span class="text-[10px] font-sans opacity-50">(1...)</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-2 text-left bg-white/10 p-3 rounded-xl backdrop-blur-sm text-sm">
+                        <div class="flex justify-between border-b border-white/20 pb-1">
+                            <span>34</span>
+                            <span class="font-bold">Treinta <span class="text-[#ff6f00]">y</span> cuatro</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/20 pb-1">
+                            <span>58</span>
+                            <span class="font-bold">Cincuenta <span class="text-[#ff6f00]">y</span> ocho</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>99</span>
+                            <span class="font-bold">Noventa <span class="text-[#ff6f00]">y</span> nueve</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<section>
+    <div class="slide-container">
+        <h2 class="text-3xl font-bold text-[#004d40] mb-6 border-l-8 border-[#ff6f00] pl-4">4. The "100" Dilemma</h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass-card bg-white p-6 rounded-2xl border-t-4 border-indigo-500 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-16 h-16 bg-indigo-100 rounded-full"></div>
+                <h3 class="text-2xl font-bold text-indigo-800 mb-2">CIEN</h3>
+                <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Use EXACTLY for 100</p>
+                <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                    <li>Exact number 100.</li>
+                    <li>Before a noun (100 books, 100 people).</li>
+                </ul>
+                <div class="mt-4 bg-indigo-50 p-3 rounded-lg text-sm text-indigo-900">
+                    <p>✅ "Tengo <strong>cien</strong> dólares."</p>
+                    <p>✅ "Tengo <strong>cien</strong> libros."</p>
+                </div>
+            </div>
+
+            <div class="glass-card bg-white p-6 rounded-2xl border-t-4 border-pink-500 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-16 h-16 bg-pink-100 rounded-full"></div>
+                <h3 class="text-2xl font-bold text-pink-800 mb-2">CIENTO...</h3>
+                <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Use for 101 to 199</p>
+                <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                    <li>When followed by another number.</li>
+                    <li>Think of it as "One hundred AND..."</li>
+                </ul>
+                <div class="mt-4 bg-pink-50 p-3 rounded-lg text-sm text-pink-900">
+                    <p>✅ "<strong>Ciento</strong> uno (101)."</p>
+                    <p>✅ "<strong>Ciento</strong> cincuenta (150)."</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center bg-[#004d40] text-white p-4 rounded-xl shadow-lg">
+            <p class="font-bold text-lg"><i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i> Important!</p>
+            <p>Never say "Un cien" or "Un ciento". Just "Cien" or "Ciento".</p>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col justify-center">
+        <h2 class="text-3xl font-bold text-[#004d40] mb-6 border-l-8 border-[#ff6f00] pl-4 font-serif">
+            4. The Hundreds (200-900)
+        </h2>
+        
+        <p class="text-x1 text-slate-700 mb-6">
+            To form hundreds, we generally use the formula: <span class="bg-emerald-100 text-emerald-800 px-2 rounded font-bold">Number + Cientos</span>.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 h-full">
+            
+            <div class="glass-card bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100">
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fas fa-check-circle text-emerald-500 text-2xl"></i>
+                    <h3 class="text-xl font-bold text-emerald-800">The "Easy" Ones</h3>
+                </div>
+                <p class="text-sm text-emerald-700 mb-4">Just add <strong>-cientos</strong> to the number.</p>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                        <span class="font-bold text-gray-500 w-12">200</span>
+                        <div class="text-lg">
+                            Dos<span class="text-emerald-600 font-bold">cientos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                        <span class="font-bold text-gray-500 w-12">300</span>
+                        <div class="text-lg">
+                            Tres<span class="text-emerald-600 font-bold">cientos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                        <span class="font-bold text-gray-500 w-12">400</span>
+                        <div class="text-lg">
+                            Cuatro<span class="text-emerald-600 font-bold">cientos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                        <span class="font-bold text-gray-500 w-12">600</span>
+                        <div class="text-lg">
+                            Seis<span class="text-emerald-600 font-bold">cientos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                        <span class="font-bold text-gray-500 w-12">800</span>
+                        <div class="text-lg">
+                            Ocho<span class="text-emerald-600 font-bold">cientos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card bg-orange-50/50 p-6 rounded-2xl border-2 border-orange-200 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 bg-orange-200 w-24 h-24 rounded-full opacity-50"></div>
+                
+                <div class="flex items-center gap-2 mb-4 relative z-10">
+                    <i class="fas fa-exclamation-triangle text-orange-500 text-2xl animate-pulse"></i>
+                    <h3 class="text-xl font-bold text-orange-800">The "Tricky" Ones</h3>
+                </div>
+                <p class="text-sm text-orange-800 mb-4 relative z-10">The root word changes slightly!</p>
+                
+                <div class="space-y-4 relative z-10">
+                    <div class="bg-white p-3 rounded-lg shadow-md border-l-4 border-orange-400">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 text-xl">500</span>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 rounded">Not "Cincocientos"</span>
+                        </div>
+                        <p class="text-2xl text-[#004d40] font-bold mt-1">
+                            Quin<span class="text-gray-400 font-normal">ientos</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg shadow-md border-l-4 border-orange-400">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 text-xl">700</span>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 rounded">Not "Sietecientos"</span>
+                        </div>
+                        <p class="text-2xl text-[#004d40] font-bold mt-1">
+                            Sete<span class="text-gray-400 font-normal">cientos</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg shadow-md border-l-4 border-orange-400">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 text-xl">900</span>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 rounded">Not "Nuevecientos"</span>
+                        </div>
+                        <p class="text-2xl text-[#004d40] font-bold mt-1">
+                            Nove<span class="text-gray-400 font-normal">cientos</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="slide-container h-full flex flex-col">
+        <h2 class="text-3xl font-bold text-[#004d40] mb-4 border-l-8 border-[#ff6f00] pl-4 font-serif">
+            5. The Gender Trap (200-900)
+        </h2>
+        
+        <p class="text-x1 text-slate-700 mb-6">
+            Unlike English, numbers from 200 to 900 behave like adjectives. They must match the <strong>gender</strong> of the object.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6 h-full">
+            
+            <div class="glass-card bg-blue-50/50 border-t-4 border-blue-500 p-6 rounded-xl flex flex-col gap-4">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="bg-blue-100 p-2 rounded-full text-blue-600"><i class="fas fa-mars text-2xl"></i></div>
+                    <h3 class="text-xl font-bold text-blue-800">Masculine Objects</h3>
+                </div>
+                <p class="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Ending: -OS</p>
+                
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-blue-100 flex justify-between items-center">
+                    <span>200 Gatos</span>
+                    <span class="font-bold text-gray-700">Doscient<span class="text-blue-600 font-extrabold">os</span></span>
+                </div>
+                <div class="bg-white p-3 rounded-lg shadow-sm border-blue-100 flex justify-between items-center">
+                    <span>400 Libros</span>
+                    <span class="font-bold text-gray-700">Cuatrocient<span class="text-blue-600 font-extrabold">os</span></span>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg shadow-sm border-l-4 border-yellow-400 flex justify-between items-center">
+                    <span>500 Pesos</span>
+                    <span class="font-bold text-gray-700">Quinient<span class="text-blue-600 font-extrabold">os</span></span>
+                </div>
+            </div>
+
+            <div class="glass-card bg-pink-50/50 border-t-4 border-pink-500 p-6 rounded-xl flex flex-col gap-4">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="bg-pink-100 p-2 rounded-full text-pink-600"><i class="fas fa-venus text-2xl"></i></div>
+                    <h3 class="text-xl font-bold text-pink-800">Feminine Objects</h3>
+                </div>
+                <p class="text-sm text-pink-600 font-bold uppercase tracking-wider mb-2">Ending: -AS</p>
+                
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-pink-100 flex justify-between items-center">
+                    <span>200 Casas</span>
+                    <span class="font-bold text-gray-700">Doscient<span class="text-pink-600 font-extrabold">as</span></span>
+                </div>
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-pink-100 flex justify-between items-center">
+                    <span>400 Personas</span>
+                    <span class="font-bold text-gray-700">Cuatrocient<span class="text-pink-600 font-extrabold">as</span></span>
+                </div>
+                 <div class="bg-yellow-50 p-3 rounded-lg shadow-sm border-l-4 border-yellow-400 flex justify-between items-center">
+                    <span>500 Flores</span>
+                    <span class="font-bold text-gray-700">Quinient<span class="text-pink-600 font-extrabold">as</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 bg-[#004d40] text-white p-4 rounded-xl shadow-lg flex items-center gap-4">
+            <i class="fas fa-exclamation-triangle text-yellow-400 text-2xl"></i>
+            <div>
+                <p class="font-bold text-yellow-400 uppercase text-xs">Spelling Changes!</p>
+                <p class="text-sm">
+                    Watch out for <strong>500 (Quinientos)</strong>, <strong>700 (Setecientos)</strong>, and <strong>900 (Novecientos)</strong>. They change their root spelling!
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col p-0" style="pointer-events: auto !important;">
+        
+        <div class="text-center mb-6 pt-2">
+            <h2 class="text-4xl font-bold text-[#004d40] font-serif mb-2">
+                <i class="fas fa-chart-line text-[#ff6f00] mr-2"></i> Big Numbers
+            </h2>
+            <p class="text-3xl text-slate-700">
+                The two giants: <strong class="text-emerald-600">Mil</strong> vs. <strong class="text-blue-600">Millón</strong>
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 w-full max-w-7xl mx-auto h-full px-4 pb-4">
+            
+            <div class="bg-emerald-50 rounded-3xl p-6 border-4 border-emerald-100 flex flex-col shadow-lg relative overflow-hidden group hover:border-emerald-300 transition-all">
+                
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-full shadow-sm text-emerald-600">
+                        <i class="fas fa-layer-group text-3xl"></i>
+                    </div>
+                    <h3 class="text-4xl font-bold text-emerald-800">MIL</h3>
+                    <span class="bg-emerald-200 text-emerald-900 text-lg font-bold px-3 py-1 rounded uppercase">1,000</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-red-500 mb-6 flex-1 flex flex-col justify-center">
+                    <p class="text-xl text-gray-500 font-bold uppercase mb-2">⚠️ Important Rule:</p>
+                    <div class="space-y-2">
+                        <p class="text-3xl text-slate-700 leading-tight">
+                            Never say <span class="line-through text-red-500 decoration-4 decoration-red-500 font-bold">"Un mil"</span>.
+                        </p>
+                        <p class="text-3xl text-slate-700 leading-tight">
+                            Just say <strong class="text-emerald-600 text-4xl">"Mil"</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center border-b-2 border-emerald-200 pb-2 mb-2">
+                    <span class="font-mono text-2xl text-gray-500">2,000</span>
+                    <span class="font-bold text-2xl text-emerald-700">Dos mil</span>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-3xl p-6 border-4 border-blue-100 flex flex-col shadow-lg relative overflow-hidden group hover:border-blue-300 transition-all">
+                
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-full shadow-sm text-blue-600">
+                        <i class="fas fa-globe-americas text-3xl"></i>
+                    </div>
+                    <h3 class="text-4xl font-bold text-blue-800">MILLÓN</h3>
+                    <span class="bg-blue-200 text-blue-900 text-lg font-bold px-3 py-1 rounded uppercase">1,000,000</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-blue-500 mb-4">
+                    <p class="text-xl text-gray-500 font-bold uppercase mb-2">✅ Important Rule:</p>
+                    <p class="text-3xl text-slate-700 leading-tight">
+                        Always use <strong class="text-blue-600 text-4xl">"Un"</strong> for 1 million.
+                        <br><span class="text-blue-800 font-bold text-2xl bg-blue-100 px-2 rounded">Un millón</span>
+                    </p>
+                </div>
+
+                <div class="bg-blue-100 p-5 rounded-2xl border-2 border-blue-200 mt-auto">
+                    <p class="text-xl text-blue-900 font-bold uppercase mb-3 text-center">The "DE" Connector Rule</p>
+                    
+                    <div class="flex items-center justify-center gap-2 text-3xl md:text-4xl mb-4 flex-wrap">
+                        <span class="font-bold text-slate-700">Millones</span>
+                        <i class="fas fa-plus text-lg text-gray-400"></i>
+                        <span class="bg-yellow-400 text-yellow-900 px-4 py-1 rounded-lg font-black shadow-md transform scale-110">DE</span>
+                        <i class="fas fa-plus text-lg text-gray-400"></i>
+                        <span class="font-bold text-slate-700">Noun</span>
+                    </div>
+                    
+                    <p class="text-center text-slate-700 text-2xl italic font-medium">
+                        "Dos millones <strong class="text-blue-700 bg-white px-2 rounded decoration-4 underline decoration-yellow-400">de</strong> pesos"
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col p-0" style="pointer-events: auto !important;">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-2 bg-white/95 p-4 rounded-xl border-l-8 border-[#ff6f00] shadow-md relative z-30 shrink-0">
+            <div class="flex items-center gap-4">
+                <div class="bg-orange-100 p-3 rounded-full text-[#ff6f00]">
+                    <i class="fas fa-shoe-prints fa-rotate-90 text-3xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-bold text-[#004d40] font-serif m-0 leading-none">La Golosa</h2>
+                    <span class="text-gray-400 text-sm uppercase tracking-widest font-bold">Hopscotch</span>
+                </div>
+            </div>
+            
+            <div class="flex-1 px-4 border-l border-gray-200 hidden md:block">
+                <p class="text-xs text-slate-700 italic mb-1">
+                    <strong class="text-[#004d40] not-italic">Cultural Note:</strong> In Colombia 🇨🇴, Hopscotch is called <strong>"La Golosa"</strong>.
+                </p>
+                <div class="flex gap-4 text-xs text-slate-600 font-bold">
+                    <div class="flex items-center gap-1"><span class="bg-emerald-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px]">1</span><span>Start 200</span></div>
+                    <div class="flex items-center gap-1"><span class="bg-emerald-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px]">2</span><span>Gender</span></div>
+                    <div class="flex items-center gap-1"><span class="bg-emerald-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px]">3</span><span>Sky 900</span></div>
+                </div>
+            </div>
+
+            <div class="hidden md:block">
+                <div class="bg-[#004d40] text-white px-4 py-2 rounded-lg font-bold shadow animate-pulse border border-white text-sm cursor-default" style="color: #ffffff !important;">
+                    <i class="fas fa-gamepad mr-2"></i> Let's Play!
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center w-full relative z-20 overflow-hidden pb-4">
+            
+            <div class="flex items-center gap-2 px-2 w-full justify-center">
+                
+                <button id="box-1" onclick="openGameModal(1)" style="pointer-events: auto !important;" class="relative w-24 h-24 md:w-28 md:h-28 bg-emerald-100 border-b-4 border-emerald-500 rounded-xl flex flex-col items-center justify-center transition-all hover:scale-105 animate-pulse ring-2 ring-emerald-200 shadow-lg z-20 cursor-pointer group">
+                    <span class="text-2xl md:text-3xl font-bold text-emerald-800 group-hover:scale-110 transition-transform">200</span>
+                    <span class="text-[10px] text-emerald-700 font-bold uppercase mt-1 bg-white/50 px-1 rounded">Start</span>
+                    <i class="fas fa-play absolute top-2 right-2 text-emerald-500 bg-white rounded-full p-0.5 text-[8px] shadow-sm"></i>
+                </button>
+
+                <i class="fas fa-chevron-right text-gray-300 text-xl"></i>
+
+                <div class="flex flex-col gap-2">
+                    <button id="box-2" disabled onclick="openGameModal(2)" style="pointer-events: auto !important;" class="w-20 h-20 md:w-24 md:h-24 bg-blue-100 border-b-4 border-blue-400 text-blue-900 rounded-lg flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-sm relative group z-10">
+                        <span class="text-xl md:text-2xl font-bold">300</span>
+                        <i class="fas fa-lock absolute top-1 right-1 text-blue-300 text-xs lock-icon"></i>
+                    </button>
+                    <button id="box-3" disabled onclick="openGameModal(3)" style="pointer-events: auto !important;" class="w-20 h-20 md:w-24 md:h-24 bg-indigo-100 border-b-4 border-indigo-400 text-indigo-900 rounded-lg flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-sm relative group z-10">
+                        <span class="text-xl md:text-2xl font-bold">400</span>
+                        <i class="fas fa-lock absolute top-1 right-1 text-indigo-300 text-xs lock-icon"></i>
+                    </button>
+                </div>
+
+                <i class="fas fa-chevron-right text-gray-300 text-xl"></i>
+
+                <button id="box-4" disabled onclick="openGameModal(4)" style="pointer-events: auto !important;" class="w-24 h-24 md:w-28 md:h-28 bg-pink-100 border-b-4 border-pink-500 text-pink-900 rounded-xl flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-md relative group z-10">
+                    <span class="text-2xl md:text-3xl font-bold">500</span>
+                    <span class="text-[9px] font-bold uppercase bg-white/50 px-1 rounded mt-1 text-pink-700">Irregular</span>
+                    <i class="fas fa-lock absolute top-2 right-2 text-pink-300 text-xs lock-icon"></i>
+                </button>
+
+                <i class="fas fa-chevron-right text-gray-300 text-xl"></i>
+
+                <div class="flex flex-col gap-2">
+                    <button id="box-5" disabled onclick="openGameModal(5)" style="pointer-events: auto !important;" class="w-20 h-20 md:w-24 md:h-24 bg-orange-100 border-b-4 border-orange-400 text-orange-900 rounded-lg flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-sm relative group z-10">
+                        <span class="text-xl md:text-2xl font-bold">600</span>
+                        <i class="fas fa-lock absolute top-1 right-1 text-orange-300 text-xs lock-icon"></i>
+                    </button>
+                    <button id="box-6" disabled onclick="openGameModal(6)" style="pointer-events: auto !important;" class="w-20 h-20 md:w-24 md:h-24 bg-teal-100 border-b-4 border-teal-400 text-teal-900 rounded-lg flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-sm relative group z-10">
+                        <span class="text-xl md:text-2xl font-bold">700</span>
+                        <i class="fas fa-lock absolute top-1 right-1 text-teal-300 text-xs lock-icon"></i>
+                    </button>
+                </div>
+
+                <i class="fas fa-chevron-right text-gray-300 text-xl"></i>
+
+                <button id="box-7" disabled onclick="openGameModal(7)" style="pointer-events: auto !important;" class="w-24 h-24 md:w-28 md:h-28 bg-yellow-100 border-b-4 border-yellow-500 text-yellow-900 rounded-xl flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-md relative group z-10">
+                    <span class="text-2xl md:text-3xl font-bold">800</span>
+                    <i class="fas fa-lock absolute top-2 right-2 text-yellow-300 text-xs lock-icon"></i>
+                </button>
+
+                <i class="fas fa-flag-checkered text-purple-300 text-2xl animate-pulse"></i>
+
+                 <button id="box-8" disabled onclick="openGameModal(8)" style="pointer-events: auto !important;" class="w-28 h-28 md:w-32 md:h-32 bg-purple-100 border-b-4 border-purple-500 text-purple-900 rounded-full flex flex-col items-center justify-center transition-all opacity-50 cursor-not-allowed shadow-lg relative group z-10">
+                    <span class="text-3xl md:text-4xl font-bold group-hover:scale-110 transition-transform drop-shadow-sm">900</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest mt-1 bg-white/50 px-2 rounded-full">Cielo</span>
+                    <i class="fas fa-lock absolute top-4 right-6 text-purple-300 lock-icon text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-modal" style="pointer-events: auto !important;" class="fixed inset-0 z-[10000] bg-slate-900/95 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
+            <button onclick="closeGameModal()" class="absolute top-8 right-8 text-white/50 hover:text-white text-5xl transition-colors cursor-pointer z-[10001]">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <div id="modal-content" class="text-center w-full max-w-xl bg-white p-8 rounded-3xl shadow-2xl relative animate-[fadeIn_0.3s_ease-out]"></div>
+        </div>
+
+        <div id="victory-modal" style="pointer-events: auto !important;" class="fixed inset-0 z-[10002] bg-[#004d40]/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 text-center">
+            <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-lg w-full transform scale-100">
+                <div class="text-9xl mb-4 drop-shadow-lg">🏆</div>
+                <h2 class="text-4xl font-bold text-[#004d40] mb-2 font-serif">¡Felicitaciones!</h2>
+                <p class="text-lg text-slate-600 mb-6 font-bold">You reached "El Cielo"!</p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="resetGame()" class="bg-[#ff6f00] text-white px-6 py-2 rounded-full font-bold text-lg shadow-lg hover:bg-orange-600 hover:scale-105 transition-all">
+                        <i class="fas fa-redo mr-2"></i> Play Again
+                    </button>
+                    <button onclick="closeVictoryModal()" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold text-lg hover:bg-gray-300 transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            window.gameData = {
+                1: { title: "Manzanas", number: "200", icon: "fa-apple-alt", options: [{ t: "Doscientos", c: false }, { t: "Doscientas", c: true }], next: [2, 3] },
+                2: { title: "Libros", number: "300", icon: "fa-book", options: [{ t: "Trescientos", c: true }, { t: "Trescientas", c: false }], next: [4] },
+                3: { title: "Pájaros (Birds)", number: "400", icon: "fa-crow", options: [{ t: "Cuatrocientos", c: true }, { t: "Cuatrocientas", c: false }], next: [4] },
+                4: { title: "Personas", number: "500 (Irr!)", icon: "fa-users", options: [{ t: "Quinientos", c: false }, { t: "Quinientas", c: true }], next: [5, 6] },
+                5: { title: "Casas", number: "600", icon: "fa-home", options: [{ t: "Seiscientos", c: false }, { t: "Seiscientas", c: true }], next: [7] },
+                6: { title: "Árboles", number: "700 (Irr!)", icon: "fa-tree", options: [{ t: "Setecientos", c: true }, { t: "Sietecientos", c: false }], next: [7] },
+                7: { title: "Sillas", number: "800", icon: "fa-chair", options: [{ t: "Ochocientos", c: false }, { t: "Ochocientas", c: true }], next: [8] },
+                8: { title: "Pesos", number: "900 (Irr!)", icon: "fa-coins", options: [{ t: "Novecientos", c: true }, { t: "Novecientas", c: false }], next: [] }
+            };
+
+            window.completedLevels = [];
+
+            window.openGameModal = function(level) {
+                const data = window.gameData[level];
+                const modal = document.getElementById('game-modal');
+                const content = document.getElementById('modal-content');
+                
+                content.innerHTML = `
+                    <div class="mb-4 animate-bounce bg-gray-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-inner border border-gray-100">
+                        <i class="fas ${data.icon} text-5xl text-gray-700"></i>
+                    </div>
+                    <h3 class="text-4xl font-bold text-slate-800 mb-6 font-serif uppercase tracking-wide">${data.title}</h3>
+                    <div class="bg-slate-50 p-4 rounded-2xl mb-6 border-2 border-dashed border-gray-300">
+                        <p class="text-xl text-gray-500 font-bold uppercase mb-1">How do you say?</p>
+                        <p class="text-5xl font-bold text-slate-800">${data.number}</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="solveGame(this, ${level}, ${data.options[0].c})" style="pointer-events: auto;" class="py-4 rounded-xl border-b-4 border-gray-200 bg-white text-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-1 transition-all shadow-md w-full cursor-pointer">
+                            ${data.options[0].t}
+                        </button>
+                        <button onclick="solveGame(this, ${level}, ${data.options[1].c})" style="pointer-events: auto;" class="py-4 rounded-xl border-b-4 border-gray-200 bg-white text-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-1 transition-all shadow-md w-full cursor-pointer">
+                            ${data.options[1].t}
+                        </button>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
+            window.closeGameModal = function() {
+                const modal = document.getElementById('game-modal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            window.closeVictoryModal = function() {
+                document.getElementById('victory-modal').classList.add('hidden');
+                document.getElementById('victory-modal').classList.remove('flex');
+            };
+
+            window.resetGame = function() { location.reload(); };
+
+            window.solveGame = function(btn, level, isCorrect) {
+                if (isCorrect) {
+                    btn.className = "py-4 rounded-xl border-b-4 border-emerald-600 bg-emerald-500 text-2xl font-bold text-white shadow-none transform translate-y-1 w-full";
+                    try { react('confetti'); } catch(e) {}
+                    setTimeout(() => { window.closeGameModal(); window.markCompleted(level); }, 800);
+                } else {
+                    btn.className = "py-4 rounded-xl border-b-4 border-red-600 bg-red-500 text-2xl font-bold text-white animate-shake w-full";
+                    try { react('error'); } catch(e) {}
+                }
+            };
+
+            window.markCompleted = function(level) {
+                if(window.completedLevels.includes(level)) return;
+                const box = document.getElementById('box-' + level);
+                if(box) {
+                    box.className = box.className.replace(/bg-\w+-100/g, "bg-gray-200");
+                    box.className = box.className.replace(/border-\w+-\d+/g, "border-gray-400");
+                    box.className = box.className.replace(/text-\w+-\d+/g, "text-gray-500");
+                    box.classList.remove('animate-pulse', 'ring-2', 'hover:scale-105');
+                    box.classList.add('opacity-100');
+                    box.innerHTML = '<i class="fas fa-check-circle text-4xl text-emerald-500 drop-shadow-md"></i>';
+                    box.onclick = null; 
+                    window.completedLevels.push(level);
+                    const nextLevels = window.gameData[level].next;
+                    nextLevels.forEach(nextId => {
+                        const nextBox = document.getElementById('box-' + nextId);
+                        if(nextBox && !window.completedLevels.includes(nextId)) {
+                            nextBox.disabled = false;
+                            nextBox.classList.remove('opacity-50', 'opacity-40', 'cursor-not-allowed');
+                            nextBox.classList.add('cursor-pointer', 'animate-pulse', 'ring-2', 'ring-yellow-400', 'shadow-xl', 'scale-105', 'z-30', 'bg-white');
+                            const lock = nextBox.querySelector('.lock-icon');
+                            if(lock) lock.className = "fas fa-unlock text-emerald-500 absolute top-1 right-1 text-sm bg-white rounded-full p-0.5";
+                        }
+                    });
+                    if (level === 8) {
+                        setTimeout(() => { 
+                            try { react('confetti'); } catch(e) {}
+                            const vicModal = document.getElementById('victory-modal');
+                            vicModal.classList.remove('hidden');
+                            vicModal.classList.add('flex');
+                        }, 500);
+                    }
+                }
+            };
+        </script>
+    </div>
+</section>
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col p-0" style="pointer-events: auto !important;">
+        
+        <div class="text-center mb-4 pt-4 relative">
+            <h2 class="text-4xl font-bold text-[#004d40] font-serif mb-2 flex items-center justify-center gap-3">
+                <i class="fas fa-user-secret text-slate-700"></i>
+                The Secret Code
+                <i class="fas fa-unlock-alt text-yellow-500 drop-shadow-sm"></i>
+            </h2>
+            
+            <div class="flex justify-center items-center gap-4">
+                <div class="bg-slate-100 px-4 py-2 rounded-lg border border-slate-300 text-sm text-slate-600 shadow-inner">
+                    <strong>Mission:</strong> Read the English number and type the digits!
+                </div>
+                
+                <button onclick="resetGame()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 transition-colors border border-gray-300" title="Restart Game">
+                    <i class="fas fa-redo"></i> Restart
+                </button>
+            </div>
+
+            <div class="absolute top-0 right-0 mt-2 mr-4 bg-slate-900 text-red-500 font-mono text-xl p-3 rounded-lg border-2 border-slate-700 shadow-lg z-30 flex items-center gap-2">
+                <i class="fas fa-stopwatch"></i>
+                <span id="timer-display" class="font-bold">60</span>s
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col md:flex-row items-center justify-center gap-12 w-full max-w-5xl mx-auto pb-8 relative">
+            
+            <div class="relative w-72 h-72 md:w-80 md:h-80 perspective-1000 mt-8 md:mt-0 group">
+                <div class="absolute inset-0 bg-slate-800 rounded-3xl flex items-center justify-center shadow-inner z-0">
+                    <div id="safe-treasure" class="opacity-0 transition-opacity duration-1000 text-center">
+                        <i class="fas fa-gem text-6xl text-cyan-400 mb-2 animate-pulse"></i>
+                        <div class="text-white text-xs mt-1 font-mono">CODE ACCEPTED</div>
+                    </div>
+                </div>
+                <div id="safe-door" class="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 rounded-3xl border-8 border-gray-500 shadow-2xl z-10 flex flex-col items-center justify-center transition-transform duration-1000 origin-left">
+                    <div class="bg-black border-4 border-gray-600 rounded-lg p-3 mb-6 w-3/4 shadow-inner relative overflow-hidden">
+                        <div class="absolute inset-0 bg-green-500/10 pointer-events-none"></div>
+                        <p class="text-[10px] text-gray-500 font-mono mb-1 text-center tracking-widest">TARGET (ENGLISH)</p>
+                        <p id="target-word" class="text-green-400 font-mono text-xl md:text-2xl font-bold text-center leading-tight break-words min-h-[3rem] flex items-center justify-center drop-shadow-md">
+                            LOADING...
+                        </p>
+                    </div>
+                    <div class="w-24 h-24 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border-4 border-gray-600 shadow-lg flex items-center justify-center relative">
+                        <div class="w-20 h-20 bg-gray-400 rounded-full border border-gray-500 flex items-center justify-center">
+                            <div id="door-handle" class="w-16 h-4 bg-gray-600 rounded-full shadow-sm transition-transform duration-500"></div>
+                        </div>
+                        <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                        <div class="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                    </div>
+                    <div class="mt-6 bg-gray-300 w-32 h-10 rounded border border-gray-400 flex items-center justify-center shadow-inner">
+                        <span id="user-input-display" class="font-mono text-2xl font-bold text-gray-700 tracking-widest"></span>
+                        <span class="animate-pulse text-gray-500 ml-1">|</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-2xl border-b-8 border-slate-900 w-full max-w-xs z-20" id="keypad-container">
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="pressKey(1)" class="keypad-btn">1</button>
+                    <button onclick="pressKey(2)" class="keypad-btn">2</button>
+                    <button onclick="pressKey(3)" class="keypad-btn">3</button>
+                    <button onclick="pressKey(4)" class="keypad-btn">4</button>
+                    <button onclick="pressKey(5)" class="keypad-btn">5</button>
+                    <button onclick="pressKey(6)" class="keypad-btn">6</button>
+                    <button onclick="pressKey(7)" class="keypad-btn">7</button>
+                    <button onclick="pressKey(8)" class="keypad-btn">8</button>
+                    <button onclick="pressKey(9)" class="keypad-btn">9</button>
+                    <button onclick="clearInput()" class="keypad-action-btn bg-red-600 hover:bg-red-500 border-red-800 shadow-[0_4px_0_rgb(153,27,27)] active:shadow-none active:translate-y-1">
+                        <i class="fas fa-backspace text-xl"></i>
+                    </button>
+                    <button onclick="pressKey(0)" class="keypad-btn">0</button>
+                    <button onclick="checkCode()" class="keypad-action-btn bg-emerald-500 hover:bg-emerald-400 border-emerald-700 shadow-[0_4px_0_rgb(4,120,87)] active:shadow-none active:translate-y-1">
+                        <i class="fas fa-check text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="victory-modal" style="pointer-events: auto !important;" class="fixed inset-0 z-[9999] bg-[#004d40]/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 text-center">
+            <div class="bg-white p-10 rounded-3xl shadow-2xl max-w-md w-full relative animate-[fadeIn_0.5s_ease-out]">
+                <canvas id="victory-canvas" class="absolute inset-0 pointer-events-none w-full h-full"></canvas>
+                <div class="mb-6 transform scale-110">
+                    <i class="fas fa-trophy text-8xl text-yellow-400 drop-shadow-md"></i>
+                </div>
+                <h2 class="text-4xl font-bold text-[#004d40] mb-2 font-serif">Mission Accomplished!</h2>
+                <p class="text-lg text-slate-600 mb-8 font-bold">You unlocked the Safe!</p>
+                <div class="bg-slate-100 rounded-xl p-4 mb-8">
+                    <p class="text-sm text-slate-500 uppercase font-bold">Time Remaining</p>
+                    <p id="final-time" class="text-3xl font-mono font-bold text-[#ff6f00]">00s</p>
+                </div>
+                <button onclick="resetGame()" class="w-full bg-[#ff6f00] text-white py-4 rounded-xl font-bold text-xl shadow-lg hover:bg-orange-600 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <i class="fas fa-redo-alt mr-2"></i> Play Again
+                </button>
+            </div>
+        </div>
+
+        <div id="busted-modal" style="pointer-events: auto !important;" class="fixed inset-0 z-[10000] bg-slate-900/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 text-center">
+            <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full relative animate-[fadeIn_0.5s_ease-out] border-4 border-red-600">
+                <img src="https://cdn-icons-png.flaticon.com/512/4337/4337695.png" alt="Police Arrest" class="w-48 h-48 mx-auto mb-6 drop-shadow-lg animate-[bounce_1s_infinite]">
+                <h2 class="text-5xl font-bold text-red-600 mb-2 font-serif uppercase tracking-wider">BUSTED!</h2>
+                <p class="text-xl text-slate-800 mb-8 font-bold">The police caught you!</p>
+                <button onclick="resetGame()" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold text-xl shadow-lg hover:bg-red-700 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <i class="fas fa-redo-alt mr-2"></i> Try Again
+                </button>
+            </div>
+        </div>
+
+        <style>
+            .perspective-1000 { perspective: 1000px; }
+            .keypad-btn {
+                background-color: #334155; color: white; font-size: 1.5rem; font-weight: bold; padding: 1rem;
+                border-radius: 0.75rem; box-shadow: 0 4px 0 #1e293b; transition: all 0.1s;
+            }
+            .keypad-btn:hover { background-color: #475569; }
+            .keypad-btn:active { transform: translateY(4px); box-shadow: none; }
+            .keypad-action-btn {
+                color: white; font-weight: bold; padding: 1rem; border-radius: 0.75rem; 
+                transition: all 0.1s; display: flex; align-items: center; justify-content: center;
+            }
+            .door-open { transform: rotateY(-110deg); }
+            .disabled-keypad { opacity: 0.5; pointer-events: none; filter: grayscale(0.8); }
+        </style>
+
+        <script>
+            window.safeLevels = [
+                { word: "Fifteen", code: "15" },
+                { word: "Thirty-two", code: "32" },
+                { word: "One hundred one", code: "101" },
+                { word: "Five hundred", code: "500" },
+                { word: "Seven hundred twenty", code: "720" },
+                { word: "One thousand nine hundred", code: "1900" }
+            ];
+            
+            window.currentSafeLevel = 0;
+            window.currentInput = "";
+            window.initialTime = 60;
+            window.timeLeft = window.initialTime;
+            window.timerInterval = null;
+            window.isGameActive = false;
+
+            // Iniciar al cargar
+            setTimeout(() => {
+                if (!window.isGameActive) {
+                    resetGame();
+                }
+            }, 500);
+
+            window.resetGame = function() {
+                window.currentSafeLevel = 0;
+                window.currentInput = "";
+                window.timeLeft = window.initialTime;
+                window.isGameActive = true;
+                
+                document.getElementById('victory-modal').classList.add('hidden');
+                document.getElementById('victory-modal').classList.remove('flex');
+                document.getElementById('busted-modal').classList.add('hidden');
+                document.getElementById('busted-modal').classList.remove('flex');
+                
+                document.getElementById('keypad-container').classList.remove('disabled-keypad');
+                document.getElementById('timer-display').parentElement.classList.remove('animate-pulse', 'bg-red-100', 'text-red-600', 'border-red-500');
+                document.getElementById('timer-display').parentElement.classList.add('bg-slate-900', 'text-red-500');
+                
+                if (window.timerInterval) clearInterval(window.timerInterval);
+                window.updateTimerDisplay();
+                window.timerInterval = setInterval(() => {
+                    if(!window.isGameActive) return;
+                    window.timeLeft--;
+                    window.updateTimerDisplay();
+                    if (window.timeLeft <= 0) {
+                        window.gameOver();
+                    }
+                }, 1000);
+
+                window.loadSafeLevel();
+            };
+
+            window.updateTimerDisplay = function() {
+                const display = document.getElementById('timer-display');
+                if (display) {
+                    display.innerText = window.timeLeft;
+                    if (window.timeLeft <= 10 && window.timeLeft > 0) {
+                        display.parentElement.classList.add('animate-pulse', 'border-red-500', 'text-red-600');
+                        display.parentElement.classList.remove('bg-slate-900', 'text-red-500');
+                        display.parentElement.style.backgroundColor = '#fee2e2';
+                    }
+                }
+            };
+
+            window.gameOver = function() {
+                clearInterval(window.timerInterval);
+                window.isGameActive = false;
+                document.getElementById('keypad-container').classList.add('disabled-keypad');
+                setTimeout(() => {
+                    try { react('error'); } catch(e){} 
+                    const modal = document.getElementById('busted-modal');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                }, 500);
+            };
+
+            window.loadSafeLevel = function() {
+                const door = document.getElementById('safe-door');
+                const treasure = document.getElementById('safe-treasure');
+                const handle = document.getElementById('door-handle');
+                
+                door.classList.remove('door-open');
+                treasure.classList.remove('opacity-100');
+                treasure.classList.add('opacity-0');
+                handle.style.transform = "rotate(0deg)";
+                
+                window.currentInput = "";
+                window.updateDisplay();
+
+                if (window.currentSafeLevel < window.safeLevels.length) {
+                    const level = window.safeLevels[window.currentSafeLevel];
+                    document.getElementById('target-word').innerText = level.word.toUpperCase();
+                    document.getElementById('target-word').className = "text-green-400 font-mono text-xl md:text-2xl font-bold text-center leading-tight break-words min-h-[3rem] flex items-center justify-center drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]";
+                }
+            };
+
+            window.pressKey = function(num) {
+                if (!window.isGameActive) return;
+                if (window.currentInput.length < 6) {
+                    window.currentInput += num;
+                    window.updateDisplay();
+                    try { const a = new Audio('https://cdn.pixabay.com/download/audio/2022/03/24/audio_07641d4b27.mp3?filename=ui-click-43196.mp3'); a.volume=0.2; a.play(); } catch(e){}
+                }
+            };
+
+            window.clearInput = function() {
+                if (!window.isGameActive) return;
+                window.currentInput = "";
+                window.updateDisplay();
+            };
+
+            window.updateDisplay = function() {
+                document.getElementById('user-input-display').innerText = window.currentInput;
+            };
+
+            window.checkCode = function() {
+                if (!window.isGameActive || window.currentSafeLevel >= window.safeLevels.length) return;
+
+                const correctCode = window.safeLevels[window.currentSafeLevel].code;
+                const display = document.getElementById('user-input-display');
+                
+                if (window.currentInput === correctCode) {
+                    display.style.color = "#10b981"; // Green
+                    const tempTime = window.timeLeft; 
+                    document.getElementById('door-handle').style.transform = "rotate(90deg)";
+                    try { react('applause'); } catch(e){}
+
+                    setTimeout(() => {
+                        document.getElementById('safe-door').classList.add('door-open');
+                        document.getElementById('safe-treasure').classList.remove('opacity-0');
+                        document.getElementById('safe-treasure').classList.add('opacity-100');
+                        
+                        setTimeout(() => {
+                            window.currentSafeLevel++;
+                            if (window.currentSafeLevel < window.safeLevels.length) {
+                                window.loadSafeLevel();
+                                display.style.color = "#374151"; 
+                            } else {
+                                window.isGameActive = false;
+                                clearInterval(window.timerInterval);
+                                try { react('confetti'); } catch(e){}
+                                document.getElementById('final-time').innerText = tempTime + "s";
+                                const modal = document.getElementById('victory-modal');
+                                modal.classList.remove('hidden');
+                                modal.classList.add('flex');
+                            }
+                        }, 2000); 
+                    }, 500);
+
+                } else {
+                    display.style.color = "#ef4444"; // Red
+                    const originalText = document.getElementById('target-word').innerText;
+                    document.getElementById('target-word').innerText = "DENIED";
+                    document.getElementById('target-word').className = "text-red-500 font-mono text-xl font-bold animate-pulse text-center flex items-center justify-center min-h-[3rem]";
+                    try { react('error'); } catch(e){}
+                    setTimeout(() => {
+                        if(window.isGameActive) {
+                            window.currentInput = "";
+                            window.updateDisplay();
+                            display.style.color = "#374151";
+                            document.getElementById('target-word').innerText = originalText;
+                            document.getElementById('target-word').className = "text-green-400 font-mono text-xl md:text-2xl font-bold text-center leading-tight break-words min-h-[3rem] flex items-center justify-center drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]";
+                        }
+                    }, 1000);
+                }
+            };
+        </script>
+    </div>
+</section>
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col p-0" style="pointer-events: auto !important;">
+        
+        <div class="text-center mb-8 pt-4">
+            <h2 class="text-4xl font-bold text-[#004d40] font-serif mb-4">
+                <i class="fas fa-magic text-purple-500 mr-2"></i> The Magic of "Uno"
+            </h2>
+            
+            <p class="text-3xl text-slate-700 font-medium leading-relaxed">
+                The number <strong class="text-[#ff6f00] scale-110 inline-block">1</strong> changes its outfit depending on where it stands!
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto h-full pb-8">
+            
+            <div class="bg-white/80 p-6 rounded-2xl border-t-8 border-gray-400 shadow-lg flex flex-col items-center text-center transition-transform hover:scale-105">
+                <div class="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mb-4 text-4xl font-bold text-gray-500 shadow-inner">
+                    1
+                </div>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">UNO</h3>
+                <span class="bg-gray-200 text-gray-600 text-xs font-bold px-3 py-1 rounded-full uppercase mb-4">Counting</span>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Use <strong>Uno</strong> when counting or when the number stands <u>alone</u>.
+                </p>
+                <div class="mt-auto bg-gray-50 p-3 rounded-lg border border-gray-200 w-full">
+                    <p class="text-gray-500 italic">"Número uno"</p>
+                    <p class="text-gray-500 italic">"Tres, dos, uno..."</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border-t-8 border-emerald-500 shadow-2xl flex flex-col items-center text-center transform scale-110 z-10 relative">
+                <div class="absolute -top-4 bg-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase shadow-md">Most Important!</div>
+                <div class="bg-emerald-100 w-24 h-24 rounded-full flex items-center justify-center mb-4 text-5xl font-bold text-emerald-600 shadow-inner">
+                    <i class="fas fa-cut text-2xl absolute top-0 right-0 text-red-400 bg-white rounded-full p-1 border border-red-200" title="Drop the O!"></i>
+                    UN
+                </div>
+                <h3 class="text-3xl font-bold text-emerald-800 mb-2">UN_</h3>
+                <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase mb-4">Before Masculine</span>
+                <p class="text-slate-700 text-sm leading-relaxed font-semibold">
+                    Drop the <strong>"O"</strong> before a <u>Masculine Noun</u>.
+                </p>
+                <div class="mt-auto bg-emerald-50 p-4 rounded-xl border border-emerald-200 w-full space-y-2 text-left">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check text-emerald-500"></i>
+                        <span class="text-slate-700 font-bold">Un libro</span>
+                        <span class="text-xs text-red-400 line-through decoration-2 opacity-50">Uno libro</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check text-emerald-500"></i>
+                        <span class="text-slate-700 font-bold">Veintiún años</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/80 p-6 rounded-2xl border-t-8 border-pink-400 shadow-lg flex flex-col items-center text-center transition-transform hover:scale-105">
+                <div class="bg-pink-100 w-20 h-20 rounded-full flex items-center justify-center mb-4 text-4xl font-bold text-pink-500 shadow-inner">
+                    <i class="fas fa-venus text-2xl absolute top-0 right-0 text-pink-400"></i>
+                    A
+                </div>
+                <h3 class="text-2xl font-bold text-pink-700 mb-2">UNA</h3>
+                <span class="bg-pink-100 text-pink-600 text-xs font-bold px-3 py-1 rounded-full uppercase mb-4">Before Feminine</span>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Change "O" to <strong>"A"</strong> before a <u>Feminine Noun</u>.
+                </p>
+                <div class="mt-auto bg-pink-50 p-3 rounded-lg border border-pink-200 w-full">
+                    <p class="text-pink-800 font-bold">"Una casa"</p>
+                    <p class="text-pink-800 font-bold">"Veintiuna chicas"</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col p-0" style="pointer-events: auto !important;">
+        
+        <div class="text-center mb-6 pt-4">
+            <h2 class="text-4xl font-bold text-[#004d40] font-serif mb-2">
+                <i class="fas fa-flag-checkered text-red-500 mr-2"></i> Final Challenge
+            </h2>
+            <p class="text-lg text-slate-600">Select the correct translation for each phrase.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full max-w-6xl mx-auto pb-8 px-4 overflow-y-auto">
+            
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-birthday-cake text-pink-400"></i>
+                    <span class="font-bold text-gray-700">"I am 25 years old."</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Tengo veinticinco años</button>
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Soy veinticinco años</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-book text-blue-400"></i>
+                    <span class="font-bold text-gray-700">"100 books"</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Ciento libros</button>
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Cien libros</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-paw text-orange-400"></i>
+                    <span class="font-bold text-gray-700">"101 dalmatians"</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Ciento un dálmatas</button>
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Cien un dálmatas</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-user text-green-400"></i>
+                    <span class="font-bold text-gray-700">"A man" (Un hombre)</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Uno hombre</button>
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Un hombre</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-calendar-alt text-purple-400"></i>
+                    <span class="font-bold text-gray-700">"The year 2025"</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Dos mil veinticinco</button>
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Veinte veinticinco</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-dollar-sign text-yellow-500"></i>
+                    <span class="font-bold text-gray-700">"1,000 pesos"</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Un mil pesos</button>
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Mil pesos</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-home text-indigo-400"></i>
+                    <span class="font-bold text-gray-700">"500 houses" (Casas - Fem)</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Quinientas casas</button>
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Quinientos casas</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-users text-teal-400"></i>
+                    <span class="font-bold text-gray-700">"1 million people"</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="checkFinal(this, false)" class="quiz-btn">Un millón personas</button>
+                    <button onclick="checkFinal(this, true)" class="quiz-btn">Un millón <span class="underline">de</span> personas</button>
+                </div>
+            </div>
+
+        </div>
+
+        <style>
+            .quiz-btn {
+                background-color: #f8fafc;
+                border: 2px solid #e2e8f0;
+                color: #475569;
+                font-weight: 600;
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                transition: all 0.2s;
+                font-size: 0.95rem;
+            }
+            .quiz-btn:hover {
+                background-color: #e2e8f0;
+                border-color: #cbd5e1;
+            }
+        </style>
+
+        <script>
+            function checkFinal(btn, isCorrect) {
+                const parent = btn.parentElement;
+                const buttons = parent.querySelectorAll('button');
+                buttons.forEach(b => b.disabled = true); // Bloquear ambos
+
+                if(isCorrect) {
+                    btn.classList.remove('bg-gray-50', 'text-gray-600');
+                    btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                    btn.innerHTML = '<i class="fas fa-check mr-2"></i>' + btn.innerHTML;
+                    try { react('applause'); } catch(e){}
+                } else {
+                    btn.classList.remove('bg-gray-50', 'text-gray-600');
+                    btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                    btn.innerHTML = '<i class="fas fa-times mr-2"></i>' + btn.innerHTML;
+                    try { react('error'); } catch(e){}
+                }
+            }
+        </script>
+    </div>
+</section>
+
+
+
+<section>
+    <div class="slide-container h-full flex flex-col items-center justify-center p-0" style="pointer-events: auto !important;">
+        
+        <div class="mb-8 animate-[fadeInDown_1s_ease-out] flex flex-col items-center">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" 
+                 alt="Tucaneo Academy" 
+                 class="w-60 md:w-72 h-auto drop-shadow-xl hover:scale-105 transition-transform duration-500">
+        </div>
+
+        <div class="bg-white p-8 md:p-10 rounded-[2rem] shadow-2xl border-t-8 border-red-600 max-w-4xl w-full relative">
+            
+            <div class="absolute -top-5 right-10 bg-red-600 text-white px-4 py-1 rounded-full font-bold uppercase text-sm shadow-md animate-pulse">
+                <i class="fas fa-fire mr-1"></i> Expert Mode
+            </div>
+
+            <h2 class="text-4xl font-bold text-slate-800 mb-8 text-center border-b-2 border-dashed border-gray-200 pb-4 font-serif">
+                <i class="fas fa-brain text-red-600 mr-3"></i> Reto Final (Challenge)
+            </h2>
+
+            <div class="space-y-6">
+                
+                <div class="flex items-start gap-5 p-4 bg-red-50 rounded-2xl border border-red-100">
+                    <span class="bg-red-600 text-white font-black text-2xl w-12 h-12 flex items-center justify-center rounded-full shrink-0 shadow-sm">1</span>
+                    <div>
+                        <p class="text-xl font-bold text-red-800 mb-1 uppercase text-sm">Math Challenge:</p>
+                        <p class="text-2xl text-slate-700 leading-snug">
+                            Calculate and write the result in words: 
+                            <br>
+                            <span class="font-mono font-bold text-slate-900 bg-white px-2 rounded border border-gray-300">500 + 700 + 900 = ?</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-5 p-4 hover:bg-slate-50 rounded-2xl transition-colors border border-transparent hover:border-slate-200">
+                    <span class="bg-slate-700 text-white font-black text-2xl w-12 h-12 flex items-center justify-center rounded-full shrink-0 shadow-sm">2</span>
+                    <div>
+                        <p class="text-xl font-bold text-slate-500 mb-1 uppercase text-sm">Tricky Translation:</p>
+                        <p class="text-2xl text-slate-700 leading-snug">
+                            Translate: <strong>"21,000 women"</strong>.
+                            <br><span class="text-sm text-gray-400 italic">(Watch out! Does "21" change for "mil" or "women"?)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-5 p-4 hover:bg-slate-50 rounded-2xl transition-colors border border-transparent hover:border-slate-200">
+                    <span class="bg-slate-700 text-white font-black text-2xl w-12 h-12 flex items-center justify-center rounded-full shrink-0 shadow-sm">3</span>
+                    <div>
+                        <p class="text-xl font-bold text-slate-500 mb-1 uppercase text-sm">History Date:</p>
+                        <p class="text-2xl text-slate-700 leading-snug">
+                            Write the full year: <strong>1999</strong>.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-10 text-center">
+            <p class="text-2xl font-bold text-[#004d40] mb-1 font-serif">¿Aceptas el reto?</p>
+            <a href="https://tucaneo.com" target="_blank" class="text-slate-500 hover:text-[#ff6f00] transition-colors font-bold tracking-widest text-base uppercase border-b-2 border-transparent hover:border-[#ff6f00]">
+                www.tucaneo.com
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Lógica Corregida) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        
+        // Iconos
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { 
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, 
+            Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, 
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, 
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, 
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, 
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, 
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, 
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, 
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, 
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, 
+            Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, 
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, 
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, 
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> 
+        };
+
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+
+        // --- GLOSARIO (Sin cambios) ---
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+
+        // --- PIZARRA (Corregida) ---
+        function WhiteboardModule() { 
+            const [elements, setElements] = useState([]); 
+            const [history, setHistory] = useState([]); 
+            const [historyStep, setHistoryStep] = useState(0); 
+            const [tool, setTool] = useState('pencil'); 
+            const [action, setAction] = useState('none'); 
+            const [panOffset, setPanOffset] = useState({x:0, y:0}); 
+            const [writingPos, setWritingPos] = useState(null); 
+            const [defaultText, setDefaultText] = useState(''); // Estado para edición
+            const [selectedId, setSelectedId] = useState(null); 
+            const [confirmClear, setConfirmClear] = useState(false); 
+            const [resizeHandle, setResizeHandle] = useState(null); 
+            const [dragOffset, setDragOffset] = useState({x:0, y:0}); 
+            const [color, setColor] = useState('#004d40'); 
+            const [strokeWidth, setStrokeWidth] = useState(3); 
+            const [size, setSize] = useState({w:0, h:0}); 
+            const [hoverCursor, setHoverCursor] = useState(null); 
+            const containerRef = useRef(null); 
+            const canvasRef = useRef(null); 
+            const textAreaRef = useRef(null); 
+            const generateId = () => Math.random().toString(36).substr(2, 9); 
+
+            useEffect(() => { 
+                if(!containerRef.current) return; 
+                const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); 
+                obs.observe(containerRef.current); 
+                return () => obs.disconnect(); 
+            }, []); 
+
+            useEffect(() => { 
+                if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } 
+                if (confirmClear) setConfirmClear(false); 
+                // Si cambiamos de herramienta escribiendo, guardamos
+                if (action === 'writing' && tool !== 'text') finishWriting(); 
+            }, [tool]); 
+
+            // Enfocar textarea al escribir
+            useEffect(() => { 
+                if (action === 'writing' && textAreaRef.current) { 
+                    textAreaRef.current.value = defaultText; // Poner texto existente si es edición
+                    setTimeout(() => {
+                        textAreaRef.current?.focus();
+                        textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight;
+                    }, 10); 
+                } 
+            }, [action, writingPos]); 
+
+            // Actualizar propiedades al seleccionar
+            useEffect(() => { 
+                if(selectedId && !resizeHandle && action !== 'moving') { 
+                    const index = elements.findIndex(el => el.id === selectedId); 
+                    if(index !== -1) { 
+                        const el = elements[index]; 
+                        if(el.color !== color || el.strokeWidth !== strokeWidth) { 
+                            const newEls = [...elements]; 
+                            // Recalcular tamaño si es texto
+                            let newW = el.width;
+                            let newH = el.height;
+                            if (el.type === 'text') {
+                                const fontSize = Math.max(12, strokeWidth * 4);
+                                const lines = el.text.split('\n');
+                                newH = lines.length * fontSize * 1.2;
+                                const maxLineLen = Math.max(...lines.map(l=>l.length));
+                                newW = maxLineLen * fontSize * 0.6;
+                            }
+                            newEls[index] = { ...el, color, strokeWidth, width: newW, height: newH }; 
+                            setElements(newEls); 
+                        } 
+                    } 
+                } 
+            }, [color, strokeWidth]); 
+
+            useEffect(() => { 
+                if(selectedId) { 
+                    const el = elements.find(e => e.id === selectedId); 
+                    if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } 
+                } 
+            }, [selectedId]); 
+
+            // RENDERIZADO (Con soporte multilínea)
+            useLayoutEffect(() => { 
+                const ctx = canvasRef.current?.getContext('2d'); 
+                if(!ctx || size.w === 0) return; 
+                canvasRef.current.width = size.w; 
+                canvasRef.current.height = size.h; 
+                ctx.clearRect(0,0,size.w,size.h); 
+                
+                // Grid
+                ctx.save(); 
+                ctx.fillStyle='#ffffff'; 
+                ctx.fillRect(0,0,size.w,size.h); 
+                ctx.strokeStyle='#f1f5f9'; 
+                ctx.lineWidth=1; 
+                ctx.beginPath(); 
+                const gridSize = 40; 
+                const offsetX = panOffset.x % gridSize; 
+                const offsetY = panOffset.y % gridSize; 
+                for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } 
+                for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } 
+                ctx.stroke(); 
+                ctx.restore(); 
+
+                ctx.save(); 
+                ctx.translate(panOffset.x, panOffset.y); 
+                
+                elements.forEach(el => { 
+                    ctx.lineCap = 'round'; 
+                    ctx.lineJoin = 'round'; 
+                    if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } 
+                    else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } 
+
+                    if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { 
+                        ctx.beginPath(); 
+                        ctx.moveTo(el.points[0].x, el.points[0].y); 
+                        for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); 
+                        ctx.stroke(); 
+                    } else if (el.type === 'rectangle') { 
+                        ctx.strokeRect(el.x, el.y, el.width, el.height); 
+                    } else if (el.type === 'circle') { 
+                        ctx.beginPath(); 
+                        const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; 
+                        ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); 
+                        ctx.stroke(); 
+                    } else if (el.type === 'line') { 
+                        ctx.beginPath(); 
+                        ctx.moveTo(el.x, el.y); 
+                        ctx.lineTo(el.x+el.width, el.y+el.height); 
+                        ctx.stroke(); 
+                    } else if (el.type === 'text' && el.text) { 
+                        const fontSize = Math.max(12, el.strokeWidth * 4); 
+                        ctx.font = `${fontSize}px 'Lato', sans-serif`; 
+                        ctx.textBaseline = 'top'; 
+                        
+                        // LÓGICA DE MULTILÍNEA
+                        const lines = el.text.split('\n');
+                        let maxWidth = 0;
+                        lines.forEach((line, index) => {
+                            ctx.fillText(line, el.x, el.y + (index * fontSize * 1.2));
+                            const m = ctx.measureText(line);
+                            if(m.width > maxWidth) maxWidth = m.width;
+                        });
+                        
+                        el.width = maxWidth; 
+                        el.height = lines.length * fontSize * 1.2; 
+                    } 
+                }); 
+
+                if(selectedId) { 
+                    const el = elements.find(e => e.id === selectedId); 
+                    if(el) { 
+                        const isPencil = el.type === 'pencil' || el.type === 'eraser'; 
+                        ctx.strokeStyle = '#ff6f00'; 
+                        ctx.lineWidth = 1; 
+                        ctx.setLineDash([5, 5]); 
+                        let bx = el.x, by = el.y, bw = el.width, bh = el.height; 
+                        if(isPencil) { 
+                            const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); 
+                            bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; 
+                        } else { 
+                            if(bw < 0) { bx += bw; bw = Math.abs(bw); } 
+                            if(bh < 0) { by += bh; bh = Math.abs(bh); } 
+                        } 
+                        ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); 
+                        ctx.setLineDash([]); 
+                        if(!isPencil) { 
+                            const handles = getHandles({x:bx, y:by, width:bw, height:bh}); 
+                            ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; 
+                            Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); 
+                        } 
+                    } 
+                } 
+                ctx.restore(); 
+            }, [elements, size, panOffset, selectedId]); 
+
+            const updateHistory = (newEls) => { 
+                const newHist = history.slice(0, historyStep + 1); 
+                newHist.push(newEls); 
+                setHistory(newHist); 
+                setHistoryStep(newHist.length - 1); 
+            }; 
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; 
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; 
+            const getPos = (e) => { 
+                const rect = canvasRef.current.getBoundingClientRect(); 
+                const cx = e.touches ? e.touches[0].clientX : e.clientX; 
+                const cy = e.touches ? e.touches[0].clientY : e.clientY; 
+                return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; 
+            }; 
+            
+            const isPointInElement = (x, y, el) => { 
+                const padding = 10; 
+                let bx = el.x, by = el.y, bw = el.width, bh = el.height; 
+                if(el.type === 'pencil' || el.type === 'eraser') { 
+                    const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); 
+                    bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; 
+                } else { 
+                    if(bw < 0) { bx += bw; bw = Math.abs(bw); } 
+                    if(bh < 0) { by += bh; bh = Math.abs(bh); } 
+                } 
+                return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; 
+            }; 
+
+            // MANEJO DE DOBLE CLIC (EDITAR)
+            const handleDoubleClick = (e) => {
+                const {x, y} = getPos(e);
+                for(let i = elements.length - 1; i >= 0; i--) {
+                    const el = elements[i];
+                    if (el.type === 'text' && isPointInElement(x, y, el)) {
+                        setDefaultText(el.text);
+                        setWritingPos({x: el.x, y: el.y});
+                        setTool('text'); 
+                        setAction('writing');
+                        setColor(el.color);
+                        setStrokeWidth(el.strokeWidth);
+                        const newEls = elements.filter(item => item.id !== el.id);
+                        setElements(newEls);
+                        return; 
+                    }
+                }
+            };
+
+            const handleDown = (e) => { 
+                if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; 
+                e.preventDefault(); 
+                
+                const {x,y} = getPos(e); 
+                
+                if(tool === 'selection') { 
+                    if(selectedId) { 
+                        const el = elements.find(e => e.id === selectedId); 
+                        if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { 
+                            let bx = el.x, by = el.y, bw = el.width, bh = el.height; 
+                            if(bw < 0) { bx += bw; bw = Math.abs(bw); } 
+                            if(bh < 0) { by += bh; bh = Math.abs(bh); } 
+                            const handles = getHandles({x:bx, y:by, width:bw, height:bh}); 
+                            for(const key in handles) { 
+                                if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } 
+                            } 
+                        } 
+                    } 
+                    let foundId = null; 
+                    if(selectedId) { 
+                        const el = elements.find(e => e.id === selectedId); 
+                        if(el && isPointInElement(x, y, el)) foundId = selectedId; 
+                    } 
+                    if(!foundId) { 
+                        for(let i=elements.length-1; i>=0; i--) { 
+                            if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } 
+                        } 
+                    } 
+                    setSelectedId(foundId); 
+                    if(foundId) { 
+                        setAction('moving'); 
+                        const el = elements.find(e => e.id === foundId); 
+                        setDragOffset({ x: x - el.x, y: y - el.y }); 
+                    } else { 
+                        setAction('panning'); 
+                    } 
+                    return; 
+                } 
+
+                if(tool === 'text') { 
+                    if(action==='writing') {
+                        finishWriting(); 
+                    } else { 
+                        setDefaultText(''); 
+                        setAction('writing'); 
+                        setWritingPos({x,y}); 
+                    } 
+                    return; 
+                } 
+
+                setAction('drawing'); 
+                const newEl = { 
+                    id: generateId(), 
+                    type: tool, 
+                    x, y, 
+                    width:0, height:0, 
+                    color, strokeWidth, 
+                    points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined 
+                }; 
+                setElements(prev=>[...prev, newEl]); 
+            }; 
+
+            const handleMove = (e) => { 
+                const {x,y} = getPos(e); 
+                if(tool === 'selection' && selectedId && action === 'none') { 
+                    const el = elements.find(e => e.id === selectedId); 
+                    if(el) { 
+                        if(el.type !== 'pencil' && el.type !== 'eraser') { 
+                            let bx = el.x, by = el.y, bw = el.width, bh = el.height; 
+                            if(bw < 0) { bx += bw; bw = Math.abs(bw); } 
+                            if(bh < 0) { by += bh; bh = Math.abs(bh); } 
+                            const handles = getHandles({x:bx, y:by, width:bw, height:bh}); 
+                            let cursor = null; 
+                            for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } 
+                            setHoverCursor(cursor); 
+                        } 
+                        if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } 
+                    } else { setHoverCursor(null); } 
+                } else if (action === 'none') { setHoverCursor(null); } 
+
+                if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } 
+
+                if(action === 'moving' && selectedId) { 
+                    const els = [...elements]; 
+                    const index = els.findIndex(e => e.id === selectedId); 
+                    const el = els[index]; 
+                    const newX = x - dragOffset.x; 
+                    const newY = y - dragOffset.y; 
+                    if (el.type === 'pencil' || el.type === 'eraser') { 
+                        const dx = newX - el.x; const dy = newY - el.y; 
+                        const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); 
+                        els[index] = { ...el, x: newX, y: newY, points: newPoints }; 
+                    } else { 
+                        els[index] = { ...el, x: newX, y: newY }; 
+                    } 
+                    setElements(els); 
+                    return; 
+                } 
+
+                if(action === 'resizing' && selectedId && resizeHandle) { 
+                    const els = [...elements]; 
+                    const index = els.findIndex(e => e.id === selectedId); 
+                    const el = els[index]; 
+                    if(el.type === 'text') { 
+                        let newHeight = el.height; 
+                        if(resizeHandle.includes('b')) newHeight = y - el.y; 
+                        if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; 
+                        if(newHeight < 10) newHeight = 10; 
+                        const newStrokeWidth = newHeight / 4; 
+                        const lines = el.text.split('\n');
+                        const maxLen = Math.max(...lines.map(l=>l.length));
+                        els[index] = { 
+                            ...el, 
+                            strokeWidth: newStrokeWidth, 
+                            height: lines.length * newHeight * 1.2, 
+                            width: maxLen * newHeight * 0.6 
+                        }; 
+                    } else { 
+                        let newX = el.x, newY = el.y, newW = el.width, newH = el.height; 
+                        if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } 
+                        else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } 
+                        else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } 
+                        else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } 
+                        els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; 
+                    } 
+                    setElements(els); 
+                    return; 
+                } 
+
+                if(action === 'drawing') { 
+                    const els = [...elements]; 
+                    const curr = els[els.length-1]; 
+                    if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); 
+                    else { curr.width = x - curr.x; curr.height = y - curr.y; } 
+                    setElements(els); 
+                } 
+            }; 
+
+            const handleUp = () => { 
+                if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); 
+                if(action !== 'writing') { setAction('none'); setResizeHandle(null); } 
+            }; 
+
+            const finishWriting = () => { 
+                if(!textAreaRef.current || !writingPos) { 
+                    setAction('none'); setWritingPos(null); return; 
+                } 
+                const text = textAreaRef.current.value.trim(); 
+                if(text) { 
+                    const fontSize = Math.max(12, strokeWidth * 4); 
+                    const lines = text.split('\n');
+                    const totalHeight = lines.length * fontSize * 1.2;
+                    const maxLineLen = Math.max(...lines.map(l => l.length));
+                    const approxWidth = maxLineLen * fontSize * 0.6; 
+                    
+                    const newEls = [...elements, { 
+                        id:generateId(), 
+                        type:'text', 
+                        x:writingPos.x, 
+                        y:writingPos.y, 
+                        text, color, strokeWidth, 
+                        width: approxWidth, 
+                        height: totalHeight 
+                    }]; 
+                    setElements(newEls); 
+                    updateHistory(newEls); 
+                } 
+                setAction('none'); 
+                setWritingPos(null); 
+                setDefaultText('');
+            }; 
+
+            const save = () => { 
+                const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); 
+            }; 
+            
+            let cursorClass = 'cursor-crosshair'; 
+            if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; 
+            else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; 
+            else if(tool === 'text') cursorClass = 'cursor-text'; 
+            else if(tool === 'eraser') cursorClass = 'cursor-eraser'; 
+
+            return ( 
+                <div ref={containerRef} 
+                    onDoubleClick={handleDoubleClick} 
+                    className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> 
+                    
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> 
+                        <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> 
+                        <div className="w-full h-px bg-gray-200 my-1"></div> 
+                        <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> 
+                        {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( 
+                            <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> 
+                        ))} 
+                    </div> 
+                    
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> 
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> 
+                        <div className="flex items-center gap-2 flex-shrink-0"> 
+                            <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> 
+                            <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> 
+                        </div> 
+                        <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> 
+                        <div className="flex gap-1 flex-shrink-0"> 
+                            <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> 
+                            <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> 
+                            <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> 
+                        </div> 
+                        <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> 
+                    </div> 
+                    
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> 
+                    
+                    {action==='writing' && writingPos && ( 
+                        <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> 
+                            <textarea 
+                                ref={textAreaRef} 
+                                onKeyDown={(e) => {
+                                    // Evitar que el evento suba a Reveal.js
+                                    e.stopPropagation(); 
+                                    // Si es ESC, cerramos, pero ENTER ahora funciona normal (salto de línea)
+                                    if(e.key === 'Escape') finishWriting(); 
+                                }}
+                                onBlur={finishWriting} 
+                                className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-both font-sans" 
+                                style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} 
+                                placeholder="Escriba aquí..." 
+                            /> 
+                        </div> 
+                    )} 
+                </div> 
+            ); 
+        }
+
+        // --- APP PRINCIPAL (Contenedor) ---
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+
+        // RENDERIZADO FINAL
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Desactivando lógica de presentación.");
+            document.body.classList.add('is-mobile');
+            
+            // NO INICIAMOS REVEAL.JS EN MÓVIL
+            // Dejamos que el CSS haga todo el trabajo de scroll vertical.
+            
+            // Barra de progreso manual
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                const progressBar = document.getElementById('scroll-progress');
+                if(progressBar) progressBar.style.width = scrolled + '%';
+                
+                const btn = document.getElementById('back-to-top');
+                if(btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal (Solo aquí)
+            Reveal.initialize({
+                // ... tu configuración de PC ...
+                width: "100%", height: "100%", margin: 0, minScale: 1, maxScale: 1,
+                transition: 'slide', backgroundTransition: 'fade', background: '#fefce8'
+            });
+        }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+       // --- CONTROL INTELIGENTE DE TECLAS (VERSIÓN FINAL) ---
+        function handleZoomNavigation(e) {
+            // 1. Ignorar si el usuario escribe en un input
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+            // 2. Guardamos la posición EXACTA (diapositiva H y V) antes de movernos
+            const indicesBefore = Reveal.getIndices();
+            let actionTriggered = false;
+
+            // 3. Ejecutamos la acción de Reveal
+            if (e.key === 'ArrowLeft') {
+                Reveal.prev();
+                actionTriggered = true;
+            } else if (e.key === 'ArrowRight' || e.code === 'Space') {
+                Reveal.next();
+                actionTriggered = true;
+            }
+
+            // 4. Decidimos si hacer scroll arriba o no
+            if (actionTriggered) {
+                const indicesAfter = Reveal.getIndices();
+
+                // LÓGICA: Si la diapositiva Horizontal (h) o Vertical (v) cambió, es una diapositiva nueva -> SCROLL TOP
+                // Si h y v son iguales, significa que solo cambió el fragmento (f) -> NO SCROLL
+                if (indicesBefore.h !== indicesAfter.h || indicesBefore.v !== indicesAfter.v) {
+                    window.scrollTo(0, 0);
+                }
+                // Si no, nos quedamos quietos para ver la respuesta que acabamos de revelar.
+            }
+        }
+
+        function forceZoom() {
+            if (isMobile) return;
+            
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            const html = document.documentElement;
+            const body = document.body;
+            
+            const isActive = container.classList.contains('is-zoomed');
+
+            if (!isActive) {
+                // --- ACTIVAR ZOOM ---
+                html.classList.add('is-scrollable');
+                body.classList.add('is-scrollable');
+                container.classList.add('is-zoomed');
+                
+                // Apagamos teclado nativo de Reveal y encendemos el nuestro
+                Reveal.configure({ keyboard: false });
+                document.addEventListener('keydown', handleZoomNavigation);
+                
+                btn.classList.add('active');
+
+            } else {
+                // --- DESACTIVAR ZOOM ---
+                window.scrollTo(0, 0);
+                html.classList.remove('is-scrollable');
+                body.classList.remove('is-scrollable');
+                container.classList.remove('is-zoomed');
+                
+                // Restauramos todo
+                Reveal.configure({ keyboard: true });
+                document.removeEventListener('keydown', handleZoomNavigation);
+                Reveal.layout();
+                
+                btn.classList.remove('active');
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error': 
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

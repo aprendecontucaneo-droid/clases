@@ -1,0 +1,695 @@
+<style>
+  /* =========================================
+     1. MASTER CSS TUCANEO V2 - FIXED FOR SIDEBAR
+     ========================================= */
+
+  /* HEADER TRANSPARENTE & GENERAL */
+  /* Nota: Si la barra lateral tapa el header, esto asegura que se contenga */
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0; width: 100%; z-index: 99;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important; 
+  }
+  .main-header-menu .menu-item > .menu-link, .site-title a, .site-header a {
+      color: #ffffff !important; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+      font-weight: 700 !important; font-size: 1.1rem !important;
+  }
+  .main-header-menu .menu-item > .menu-link:hover { color: #f59e0b !important; }
+   
+  .tucaneo-container {
+    max-width: 1200px;
+    width: 100%; margin: 0 auto;
+    padding: 0 20px 100px 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+/* PORTADA HERO - VERSIÓN FINAL (SIN BORDES) */
+.tucaneo-hero {
+    position: relative;
+    
+    /* ESTO ELIMINA LOS BORDES BLANCOS */
+    width: 100vw;  /* Ancho total de la ventana */
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw; /* Centrado forzado */
+    margin-right: -50vw;
+    
+    height: 85vh; 
+    min-height: 600px;
+    
+    /* --- IMPORTANTE: CAMBIA EL ENLACE DE ABAJO POR EL TUYO --- */
+    background-image: url('https://tucaneo.com/wp-content/uploads/2025/09/Gemini_Generated_Image_hq9vq3hq9vq3hq9v-e1764773221752.png');
+    /* --------------------------------------------------------- */
+    
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat;
+    border-radius: 0 0 30px 30px; /* Redondeado solo abajo para unir con header si quieres, o 30px general */
+    margin-bottom: 60px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3); 
+    overflow: hidden;
+}
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, rgba(9, 23, 18, 0.6) 0%, rgba(9, 23, 18, 0.3) 40%, rgba(9, 23, 18, 0.8) 100%);
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+  .tucaneo-hero-content {
+    position: relative; z-index: 10; padding: 20px; max-width: 850px;
+    text-align: center; color: white; margin-top: 50px; 
+  }
+  .tucaneo-tagline { 
+    display: inline-block; background-color: #f59e0b; color: #000; 
+    font-weight: 800; font-size: 0.9rem; padding: 8px 16px; 
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; 
+    margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); 
+  }
+  .tucaneo-hero h1 { font-size: 3.5rem; line-height: 1.1; font-weight: 900; margin-bottom: 25px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  .tucaneo-hero p { font-size: 1.2rem; line-height: 1.6; color: #f3f4f6; margin-bottom: 45px; max-width: 90%; margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+   
+  .tucaneo-cta { 
+    background-color: #10b981; color: white !important; padding: 18px 45px; 
+    border-radius: 50px; font-weight: 800; text-decoration: none; 
+    display: inline-block; transition: all 0.3s ease; border: none; 
+    font-size: 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5); 
+  }
+  .tucaneo-cta:hover { background-color: #059669; transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); }
+
+  /* ACORDEÓN (MÓDULOS) */
+  .tucaneo-module {
+    background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+    margin-bottom: 25px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+  }
+  details.tucaneo-module[open] { box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: #06b6d4; }
+
+  .tucaneo-summary {
+    background-color: #f9fafb; padding: 20px 30px; cursor: pointer;
+    font-size: 1.1rem; font-weight: 800; color: #111827; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.3s; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tucaneo-summary:hover { background-color: #f3f4f6; }
+  .tucaneo-summary::after { content: '+'; font-size: 1.5rem; font-weight: 300; color: #6b7280; transition: transform 0.3s; }
+  details[open] .tucaneo-summary::after { content: '+'; transform: rotate(45deg); color: #0891b2; }
+  details[open] .tucaneo-summary { background-color: #ecfeff; color: #0e7490; border-bottom: 1px solid #e5e7eb; }
+  .tucaneo-summary::-webkit-details-marker { display: none; }
+   
+  .tucaneo-module-content { padding: 20px; background: #fff; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GRID Y TARJETAS */
+  .tucaneo-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px; padding-top: 10px;
+  }
+  .tucaneo-card {
+    background: #fff; border-radius: 16px; border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; display: flex;
+    flex-direction: column; height: 100%; transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .tucaneo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+   
+  .contenedor-imagen { position: relative; height: 180px; overflow: hidden; }
+  .tucaneo-cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .tucaneo-card:hover .tucaneo-cover-img { transform: scale(1.05); }
+   
+  .tucaneo-badge {
+    position: absolute; top: 15px; left: 15px; color: white !important; padding: 6px 12px;
+    border-radius: 8px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+    z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .tucaneo-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+  .tucaneo-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px; font-weight: 700; text-transform: uppercase; }
+  .tucaneo-title { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 800; color: #1f2937; line-height: 1.2; }
+  .tucaneo-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    
+  /* BOTONES */
+  .tucaneo-btn {
+    display: flex; justify-content: center; align-items: center; width: 100%; padding: 14px;
+    font-weight: 800; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase;
+    font-size: 0.9rem; color: white !important; text-decoration: none !important; transition: 0.2s; box-sizing: border-box;
+  }
+  .tucaneo-btn:active { transform: scale(0.98); }
+
+  /* ZONA DE JUEGO ESPECIAL */
+  .tucaneo-game-zone {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 20px; padding: 6px; margin: 40px 0;
+      box-shadow: 0 15px 35px rgba(34, 197, 94, 0.4);
+      position: relative; overflow: hidden; transition: transform 0.3s;
+  }
+  .tucaneo-game-zone:hover { transform: scale(1.01); }
+  .tucaneo-game-zone::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-25deg); animation: shine 4s infinite; z-index: 1; pointer-events: none;
+  }
+  @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+  .game-inner {
+      background: #f0fdf4; border-radius: 16px; display: flex; flex-direction: row; 
+      overflow: hidden; height: 100%; align-items: center; position: relative; z-index: 2;
+  }
+  .game-img-col { width: 40%; height: 280px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #dcfce7; }
+  .game-img-col img { width: 90%; height: auto; object-fit: contain; }
+  .game-content-col { padding: 30px 40px; width: 60%; display: flex; flex-direction: column; justify-content: center; }
+   
+  .btn-game-special { 
+      background-color: #16a34a !important; 
+      box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+      animation: pulse-green 2s infinite; align-self: flex-start; min-width: 200px;
+  }
+  @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+  }
+
+  /* SEPARADORES DE EXAMEN */
+  .tucaneo-exam-separator {
+    margin: 50px 0; padding: 50px 30px; 
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); /* Red */
+    border-radius: 20px; color: white; text-align: center; 
+    box-shadow: 0 15px 35px rgba(225, 29, 72, 0.3);
+    position: relative; overflow: hidden;
+  }
+  .tucaneo-exam-separator.orange-theme {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); /* Orange */
+    box-shadow: 0 15px 35px rgba(217, 119, 6, 0.3);
+  }
+  .tucaneo-exam-separator h3 { color: white; margin-bottom: 15px; font-size: 2.2rem; font-weight: 900; }
+  .tucaneo-exam-separator p { color: #ffe4e6; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.1rem; }
+  .tucaneo-exam-separator.orange-theme p { color: #fff7ed; }
+
+  a.tucaneo-btn.btn-exam { 
+      background: white !important; color: #e11d48 !important; 
+      max-width: 280px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+  }
+  a.tucaneo-btn.btn-exam:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.25); color: #be123c !important; }
+   
+  .tucaneo-exam-separator.orange-theme a.tucaneo-btn.btn-exam { color: #d97706 !important; }
+  .tucaneo-exam-separator.orange-theme a.tucaneo-btn.btn-exam:hover { color: #b45309 !important; }
+
+  /* CERTIFICADO / TROFEO SECTION - MEJORADO */
+  .tucaneo-certificate-section {
+    margin-top: 80px; padding: 60px 20px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 2px solid #fbbf24; border-radius: 25px;
+    text-align: center; position: relative; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(245, 158, 11, 0.15);
+  }
+  .certificate-icon { 
+    font-size: 4rem; display: block; margin-bottom: 20px; 
+    text-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); animation: float 3s ease-in-out infinite; 
+  }
+  @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+   
+  .cert-title { font-size: 2.5rem; color: #b45309; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+  .cert-subtitle { color: #92400e; font-size: 1.2rem; margin-bottom: 30px; }
+   
+  .cert-input-area {
+    background: white; max-width: 500px; margin: 0 auto; padding: 30px;
+    border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; z-index: 2;
+  }
+  .cert-input {
+    width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 10px;
+    font-size: 1.1rem; text-align: center; margin-bottom: 15px;
+    transition: 0.3s;
+  }
+  .cert-input:focus { border-color: #f59e0b; outline: none; }
+   
+  .diploma-display {
+    margin-top: 30px; border: 8px double #b45309; padding: 40px;
+    background: white; position: relative; display: none; /* Hidden by default */
+    z-index: 2;
+  }
+  .diploma-display.show { display: block; animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes scaleIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+   
+  /* Efecto de resplandor al aparecer el diploma */
+  .certificate-glow {
+        animation: glowPulse 2s infinite alternate;
+  }
+  @keyframes glowPulse {
+      from { box-shadow: 0 0 20px -5px rgba(245, 158, 11, 0.5); }
+      to { box-shadow: 0 0 50px 10px rgba(245, 158, 11, 0.8); }
+  }
+
+  .diploma-name { font-family: "Georgia", serif; font-size: 2.5rem; color: #1e3a8a; font-weight: bold; margin: 20px 0; border-bottom: 2px solid #bfdbfe; display: inline-block; padding: 0 20px; }
+
+  /* THEMES & COLORS */
+  .tema-a1 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .btn-a1 { background-color: #2563eb !important; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+  .btn-a1:hover { background-color: #1d4ed8 !important; }
+
+  .tema-b1 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+  .btn-b1 { background-color: #f59e0b !important; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+  .btn-b1:hover { background-color: #d97706 !important; }
+
+  .tema-a2 { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+  .btn-a2 { background-color: #0891b2 !important; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
+  .btn-a2:hover { background-color: #0e7490 !important; }
+    
+  .tema-a2-new { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+  .btn-a2-new { background-color: #7c3aed !important; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
+  .btn-a2-new:hover { background-color: #6d28d9 !important; }
+
+  /* RESPONSIVE */
+  @media (max-width: 921px) {
+    header#masthead, .site-header { background-color: #ffffff !important; padding-top: 0px !important; position: fixed !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;}
+    .site-title a, .site-header .ast-button-wrap .menu-toggle-icon { color: #0e231b !important; text-shadow: none !important; }
+    .tucaneo-hero { width: 92%; height: auto !important; min-height: 550px; margin-top: 130px; border-radius: 25px !important; margin-left: auto; margin-right: auto; left: auto; right: auto; }
+    .tucaneo-hero-content { padding: 30px 20px !important; margin-top: 0px !important; }
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+     
+    .game-inner { flex-direction: column; }
+    .game-img-col { width: 100%; height: 200px; }
+    .game-content-col { width: 100%; padding: 25px; text-align: center; }
+    .btn-game-special { align-self: center; width: 100%; }
+     
+    .diploma-display { padding: 20px; }
+    .diploma-name { font-size: 1.8rem; }
+  }
+</style>
+
+<div class="tucaneo-container">
+    
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div> 
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Nivel Plataforma</span>
+      <h1>Curso de Español Nivel A2</h1>
+      <p>Lleva tu español al siguiente nivel. Aprende a narrar historias en pasado, proyectar tus planes a futuro y desenvolverte en situaciones cotidianas con mayor fluidez y confianza.</p>
+      <a href="#modulo-1-a2" class="tucaneo-cta">Comenzar Nivel A2</a>
+    </div>
+  </div>
+    
+  <details class="tucaneo-module" id="modulo-1-a2" open>
+    <summary class="tucaneo-summary">
+      <span>Módulo 1: Gustos, Planes y Expresiones</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+          
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">Gramática</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/humano-amigos-youtube.png-scaled-e1767840450826.png" class="tucaneo-cover-img" alt="Practica con video de gustar">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 5 min</span>
+            </div>
+            <h3 class="tucaneo-title">Practica con video de gustar</h3>
+            <p class="tucaneo-desc">Mejora tu comprensión auditiva y aprende a expresar preferencias.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Practica%20con%20video%20de%20gustar.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">Gramática</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/avion-futuro-mapa-scaled-e1767840876658.png" class="tucaneo-cover-img" alt="Futuro con ir">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 20 min</span>
+            </div>
+            <h3 class="tucaneo-title">Futuro con ir</h3>
+            <p class="tucaneo-desc">Aprende la estructura 'Ir a + Infinitivo' para hablar de tus planes.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Futuro_con_ir.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">Práctica</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/cientificos-viajar_futuro-scaled-e1768013254986.png" class="tucaneo-cover-img" alt="Futuro con ir ejercicios">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Futuro con ir: Ejercicios</h3>
+            <p class="tucaneo-desc">Pon a prueba lo aprendido con esta serie de ejercicios prácticos.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Futuro_con_ir_ejercicios.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">Video</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/futuro-volar-video-scaled-e1768013069616.png" class="tucaneo-cover-img" alt="Ejercicios de futuro con video">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Ejercicios de futuro con video</h3>
+            <p class="tucaneo-desc">Entrena tu oído con situaciones reales. Observa, escucha y completa.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Ejercicios_de_futuro_con_video.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">Vocabulario</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/park-children-sharing.png-scaled-e1768013584827.png" class="tucaneo-cover-img" alt="Modismos con tener">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Modismos con tener</h3>
+            <p class="tucaneo-desc">Domina expresiones como 'tener frío', 'tener hambre' o 'tener razón'.</p>
+            <a href="https://tucaneo.com/wp-content/uploads/Slides%202/modismos.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-game-zone">
+      <div class="game-inner">
+          <div class="game-img-col">
+              <img src="https://image.pollinations.ai/prompt/person%20playing%20video%20games%20computer%20vector%20illustration%20vibrant%20flat%20design?width=800&height=600&nologo=true" alt="Juego Tucaneo">
+          </div>
+          <div class="game-content-col">
+              <div class="tucaneo-meta" style="margin-bottom: 15px;">
+                  <span style="color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 6px;">★ ZONA DE JUEGO</span>
+              </div>
+              <h3 class="tucaneo-title" style="font-size: 1.8rem; color: #14532d;">Reto Gramatical: El Gran Desafío</h3>
+              <p class="tucaneo-desc" style="font-size: 1.05rem;">
+                  ¡Es hora de divertirse! Demuestra tu agilidad mental en este juego interactivo. Combina modismos y futuro para ganar puntos. ¿Estás listo?
+              </p>
+              <a href="https://clases.tucaneo.com/A1.2/Reto_Gramatical_El%20Gran_Desaf%C3%ADo.html" class="tucaneo-btn btn-game-special" target="_blank">¡JUGAR AHORA! 🎮</a>
+          </div>
+      </div>
+  </div>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Examen Final: Dominio del A2</h3>
+      <p>Evaluación completa de tus habilidades lingüísticas. Pon a prueba tu comprensión de estructuras clave: modismos, futuro próximo y verbo gustar.</p>
+      <a href="https://clases.tucaneo.com/A1.2/Examen_6.html" class="tucaneo-btn btn-exam">Iniciar Examen</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 2: Comparativos y Mundo Laboral</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+          
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2">Gramática</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/pintando-artista-comparando-e1768097683692.png" class="tucaneo-cover-img" alt="Comparativos">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #0891b2;">● Nivel A2</span>
+                <span>• 15 min</span>
+              </div>
+              <h3 class="tucaneo-title">El Arte de Comparar</h3>
+              <p class="tucaneo-desc">Aprende a establecer diferencias y similitudes con precisión en español.</p>
+              <a href="https://clases.tucaneo.com/A1.2/El_Arte_de_Comparar.html" class="tucaneo-btn btn-a2" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+        
+          <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2">Vocabulario</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/oficina-aprender_espanol-e1768098210171.png" class="tucaneo-cover-img" alt="El Trabajo">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #0891b2;">● Nivel A2</span>
+                <span>• 15 min</span>
+              </div>
+              <h3 class="tucaneo-title">Español en el Trabajo</h3>
+              <p class="tucaneo-desc">Impulsa tu perfil profesional. Ejercicios prácticos sobre el entorno laboral.</p>
+              <a href="https://clases.tucaneo.com/A1.2/Espa%C3%B1ol_en_el_Trabajo.html" class="tucaneo-btn btn-a2" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+
+          <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2-new">Gramática</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/escoger_caminos-deportista-e1768097802310.png" class="tucaneo-cover-img" alt="Ejercicios comparativos">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #7c3aed;">● Nivel A2</span>
+                <span>• 15 min</span>
+              </div>
+              <h3 class="tucaneo-title">Ejercicios Comparativos</h3>
+              <p class="tucaneo-desc">Domina las comparaciones en español. Practica cómo diferenciar y describir objetos y personas.</p>
+              <a href="https://clases.tucaneo.com/A1.2/Ejercicios_Comparativos.html" class="tucaneo-btn btn-a2-new" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+
+          <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2-new">Lectura</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/libro-animales_meta-noche-e1768097868304.png" class="tucaneo-cover-img" alt="Texto de practica">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #7c3aed;">● Nivel A2</span>
+                <span>• 10 min</span>
+              </div>
+              <h3 class="tucaneo-title">Texto de Práctica Integral</h3>
+              <p class="tucaneo-desc">Mejora tu comprensión lectora con textos dinámicos que integran comparativos y vocabulario laboral.</p>
+              <a href="https://clases.tucaneo.com/A1.2/Texto_de_Practica_Integral.html" class="tucaneo-btn btn-a2-new" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 3: Negación y Preposiciones</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+
+          <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2-new">Vocabulario</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/negativo-viendo_futbol-scaled-e1768097726539.png" class="tucaneo-cover-img" alt="Expresiones negativas en español">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #7c3aed;">● Nivel A2</span>
+                <span>• 15 min</span>
+              </div>
+              <h3 class="tucaneo-title">Expresiones Negativas</h3>
+              <p class="tucaneo-desc">Aprende a decir 'no' correctamente. Domina la negación, palabras negativas y evita errores comunes.</p>
+              <a href="https://clases.tucaneo.com/A1.2/Expresiones_Negativas.html" class="tucaneo-btn btn-a2-new" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+
+          <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a2-new">Gramática</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/boxeo-por_para-e1768098351390.png" class="tucaneo-cover-img" alt="Por y para">
+            </div>
+            <div class="tucaneo-body">
+              <div class="tucaneo-meta">
+                <span style="color: #7c3aed;">● Nivel A2</span>
+                <span>• 15 min</span>
+              </div>
+              <h3 class="tucaneo-title">Por vs. Para</h3>
+              <p class="tucaneo-desc">¿Confundido con las preposiciones? Despeja tus dudas con esta guía definitiva sobre 'Por' y 'Para'.</p>
+              <a href="https://clases.tucaneo.com/A1.2/Por_vs_Para.html" class="tucaneo-btn btn-a2-new" target="_blank">Empezar Lección</a>
+            </div>
+          </article>
+
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator orange-theme">
+      <h3>Examen 7: Comparativos</h3>
+      <p>Pon a prueba tu dominio de las comparaciones en español. Evalúa tus habilidades gramaticales y consolida tus conocimientos del nivel A2 con este test práctico.</p>
+      <a href="https://clases.tucaneo.com/A1.2/Examen_7.html" class="tucaneo-btn btn-exam">Empezar Examen</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 4: Repaso y Orientación</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">GRAMÁTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/aventureros-safari-camino_rocoso.png-scaled-e1768100005551.png" class="tucaneo-cover-img" alt="Repaso de Irregulares">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Repaso: Irregulares en Presente</h3>
+            <p class="tucaneo-desc">Domina los verbos más difíciles del español. Una sesión de repaso intensivo enfocada en la conjugación de verbos irregulares.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Repaso_Irregulares_en_Presente.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Repaso</a>
+          </div>
+        </article>
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">RECURSOS</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/isla_del_tesoro-piratas-scaled-e1768100089603.png" class="tucaneo-cover-img" alt="Tablas de Verbos Irregulares">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Tablas Maestras: Verbos Irregulares</h3>
+            <p class="tucaneo-desc">Accede a la guía visual definitiva. Recopilación estructurada de tablas de conjugación en presente simple.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Tablas_Maestras_Verbos_Irregulares.html" class="tucaneo-btn btn-b1" target="_blank">Ver Tablas</a>
+          </div>
+        </article>
+        
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-b1">VOCABULARIO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/tucan-bebe-explorador.png-scaled-e1768100155857.png" class="tucaneo-cover-img" alt="Direcciones en Español">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #d97706;">● Nivel A2</span>
+              <span>• 15 MIN</span>
+            </div>
+            <h3 class="tucaneo-title">Direcciones y Ubicación</h3>
+            <p class="tucaneo-desc">Aprende a no perderte nunca. Vocabulario esencial y frases clave para pedir y dar indicaciones.</p>
+            <a href="https://clases.tucaneo.com/A1.2/Direcciones_y_Ubicaci%C3%B3n.html" class="tucaneo-btn btn-b1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary">
+      <span>Módulo 5: Consolidación Final</span>
+    </summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+         
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/sobrevivientes-mundo_apocaliptico-scaled-e1768100212960.png" class="tucaneo-cover-img" alt="Supervivencia Gramatical">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A2</span>
+              <span>• 15 min</span>
+            </div>
+            <h3 class="tucaneo-title">Supervivencia Gramatical</h3>
+            <p class="tucaneo-desc">Domina los pilares esenciales: repaso estratégico de Ser/Estar, Por/Para, comparativos y futuro con 'ir'. ¡La guía definitiva para asegurar tu base!</p>
+            <a href="https://clases.tucaneo.com/A1.2/Supervivencia_Gramatical.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Examen 8: Prueba Final</h3>
+      <p>Evaluación integral del curso. Pon a prueba tu dominio sobre Ser/Estar, Futuro y estructuras comparativas. ¿Estás listo para el siguiente nivel?</p>
+      <a href="https://clases.tucaneo.com/A1.2/Examen_8_Prueba_Final.html" class="tucaneo-btn btn-exam">Empezar Examen</a>
+  </div>
+
+  <div class="tucaneo-certificate-section">
+      <span class="certificate-icon">🏆</span>
+      <h2 class="cert-title">¡Misión Cumplida!</h2>
+      <p class="cert-subtitle">Has completado la ruta de aprendizaje del Nivel A2.</p>
+       
+      <div class="cert-input-area" id="inputArea">
+          <p style="margin-bottom: 15px; color: #6b7280; font-weight: 600;">Escribe tu nombre para obtener tu reconocimiento:</p>
+          <input type="text" id="studentName" class="cert-input" placeholder="Tu nombre aquí...">
+          <button onclick="generarDiploma()" class="tucaneo-btn btn-b1" style="font-size: 1.1rem;">✨ Generar Mi Diploma ✨</button>
+      </div>
+
+      <div class="diploma-display" id="diplomaDisplay">
+          <div style="border: 2px solid #b45309; padding: 20px;">
+              <span style="font-size: 3rem;">🎓</span>
+              <h3 style="color: #92400e; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px;">Certificado de Excelencia</h3>
+              <p>Se otorga el presente reconocimiento a:</p>
+              <div class="diploma-name" id="nameOutput">Nombre del Estudiante</div>
+              <p>Por completar exitosamente el</p>
+              <h4 style="font-size: 1.5rem; color: #b45309; margin: 10px 0;">Nivel A2: Español Tucaneo</h4>
+              <p style="font-size: 0.9rem; color: #666; margin-top: 20px;">"El aprendizaje es un tesoro que seguirá a su dueño a todas partes."</p>
+          </div>
+      </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+  function generarDiploma() {
+      var name = document.getElementById('studentName').value;
+      var diplomaBox = document.getElementById('diplomaDisplay');
+       
+      if(name.trim() !== "") {
+          // 1. Poner el nombre y mostrar el diploma
+          document.getElementById('nameOutput').textContent = name;
+          diplomaBox.classList.add('show');
+          // Añadir efecto de resplandor pulsante
+          diplomaBox.classList.add('certificate-glow');
+          document.getElementById('inputArea').style.display = 'none';
+
+          // 2. LANZAR CONFETI (Efecto visual)
+          var duration = 3 * 1000;
+          var animationEnd = Date.now() + duration;
+          var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+           
+          // Colores personalizados Tucaneo (Dorado, Azul, Verde, Naranja)
+          var colors = ['#f59e0b', '#2563eb', '#10b981', '#d97706'];
+
+          function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+          }
+
+          var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+              return clearInterval(interval);
+            }
+
+            var particleCount = 50 * (timeLeft / duration);
+            // Lanzar confeti desde dos puntos
+            confetti(Object.assign({}, defaults, { particleCount, colors: colors, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, colors: colors, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+          }, 250);
+
+      } else {
+          alert("Por favor, escribe tu nombre para el certificado.");
+      }
+  }
+</script>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape de la Cueva: La Gran Odisea (A2)</title>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Metamorphous&family=Share+Tech+Mono&display=swap');
+
+        /* --- ESTILOS INMERSIVOS --- */
+        body {
+            background-color: #000;
+            color: #e2e8f0;
+            font-family: 'Metamorphous', serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .font-tech {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* ANIMACIONES */
+        @keyframes float-ethereal {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.3));
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.02);
+                filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
+            }
+        }
+
+        @keyframes pulse-danger {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes slide-in-bottom {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake-screen {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px) rotate(-1deg);
+            }
+
+            75% {
+                transform: translateX(5px) rotate(1deg);
+            }
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.3);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.3);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-float {
+            animation: float-ethereal 4s ease-in-out infinite;
+        }
+
+        .animate-enter {
+            animation: slide-in-bottom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .animate-fade {
+            animation: fade-in 1s ease-out;
+        }
+
+        .animate-shake {
+            animation: shake-screen 0.4s ease-in-out;
+        }
+
+        .animate-heartbeat {
+            animation: heartbeat 1.5s infinite;
+        }
+
+        /* UI */
+        .glass-panel {
+            background: rgba(10, 10, 20, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .item-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .typewriter::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* FONDOS TEMÁTICOS */
+        .bg-start {
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+        }
+
+        .bg-forest {
+            background: radial-gradient(circle at 50% 30%, #064e3b 0%, #020617 90%);
+        }
+
+        .bg-river {
+            background: radial-gradient(circle at 50% 70%, #1e3a8a 0%, #020617 80%);
+        }
+
+        .bg-ruins {
+            background: radial-gradient(circle at 50% 50%, #7c2d12 0%, #020617 90%);
+        }
+
+        .bg-boss {
+            background: radial-gradient(circle at 50% 50%, #7f1d1d 0%, #000000 80%);
+        }
+
+        /* BOTONES */
+        .btn-rpg {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .btn-rpg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.2);
+        }
+
+        .btn-rpg:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="h-screen w-screen overflow-hidden">
+    <div id="root" class="w-full h-full"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // --- AUDIO ENGINE ---
+        class AudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.bgNodes = [];
+                this.isMuted = false;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            }
+
+            playTone(freq, type, duration, vol = 0.1, slideTo = null) {
+                if (this.isMuted) return;
+                this.init();
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, t);
+                if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t + duration);
+                gain.gain.setValueAtTime(vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duration);
+            }
+
+            sfx = {
+                click: () => this.playTone(800, 'sine', 0.05, 0.05),
+                hover: () => this.playTone(300, 'triangle', 0.05, 0.02),
+                step: () => this.playTone(100, 'noise', 0.1, 0.1), // Placeholder for noise
+                item: () => {
+                    [600, 800, 1200].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.2, 0.1), i * 100));
+                },
+                damage: () => {
+                    this.playTone(150, 'sawtooth', 0.3, 0.3, 50);
+                },
+                heal: () => {
+                    [400, 500, 600].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.5, 0.05), i * 150));
+                },
+                win: () => {
+                    [440, 554, 659, 880, 440, 554, 659, 880].forEach((f, i) => setTimeout(() => this.playTone(f, 'square', 0.2, 0.1), i * 100));
+                }
+            }
+
+            startAmbience() {
+                if (this.bgNodes.length > 0 || this.isMuted) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 60;
+                const gain = this.ctx.createGain();
+                gain.gain.value = 0.03;
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                this.bgNodes.push(osc);
+            }
+        }
+        const audio = new AudioEngine();
+
+        // --- CONTENIDO: 15 SECCIONES ---
+
+        // Items: 'torch' (antorcha), 'potion' (poción), 'key' (llave)
+
+        const STORY = {
+            // 1. INTRO
+            'start': {
+                id: 'start',
+                bg: 'bg-start',
+                icon: 'fa-dungeon',
+                text: "Despiertas en una cueva fría. No recuerdas cómo llegaste aquí. Solo ves una salida lejana.",
+                options: [
+                    { text: "Caminar hacia la luz", next: 's2_crossroads' }
+                ]
+            },
+            // 2. CRUCE
+            's2_crossroads': {
+                id: 's2_crossroads',
+                bg: 'bg-start',
+                icon: 'fa-signs-post',
+                text: "Llegas a un cruce. A la izquierda escuchas agua. A la derecha hay silencio total.",
+                options: [
+                    { text: "Ir al Río (Izquierda)", next: 's3_river' },
+                    { text: "Ir al Túnel Seco (Derecha)", next: 's3_dry' }
+                ]
+            },
+            // 3A. RÍO (Puzzle Preposiciones)
+            's3_river': {
+                id: 's3_river',
+                bg: 'bg-river',
+                icon: 'fa-water',
+                type: 'puzzle',
+                text: "Un río bloquea el paso. Hay piedras mágicas con palabras. Debes formar un puente.",
+                solution: ["El", "puente", "es", "largo"],
+                words: ["largo", "El", "es", "puente", "río", "azul"],
+                successMsg: "Las piedras se unen y puedes cruzar.",
+                next: 's4_camp'
+            },
+            // 3B. TÚNEL SECO (Combate Murciélagos)
+            's3_dry': {
+                id: 's3_dry',
+                bg: 'bg-start',
+                icon: 'fa-bat',
+                type: 'combat',
+                enemyName: "Murciélagos",
+                text: "¡Murciélagos atacan desde el techo!",
+                hp: 2,
+                topic: 'verbs',
+                next: 's4_camp'
+            },
+            // 4. CAMPAMENTO (Item: Antorcha)
+            's4_camp': {
+                id: 's4_camp',
+                bg: 'bg-ruins',
+                icon: 'fa-campground',
+                type: 'rest', // Recupera vida
+                item: 'torch',
+                text: "Encuentras un campamento abandonado. Hay una antorcha encendida y comida.",
+                heal: true,
+                options: [
+                    { text: "Tomar la antorcha y descansar", next: 's5_dark_tunnel' }
+                ]
+            },
+            // 5. TÚNEL OSCURO (Check de Item)
+            's5_dark_tunnel': {
+                id: 's5_dark_tunnel',
+                bg: 'bg-start',
+                icon: 'fa-skull', // Trampa potencial
+                text: "El siguiente túnel es muy oscuro. No se ve nada.",
+                checkItem: 'torch',
+                itemSuccess: { text: "Usas tu antorcha. Ves un agujero en el suelo y lo esquivas.", next: 's6_ruins' },
+                itemFail: { text: "¡Está muy oscuro! Caes en un agujero y te lastimas.", damage: 1, next: 's6_ruins' }
+            },
+            // 6. RUINAS ANTIGUAS
+            's6_ruins': {
+                id: 's6_ruins',
+                bg: 'bg-ruins',
+                icon: 'fa-scroll',
+                text: "Llegas a unas ruinas antiguas. Un esqueleto guarda una puerta.",
+                options: [
+                    { text: "Hablar con el esqueleto", next: 's7_skeleton_riddle' },
+                    { text: "Atacar al esqueleto", next: 's7_combat_skeleton' }
+                ]
+            },
+            // 7A. ACERTIJO ESQUELETO
+            's7_skeleton_riddle': {
+                id: 's7_skeleton_riddle',
+                bg: 'bg-ruins',
+                icon: 'fa-skull-crossbones',
+                type: 'riddle',
+                text: "El esqueleto dice: 'Tengo hojas pero no soy un árbol. Tengo lomo pero no soy un gato. ¿Qué soy?'",
+                correct: "El libro",
+                options: ["El árbol", "El libro", "El gato", "La mesa"],
+                next: 's8_lab'
+            },
+            // 7B. COMBATE ESQUELETO
+            's7_combat_skeleton': {
+                id: 's7_combat_skeleton',
+                bg: 'bg-ruins',
+                icon: 'fa-khanda',
+                type: 'combat',
+                enemyName: "Guerrero Esqueleto",
+                text: "El esqueleto levanta su espada.",
+                hp: 3,
+                topic: 'verbs',
+                next: 's8_lab'
+            },
+            // 8. LABORATORIO (Item: Poción o Llave)
+            's8_lab': {
+                id: 's8_lab',
+                bg: 'bg-ruins',
+                icon: 'fa-flask',
+                text: "Un laboratorio de alquimia. Ves una Llave Dorada en una mesa y una Poción Roja.",
+                options: [
+                    { text: "Tomar la Llave", getItem: 'key', next: 's9_hallway' },
+                    { text: "Beber la Poción (Curar)", heal: true, next: 's9_hallway' }
+                ]
+            },
+            // 9. PASILLO LARGO
+            's9_hallway': {
+                id: 's9_hallway',
+                bg: 'bg-start',
+                icon: 'fa-walking',
+                type: 'combat', // Emboscada sorpresa
+                enemyName: "Sombra",
+                text: "Caminas por un pasillo largo... ¡Una Sombra aparece detrás de ti!",
+                hp: 2,
+                topic: 'pronouns',
+                next: 's10_locked_door'
+            },
+            // 10. PUERTA CERRADA (Check Key)
+            's10_locked_door': {
+                id: 's10_locked_door',
+                bg: 'bg-ruins',
+                icon: 'fa-door-closed',
+                text: "Una gran puerta de metal bloquea el camino.",
+                checkItem: 'key',
+                itemSuccess: { text: "¡Tienes la llave! La puerta se abre suavemente.", next: 's11_bridge' },
+                itemFail: { text: "No tienes la llave. Debes forzar la cerradura (Cuesta energía).", damage: 1, next: 's11_bridge' }
+            },
+            // 11. PUENTE DE LA VERDAD
+            's11_bridge': {
+                id: 's11_bridge',
+                bg: 'bg-river',
+                icon: 'fa-bridge',
+                type: 'riddle',
+                text: "Un guardián invisible pregunta: '¿Cuál oración es correcta?'",
+                correct: "Mañana voy a comer.",
+                options: ["Mañana voy comer.", "Mañana voy a comer.", "Mañana comer voy.", "Voy comer mañana."],
+                next: 's12_boss_intro'
+            },
+            // 12. JEFE INTRO
+            's12_boss_intro': {
+                id: 's12_boss_intro',
+                bg: 'bg-boss',
+                icon: 'fa-dragon',
+                text: "Llegas a la salida, pero el Gran Dragón Gramatical despierta. '¡Nadie sale sin demostrar dominio del idioma!'",
+                options: [
+                    { text: "¡Estoy listo!", next: 's13_boss_p1' }
+                ]
+            },
+            // 13. JEFE FASE 1 (Verbos)
+            's13_boss_p1': {
+                id: 's13_boss_p1',
+                bg: 'bg-boss',
+                icon: 'fa-fire',
+                type: 'combat',
+                enemyName: "Dragón (Fase 1)",
+                text: "El Dragón lanza fuego. ¡Usa verbos fuertes para protegerte!",
+                hp: 3,
+                topic: 'verbs',
+                next: 's14_boss_p2'
+            },
+            // 14. JEFE FASE 2 (Puzzle Final)
+            's14_boss_p2': {
+                id: 's14_boss_p2',
+                bg: 'bg-boss',
+                icon: 'fa-bomb',
+                type: 'puzzle',
+                text: "El Dragón está débil. ¡Prepara el hechizo final!",
+                solution: ["Yo", "soy", "un", "maestro"],
+                words: ["soy", "maestro", "Yo", "un", "el", "es"],
+                successMsg: "¡El hechizo golpea al Dragón!",
+                next: 'victory'
+            },
+            // 15. VICTORIA
+            'victory': { type: 'win' },
+            'gameover': { type: 'lose' }
+        };
+
+        const QUESTIONS = {
+            verbs: [
+                { q: "Yo ____ (vivir) aquí.", correct: "vivo", opts: ["vive", "viven"] },
+                { q: "Nosotros ____ (comer) pan.", correct: "comemos", opts: ["comen", "comes"] },
+                { q: "Ellos ____ (ser) altos.", correct: "son", opts: ["es", "sois"] },
+                { q: "Tú ____ (tener) tiempo.", correct: "tienes", opts: ["tiene", "tenemos"] }
+            ],
+            pronouns: [
+                { q: "¿Ves a Juan? Sí, ___ veo.", correct: "lo", opts: ["le", "se"] },
+                { q: "¿Compraste la mesa? Sí, ___ compré.", correct: "la", opts: ["lo", "le"] },
+                { q: "Ellos ___ levantan temprano.", correct: "se", opts: ["nos", "os"] }
+            ]
+        };
+
+        // --- COMPONENTES ---
+
+        const Typewriter = ({ text, speed = 20 }) => {
+            const [display, setDisplay] = useState('');
+            useEffect(() => {
+                setDisplay('');
+                let i = 0;
+                const t = setInterval(() => {
+                    if (i < text.length) {
+                        setDisplay(prev => prev + text.charAt(i));
+                        i++;
+                        if (i % 3 === 0) audio.sfx.click();
+                    } else clearInterval(t);
+                }, speed);
+                return () => clearInterval(t);
+            }, [text]);
+            return <p className="text-xl md:text-2xl text-slate-200 leading-relaxed font-cinzel typewriter min-h-[80px]">{display}</p>;
+        };
+
+        const RuneGame = ({ puzzle, onWin, onFail }) => {
+            const [slots, setSlots] = useState(Array(puzzle.solution.length).fill(null));
+            const [pool, setPool] = useState(puzzle.words.map((w, i) => ({ id: i, w, active: true })));
+
+            const clickPool = (item) => {
+                if (!item.active) return;
+                const emptyIdx = slots.indexOf(null);
+                if (emptyIdx === -1) return;
+                audio.playTone(800 + (emptyIdx * 100), 'sine', 0.1);
+                const newSlots = [...slots]; newSlots[emptyIdx] = item; setSlots(newSlots);
+                setPool(pool.map(p => p.id === item.id ? { ...p, active: false } : p));
+            };
+
+            const reset = () => {
+                setSlots(Array(puzzle.solution.length).fill(null));
+                setPool(puzzle.words.map((w, i) => ({ id: i, w, active: true })));
+                onFail(); audio.sfx.damage();
+            };
+
+            const check = () => {
+                if (slots.map(s => s ? s.w : '').join(' ') === puzzle.solution.join(' ')) {
+                    audio.sfx.item(); onWin();
+                } else reset();
+            };
+
+            return (
+                <div className="w-full max-w-xl animate-enter">
+                    <div className="flex gap-2 justify-center mb-6 min-h-[60px] p-4 glass-panel rounded-xl">
+                        {slots.map((s, i) => (
+                            <div key={i} className="border-b-2 border-slate-500 w-24 flex items-center justify-center text-amber-400 font-bold">{s ? s.w : ''}</div>
+                        ))}
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-4 mb-8">
+                        {pool.map((p) => (
+                            <button key={p.id} disabled={!p.active} onClick={() => clickPool(p)} className={`px-6 py-3 rounded-lg font-bold border-2 transition-all ${p.active ? 'bg-slate-800 border-amber-600 hover:scale-105' : 'opacity-20 border-transparent'}`}>{p.w}</button>
+                        ))}
+                    </div>
+                    <div className="flex justify-center gap-4">
+                        <button onClick={check} className="bg-amber-600 hover:bg-amber-500 text-black font-bold px-8 py-3 rounded-lg">Invocar</button>
+                        <button onClick={reset} className="bg-slate-700 text-white px-4 py-3 rounded-lg"><i className="fas fa-undo"></i></button>
+                    </div>
+                </div>
+            );
+        };
+
+        const CombatGame = ({ type, enemy, hp, maxHp, onDamage, onWin }) => {
+            const [q, setQ] = useState(null);
+
+            const nextQ = useCallback(() => {
+                const list = QUESTIONS[type] || QUESTIONS.verbs;
+                const item = list[Math.floor(Math.random() * list.length)];
+                setQ({ ...item, mixedOpts: [item.correct, ...item.opts].sort(() => Math.random() - 0.5) });
+            }, [type]);
+
+            useEffect(() => { nextQ(); }, [nextQ]);
+
+            const answer = (txt) => {
+                if (txt === q.correct) {
+                    audio.sfx.hover();
+                    setTimeout(() => { onWin(); nextQ(); }, 200);
+                } else {
+                    audio.sfx.damage(); onDamage();
+                }
+            };
+
+            if (!q) return <div>Cargando...</div>;
+
+            return (
+                <div className="w-full max-w-lg animate-enter">
+                    <div className="glass-panel p-6 rounded-xl border-l-4 border-red-500 mb-6 relative">
+                        <div className="absolute top-0 right-0 p-2 text-xs text-red-400 font-tech">ENEMIGO: {enemy}</div>
+                        <div className="text-center text-xl mb-6 mt-4">
+                            {q.q.split('____').map((part, i) => <span key={i}>{part}{i === 0 && <span className="text-amber-400 border-b-2 border-amber-400 mx-1">?</span>}</span>)}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            {q.mixedOpts.map((opt, i) => (
+                                <button key={i} onClick={() => answer(opt)} className="p-4 bg-slate-800 border border-slate-600 hover:border-amber-400 rounded-lg font-bold">{opt}</button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="w-full bg-slate-900 h-4 rounded-full overflow-hidden border border-slate-700">
+                        <div className="h-full bg-red-600 transition-all duration-300" style={{ width: `${(hp / maxHp) * 100}%` }}></div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- GAME CONTROLLER ---
+        const Game = () => {
+            const [nodeId, setNodeId] = useState(null);
+            const [hp, setHp] = useState(5); // Más vida porque es más largo (5 HP)
+            const [items, setItems] = useState([]);
+            const [overlay, setOverlay] = useState(null);
+            const [subProgress, setSubProgress] = useState(0);
+
+            const currentNode = STORY[nodeId];
+
+            const start = () => {
+                setNodeId('start');
+                setHp(5);
+                setItems([]);
+                setSubProgress(0);
+                audio.startAmbience();
+            };
+
+            // ITEM CHECK LOGIC
+            useEffect(() => {
+                if (currentNode && currentNode.checkItem) {
+                    const hasItem = items.includes(currentNode.checkItem);
+                    const outcome = hasItem ? currentNode.itemSuccess : currentNode.itemFail;
+
+                    // Show outcome text after a small delay
+                    setTimeout(() => {
+                        if (outcome.damage) takeDamage(outcome.damage);
+                        // We modify the current node essentially to show the result
+                        // But simpler: just auto-transition to a temp state or alert?
+                        // Let's create a temporary "result" node in state
+                    }, 500);
+                }
+            }, [nodeId]);
+
+            const takeDamage = (amount = 1) => {
+                setOverlay('damage');
+                setTimeout(() => setOverlay(null), 500);
+                setHp(prev => {
+                    const n = prev - amount;
+                    if (n <= 0) {
+                        audio.sfx.damage();
+                        setNodeId('gameover');
+                    }
+                    return n;
+                });
+            };
+
+            const heal = () => {
+                setOverlay('heal');
+                setTimeout(() => setOverlay(null), 500);
+                audio.sfx.heal();
+                setHp(prev => Math.min(prev + 1, 5));
+            };
+
+            const handleChoice = (opt) => {
+                if (opt.getItem) {
+                    setItems([...items, opt.getItem]);
+                    audio.sfx.item();
+                }
+                if (opt.heal) heal();
+
+                audio.sfx.step();
+                setSubProgress(0);
+                setNodeId(opt.next);
+            };
+
+            // Riddle Handler
+            const handleRiddle = (txt) => {
+                if (txt === currentNode.correct) {
+                    audio.sfx.item();
+                    setNodeId(currentNode.next);
+                } else {
+                    takeDamage();
+                    audio.sfx.damage();
+                }
+            };
+
+            // Item Check Special Render
+            const renderItemCheck = () => {
+                const hasItem = items.includes(currentNode.checkItem);
+                const outcome = hasItem ? currentNode.itemSuccess : currentNode.itemFail;
+                return (
+                    <div className="max-w-xl text-center animate-enter">
+                        <div className="text-4xl mb-4">{hasItem ? '✨' : '⚠️'}</div>
+                        <Typewriter text={outcome.text} />
+                        <button
+                            onClick={() => {
+                                if (outcome.damage) takeDamage(outcome.damage);
+                                setNodeId(outcome.next);
+                            }}
+                            className="mt-8 btn-rpg px-8 py-3 bg-slate-700 rounded-lg"
+                        >
+                            Continuar
+                        </button>
+                    </div>
+                );
+            };
+
+            if (!currentNode && !nodeId) {
+                return (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-black bg-start text-center p-4">
+                        <i className="fas fa-mountain text-8xl text-slate-600 mb-4 animate-float"></i>
+                        <h1 className="text-6xl md:text-8xl text-amber-500 font-cinzel mb-2 animate-float">ESCAPE</h1>
+                        <h2 className="text-2xl text-slate-400 font-cinzel mb-12">La Gran Odisea</h2>
+                        <button onClick={start} className="bg-amber-700 hover:bg-amber-600 text-white font-bold py-4 px-12 rounded-full animate-pulse transition-transform hover:scale-105">COMENZAR AVENTURA</button>
+                        <p className="mt-4 text-slate-500 text-sm">Duración: ~15 mins • Nivel A2 • 15 Secciones</p>
+                    </div>
+                );
+            }
+
+            if (currentNode?.type === 'lose') return <div className="w-full h-full bg-red-950 flex flex-col items-center justify-center animate-shake"><h2 className="text-6xl text-white font-cinzel">HAS MUERTO</h2><button onClick={start} className="mt-8 px-6 py-3 bg-red-800 text-white rounded">Reintentar</button></div>;
+
+            if (currentNode?.type === 'win') return <div className="w-full h-full bg-blue-950 flex flex-col items-center justify-center"><h2 className="text-6xl text-white font-cinzel">¡VICTORIA!</h2><p className="text-xl text-slate-300 mt-4">Has escapado con éxito.</p><button onClick={start} className="mt-8 px-6 py-3 bg-green-700 text-white rounded">Jugar de Nuevo</button></div>;
+
+            return (
+                <div className={`relative w-full h-full flex flex-col p-4 md:p-8 transition-colors duration-1000 ${currentNode.bg || 'bg-black'}`}>
+                    {overlay === 'damage' && <div className="absolute inset-0 bg-red-500/30 z-50 pointer-events-none animate-shake"></div>}
+                    {overlay === 'heal' && <div className="absolute inset-0 bg-green-500/20 z-50 pointer-events-none animate-fade"></div>}
+
+                    {/* HUD */}
+                    <div className="flex justify-between items-start mb-4 z-10">
+                        <div>
+                            <div className="flex gap-1 mb-2">
+                                {[...Array(5)].map((_, i) => <i key={i} className={`fas fa-heart text-xl ${i < hp ? 'text-red-500' : 'text-slate-800'}`}></i>)}
+                            </div>
+                            <div className="flex gap-2 text-xl text-amber-400">
+                                {items.includes('torch') && <i className="fas fa-fire" title="Antorcha"></i>}
+                                {items.includes('key') && <i className="fas fa-key" title="Llave"></i>}
+                            </div>
+                        </div>
+                        <div className="text-xs text-slate-500 font-tech border border-slate-700 px-2 py-1 rounded bg-black/50">
+                            SECCIÓN: {nodeId.toUpperCase()}
+                        </div>
+                    </div>
+
+                    {/* SCENE */}
+                    <div className="flex-1 flex flex-col items-center justify-center relative z-0">
+                        {/* Check Item Logic Overlay */}
+                        {currentNode.checkItem ? (
+                            renderItemCheck()
+                        ) : (
+                            <>
+                                <i className={`fas ${currentNode.icon} text-8xl text-slate-300 mb-8 animate-float ${currentNode.type === 'combat' ? 'text-red-400' : ''}`}></i>
+
+                                <div className="w-full flex justify-center min-h-[40vh]">
+
+                                    {/* NARRATIVE */}
+                                    {(!currentNode.type || currentNode.type === 'rest') && (
+                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center">
+                                            <Typewriter text={currentNode.text} />
+                                            {currentNode.heal && <div className="text-green-400 mt-2 font-mono text-sm">+1 VIDA RECUPERADA</div>}
+                                            <div className="mt-8 w-full grid gap-4">
+                                                {currentNode.options.map((opt, i) => (
+                                                    <button key={i} onClick={() => handleChoice(opt)} className="btn-rpg w-full p-4 bg-slate-800/90 border border-slate-600 rounded-xl text-lg hover:border-amber-400 text-left">
+                                                        {opt.text}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* PUZZLE */}
+                                    {currentNode.type === 'puzzle' && (
+                                        <div className="flex flex-col items-center w-full">
+                                            <p className="mb-6 text-slate-300 text-center max-w-lg">{currentNode.text}</p>
+                                            <RuneGame puzzle={currentNode} onWin={() => { setOverlay('heal'); setNodeId(currentNode.next); }} onFail={() => takeDamage(1)} />
+                                        </div>
+                                    )}
+
+                                    {/* COMBAT */}
+                                    {currentNode.type === 'combat' && (
+                                        <CombatGame
+                                            type={currentNode.topic} enemy={currentNode.enemyName}
+                                            hp={currentNode.hp - subProgress} maxHp={currentNode.hp}
+                                            onDamage={() => takeDamage(1)}
+                                            onWin={() => setSubProgress(p => {
+                                                const n = p + 1;
+                                                if (n >= currentNode.hp) { audio.sfx.win(); setNodeId(currentNode.next); return 0; }
+                                                return n;
+                                            })}
+                                        />
+                                    )}
+
+                                    {/* RIDDLE */}
+                                    {currentNode.type === 'riddle' && (
+                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center">
+                                            <Typewriter text={currentNode.text} />
+                                            <div className="grid grid-cols-2 gap-4 mt-8 w-full">
+                                                {currentNode.options.map((opt, i) => (
+                                                    <button key={i} onClick={() => handleRiddle(opt)} className="btn-rpg p-4 bg-slate-800 border border-slate-600 rounded-lg hover:bg-slate-700">{opt}</button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Game />);
+    </script>
+</body>
+
+</html>

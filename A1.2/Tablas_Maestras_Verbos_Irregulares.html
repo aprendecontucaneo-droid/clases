@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- ESTILOS VISUALES (TROPICAL - ESQUELETO 15) --- */
+        :root { 
+            --primary: #004d40; /* Verde Selva */
+            --accent: #ff6f00;  /* Naranja Atardecer */
+            --text-main: #1f2937; 
+            --bg-light: #fefce8; /* Crema Suave */
+            --danger: #ef4444; 
+        }
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
+        
+        /* Drawer y Pizarra */
+        #tucaneo-drawer { position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn { position: absolute; top: 20px; right: 20px; z-index: 20001; background: var(--danger); color: white; width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        #safe-close-btn:hover { transform: scale(1.1); }
+        
+        /* UI Flotante */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 100px; z-index: 5000; transition: all 0.3s ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; transition: all 0.3s ease; }
+        #floating-cta { position: fixed; bottom: 20px; left: 30px; z-index: 5000; font-size: 12px; color: var(--primary); text-decoration: none; letter-spacing: 1px; font-weight: bold; opacity: 0.7; }
+        
+        /* Reveal JS Base (Tipografía Tropical) */
+        .reveal { color: var(--text-main); font-size: 22px; }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: var(--primary); text-transform: none; font-weight: 700; }
+        
+        /* ESTADO NORMAL (Slide centered) */
+        .reveal section { 
+            display: flex !important; 
+            flex-direction: column; 
+            justify-content: center; 
+            height: 100%; 
+            padding: 0 !important;
+        }
+
+        /* --- MODO ZOOM / SCROLL (PC) --- */
+        .reveal.is-zoomed {
+            overflow-y: scroll !important;
+            overflow-x: hidden !important;
+            background: var(--bg-light);
+        }
+        .reveal.is-zoomed .slides {
+            transform: none !important;
+            width: 100% !important;
+            height: auto !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 100px 0 150px 0 !important;
+            text-align: center !important;
+            overflow: visible !important;
+            inset: 0 !important;
+        }
+        .reveal.is-zoomed section.present {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            height: auto !important;
+            width: 90% !important;
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            transform: none !important;
+            text-align: left !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px; /* Tropical Rounding */
+            padding: 40px !important;
+            top: auto !important;
+            left: auto !important;
+        }
+        .reveal.is-zoomed section:not(.present) { display: none !important; }
+        .reveal.is-zoomed::-webkit-scrollbar { width: 12px; }
+        .reveal.is-zoomed::-webkit-scrollbar-track { background: var(--bg-light); }
+        .reveal.is-zoomed::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; border: 3px solid var(--bg-light); }
+
+        /* --- ESTILOS DE COMPONENTES (TROPICALIZADOS) --- */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8); 
+            border-radius: 20px; /* Redondeado Tropical */
+            padding: 30px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+            text-align: left; 
+            margin: 0 auto; 
+            width: 100%;
+        }
+        
+        .clean-input { 
+            border: none; border-bottom: 2px solid #e5e7eb; background: rgba(255,255,255,0.5); font-family: 'Handlee', cursive; font-size: 1.2em; color: var(--accent); text-align: left; width: 100%; transition: 0.3s; padding: 10px; border-radius: 10px; cursor: text; 
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        .grid-responsive { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; width: 100%; padding: 0 10px; }
+        
+        /* Botones Nav (Redondos) */
+        .nav-btn { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 12px; padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none; letter-spacing: 1px; }
+        .nav-btn.zoom { background-color: var(--accent); color: white; }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #64748b; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .nav-btn.zoom.active { background-color: #fff; color: var(--accent); border: 2px solid var(--accent); }
+
+        .cursor-eraser { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="white" stroke="black" stroke-width="1"/></svg>') 10 10, auto; }
+
+        /* Helpers Tablas */
+        .number-table { width: 100%; text-align: left; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
+        .number-table th { border-bottom: 2px solid var(--accent); color: var(--primary); font-family: 'Playfair Display', serif; padding: 8px; font-size: 1.1em; font-weight: bold; }
+        .number-table td { background: white; border-radius: 10px; padding: 12px; color: var(--text-main); font-family: 'Lato', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .pronunciation { font-style: italic; color: #94a3b8; font-size: 0.9em; margin-left: 10px; font-family: 'Handlee', cursive; }
+
+        /* UI Móvil */
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.1s; display: none; }
+        #back-to-top { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 4000; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: opacity 0.3s, transform 0.3s; opacity: 0; pointer-events: none; }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        /* --- ZONA MÓVIL CRÍTICA (RESTAURADA EXACTAMENTE AL ESQUELETO 23) --- */
+        @media (max-width: 1024px) {
+            html, body { 
+                height: auto !important; 
+                overflow-y: auto !important; 
+                -webkit-overflow-scrolling: touch; 
+                touch-action: pan-y pinch-zoom !important; 
+            }
+            #fixed-logo { width: 80px; top: 15px; left: 15px; } 
+            #top-nav { top: 15px; right: 15px; gap: 8px; } 
+            .nav-btn span { display: none; } 
+            .nav-btn { padding: 8px; width: 36px; height: 36px; justify-content: center; }
+            /* Ocultamos el Dock y el Zoom en móvil para evitar bugs */
+            #btn-zoom, .nav-btn.whiteboard, #premium-dock { display: none !important; } 
+            #scroll-progress { display: block; }
+            #back-to-top { display: flex; }
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+
+            /* Reveal Reset para Móvil */
+            .reveal { overflow: visible !important; position: relative !important; height: auto !important; touch-action: pan-y pinch-zoom !important; background: transparent !important; }
+            .reveal .slides { 
+                display: block !important; 
+                position: static !important; 
+                height: auto !important; 
+                width: 100% !important; 
+                transform: none !important; 
+                margin: 0 !important; 
+                text-align: left !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                overflow: visible !important;
+            }
+            .reveal .slides section { 
+                display: block !important; 
+                opacity: 1 !important; 
+                visibility: visible !important; 
+                position: static !important; 
+                height: auto !important; 
+                width: 100% !important; 
+                padding: 80px 20px 60px 20px !important; 
+                border-bottom: 1px solid #e2e8f0; 
+                transform: none !important;
+            }
+            
+            input, textarea, .clean-input { position: relative !important; z-index: 2147483647 !important; font-size: 16px !important; padding: 15px !important; background: #fff !important; border: 1px solid #ccc !important; border-radius: 8px !important; margin-top: 10px !important; pointer-events: auto !important; }
+            .glass-card { padding: 20px; margin-bottom: 20px; box-shadow: none; border: 1px solid #cbd5e1; } 
+            .grid-responsive { grid-template-columns: 1fr; gap: 20px; padding: 0; } 
+            .reveal h1 { font-size: 2em !important; line-height: 1.1 !important; }
+        }
+
+        @media print {
+            #top-nav, #tucaneo-drawer, #safe-close-btn, #btn-zoom, .nav-btn, #floating-cta, #scroll-progress, #back-to-top, #premium-dock { display: none !important; }
+            body { background: white; }
+            .reveal { height: auto !important; overflow: visible !important; }
+            .reveal section { page-break-after: always; height: auto !important; padding: 20px !important; display: block !important; opacity: 1 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">FUNDAMENTOS NUMÉRICOS</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+        
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+           <section>
+                <div class="h-full w-full flex flex-col items-center justify-center p-6">
+                    <div class="glass-card max-w-4xl text-center py-12">
+                        <div class="mb-6 inline-block bg-orange-100 text-orange-600 px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest border border-orange-200">
+                            <i class="fas fa-book-open mr-2"></i> Recopilación Gramatical
+                        </div>
+                        <h1 class="text-6xl font-bold text-emerald-900 mb-6 font-playfair">
+                            Guía Maestra de <br><span class="text-orange-500">Verbos Irregulares</span>
+                        </h1>
+                        <p class="text-2xl text-slate-600 font-handlee">
+                            Tablas, listas y trucos para dominar el Presente Simple.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-6xl mx-auto h-full overflow-y-auto">
+                    <div class="border-b border-gray-200 pb-4 mb-6">
+                        <h3 class="text-3xl text-emerald-800 font-playfair font-bold">1. El Grupo "YO"</h3>
+                        <p class="text-slate-500 font-handlee text-lg">Estos verbos son regulares en casi todas sus formas, ¡excepto cuando hablas de TI MISMO!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-md border-t-4 border-emerald-500">
+                            <h4 class="font-bold text-lg text-emerald-700 mb-3 text-center">Terminación -GO</h4>
+                            <table class="w-full text-left text-base">
+                                <thead class="bg-emerald-50 text-emerald-800 text-xs uppercase">
+                                    <tr><th class="p-2 rounded-l-lg">Verbo</th><th class="p-2 rounded-r-lg">Yo...</th></tr>
+                                </thead>
+                                <tbody class="text-slate-600">
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Hacer</td><td class="p-2 font-bold text-emerald-600">Hago</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Poner</td><td class="p-2 font-bold text-emerald-600">Pongo</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Salir</td><td class="p-2 font-bold text-emerald-600">Salgo</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Traer</td><td class="p-2 font-bold text-emerald-600">Traigo</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Caer</td><td class="p-2 font-bold text-emerald-600">Caigo</td></tr>
+                                    <tr><td class="p-2 font-bold">Valer</td><td class="p-2 font-bold text-emerald-600">Valgo</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-md border-t-4 border-purple-500">
+                            <h4 class="font-bold text-lg text-purple-700 mb-3 text-center">Terminación -ZCO</h4>
+                            <table class="w-full text-left text-base">
+                                <thead class="bg-purple-50 text-purple-800 text-xs uppercase">
+                                    <tr><th class="p-2 rounded-l-lg">Verbo</th><th class="p-2 rounded-r-lg">Yo...</th></tr>
+                                </thead>
+                                <tbody class="text-slate-600">
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Conocer</td><td class="p-2 font-bold text-purple-600">Conozco</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Conducir</td><td class="p-2 font-bold text-purple-600">Conduzco</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Traducir</td><td class="p-2 font-bold text-purple-600">Traduzco</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Parecer</td><td class="p-2 font-bold text-purple-600">Parezco</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Ofrecer</td><td class="p-2 font-bold text-purple-600">Ofrezco</td></tr>
+                                    <tr><td class="p-2 font-bold">Nacer</td><td class="p-2 font-bold text-purple-600">Nazco</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-md border-t-4 border-orange-500">
+                            <h4 class="font-bold text-lg text-orange-700 mb-3 text-center">Especiales & -JO</h4>
+                            <table class="w-full text-left text-base">
+                                <thead class="bg-orange-50 text-orange-800 text-xs uppercase">
+                                    <tr><th class="p-2 rounded-l-lg">Verbo</th><th class="p-2 rounded-r-lg">Yo...</th></tr>
+                                </thead>
+                                <tbody class="text-slate-600">
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Saber</td><td class="p-2 font-bold text-orange-600">Sé</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Ver</td><td class="p-2 font-bold text-orange-600">Veo</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Dar</td><td class="p-2 font-bold text-orange-600">Doy</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Caber</td><td class="p-2 font-bold text-orange-600">Quepo</td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-2 font-bold">Escoger</td><td class="p-2 font-bold text-orange-600">Escojo</td></tr>
+                                    <tr><td class="p-2 font-bold">Recoger</td><td class="p-2 font-bold text-orange-600">Recojo</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="h-full w-full flex flex-col p-4 max-w-7xl mx-auto justify-center">
+                    <div class="text-center mb-6">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Stem Changing Verbs</span>
+                        <h3 class="text-4xl text-slate-800 font-playfair font-bold mt-2">2. Los Verbos "Bota"</h3>
+                        <p class="text-lg text-slate-500 font-handlee">La raíz cambia en todas las personas <strong>MENOS en Nosotros/Vosotros</strong>.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                        
+                        <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition">
+                            <div class="flex items-center gap-2 mb-3 border-b pb-2">
+                                <span class="bg-emerald-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-bold">1</span>
+                                <h4 class="font-bold text-emerald-800">E &rarr; IE</h4>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Yo <strong class="text-emerald-600">pienso</strong></li>
+                                <li>Tú <strong class="text-emerald-600">piensas</strong></li>
+                                <li>Él <strong class="text-emerald-600">piensa</strong></li>
+                                <li class="bg-slate-100 p-1 rounded font-bold text-slate-400">Nosotros pensamos</li>
+                                <li>Ellos <strong class="text-emerald-600">piensan</strong></li>
+                            </ul>
+                            <div class="bg-emerald-50 p-3 rounded-lg text-xs">
+                                <strong class="block text-emerald-700 mb-1">Lista Común:</strong>
+                                Cerrar, Empezar, Entender, Perder, Preferir, Querer, Mentir, Sentir.
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition">
+                            <div class="flex items-center gap-2 mb-3 border-b pb-2">
+                                <span class="bg-orange-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-bold">2</span>
+                                <h4 class="font-bold text-orange-800">O &rarr; UE</h4>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Yo <strong class="text-orange-600">duermo</strong></li>
+                                <li>Tú <strong class="text-orange-600">duermes</strong></li>
+                                <li>Él <strong class="text-orange-600">duerme</strong></li>
+                                <li class="bg-slate-100 p-1 rounded font-bold text-slate-400">Nosotros dormimos</li>
+                                <li>Ellos <strong class="text-orange-600">duermen</strong></li>
+                            </ul>
+                            <div class="bg-orange-50 p-3 rounded-lg text-xs">
+                                <strong class="block text-orange-700 mb-1">Lista Común:</strong>
+                                Almorzar, Contar, Costar, Doler, Encontrar, Poder, Recordar, Volver.
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition">
+                            <div class="flex items-center gap-2 mb-3 border-b pb-2">
+                                <span class="bg-pink-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-bold">3</span>
+                                <h4 class="font-bold text-pink-800">E &rarr; I</h4>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Yo <strong class="text-pink-600">pido</strong></li>
+                                <li>Tú <strong class="text-pink-600">pides</strong></li>
+                                <li>Él <strong class="text-pink-600">pide</strong></li>
+                                <li class="bg-slate-100 p-1 rounded font-bold text-slate-400">Nosotros pedimos</li>
+                                <li>Ellos <strong class="text-pink-600">piden</strong></li>
+                            </ul>
+                            <div class="bg-pink-50 p-3 rounded-lg text-xs">
+                                <strong class="block text-pink-700 mb-1">Lista Común:</strong>
+                                Servir, Repetir, Seguir, Vestir, Freír, Medir, Sonreír.
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100 hover:shadow-xl transition relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">¡ÚNICO!</div>
+                            <div class="flex items-center gap-2 mb-3 border-b pb-2">
+                                <span class="bg-purple-500 text-white w-8 h-8 flex items-center justify-center rounded-full font-bold">4</span>
+                                <h4 class="font-bold text-purple-800">U &rarr; UE</h4>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Yo <strong class="text-purple-600">juego</strong></li>
+                                <li>Tú <strong class="text-purple-600">juegas</strong></li>
+                                <li>Él <strong class="text-purple-600">juega</strong></li>
+                                <li class="bg-slate-100 p-1 rounded font-bold text-slate-400">Nosotros jugamos</li>
+                                <li>Ellos <strong class="text-purple-600">juegan</strong></li>
+                            </ul>
+                            <div class="bg-purple-50 p-3 rounded-lg text-xs">
+                                <strong class="block text-purple-700 mb-1">Solo un verbo:</strong>
+                                JUGAR (To play). ¡Es el único con la U!
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="bg-indigo-100 p-3 rounded-full text-indigo-600 animate-pulse"><i class="fas fa-random text-3xl"></i></div>
+                        <div>
+                            <h3 class="m-0 text-3xl text-indigo-900 font-playfair font-bold">3. Los Híbridos</h3>
+                            <p class="text-slate-500 font-handlee">Tienen forma "Yo-Go" especial Y cambio de raíz. ¡Cuidado!</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        
+                        <div class="bg-white p-0 rounded-2xl shadow-md overflow-hidden border border-slate-200">
+                            <div class="bg-indigo-600 text-white p-3 text-center font-bold font-playfair text-xl">TENER</div>
+                            <div class="p-5">
+                                <div class="mb-4 text-center">
+                                    <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs font-bold mr-1">YO-GO</span>
+                                    <span class="bg-emerald-100 text-emerald-600 px-2 py-1 rounded text-xs font-bold">E &rarr; IE</span>
+                                </div>
+                                <ul class="space-y-2 text-lg text-slate-700 text-center">
+                                    <li class="font-bold text-orange-600 bg-orange-50 rounded">Yo Tengo</li>
+                                    <li>Tú <span class="text-emerald-600 font-bold">tienes</span></li>
+                                    <li>Él <span class="text-emerald-600 font-bold">tiene</span></li>
+                                    <li class="text-slate-400 italic">Nosotros tenemos</li>
+                                    <li>Ellos <span class="text-emerald-600 font-bold">tienen</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-0 rounded-2xl shadow-md overflow-hidden border border-slate-200">
+                            <div class="bg-teal-600 text-white p-3 text-center font-bold font-playfair text-xl">VENIR</div>
+                            <div class="p-5">
+                                <div class="mb-4 text-center">
+                                    <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs font-bold mr-1">YO-GO</span>
+                                    <span class="bg-emerald-100 text-emerald-600 px-2 py-1 rounded text-xs font-bold">E &rarr; IE</span>
+                                </div>
+                                <ul class="space-y-2 text-lg text-slate-700 text-center">
+                                    <li class="font-bold text-orange-600 bg-orange-50 rounded">Yo Vengo</li>
+                                    <li>Tú <span class="text-emerald-600 font-bold">vienes</span></li>
+                                    <li>Él <span class="text-emerald-600 font-bold">viene</span></li>
+                                    <li class="text-slate-400 italic">Nosotros venimos</li>
+                                    <li>Ellos <span class="text-emerald-600 font-bold">vienen</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-0 rounded-2xl shadow-md overflow-hidden border border-slate-200">
+                            <div class="bg-pink-600 text-white p-3 text-center font-bold font-playfair text-xl">DECIR</div>
+                            <div class="p-5">
+                                <div class="mb-4 text-center">
+                                    <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs font-bold mr-1">YO-GO</span>
+                                    <span class="bg-pink-100 text-pink-600 px-2 py-1 rounded text-xs font-bold">E &rarr; I</span>
+                                </div>
+                                <ul class="space-y-2 text-lg text-slate-700 text-center">
+                                    <li class="font-bold text-orange-600 bg-orange-50 rounded">Yo Digo</li>
+                                    <li>Tú <span class="text-pink-600 font-bold">dices</span></li>
+                                    <li>Él <span class="text-pink-600 font-bold">dice</span></li>
+                                    <li class="text-slate-400 italic">Nosotros decimos</li>
+                                    <li>Ellos <span class="text-pink-600 font-bold">dicen</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-card max-w-6xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h3 class="text-4xl text-slate-800 font-playfair font-bold">4. Los Rebeldes Totales</h3>
+                        <p class="text-slate-500 font-handlee">No siguen ninguna regla. Hay que memorizarlos.</p>
+                    </div>
+
+                    <table class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="text-white text-lg">
+                                <th class="bg-blue-500 p-3 rounded-tl-xl border-r border-blue-400">SER</th>
+                                <th class="bg-green-500 p-3 border-r border-green-400">ESTAR</th>
+                                <th class="bg-purple-500 p-3 rounded-tr-xl">IR</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xl text-slate-700 font-handlee">
+                            <tr class="bg-white border-b border-gray-100">
+                                <td class="p-4 font-bold text-blue-600">Yo Soy</td>
+                                <td class="p-4 font-bold text-green-600">Yo Estoy</td>
+                                <td class="p-4 font-bold text-purple-600">Yo Voy</td>
+                            </tr>
+                            <tr class="bg-slate-50 border-b border-gray-100">
+                                <td class="p-4">Tú Eres</td>
+                                <td class="p-4">Tú Estás</td>
+                                <td class="p-4">Tú Vas</td>
+                            </tr>
+                            <tr class="bg-white border-b border-gray-100">
+                                <td class="p-4">Él Es</td>
+                                <td class="p-4">Él Está</td>
+                                <td class="p-4">Él Va</td>
+                            </tr>
+                            <tr class="bg-slate-50 border-b border-gray-100">
+                                <td class="p-4">Nosotros Somos</td>
+                                <td class="p-4">Nosotros Estamos</td>
+                                <td class="p-4">Nosotros Vamos</td>
+                            </tr>
+                            <tr class="bg-white rounded-b-xl">
+                                <td class="p-4">Ellos Son</td>
+                                <td class="p-4">Ellos Están</td>
+                                <td class="p-4">Ellos Van</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="mt-6 flex justify-center gap-4">
+                        <div class="bg-yellow-50 text-orange-800 px-4 py-2 rounded-lg border border-yellow-200 shadow-sm flex items-center">
+                            <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                            <span class="text-sm">Tip: Recuerda "OY" en la primera persona (S<strong>oy</strong>, Est<strong>oy</strong>, V<strong>oy</strong>).</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section>
+                <div class="h-full flex flex-col items-center justify-center">
+                    <div class="mb-4 text-center">
+                        <span class="bg-purple-100 text-purple-700 font-bold px-4 py-1 rounded-full text-sm uppercase tracking-widest">Desafío Mental</span>
+                        <h2 class="text-4xl font-bold text-slate-800 font-playfair mt-2">🧠 Memoria Irregular</h2>
+                        <p class="text-slate-500 font-handlee">Encuentra las 4 parejas (Infinitivo + Conjugación Yo). ¡Tienes 30 segundos!</p>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-4 w-full max-w-2xl mx-auto" id="memory-board">
+                        </div>
+
+                    <div id="memory-msg" class="mt-6 text-2xl font-bold text-emerald-600 hidden animate-bounce">
+                        ¡Excelente! 🎉
+                    </div>
+                </div>
+
+                <script>
+                    (function(){
+                        const pairs = [
+                            { id: 1, text: "PONER", type: "inf" }, { id: 1, text: "PONGO", type: "conj" },
+                            { id: 2, text: "SABER", type: "inf" }, { id: 2, text: "SÉ", type: "conj" },
+                            { id: 3, text: "SALIR", type: "inf" }, { id: 3, text: "SALGO", type: "conj" },
+                            { id: 4, text: "DECIR", type: "inf" }, { id: 4, text: "DIGO", type: "conj" }
+                        ];
+
+                        let flippedCards = [];
+                        let matchedPairs = 0;
+
+                        // Barajar
+                        const shuffled = pairs.sort(() => Math.random() - 0.5);
+                        const board = document.getElementById('memory-board');
+                        
+                        // Limpiar tablero por si acaso
+                        board.innerHTML = '';
+
+                        shuffled.forEach((item, index) => {
+                            const card = document.createElement('div');
+                            card.className = `h-24 bg-white rounded-xl shadow-md border-b-4 border-purple-200 cursor-pointer flex items-center justify-center text-slate-300 font-bold text-xl relative transform transition-all duration-300 hover:-translate-y-1 perspective-1000`;
+                            card.dataset.id = item.id;
+                            
+                            // Contenido oculto
+                            card.innerHTML = `<span class="hidden text-purple-800">${item.text}</span><i class="fas fa-question-circle text-2xl"></i>`;
+
+                            card.onclick = function() {
+                                if (flippedCards.length < 2 && !this.classList.contains('flipped') && !this.classList.contains('matched')) {
+                                    // Voltear carta
+                                    this.classList.add('flipped', 'bg-purple-50', 'border-purple-500');
+                                    this.querySelector('span').classList.remove('hidden');
+                                    this.querySelector('i').classList.add('hidden');
+                                    flippedCards.push(this);
+
+                                    if (flippedCards.length === 2) {
+                                        checkMatch();
+                                    }
+                                }
+                            };
+                            board.appendChild(card);
+                        });
+
+                        function checkMatch() {
+                            const [card1, card2] = flippedCards;
+                            if (card1.dataset.id === card2.dataset.id) {
+                                // Match
+                                card1.classList.add('matched', 'bg-emerald-100', 'border-emerald-500');
+                                card2.classList.add('matched', 'bg-emerald-100', 'border-emerald-500');
+                                matchedPairs++;
+                                flippedCards = [];
+                                if(window.react) window.react('confetti');
+                                if (matchedPairs === 4) document.getElementById('memory-msg').classList.remove('hidden');
+                            } else {
+                                // No match
+                                if(window.react) window.react('error');
+                                setTimeout(() => {
+                                    card1.classList.remove('flipped', 'bg-purple-50', 'border-purple-500');
+                                    card1.querySelector('span').classList.add('hidden');
+                                    card1.querySelector('i').classList.remove('hidden');
+                                    
+                                    card2.classList.remove('flipped', 'bg-purple-50', 'border-purple-500');
+                                    card2.querySelector('span').classList.add('hidden');
+                                    card2.querySelector('i').classList.remove('hidden');
+                                    flippedCards = [];
+                                }, 1000);
+                            }
+                        }
+                    })();
+                </script>
+            </section>
+
+            <section>
+    <div class="flex flex-col md:flex-row h-full max-w-6xl mx-auto gap-8 items-center justify-center p-4">
+        
+        <div class="md:w-1/3 text-center md:text-left space-y-4">
+            <div class="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-2">
+                Challenge Mode
+            </div>
+            <h3 class="text-4xl font-bold text-slate-800 font-playfair leading-tight">
+                El Ex Tóxico <br><span class="text-emerald-500">The Toxic Ex</span>
+            </h3>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <p class="text-slate-600 font-handlee text-lg mb-2">
+                    🇪🇸 Tu ex te está escribiendo, pero su gramática es terrible. <strong>Haz clic sobre los mensajes que tienen errores</strong> para corregirlos.
+                </p>
+                <hr class="border-slate-100 my-2">
+                <p class="text-slate-400 font-handlee text-base">
+                    🇺🇸 Your ex is texting you, but their grammar is terrible. <strong>Click on the messages with mistakes</strong> to correct them.
+                </p>
+            </div>
+            
+            <div class="hidden md:block text-slate-300 text-sm font-handlee">
+                <i class="fas fa-search mr-1"></i> Tip: Find the irregular verbs (Yo form).
+            </div>
+        </div>
+
+        <div class="md:w-1/2 w-full max-w-sm">
+            <div class="bg-slate-900 p-3 rounded-[3rem] shadow-2xl border-4 border-slate-800 relative">
+                <div class="bg-[#efe7dd] rounded-[2.5rem] overflow-hidden relative h-[600px] flex flex-col">
+                    
+                    <div class="bg-[#075e54] p-4 pt-8 flex items-center gap-3 shadow-md z-10 text-white">
+                        <i class="fas fa-arrow-left"></i>
+                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg">🚩</div>
+                        <div class="flex-1">
+                            <p class="font-bold text-sm leading-none">El Tóxico 💔</p>
+                            <p class="text-xs text-green-100 opacity-80 mt-1">Escribiendo...</p>
+                        </div>
+                        <div class="flex gap-4 text-lg">
+                            <i class="fas fa-video"></i>
+                            <i class="fas fa-phone"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-opacity-10">
+                        
+                        <div class="flex justify-center mb-4">
+                            <span class="bg-[#dcf8c6] text-xs text-gray-600 px-2 py-1 rounded shadow-sm">Hoy</span>
+                        </div>
+
+                        <div class="flex flex-col items-start group cursor-pointer" 
+                             onclick="if(!this.classList.contains('corrected')){ 
+                                 this.querySelector('.bubble').classList.remove('bg-white'); 
+                                 this.querySelector('.bubble').classList.add('bg-[#dcf8c6]', 'corrected'); 
+                                 this.querySelector('.content').innerHTML = 'Amor, yo <strong>hago</strong> todo por ti...';
+                                 this.querySelector('.check').classList.remove('hidden');
+                                 if(window.react) window.react('confetti'); 
+                             }">
+                            <div class="bubble bg-white text-slate-800 p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-sm text-sm relative transition-colors duration-500 max-w-[85%]">
+                                <span class="content">Amor, yo <span class="text-slate-800">haco</span> todo por ti... 😭</span>
+                                <span class="text-[10px] text-gray-400 block text-right mt-1 flex justify-end gap-1 items-center">
+                                    10:01 AM <i class="check fas fa-check-double text-blue-500 hidden text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-end">
+                            <div class="bg-[#e1ffc7] text-slate-800 p-3 rounded-tl-xl rounded-bl-xl rounded-br-xl shadow-sm text-sm max-w-[85%]">
+                                <span class="content">¡Ya basta! Siempre mientes.</span>
+                                <span class="text-[10px] text-gray-500 block text-right mt-1">10:02 AM <i class="fas fa-check-double text-blue-500"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-start group cursor-pointer mt-4" 
+                             onclick="if(!this.classList.contains('corrected')){ 
+                                 this.querySelector('.bubble').classList.remove('bg-white'); 
+                                 this.querySelector('.bubble').classList.add('bg-[#dcf8c6]', 'corrected'); 
+                                 this.querySelector('.content').innerHTML = 'Es que no <strong>sé</strong> vivir sin ti.';
+                                 this.querySelector('.check').classList.remove('hidden');
+                                 if(window.react) window.react('confetti'); 
+                             }">
+                            <div class="bubble bg-white text-slate-800 p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-sm text-sm relative transition-colors duration-500 max-w-[85%]">
+                                <span class="content">Es que no <span class="text-slate-800">sabo</span> vivir sin ti.</span>
+                                <span class="text-[10px] text-gray-400 block text-right mt-1 flex justify-end gap-1 items-center">
+                                    10:03 AM <i class="check fas fa-check-double text-blue-500 hidden text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                         <div class="flex flex-col items-start group cursor-pointer mt-2" 
+                         onclick="if(!this.classList.contains('corrected')){ 
+                             this.querySelector('.bubble').classList.remove('bg-white'); 
+                             this.querySelector('.bubble').classList.add('bg-[#dcf8c6]', 'corrected'); 
+                             this.querySelector('.content').innerHTML = '¿Por qué no <strong>vienes</strong> a verme?';
+                             this.querySelector('.check').classList.remove('hidden');
+                             if(window.react) window.react('confetti'); 
+                         }">
+                            <div class="bubble bg-white text-slate-800 p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-sm text-sm relative transition-colors duration-500 max-w-[85%]">
+                                <span class="content">¿Por qué no <span class="text-slate-800">venes</span> a verme? 🥺</span>
+                                <span class="text-[10px] text-gray-400 block text-right mt-1 flex justify-end gap-1 items-center">
+                                    10:04 AM <i class="check fas fa-check-double text-blue-500 hidden text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="bg-[#f0f0f0] p-2 flex items-center gap-2">
+                        <div class="bg-white rounded-full p-2 text-gray-400 text-lg"><i class="far fa-smile"></i></div>
+                        <div class="bg-white flex-1 rounded-full px-4 py-2 text-sm text-gray-400">Bloquear contacto...|</div>
+                        <div class="bg-[#008f79] rounded-full p-3 text-white shadow-sm"><i class="fas fa-microphone"></i></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+            <section>
+    <div class="glass-card max-w-4xl mx-auto text-center h-full flex flex-col justify-center items-center relative">
+        
+        <div class="mb-2 w-full flex flex-col items-center">
+            <h2 class="text-3xl font-bold text-slate-800 font-playfair mb-4">💣 Desactiva la Bomba</h2>
+            
+            <div class="flex gap-4 mb-6">
+                <div id="lvl-1" class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-400 border-4 border-white shadow-sm transition-all duration-500">1</div>
+                <div id="lvl-2" class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-400 border-4 border-white shadow-sm transition-all duration-500">2</div>
+                <div id="lvl-3" class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-400 border-4 border-white shadow-sm transition-all duration-500">3</div>
+            </div>
+        </div>
+
+        <div id="bomb-container" class="w-full max-w-lg bg-white p-8 rounded-3xl shadow-2xl border-4 border-slate-100 relative overflow-hidden transition-all duration-300">
+            
+            <div class="absolute top-0 left-0 h-3 bg-red-500 w-full" id="timer-bar"></div>
+
+            <div id="game-area">
+                <p class="text-slate-400 text-sm uppercase tracking-widest font-bold mb-2 animate-pulse">⚠️ DANGER: CONJUGA EN "YO"</p>
+                
+                <h3 id="bomb-verb" class="text-5xl font-black text-slate-800 mb-8 tracking-tight">...</h3>
+
+                <div id="bomb-controls">
+                    <input type="text" id="bomb-input" 
+                           class="w-full text-center text-4xl font-bold border-b-4 border-slate-300 focus:border-red-500 outline-none p-2 mb-6 uppercase text-emerald-600 bg-transparent placeholder-slate-200" 
+                           placeholder="RESPUESTA" autocomplete="off" 
+                           onkeyup="if(event.key === 'Enter') checkBomb()">
+                    
+                    <button onclick="checkBomb()" class="w-full bg-red-500 text-white px-8 py-4 rounded-xl font-bold text-xl shadow-[0_5px_0_rgb(185,28,28)] hover:shadow-[0_2px_0_rgb(185,28,28)] hover:translate-y-1 active:shadow-none active:translate-y-2 transition-all">
+                        ✂️ CORTAR CABLE
+                    </button>
+                </div>
+            </div>
+
+            <div id="explosion-msg" class="hidden absolute inset-0 bg-red-600 flex flex-col items-center justify-center text-white z-20 animate-fade-in">
+                <i class="fas fa-bomb text-7xl mb-4 animate-bounce"></i>
+                <h3 class="text-5xl font-bold font-playfair mb-2">¡BOOM!</h3>
+                <p class="mb-6 font-handlee text-xl">Se acabó el tiempo...</p>
+                <button onclick="restartGame()" class="bg-white text-red-600 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition">Intentar de nuevo</button>
+            </div>
+            
+            <div id="level-success-msg" class="hidden absolute inset-0 bg-emerald-500 flex flex-col items-center justify-center text-white z-20">
+                <i class="fas fa-check text-7xl mb-4 animate-ping"></i>
+                <h3 class="text-4xl font-bold">¡CABLE CORTADO!</h3>
+                <p class="mt-2 font-handlee">Siguiente nivel en 1 seg...</p>
+            </div>
+
+            <div id="grand-winner-msg" class="hidden absolute inset-0 bg-yellow-400 flex flex-col items-center justify-center text-slate-800 z-30">
+                <div class="w-32 h-32 rounded-full bg-white border-4 border-orange-500 flex items-center justify-center mb-4 shadow-xl animate-bounce">
+                    <i class="fas fa-trophy text-6xl text-yellow-500 filter drop-shadow-sm"></i>
+                </div>
+                
+                <h3 class="text-4xl font-bold font-playfair text-orange-900 mb-2">¡SOBREVIVISTE!</h3>
+                <p class="text-lg font-handlee font-bold mb-6 max-w-xs leading-tight">Tu español es a prueba de bombas.</p>
+                <button onclick="restartGame()" class="bg-slate-800 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition">Jugar otra vez</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            // Configuración de Verbos
+            // AHORA TODOS TIENEN 5 SEGUNDOS (5000ms)
+            const levelsData = [
+                { inf: "EMPEZAR", ans: "EMPIEZO", time: 5000 }, 
+                { inf: "TENER", ans: "TENGO", time: 5000 },    
+                { inf: "CONDUCIR", ans: "CONDUZCO", time: 5000 } 
+            ];
+
+            let currentLevel = 0; 
+            let timer;
+            let timerTimeout;
+
+            // Iniciar el juego
+            window.startGame = function() {
+                currentLevel = 0;
+                updateLevelIndicators();
+                loadLevel();
+            };
+
+            window.restartGame = function() {
+                document.getElementById('grand-winner-msg').classList.add('hidden');
+                document.getElementById('explosion-msg').classList.add('hidden');
+                startGame();
+            };
+
+            function loadLevel() {
+                const data = levelsData[currentLevel];
+                const bar = document.getElementById('timer-bar');
+                const input = document.getElementById('bomb-input');
+                
+                document.getElementById('level-success-msg').classList.add('hidden');
+                document.getElementById('bomb-verb').innerText = data.inf;
+                input.value = '';
+                input.focus();
+
+                // Reiniciar Barra
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                void bar.offsetWidth; 
+
+                // Iniciar cuenta regresiva (5 segundos)
+                setTimeout(() => {
+                    bar.style.transition = `width ${data.time}ms linear`;
+                    bar.style.width = '0%';
+                }, 50);
+
+                // Lógica de Explosión
+                clearTimeout(timerTimeout);
+                timerTimeout = setTimeout(() => {
+                    explode();
+                }, data.time);
+            }
+
+            function explode() {
+                document.getElementById('explosion-msg').classList.remove('hidden');
+                if(window.react) window.react('error');
+            }
+
+            window.checkBomb = function() {
+                const input = document.getElementById('bomb-input');
+                const correct = levelsData[currentLevel].ans;
+                
+                if(input.value.trim().toUpperCase() === correct) {
+                    clearTimeout(timerTimeout);
+                    
+                    document.getElementById(`lvl-${currentLevel + 1}`).classList.remove('bg-slate-200', 'text-slate-400');
+                    document.getElementById(`lvl-${currentLevel + 1}`).classList.add('bg-emerald-500', 'text-white', 'border-emerald-200');
+
+                    if (currentLevel < 2) {
+                        document.getElementById('level-success-msg').classList.remove('hidden');
+                        if(window.react) window.react('confetti'); 
+                        
+                        setTimeout(() => {
+                            currentLevel++;
+                            loadLevel();
+                        }, 1500); 
+                    } else {
+                        document.getElementById('grand-winner-msg').classList.remove('hidden');
+                        if(window.react) window.react('confetti'); 
+                    }
+
+                } else {
+                    input.classList.add('animate-shake', 'border-red-500', 'bg-red-50');
+                    setTimeout(() => input.classList.remove('animate-shake', 'border-red-500', 'bg-red-50'), 500);
+                    input.focus();
+                }
+            };
+
+            function updateLevelIndicators() {
+                for(let i=1; i<=3; i++) {
+                    const el = document.getElementById(`lvl-${i}`);
+                    el.className = "w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-400 border-4 border-white shadow-sm transition-all duration-500";
+                }
+            }
+
+            setTimeout(startGame, 500);
+        })();
+    </script>
+
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .animate-shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</section>
+
+
+<section>
+    <div class="h-full flex flex-col items-center justify-center relative bg-slate-50 rounded-xl overflow-hidden">
+        
+        <div class="w-full bg-slate-800 p-4 flex justify-between items-center shadow-md z-10">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">👷</span>
+                <div>
+                    <h3 class="text-white font-bold text-lg leading-none">Constructor</h3>
+                    <p class="text-slate-400 text-xs" id="level-indicator">Nivel 1/3</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <i class="fas fa-stopwatch text-orange-400 text-xl animate-pulse"></i>
+                <span id="timer-display" class="text-2xl font-mono font-bold text-white">15</span>
+                <span class="text-xs text-slate-400">seg</span>
+            </div>
+        </div>
+
+        <div class="w-full h-2 bg-slate-200">
+            <div id="time-bar" class="h-full bg-orange-500 w-full"></div>
+        </div>
+
+        <div id="game-area" class="flex-1 w-full max-w-4xl p-6 flex flex-col items-center justify-start gap-6">
+            
+            <p class="text-slate-500 font-handlee text-lg text-center mt-4">
+                Ordena las palabras antes de que acabe el tiempo. ¡Cuidado con las trampas!
+            </p>
+
+            <div id="sentence-zone" class="w-full min-h-[80px] bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-wrap items-center justify-center gap-2 p-4 shadow-inner transition-colors">
+                <span class="text-slate-300 italic text-sm pointer-events-none select-none">Toca las palabras abajo...</span>
+            </div>
+
+            <div id="word-bank" class="flex flex-wrap justify-center gap-3">
+                </div>
+
+            <div class="mt-auto mb-4 flex gap-4 w-full max-w-md">
+                <button onclick="resetCurrentLevel()" class="flex-1 py-3 rounded-lg text-slate-500 hover:bg-slate-200 transition font-bold border border-slate-300">
+                    <i class="fas fa-undo"></i> Borrar
+                </button>
+                <button onclick="checkSentence()" class="flex-1 py-3 bg-blue-600 text-white rounded-lg font-bold shadow-lg hover:bg-blue-700 active:translate-y-1 transition border-b-4 border-blue-800">
+                    VERIFICAR 🔨
+                </button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="hidden absolute inset-0 bg-slate-900/95 z-50 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
+            <i class="fas fa-hard-hat text-6xl text-slate-500 mb-4"></i>
+            <h2 class="text-4xl text-white font-bold mb-2 font-playfair">Obra Cancelada</h2>
+            <p class="text-slate-300 mb-6 font-handlee text-xl">Se te acabó el tiempo o la estructura colapsó.</p>
+            <button onclick="startGame()" class="px-8 py-3 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition shadow-lg">Intentar de nuevo</button>
+        </div>
+
+        <div id="winner-screen" class="hidden absolute inset-0 bg-emerald-600/95 z-50 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
+            <i class="fas fa-city text-6xl text-white mb-4 animate-bounce"></i>
+            <h2 class="text-5xl text-white font-bold mb-2 font-playfair">¡Construcción Exitosa!</h2>
+            <p class="text-emerald-100 mb-8 font-handlee text-xl">Eres un arquitecto del español.</p>
+            <button onclick="startGame()" class="px-8 py-3 bg-white text-emerald-600 font-bold rounded-full hover:scale-105 transition shadow-lg">Jugar otra vez</button>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            // CONFIGURACIÓN DE NIVELES (TIEMPO PROGRESIVO)
+            const levels = [
+                {
+                    // Nivel 1: 15 SEGUNDOS (Calentamiento)
+                    target: "Yo nunca bebo café",
+                    words: ["Yo", "nunca", "bebo", "café", "vivo", "bebe"], 
+                    time: 20 
+                },
+                {
+                    // Nivel 2: 12 SEGUNDOS (Acelera)
+                    target: "A mí me gusta bailar",
+                    words: ["A", "mí", "me", "gusta", "bailar", "yo", "gustan"], 
+                    time: 15
+                },
+                {
+                    // Nivel 3: 10 SEGUNDOS (Pánico)
+                    target: "Nosotros pedimos mariscos para la cena",
+                    words: ["Nosotros", "ver", "para", "mariscos", "tarde", "ducha", "cena", "pedimos", "la"], 
+                    time: 15
+                }
+            ];
+
+            let currentLevelIdx = 0;
+            let currentSelection = [];
+            let timerInterval;
+            
+            // --- Lógica del Juego ---
+
+            window.startGame = function() {
+                currentLevelIdx = 0;
+                document.getElementById('game-over-screen').classList.add('hidden');
+                document.getElementById('winner-screen').classList.add('hidden');
+                loadLevel(currentLevelIdx);
+            };
+
+            function loadLevel(index) {
+                const levelData = levels[index];
+                
+                // Reset UI
+                currentSelection = [];
+                document.getElementById('sentence-zone').innerHTML = '<span class="text-slate-300 italic text-sm pointer-events-none select-none">Toca las palabras abajo...</span>';
+                document.getElementById('sentence-zone').className = "w-full min-h-[80px] bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-wrap items-center justify-center gap-2 p-4 shadow-inner transition-colors";
+                document.getElementById('level-indicator').innerText = `Nivel ${index + 1}/${levels.length}`;
+                
+                // Shuffle words
+                const shuffledWords = [...levelData.words].sort(() => Math.random() - 0.5);
+                
+                // Render Buttons
+                const bank = document.getElementById('word-bank');
+                bank.innerHTML = '';
+                shuffledWords.forEach(word => {
+                    const btn = document.createElement('button');
+                    btn.innerText = word;
+                    btn.className = "word-btn bg-white border-b-4 border-slate-200 px-4 py-2 rounded-lg text-lg font-bold text-slate-700 hover:-translate-y-1 active:scale-95 transition shadow-sm select-none";
+                    btn.onclick = () => selectWord(btn, word);
+                    bank.appendChild(btn);
+                });
+
+                // Start Timer
+                startTimer(levelData.time);
+            }
+
+            function startTimer(seconds) {
+                clearInterval(timerInterval);
+                const display = document.getElementById('timer-display');
+                const bar = document.getElementById('time-bar');
+                
+                display.innerText = seconds;
+                
+                // Reset Animation logic
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                void bar.offsetWidth; // Force reflow
+                bar.style.transition = `width ${seconds}s linear`;
+                bar.style.width = '0%';
+
+                let timeLeft = seconds;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    display.innerText = timeLeft;
+                    
+                    // Colores de advertencia cuando queda poco tiempo
+                    if(timeLeft <= 3) {
+                         display.classList.add('text-red-500');
+                    } else {
+                         display.classList.remove('text-red-500');
+                    }
+
+                    if(timeLeft <= 0) {
+                        gameOver();
+                    }
+                }, 1000);
+            }
+
+            window.selectWord = function(btn, word) {
+                const zone = document.getElementById('sentence-zone');
+                if(currentSelection.length === 0) zone.innerHTML = '';
+
+                const span = document.createElement('span');
+                span.innerText = word;
+                span.className = "bg-blue-100 text-blue-800 px-3 py-1 rounded-lg font-bold animate-fade-in cursor-pointer hover:bg-red-100 hover:text-red-600 transition";
+                
+                zone.appendChild(span);
+                currentSelection.push(word);
+
+                btn.disabled = true;
+                btn.classList.add('opacity-40', 'scale-95', 'cursor-not-allowed');
+                btn.classList.remove('hover:-translate-y-1');
+            };
+
+            window.resetCurrentLevel = function() {
+                currentSelection = [];
+                const zone = document.getElementById('sentence-zone');
+                zone.innerHTML = '<span class="text-slate-300 italic text-sm pointer-events-none select-none">Toca las palabras abajo...</span>';
+                zone.className = "w-full min-h-[80px] bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-wrap items-center justify-center gap-2 p-4 shadow-inner transition-colors";
+                
+                const btns = document.querySelectorAll('.word-btn');
+                btns.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-40', 'scale-95', 'cursor-not-allowed');
+                    btn.classList.add('hover:-translate-y-1');
+                });
+            };
+
+            window.checkSentence = function() {
+                const attempt = currentSelection.join(" ");
+                const correct = levels[currentLevelIdx].target;
+                const zone = document.getElementById('sentence-zone');
+
+                if(attempt === correct) {
+                    clearInterval(timerInterval);
+                    zone.classList.remove('border-slate-300');
+                    zone.classList.add('border-emerald-500', 'bg-emerald-50');
+                    if(window.react) window.react('confetti');
+
+                    setTimeout(() => {
+                        currentLevelIdx++;
+                        if(currentLevelIdx < levels.length) {
+                            loadLevel(currentLevelIdx);
+                        } else {
+                            document.getElementById('winner-screen').classList.remove('hidden');
+                        }
+                    }, 1000);
+
+                } else {
+                    zone.classList.remove('border-slate-300');
+                    zone.classList.add('border-red-500', 'bg-red-50');
+                    zone.classList.add('animate-shake');
+                    if(window.react) window.react('error');
+                    
+                    setTimeout(() => {
+                        zone.classList.remove('animate-shake');
+                    }, 500);
+                }
+            };
+
+            function gameOver() {
+                clearInterval(timerInterval);
+                document.getElementById('game-over-screen').classList.remove('hidden');
+                if(window.react) window.react('error');
+            }
+
+            setTimeout(startGame, 500);
+        })();
+    </script>
+    
+    <style>
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fade-in 0.2s ease-out; }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .animate-shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</section>
+
+            
+           <section>
+    <div class="glass-card max-w-5xl mx-auto text-center h-full overflow-y-auto relative">
+        <div class="mb-4">
+            <i class="fas fa-flask text-5xl text-purple-600 mb-2"></i>
+            <h2 class="text-4xl font-bold text-slate-800 font-playfair">El Gran Alquimista</h2>
+            <p class="text-slate-500 font-handlee">Completa los 5 niveles para llenar la poción mágica.</p>
+            <div class="mt-2 text-sm font-bold text-purple-500 tracking-widest uppercase" id="level-indicator">Nivel 1/5</div>
+        </div>
+
+        <div class="flex justify-center items-end gap-10 mb-6">
+            <div class="relative w-64 h-64 flex items-center justify-center">
+                <div class="absolute bottom-0 w-48 h-48 bg-slate-800 rounded-b-[4rem] rounded-t-lg shadow-2xl z-10 flex items-center justify-center border-t-4 border-slate-600 overflow-hidden">
+                    <i class="fas fa-skull text-slate-700 text-6xl opacity-30 z-0 absolute top-10"></i>
+                    
+                    <div id="potion-liquid" class="absolute bottom-0 w-full bg-green-500 transition-all duration-1000 opacity-80 z-20 flex items-center justify-center" style="height: 0%;">
+                        <div class="w-full h-full bg-green-400 animate-pulse opacity-50"></div>
+                    </div>
+                </div>
+                
+                <div class="absolute -top-10 flex gap-4 opacity-0 transition-opacity duration-500" id="bubbles">
+                    <div class="w-4 h-4 bg-green-400 rounded-full animate-bounce"></div>
+                    <div class="w-6 h-6 bg-green-300 rounded-full animate-bounce delay-100"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-area">
+            <p id="question-text" class="font-bold text-2xl text-slate-700 mb-6 min-h-[3rem]">Cargando...</p>
+            
+            <div id="options-container" class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+                </div>
+        </div>
+
+        <div id="victory-message" class="hidden animate-fade-in-up">
+            <h3 class="text-3xl font-bold text-purple-600 mb-4">¡Poción Completada!</h3>
+            <p class="text-slate-600 text-xl mb-6">Has dominado los verbos irregulares.</p>
+            <button onclick="resetGame()" class="bg-purple-600 text-white px-8 py-3 rounded-full font-bold hover:bg-purple-700 transition shadow-lg hover:shadow-purple-500/50">
+                Jugar de nuevo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Configuración de los 5 Niveles (Datos)
+        const levels = [
+            {
+                q: 'Yo ______ (SALIR) con mis amigos.',
+                options: [
+                    { text: 'SALO', icon: '🍄', correct: false },
+                    { text: 'SALGO', icon: '💎', correct: true },
+                    { text: 'SALE', icon: '🌿', correct: false }
+                ]
+            },
+            {
+                q: 'Yo ______ (TENER) mucha hambre.',
+                options: [
+                    { text: 'TIENO', icon: '🦴', correct: false },
+                    { text: 'TENGO', icon: '🍖', correct: true },
+                    { text: 'TENIO', icon: '🍂', correct: false }
+                ]
+            },
+            {
+                q: 'Yo ______ (PONER) la música.',
+                options: [
+                    { text: 'PONO', icon: '💿', correct: false },
+                    { text: 'PUNGO', icon: '🕷️', correct: false },
+                    { text: 'PONGO', icon: '🎵', correct: true }
+                ]
+            },
+            {
+                q: 'Yo ______ (HACER) la tarea.',
+                options: [
+                    { text: 'HACO', icon: '📝', correct: false },
+                    { text: 'HAGO', icon: '✨', correct: true },
+                    { text: 'HACE', icon: '❌', correct: false }
+                ]
+            },
+            {
+                q: 'Yo siempre ______ (DECIR) la verdad.',
+                options: [
+                    { text: 'DIGO', icon: '🗣️', correct: true },
+                    { text: 'DICO', icon: '😶', correct: false },
+                    { text: 'DECIO', icon: '🐸', correct: false }
+                ]
+            }
+        ];
+
+        let currentLevelIndex = 0;
+
+        // 2. Inicializar el juego
+        function initGame() {
+            currentLevelIndex = 0;
+            updateLiquid(0);
+            renderLevel();
+            document.getElementById('victory-message').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            document.getElementById('bubbles').style.opacity = "0";
+        }
+
+        // 3. Renderizar pregunta y botones
+        function renderLevel() {
+            const data = levels[currentLevelIndex];
+            
+            // Actualizar textos
+            document.getElementById('level-indicator').innerText = `Nivel ${currentLevelIndex + 1}/${levels.length}`;
+            document.getElementById('question-text').innerText = data.q;
+            
+            // Generar botones
+            const container = document.getElementById('options-container');
+            container.innerHTML = ''; // Limpiar anterior
+
+            data.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "ingredient bg-white p-4 rounded-xl shadow-md border-b-4 border-purple-200 hover:-translate-y-2 transition group w-full";
+                btn.onclick = () => checkAnswer(btn, opt.correct);
+                btn.innerHTML = `
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition">${opt.icon}</div>
+                    <span class="font-bold text-slate-600 text-lg">${opt.text}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        // 4. Lógica de Respuesta
+        window.checkAnswer = function(btn, isCorrect) {
+            const liquid = document.getElementById('potion-liquid');
+            
+            if(isCorrect) {
+                // CORRECTO
+                btn.classList.add('bg-green-100', 'border-green-500');
+                
+                // Calcular nuevo porcentaje (20%, 40%, etc.)
+                currentLevelIndex++;
+                const percentage = (currentLevelIndex / levels.length) * 100;
+                
+                // Efectos visuales positivos
+                liquid.style.backgroundColor = "#10b981"; // Verde
+                updateLiquid(percentage);
+                
+                if(window.react) window.react('success'); // Sonido opcional
+
+                // Esperar un poco antes de pasar al siguiente
+                setTimeout(() => {
+                    if (currentLevelIndex < levels.length) {
+                        renderLevel();
+                    } else {
+                        triggerWin();
+                    }
+                }, 1000);
+
+            } else {
+                // INCORRECTO
+                btn.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
+                liquid.style.backgroundColor = "#ef4444"; // Rojo momentáneo
+                if(window.react) window.react('error');
+                
+                setTimeout(() => {
+                    btn.classList.remove('bg-red-100', 'border-red-500', 'animate-shake');
+                    liquid.style.backgroundColor = "#10b981"; // Volver a verde
+                }, 800);
+            }
+        };
+
+        function updateLiquid(percent) {
+            const liquid = document.getElementById('potion-liquid');
+            liquid.style.height = percent + "%";
+        }
+
+        function triggerWin() {
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('victory-message').classList.remove('hidden');
+            document.getElementById('bubbles').style.opacity = "1";
+            document.getElementById('level-indicator').innerText = "¡MAESTRO!";
+            
+            // Trigger Confetti
+            if(window.react) window.react('confetti');
+        }
+
+        window.resetGame = function() {
+            initGame();
+        }
+
+        // Iniciar al cargar
+        initGame();
+    </script>
+</section>
+
+            <section>
+    <div class="h-full flex flex-col items-center justify-center p-6 relative">
+        <div class="glass-card max-w-4xl w-full relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+
+            <h3 class="text-3xl font-bold text-slate-800 mb-2 font-playfair text-center">¡Ronda de Práctica!</h3>
+            <p class="text-slate-500 text-center mb-8 font-handlee">Completa las frases conjugando el verbo entre paréntesis.</p>
+            
+            <div class="space-y-4" id="practice-container">
+                
+                <div class="practice-item flex items-center gap-4 p-4 bg-white/50 rounded-xl shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                    <span class="bg-orange-100 text-orange-600 font-bold px-3 py-1 rounded w-24 text-center text-sm">YO</span>
+                    <span class="text-lg text-slate-700 font-medium">(Poner) la mesa &rarr; </span>
+                    <input type="text" data-answer="pongo" class="practice-input flex-1 bg-white border-2 border-slate-200 rounded-lg px-4 py-2 text-emerald-700 font-bold focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-300" placeholder="Escribe aquí..." />
+                    <i class="status-icon fas fa-circle text-slate-200 text-xl"></i>
+                </div>
+
+                <div class="practice-item flex items-center gap-4 p-4 bg-white/50 rounded-xl shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                    <span class="bg-blue-100 text-blue-600 font-bold px-3 py-1 rounded w-24 text-center text-sm">TÚ</span>
+                    <span class="text-lg text-slate-700 font-medium">(Querer) comer &rarr; </span>
+                    <input type="text" data-answer="quieres" class="practice-input flex-1 bg-white border-2 border-slate-200 rounded-lg px-4 py-2 text-emerald-700 font-bold focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-300" placeholder="Escribe aquí..." />
+                    <i class="status-icon fas fa-circle text-slate-200 text-xl"></i>
+                </div>
+
+                <div class="practice-item flex items-center gap-4 p-4 bg-white/50 rounded-xl shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                    <span class="bg-purple-100 text-purple-600 font-bold px-3 py-1 rounded w-24 text-center text-sm">NOSOTROS</span>
+                    <span class="text-lg text-slate-700 font-medium">(Poder) ir &rarr; </span>
+                    <input type="text" data-answer="podemos" class="practice-input flex-1 bg-white border-2 border-slate-200 rounded-lg px-4 py-2 text-emerald-700 font-bold focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-300" placeholder="Escribe aquí..." />
+                    <i class="status-icon fas fa-circle text-slate-200 text-xl"></i>
+                </div>
+
+                <div class="practice-item flex items-center gap-4 p-4 bg-white/50 rounded-xl shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                    <span class="bg-pink-100 text-pink-600 font-bold px-3 py-1 rounded w-24 text-center text-sm">ELLOS</span>
+                    <span class="text-lg text-slate-700 font-medium">(Pedir) agua &rarr; </span>
+                    <input type="text" data-answer="piden" class="practice-input flex-1 bg-white border-2 border-slate-200 rounded-lg px-4 py-2 text-emerald-700 font-bold focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-300" placeholder="Escribe aquí..." />
+                    <i class="status-icon fas fa-circle text-slate-200 text-xl"></i>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center gap-4">
+                 <button onclick="revealOneLetter()" class="text-slate-400 hover:text-slate-600 font-bold text-sm px-4 py-2 rounded-full border border-slate-200 hover:bg-slate-50 transition">
+                    <i class="fas fa-lightbulb mr-1 text-yellow-400"></i> Pista
+                </button>
+
+                <button onclick="validatePractice()" class="bg-emerald-600 text-white px-10 py-3 rounded-full font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-1 transition-all">
+                    <i class="fas fa-check-double mr-2"></i> Corregir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.validatePractice = function() {
+            const inputs = document.querySelectorAll('.practice-input');
+            let allCorrect = true;
+            let firstError = null;
+
+            inputs.forEach(input => {
+                const row = input.closest('.practice-item');
+                const icon = row.querySelector('.status-icon');
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.dataset.answer.toLowerCase();
+
+                // Reset styles
+                input.classList.remove('border-red-500', 'bg-red-50', 'border-emerald-500', 'bg-emerald-50');
+                icon.className = 'status-icon fas fa-circle text-slate-200 text-xl';
+
+                if (userAnswer === correctAnswer) {
+                    // Correcto
+                    input.classList.add('border-emerald-500', 'bg-emerald-50');
+                    icon.className = 'status-icon fas fa-check-circle text-emerald-500 text-2xl animate-bounce';
+                } else {
+                    // Incorrecto
+                    allCorrect = false;
+                    input.classList.add('border-red-500', 'bg-red-50', 'animate-shake');
+                    icon.className = 'status-icon fas fa-times-circle text-red-400 text-2xl';
+                    if(!firstError) firstError = input;
+                    
+                    // Remover animación de shake después de un momento
+                    setTimeout(() => input.classList.remove('animate-shake'), 500);
+                }
+            });
+
+            if (allCorrect) {
+                if(window.react) window.react('confetti');
+                // Opcional: Sonido de victoria
+            } else {
+                if(window.react) window.react('error');
+                firstError.focus();
+            }
+        };
+
+        // Función extra: Da una pista (primera letra) en los campos vacíos
+        window.revealOneLetter = function() {
+            const inputs = document.querySelectorAll('.practice-input');
+            inputs.forEach(input => {
+                const answer = input.dataset.answer;
+                if(input.value.length === 0) {
+                    input.value = answer.charAt(0);
+                    input.focus();
+                }
+            });
+        };
+        
+        // Permitir validar con Enter
+        document.querySelectorAll('.practice-input').forEach(input => {
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    window.validatePractice();
+                }
+            });
+        });
+    </script>
+</section>
+
+<section>
+    <div class="h-full flex flex-col items-center justify-center p-4">
+        <div class="glass-card max-w-5xl w-full relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-orange-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+            <h2 class="text-4xl font-bold text-center text-slate-800 font-playfair mb-8 relative z-10">
+                ¡Misión Cumplida! 🦜
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                
+                <div class="bg-white/60 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-clipboard-list text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-emerald-800 font-playfair">Resumen de Hoy</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 font-handlee text-lg">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-emerald-500 mt-1"></i>
+                            <span>Verbos <strong>"YO-GO"</strong> (Hago, Salgo, Pongo).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-emerald-500 mt-1"></i>
+                            <span>Verbos <strong>"Bota"</strong> (Pienso, Duermo).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-emerald-500 mt-1"></i>
+                            <span>Los <strong>Rebeldes</strong> (Ser, Estar, Ir).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white/60 p-6 rounded-2xl border border-orange-100 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">HOMEWORK</div>
+                    
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                            <i class="fas fa-home text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-orange-800 font-playfair">Tu Misión</h3>
+                    </div>
+                    
+                    <ul class="space-y-4 text-slate-700">
+                        <li class="flex items-center gap-3">
+                            <span class="bg-white border border-slate-200 w-8 h-8 flex items-center justify-center rounded-full font-bold text-slate-400 text-sm">1</span>
+                            <span class="font-handlee text-lg">Escribe <strong>5 frases</strong> usando verbos "YO-GO".</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="bg-white border border-slate-200 w-8 h-8 flex items-center justify-center rounded-full font-bold text-slate-400 text-sm">2</span>
+                            <span class="font-handlee text-lg">Describe tu rutina diaria (Stem Changing).</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="mt-10 flex flex-col items-center justify-center relative z-10 border-t border-slate-100 pt-6">
+                
+                <div class="animate-bounce mb-2 cursor-pointer" onclick="react('confetti')">
+                    <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" 
+                         alt="Tucaneo Logo" 
+                         class="h-20 object-contain drop-shadow-lg hover:scale-110 transition transform duration-300">
+                </div>
+                
+                <h4 class="text-3xl font-bold text-emerald-900 font-playfair tracking-wide">Tucaneo Academy</h4>
+                <a href="https://tucaneo.com" class="text-orange-500 font-bold hover:text-orange-600 transition decoration-2 underline-offset-2 hover:underline">
+                    www.tucaneo.com
+                </a>
+
+                <div class="mt-4 flex gap-2">
+                    <button onclick="window.print()" class="text-slate-400 hover:text-slate-600 text-sm flex items-center gap-1 transition">
+                        <i class="fas fa-file-pdf"></i> Guardar PDF
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button onclick="window.location.reload()" class="text-slate-400 hover:text-slate-600 text-sm flex items-center gap-1 transition">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // --- REACT COMPONENTS (Colores Tropicales) ---
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = { Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />, Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>} />, Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />, Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />, Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />, Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />, Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />, Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />, Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />, Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />, Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></>} />, Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />, Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />, Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} /> };
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]); const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if(!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); } }; return ( <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div> ); }
+        function WhiteboardModule() { const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0); const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0}); const [writingPos, setWritingPos] = useState(null); const [selectedId, setSelectedId] = useState(null); const [confirmClear, setConfirmClear] = useState(false); const [resizeHandle, setResizeHandle] = useState(null); const [dragOffset, setDragOffset] = useState({x:0, y:0}); const [color, setColor] = useState('#004d40'); /* Verde Tropical */ const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0}); const [hoverCursor, setHoverCursor] = useState(null); const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null); const generateId = () => Math.random().toString(36).substr(2, 9); useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []); useEffect(() => { if(tool !== 'selection') { setSelectedId(null); setResizeHandle(null); } if (confirmClear) setConfirmClear(false); if (action === 'writing' && tool !== 'text') finishWriting(); }, [tool]); useEffect(() => { if (action === 'writing' && textAreaRef.current) { setTimeout(() => textAreaRef.current?.focus(), 10); } }, [action, writingPos]); useEffect(() => { if(selectedId && !resizeHandle && action !== 'moving') { const index = elements.findIndex(el => el.id === selectedId); if(index !== -1) { const el = elements[index]; if(el.color !== color || el.strokeWidth !== strokeWidth) { const newEls = [...elements]; const fontSize = Math.max(12, strokeWidth * 4); const newWidth = el.type === 'text' ? (el.text.length * fontSize * 0.6) : el.width; const newHeight = el.type === 'text' ? fontSize : el.height; newEls[index] = { ...el, color, strokeWidth, width: newWidth, height: newHeight }; setElements(newEls); } } } }, [color, strokeWidth]); useEffect(() => { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { setColor(el.color); setStrokeWidth(el.strokeWidth); } } }, [selectedId]); useLayoutEffect(() => { const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return; canvasRef.current.width = size.w; canvasRef.current.height = size.h; ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h); ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1; ctx.beginPath(); const gridSize = 40; const offsetX = panOffset.x % gridSize; const offsetY = panOffset.y % gridSize; for(let x=offsetX; x<size.w; x+=gridSize) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); } for(let y=offsetY; y<size.h; y+=gridSize) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); } ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y); elements.forEach(el => { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; } else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; } if((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); } else if (el.type === 'rectangle') { ctx.strokeRect(el.x, el.y, el.width, el.height); } else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); } else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); } else if (el.type === 'text' && el.text) { const fontSize = Math.max(12, el.strokeWidth * 4); ctx.font = `${fontSize}px 'Lato', sans-serif`; ctx.textBaseline = 'top'; ctx.fillText(el.text, el.x, el.y); const metrics = ctx.measureText(el.text); el.width = metrics.width; el.height = fontSize; } }); if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el) { const isPencil = el.type === 'pencil' || el.type === 'eraser'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(isPencil) { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10); ctx.setLineDash([]); if(!isPencil) { const handles = getHandles({x:bx, y:by, width:bw, height:bh}); ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2; Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); }); } } } ctx.restore(); }, [elements, size, panOffset, selectedId]); const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); }; const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } }; const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); setSelectedId(null); } }; const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; }; const isPointInElement = (x, y, el) => { const padding = 10; let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(el.type === 'pencil' || el.type === 'eraser') { const xs = el.points.map(p=>p.x); const ys = el.points.map(p=>p.y); bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by; } else if(el.type === 'text') { const fontSize = Math.max(12, el.strokeWidth * 4); bw = el.width || (el.text.length * fontSize * 0.6); bh = el.height || fontSize; } else { if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } } return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding; }; const handleDown = (e) => { if(['BUTTON','INPUT','TEXTAREA','LABEL','SELECT'].includes(e.target.tagName)) return; e.preventDefault(); const {x,y} = getPos(e); if(tool === 'selection') { if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && (el.type !== 'pencil' && el.type !== 'eraser')) { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); for(const key in handles) { if(isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; } } } } let foundId = null; if(selectedId) { const el = elements.find(e => e.id === selectedId); if(el && isPointInElement(x, y, el)) foundId = selectedId; } if(!foundId) { for(let i=elements.length-1; i>=0; i--) { if(isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; } } } setSelectedId(foundId); if(foundId) { setAction('moving'); const el = elements.find(e => e.id === foundId); setDragOffset({ x: x - el.x, y: y - el.y }); } else { setAction('panning'); } return; } if(tool === 'text') { if(action==='writing') finishWriting(); else { setAction('writing'); setWritingPos({x,y}); } return; } setAction('drawing'); const newEl = { id: generateId(), type: tool, x, y, width:0, height:0, color, strokeWidth, points: (tool==='pencil' || tool==='eraser') ? [{x,y}] : undefined }; setElements(prev=>[...prev, newEl]); }; const handleMove = (e) => { const {x,y} = getPos(e); if(tool === 'selection' && selectedId && action === 'none') { const el = elements.find(e => e.id === selectedId); if(el) { if(el.type !== 'pencil' && el.type !== 'eraser') { let bx = el.x, by = el.y, bw = el.width, bh = el.height; if(bw < 0) { bx += bw; bw = Math.abs(bw); } if(bh < 0) { by += bh; bh = Math.abs(bh); } const handles = getHandles({x:bx, y:by, width:bw, height:bh}); let cursor = null; for(const key in handles) { if(isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; } setHoverCursor(cursor); } if(!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); } } else { setHoverCursor(null); } } else if (action === 'none') { setHoverCursor(null); } if(action === 'panning') { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; } if(action === 'moving' && selectedId) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; const newX = x - dragOffset.x; const newY = y - dragOffset.y; if (el.type === 'pencil' || el.type === 'eraser') { const dx = newX - el.x; const dy = newY - el.y; const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy })); els[index] = { ...el, x: newX, y: newY, points: newPoints }; } else { els[index] = { ...el, x: newX, y: newY }; } setElements(els); return; } if(action === 'resizing' && selectedId && resizeHandle) { const els = [...elements]; const index = els.findIndex(e => e.id === selectedId); const el = els[index]; if(el.type === 'text') { let newHeight = el.height; if(resizeHandle.includes('b')) newHeight = y - el.y; if(resizeHandle.includes('t')) newHeight = el.y + el.height - y; if(newHeight < 10) newHeight = 10; const newStrokeWidth = newHeight / 4; els[index] = { ...el, strokeWidth: newStrokeWidth, height: newHeight, width: el.text.length * newHeight * 0.6 }; } else { let newX = el.x, newY = el.y, newW = el.width, newH = el.height; if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; } else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; } else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; } else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; } els[index] = { ...el, x: newX, y: newY, width: newW, height: newH }; } setElements(els); return; } if(action === 'drawing') { const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil' || tool==='eraser') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); } }; const handleUp = () => { if(action==='drawing' || action==='resizing' || action==='moving') updateHistory(elements); if(action !== 'writing') { setAction('none'); setResizeHandle(null); } }; const finishWriting = () => { if(!textAreaRef.current || !writingPos) { setAction('none'); setWritingPos(null); return; } const text = textAreaRef.current.value.trim(); if(text) { const fontSize = Math.max(12, strokeWidth * 4); const approxWidth = text.length * fontSize * 0.6; const newEls = [...elements, { id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth, width: approxWidth, height: fontSize }]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); }; const save = () => { const a = document.createElement('a'); a.download='pizarra-tucaneo.png'; a.href=canvasRef.current.toDataURL(); a.click(); }; let cursorClass = 'cursor-crosshair'; if(hoverCursor) cursorClass = `cursor-${hoverCursor}`; else if(tool === 'selection') cursorClass = action==='panning' ? 'cursor-grabbing' : 'cursor-default'; else if(tool === 'text') cursorClass = 'cursor-text'; else if(tool === 'eraser') cursorClass = 'cursor-eraser'; return ( <div ref={containerRef} className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}> <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200"> <button onClick={()=>setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button> <div className="w-full h-px bg-gray-200 my-1"></div> <button onClick={()=>setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool==='eraser'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button> {[{id:'pencil',i:I.Pencil, t:'Lápiz'},{id:'rectangle',i:I.Square, t:'Cuadrado'},{id:'circle',i:I.Circle, t:'Círculo'},{id:'line',i:I.Line, t:'Línea'},{id:'text',i:I.Type, t:'Texto'}].map(t=> ( <button key={t.id} onClick={()=>setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button> ))} </div> <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto"> <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" /> <div className="flex items-center gap-2 flex-shrink-0"> <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span> <input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" /> </div> <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div> <div className="flex gap-1 flex-shrink-0"> <button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button> <button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button> <button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button> </div> <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button> </div> <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" /> {action==='writing' && writingPos && ( <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left||0), top: writingPos.y + panOffset.y, }}> <textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-none font-sans" style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }} placeholder="Escriba aquí..." /> </div> )} </div> ); }
+        function App() { 
+            const [tab, setTab] = useState('board'); 
+            const close = () => window.toggleDrawer(); 
+            useEffect(() => { 
+                const handler = (e) => { 
+                    if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); 
+                }; 
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail; 
+                    setTab(toolName); 
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if(drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []); 
+            return ( 
+                <div className="h-full flex flex-col bg-slate-50"> 
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6"> 
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button> 
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-emerald-500 text-emerald-600':'border-transparent text-gray-400'}`}>{I.Book} Glosario</button> 
+                        <div className="flex-1"></div> 
+                    </div> 
+                    <div className="flex-1 relative overflow-hidden"> 
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div> 
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div> 
+                    </div> 
+                </div> 
+            ); 
+        }
+        const root = ReactDOM.createRoot(document.getElementById('tools-root')); 
+        root.render(<App />);
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    
+    <script>
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Activando Scroll Vertical Nativo (Estilo Esq 23).");
+            document.body.classList.add('is-mobile');
+            // IMPORTANTE: En móvil desactivamos Reveal y usamos scroll normal
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.width = scrolled + '%';
+                const btn = document.getElementById('back-to-top');
+                if(btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal con fondo tropical
+            Reveal.initialize({
+                controls: true, progress: true, center: true, hash: false,
+                width: 1200, height: 720, margin: 0.04, minScale: 0.1, maxScale: 3.0,
+                transition: 'slide', backgroundTransition: 'fade', 
+                background: '#fefce8' // Color crema tropical
+            });
+        }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+        function forceZoom() {
+            if (isMobile) return; 
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            
+            container.classList.toggle('is-zoomed');
+
+            if (container.classList.contains('is-zoomed')) {
+                btn.classList.add('active');
+                container.scrollTop = 0;
+            } else {
+                btn.classList.remove('active');
+                Reveal.layout(); 
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c76303d74b.mp3?filename=party-popper-6822.mp3'),
+            applause: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1533c.mp3?filename=crowd-cheering-143103.mp3'),
+            error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=negative-beeps-6008.mp3') 
+        };
+
+        function playSound(name) {
+            if(sounds[name]) {
+                sounds[name].currentTime = 0; 
+                sounds[name].volume = 0.4; 
+                sounds[name].play().catch(e => console.log("Audio bloqueado"));
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch(type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error': 
+                    break; 
+            }
+        }
+    </script>
+</body>
+</html>

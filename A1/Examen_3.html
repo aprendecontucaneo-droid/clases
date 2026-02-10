@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet A1 - Tucaneo Academy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+
+        /* --- ESTILOS GENERALES (PC: MODO ESCRITORIO) --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; 
+            margin: 0; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm 20mm 30mm 20mm; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; font-weight: bold; }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 140px; text-align: center; }
+        .short-input { width: 50px; text-align: center; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; border-bottom: 1px solid #f0f0f0; }
+        
+        /* --- ESTILOS ESPECIFICOS --- */
+        .vocab-box { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 20px; }
+        .vocab-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .vocab-item { background: white; padding: 5px 10px; border-radius: 15px; border: 1px solid #ccc; font-size: 0.9em; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            .page { width: 100%; min-height: auto; padding: 15px 15px 80px 15px; box-shadow: none; margin-bottom: 0; }
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+            .btn-container { position: relative; top: 0; right: 0; flex-direction: row; justify-content: center; width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; border-radius: 0; }
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (Limpio A4)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; padding: 0; margin: 0; display: block; }
+            .page { width: 100%; max-width: 100%; margin: 0; padding: 15mm 15mm; box-shadow: none; border: none; page-break-after: always; min-height: 290mm; }
+            .btn-container, .no-print { display: none !important; }
+            input[type="text"], textarea { background: none !important; border-bottom: 1px solid #000; }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            .img-container, h2, table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+        <button class="ui-btn print-btn" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Student Name:</strong> <input type="text" style="width: 200px;"></div>
+                <div><strong>Date:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>Topic 1: Los Números (Numbers)</h1>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/calculadora-suma-e1768184502838.png" alt="Numbers Chart">
+        </div>
+
+        <h2>Exercise A: Write the number in Spanish</h2>
+        <p class="instruction">Write the name of the number in Spanish. (Example: 2 -> Dos)</p>
+        
+        <table>
+            <tr>
+                <td>6 <input type="text" class="inline-input"></td>
+                <td>8 <input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td>11 <input type="text" class="inline-input"></td>
+                <td>12 <input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td>15 <input type="text" class="inline-input"></td>
+                <td>20 <input type="text" class="inline-input"></td>
+            </tr>
+        </table>
+
+        <h2>Exercise B: Basic Math (Matemáticas)</h2>
+        <p class="instruction">Solve the operation and write the result in <strong>words (Spanish)</strong>.</p>
+        
+        <ul>
+            <li>Dos + Dos = <input type="text" class="inline-input"></li>
+            <li>Diez - Tres = <input type="text" class="inline-input"></li>
+            <li>Cinco + Cinco = <input type="text" class="inline-input"></li>
+            <li>Veinte - Uno = <input type="text" class="inline-input"></li>
+        </ul>
+
+        <h2>Exercise C: Phone Numbers</h2>
+        <p class="instruction">Read the Spanish words and write the digits.</p>
+        <p>Mi número es: <strong>tres - uno - cinco - nueve - cero - dos.</strong></p>
+        <p>Number: <input type="text" style="width: 100%; text-align: center; letter-spacing: 5px;"></p>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Page:</strong> 2 / 4</div>
+            </div>
+        </div>
+
+        <h1>Topic 2: Días de la Semana</h1>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/calendario-semana.png" alt="Days of the Week">
+        </div>
+
+        <h2>Exercise A: Order the days</h2>
+        <p class="instruction">Fill in the missing days in the correct order (remember the Spanish days).</p>
+
+        <ol>
+            <li>Lunes</li>
+            <li><input type="text" class="inline-input"></li>
+            <li>Miércoles</li>
+            <li><input type="text" class="inline-input"></li>
+            <li><input type="text" class="inline-input"></li>
+            <li>Sábado</li>
+            <li><input type="text" class="inline-input"></li>
+        </ol>
+
+        <h2>Exercise B: Logical Sequence</h2>
+        <p class="instruction">Complete the sentences using "Ayer" (Yesterday), "Hoy" (Today), or "Mañana" (Tomorrow) logic.</p>
+
+        <p>1. Si hoy es <strong>Lunes</strong>, mañana es <input type="text" class="inline-input">.</p>
+        <p>2. Si mañana es <strong>Domingo</strong>, hoy es <input type="text" class="inline-input">.</p>
+        <p>3. Si hoy es <strong>Jueves</strong>, ayer fue <input type="text" class="inline-input">.</p>
+        <p>4. El día favorito de la semana es el <input type="text" class="inline-input">.</p>
+
+        <h2>Exercise C: My Schedule</h2>
+        <p class="instruction">What do you do on weekends? Write a short sentence in Spanish (e.g., "El sábado descanso").</p>
+        <textarea placeholder="Escribe aquí..."></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Page:</strong> 3 / 4</div>
+            </div>
+        </div>
+
+        <h1>Topic 3: ¿Qué hora es? (The Time)</h1>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/mundo_de_relojes.png" alt="Clock">
+        </div>
+
+        <h2>Exercise A: Match the time</h2>
+        <p class="instruction">Convert the digital time to Spanish words.</p>
+
+        <table>
+            <tr>
+                <td><strong>1:00</strong></td>
+                <td>Es la <input type="text" class="inline-input">.</td>
+            </tr>
+            <tr>
+                <td><strong>3:00</strong></td>
+                <td>Son las <input type="text" class="inline-input">.</td>
+            </tr>
+            <tr>
+                <td><strong>4:30</strong></td>
+                <td>Son las cuatro y <input type="text" class="inline-input">.</td>
+            </tr>
+            <tr>
+                <td><strong>10:15</strong></td>
+                <td>Son las diez y <input type="text" class="inline-input">.</td>
+            </tr>
+        </table>
+
+        <h2>Exercise B: Drawing the Time</h2>
+        <p class="instruction">Read the Spanish time and write it in digital format (e.g., 8:00).</p>
+
+        <p>1. Son las ocho en punto. -> <input type="text" class="short-input"> : <input type="text" class="short-input"></p>
+        <p>2. Es la una y media. -> <input type="text" class="short-input"> : <input type="text" class="short-input"></p>
+        <p>3. Son las once y cuarto. -> <input type="text" class="short-input"> : <input type="text" class="short-input"></p>
+        <p>4. Son las nueve y veinte. -> <input type="text" class="short-input"> : <input type="text" class="short-input"></p>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Page:</strong> 4 / 4</div>
+            </div>
+        </div>
+
+        <h1>Topic 4: En el Pueblo (In Town)</h1>
+
+        <div class="img-container">
+            <img src="https://image.pollinations.ai/prompt/simple town map with bakery pharmacy park bank vector illustration flat white background?width=800&height=400&nologo=true" alt="Town Map">
+        </div>
+
+        <h2>Exercise A: Where do you go?</h2>
+        <p class="instruction">Complete the sentences with the correct place (e.g., Supermercado, Farmacia, etc.).</p>
+
+        <p>1. I want to buy food (comida). I go to <input type="text" class="inline-input">.</p>
+        <p>2. I need medicine (medicina). I go to <input type="text" class="inline-input">.</p>
+        <p>3. I want to eat dinner. I go to <input type="text" class="inline-input">.</p>
+        <p>4. I need money (dinero). I go to <input type="text" class="inline-input">.</p>
+
+        <h2>Exercise B: Translations</h2>
+        <p class="instruction">Translate these places into Spanish.</p>
+        
+        <table>
+            <tr>
+                <td>The Library:</td>
+                <td><input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td>The Cinema:</td>
+                <td><input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td>The Street:</td>
+                <td><input type="text" class="inline-input"></td>
+            </tr>
+        </table>
+
+        <h2>Exercise C: Writing</h2>
+        <p class="instruction">Describe your town in 2 sentences. (Example: "Mi pueblo es pequeño. Hay un parque grande.")</p>
+        <textarea placeholder="Describe tu pueblo aquí..."></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workbook Repaso General A2 - Tucaneo Academy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+
+        /* --- ESTILOS GENERALES (PC: MODO ESCRITORIO) --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; 
+            margin: 0; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm 20mm 30mm 20mm; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 100px; text-align: center; }
+        .short-input { width: 40px; text-align: center; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            .page { width: 100%; min-height: auto; padding: 15px 15px 80px 15px; box-shadow: none; margin-bottom: 0; }
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+            .btn-container { position: relative; top: 0; right: 0; flex-direction: row; justify-content: center; width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; border-radius: 0; }
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (Limpio A4)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; padding: 0; margin: 0; display: block; }
+            .page { width: 100%; max-width: 100%; margin: 0; padding: 15mm 15mm; box-shadow: none; border: none; page-break-after: always; min-height: 290mm; }
+            .btn-container, .no-print { display: none !important; }
+            input[type="text"], textarea { background: none !important; border-bottom: 1px solid #000; }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            .img-container, h2, table { page-break-inside: avoid; }
+        }
+        
+        /* Utility for theory boxes */
+        .theory-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #FF8C00;
+            padding: 10px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+        .theory-title {
+            font-weight: bold;
+            color: #2E8B57;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+        <button class="ui-btn print-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>WORKBOOK DE REPASO: NIVEL A2</h1>
+        <p class="instruction">Objetivo: Verificar el dominio del Presente, Ser/Estar/Hay, Gustar y Adverbios.</p>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/esqueleto-cementerio-aprenderespanol-scaled.png" alt="Imagen Tema">
+        </div>
+
+        <h2>PÁGINA 1: EL ESQUELETO DEL ESPAÑOL (Ser/Estar/Hay)</h2>
+
+        <div class="theory-box">
+            <span class="theory-title">📘 RECORDATORIO RÁPIDO</span>
+            <strong>SER:</strong> Identidad, Profesión, Origen, Hora, Características permanentes.<br>
+            <strong>ESTAR:</strong> Ubicación, Emociones, Estados temporales.<br>
+            <strong>HAY:</strong> Existencia (There is/are). Siempre invariable en presente.
+        </div>
+
+        <h3>1. EJERCICIO A: ¿Ser o Estar?</h3>
+        <p class="instruction">Completa las frases conjugando el verbo correctamente.</p>
+        
+        <ul>
+            <li>¡Hola! Yo <input type="text" class="inline-input"> Lucía y <input type="text" class="inline-input"> profesora de español.</li>
+            <li>Hoy mis estudiantes <input type="text" class="inline-input"> muy cansados porque es lunes.</li>
+            <li>Madrid <input type="text" class="inline-input"> en el centro de España.</li>
+            <li>Esta mesa <input type="text" class="inline-input"> de madera, pero <input type="text" class="inline-input"> rota.</li>
+            <li>¿Tú <input type="text" class="inline-input"> colombiano o venezolano?</li>
+            <li>La fiesta <input type="text" class="inline-input"> a las 8:00 PM en mi casa.</li>
+            <li>El café <input type="text" class="inline-input"> frío. ¡Qué asco!</li>
+            <li>Nosotros <input type="text" class="inline-input"> felices por la noticia.</li>
+        </ul>
+
+        <h3>2. EJERCICIO B: ¿Dónde está? vs. ¿Qué hay?</h3>
+        <p class="instruction">Elige la opción correcta: "Está/Están" o "Hay".</p>
+
+        <ul>
+            <li>En la nevera <input type="text" class="inline-input"> tres manzanas rojas.</li>
+            <li>El perro <input type="text" class="inline-input"> debajo de la mesa.</li>
+            <li>¿Dónde <input type="text" class="inline-input"> las llaves del coche?</li>
+            <li>En mi barrio no <input type="text" class="inline-input"> ningún cine.</li>
+            <li>Aquí <input type="text" class="inline-input"> mucha gente hoy.</li>
+            <li>Tus zapatos <input type="text" class="inline-input"> en el dormitorio.</li>
+        </ul>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/rutina-diaynoche-scaled-e1768183226310.png" alt="Rutina Diaria">
+        </div>
+
+        <h2>PÁGINA 2: LA RUTINA Y LA ACCIÓN</h2>
+
+        <div class="theory-box">
+            <span class="theory-title">📘 MAPA DE IRREGULARIDADES</span>
+            <strong>Cambio de Raíz (La Bota):</strong> E > IE (Querer), O > UE (Poder), E > I (Pedir).<br>
+            <strong>Irregulares "YO":</strong> Hacer (Hago), Salir (Salgo), Poner (Pongo).
+        </div>
+
+        <h3>3. EJERCICIO C: Verbos Regulares</h3>
+        <p class="instruction">Conjuga los verbos entre paréntesis.</p>
+        
+        <ul>
+            <li>Mi hermano (vivir) <input type="text" class="inline-input"> en Barcelona.</li>
+            <li>Nosotros (comer) <input type="text" class="inline-input"> paella los domingos.</li>
+            <li>Tú (hablar) <input type="text" class="inline-input"> tres idiomas muy bien.</li>
+            <li>Ellas (abrir) <input type="text" class="inline-input"> la tienda a las nueve.</li>
+        </ul>
+
+        <h3>4. EJERCICIO D: El desafío de los Irregulares</h3>
+        <p class="instruction">Cuidado: Estos verbos tienen cambios. Conjúgalos correctamente.</p>
+
+        <ul>
+            <li>(Querer/yo) <input type="text" class="inline-input"> ir al cine contigo esta noche.</li>
+            <li>(Poder/tú) ¿ <input type="text" class="inline-input"> ayudarme con la tarea?</li>
+            <li>(Pedir/nosotros) <input type="text" class="inline-input"> la cuenta, por favor.</li>
+            <li>(Jugar/ellos) <input type="text" class="inline-input"> al fútbol en el parque.</li>
+            <li>(Dormir/ella) <input type="text" class="inline-input"> ocho horas diarias.</li>
+            <li>(Hacer/yo) <input type="text" class="inline-input"> ejercicio todas las mañanas.</li>
+            <li>(Salir/yo) <input type="text" class="inline-input"> de trabajar a las seis.</li>
+            <li>(Ir/nosotros) <input type="text" class="inline-input"> al supermercado ahora.</li>
+        </ul>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/frecuencia-fabrica_pollo-scaled-e1768183364743.png" alt="Frecuencia">
+        </div>
+
+        <h2>PÁGINA 3: FRECUENCIA Y TIEMPO</h2>
+
+        <div class="theory-box" style="text-align: center;">
+            <span class="theory-title">📊 LA ESCALA DE FRECUENCIA</span>
+            100% <strong>Siempre</strong> | 80% <strong>Normalmente</strong> | 50% <strong>A veces</strong> | 0% <strong>Nunca</strong>
+        </div>
+
+        <h3>5. EJERCICIO E: Ordena la frase</h3>
+        <p class="instruction">Las palabras están desordenadas. Escribe la frase correcta poniendo el adverbio en su lugar lógico.</p>
+
+        <p>1. siempre / desayuno / Yo / café / bebo</p>
+        <input type="text" style="width: 100%;" placeholder="Escribe aquí la frase ordenada...">
+        
+        <p>2. tarde / llega / nunca / Pedro / a clase</p>
+        <input type="text" style="width: 100%;" placeholder="Escribe aquí la frase ordenada...">
+
+        <p>3. veces / cine / A / nosotros / al / vamos</p>
+        <input type="text" style="width: 100%;" placeholder="Escribe aquí la frase ordenada...">
+
+        <p>4. gimnasio / va / María / normalmente / al</p>
+        <input type="text" style="width: 100%;" placeholder="Escribe aquí la frase ordenada...">
+
+        <h3>6. EJERCICIO F: Tu vida real</h3>
+        <p class="instruction">Responde con frases completas usando un adverbio de frecuencia.</p>
+
+        <p>¿Con qué frecuencia cocinas en casa?</p>
+        <textarea></textarea>
+
+        <p>¿Con qué frecuencia estudias español?</p>
+        <textarea></textarea>
+
+        <p>¿Con qué frecuencia viajas a otro país?</p>
+        <textarea></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/tucan-arcoiris-felicidad.png-scaled-e1765659968484.png" alt="Gustar y Objetos">
+        </div>
+
+        <h2>PÁGINA 4: GUSTOS Y OBJETOS</h2>
+
+        <div class="theory-box">
+            <span class="theory-title">📘 REGLA DE ORO</span>
+            A mí <strong>ME</strong> gusta el libro / gustan los libros.<br>
+            <strong>Demostrativos:</strong><br>
+            📍 Aquí (Cerca) → Este/Esta<br>
+            📍 Ahí (Media) → Ese/Esa<br>
+            📍 Allí (Lejos) → Aquel/Aquella
+        </div>
+
+        <h3>7. EJERCICIO G: ¿Qué les gusta?</h3>
+        <p class="instruction">Completa con el pronombre (me, te, le, nos, les) y la forma correcta de gustar (gusta/gustan).</p>
+        
+        <ul>
+            <li>A mí <input type="text" class="short-input"> <input type="text" class="inline-input"> los coches rápidos.</li>
+            <li>A Juan <input type="text" class="short-input"> <input type="text" class="inline-input"> escuchar música clásica.</li>
+            <li>A nosotros no <input type="text" class="short-input"> <input type="text" class="inline-input"> levantarnos temprano.</li>
+            <li>¿A ti <input type="text" class="short-input"> <input type="text" class="inline-input"> estas gafas de sol?</li>
+            <li>A mis padres <input type="text" class="short-input"> <input type="text" class="inline-input"> viajar por Europa.</li>
+        </ul>
+
+        <h3>8. EJERCICIO H: Señalando cosas</h3>
+        <p class="instruction">Selecciona el demostrativo (a, b o c) según la distancia indicada entre paréntesis.</p>
+
+        <p>(Cerca) Me gusta mucho <strong>_____</strong> camisa azul.</p>
+        <p>
+            a) Esta | b) Esa | c) Aquella <br>
+            Respuesta: <input type="text" class="short-input">
+        </p>
+        <hr style="border: 0; border-top: 1px dashed #ddd;">
+
+        <p>(Lejos) Mira <strong>_____</strong> edificio alto de allá.</p>
+        <p>
+            a) Este | b) Ese | c) Aquel <br>
+            Respuesta: <input type="text" class="short-input">
+        </p>
+        <hr style="border: 0; border-top: 1px dashed #ddd;">
+
+        <p>(Distancia Media) Pásame <strong>_____</strong> bolígrafo, por favor.</p>
+        <p>
+            a) Este | b) Ese | c) Aquel <br>
+            Respuesta: <input type="text" class="short-input">
+        </p>
+        <hr style="border: 0; border-top: 1px dashed #ddd;">
+
+        <p>(Cerca) <strong>_____</strong> zapatos son muy cómodos.</p>
+        <p>
+            a) Estos | b) Esos | c) Aquellos <br>
+            Respuesta: <input type="text" class="short-input">
+        </p>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/rutina-doctorasofia-scaled.png" alt="Doctora Escribiendo">
+        </div>
+
+        <h2>PÁGINA 5: INTEGRACIÓN Y PRODUCCIÓN</h2>
+
+        <h3>9. LECTURA: "La Rutina de Sofía"</h3>
+        <p class="instruction">Lee el texto y busca los errores.</p>
+        
+        <div style="background: #fff3e0; padding: 15px; border-radius: 5px; border: 1px solid #ffe0b2;">
+            "Hola, me llamo Sofía. Yo soy médica y trabajo en un hospital grande. (1) <strong>Hay</strong> muy feliz con mi trabajo. Normalmente (2) <strong>me levanto</strong> a las 6:00 AM. Yo (3) <strong>haco</strong> el desayuno para mi familia. A mí me (4) <strong>gustan</strong> el café con leche. Mi hospital (5) <strong>es</strong> en el centro de la ciudad. Allí (6) <strong>está</strong> muchos pacientes. A veces, yo (7) <strong>quieres</strong> dormir más, pero no puedo."
+        </div>
+
+        <h3>10. EJERCICIO I: Detective de Errores</h3>
+        <p class="instruction">Encuentra 4 errores gramaticales marcados en el texto y corrígelos.</p>
+
+        <table>
+            <tr>
+                <td><strong>Error (Escribe el número)</strong></td>
+                <td><strong>Corrección</strong></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="short-input"></td>
+                <td><input type="text" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="short-input"></td>
+                <td><input type="text" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="short-input"></td>
+                <td><input type="text" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="short-input"></td>
+                <td><input type="text" style="width: 100%;"></td>
+            </tr>
+        </table>
+
+        <h3>11. EJERCICIO J: ¡Ahora tú! (Writing)</h3>
+        <p class="instruction">Escribe un texto corto (50-80 palabras) sobre tu mejor amigo/a. Incluye: Descripción física (Ser), Dónde está ahora (Estar), Qué le gusta (Gustar) y su Rutina.</p>
+        
+        <textarea style="height: 150px;"></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+</body>
+</html>

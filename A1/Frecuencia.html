@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase Tucaneo Academy: Comida y Frecuencia</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&family=Handlee&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #2E8B57; /* Verde Tucaneo */
+            --accent: #FF8C00;  /* Naranja Tropical */
+            --background: transparent; /* Transparente para ver el fondo de Reveal */
+            --text-main: #2c3e50; 
+        }
+        body { font-family: 'Lato', sans-serif; overflow-x: hidden; }
+
+        /* Mejora de legibilidad sobre fondos con imagen */
+        .reveal section {
+            background: rgba(255, 255, 255, 0.85); /* Fondo blanco traslúcido para legibilidad */
+            border-radius: 20px;
+            padding: 20px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* --- DRAWER (HERRAMIENTAS) --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.3);
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column; text-align: left;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        #safe-close-btn {
+            position: absolute; top: 12px; right: 12px; z-index: 20001;
+            background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%;
+            border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+        }
+
+        /* --- UI GLOBAL --- */
+        #fixed-logo { position: fixed; z-index: 5000; transition: all 0.3s; }
+        #top-nav { position: fixed; z-index: 5000; display: flex; align-items: center; }
+        #floating-cta { position: fixed; z-index: 5000; }
+        
+        .reveal { color: var(--text-main); }
+        .reveal h1, .reveal h2, .reveal h3 { font-family: 'Merriweather', serif; color: var(--primary); }
+        
+        /* TABLAS Y ELEMENTOS */
+        .conj-table { 
+            width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0; 
+            font-size: 0.8em; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        .conj-table th { background-color: var(--primary); color: white; padding: 12px; }
+        .conj-table td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; background: white; }
+
+        .interactive-input {
+            background: #fff8e1; border: 1px solid #ffe0b2; border-bottom: 2px solid var(--accent);
+            font-family: 'Handlee', cursive; color: #d84315; text-align: center; border-radius: 4px; padding: 4px; width: 140px;
+        }
+
+        .status-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; }
+        .dot-green { background-color: #22c55e; } .dot-blue { background-color: #3b82f6; }
+        .dot-yellow { background-color: #eab308; } .dot-orange { background-color: #f97316; } .dot-red { background-color: #ef4444; }
+
+        @media screen and (max-width: 900px) {
+            #fixed-logo { width: 80px; top: 10px; left: 10px; }
+            #top-nav { top: 10px; right: 10px; gap: 5px; }
+            .reveal section { background: rgba(255, 255, 255, 0.92); width: 95%; }
+        }
+
+        @media screen and (min-width: 901px) {
+            #fixed-logo { width: 160px; top: 20px; left: 30px; }
+            #top-nav { top: 30px; right: 30px; gap: 15px; }
+            .nav-btn {
+                font-weight: 700; font-size: 14px; padding: 8px 20px; border-radius: 50px; color: white; display: flex; gap: 8px;
+            }
+            .nav-btn.whiteboard { background-color: var(--accent); }
+            .nav-btn.download { background-color: var(--primary); }
+            .nav-btn.exit { background-color: var(--text-main); }
+        }
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+    <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
+
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()">✕</button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">Herramientas</button>
+        <a href="#" class="nav-btn download" onclick="window.print()">PDF</a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">Salir</a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section>
+                <div class="grid-responsive" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+                    <div>
+                        <h1>¡A Comer!</h1>
+                        <h3 style="color: var(--accent)">Frecuencia y Restaurante</h3>
+                        <p class="mt-4">En esta lección aprenderemos:</p>
+                        <ul style="text-align: left; list-style: none; padding: 0;">
+                            <li>✅ Vocabulario de alimentos.</li>
+                            <li>✅ Adverbios de frecuencia.</li>
+                            <li>✅ Cómo pedir en un restaurante.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <img src="https://tucaneo.com/wp-content/uploads/2026/01/ninos_comiendo.png-scaled-e1767842350669.png" style="width: 100%; border-radius: 12px;" alt="Personas comiendo">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Vocabulario Esencial</h2>
+                <table class="conj-table">
+                    <thead>
+                        <tr><th>Categoría</th><th>Español</th><th>Inglés</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>Proteínas</b></td><td>Pollo, Pescado, Carne</td><td>Chicken, Fish, Meat</td></tr>
+                        <tr><td><b>Verduras</b></td><td>Ensalada, Lechuga, Cebolla</td><td>Salad, Lettuce, Onion</td></tr>
+                        <tr><td><b>Frutas</b></td><td>Manzana, Fresa, Plátano</td><td>Apple, Strawberry, Banana</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>Adverbios de Frecuencia</h2>
+                <table class="conj-table">
+                    <thead>
+                        <tr><th>Español</th><th>Inglés</th><th>%</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Always</td><td>Siempre</td><td><span class="status-dot dot-green"></span> 100%</td></tr>
+                        <tr><td>Sometimes</td><td>A veces</td><td><span class="status-dot dot-yellow"></span> 50%</td></tr>
+                        <tr><td>Never</td><td>Nunca</td><td><span class="status-dot dot-red"></span> 0%</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>Tu Rutina</h2>
+                <p>Completa las frases:</p>
+                <div style="text-align: left; background: white; padding: 20px; border-radius: 15px;">
+                    <p>1. Yo <input type="text" class="interactive-input"> como pizza.</p>
+                    <p>2. Mi amigo <input type="text" class="interactive-input"> bebe zumo.</p>
+                </div>
+            </section>
+
+            <section>
+                <h1>¡Excelente Trabajo!</h1>
+                <p>Has completado el módulo de Tucaneo Academy.</p>
+                <img src="https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722.png" style="max-width: 300px; margin-top: 20px;">
+            </section>
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // Aquí iría tu código de la Pizarra y Vocabulario (se mantiene igual que tu original)
+        const App = () => <div className="p-4 text-center mt-20 text-gray-400">Panel de Herramientas Tucaneo Activo</div>;
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        // 1. Definir tus imágenes de marca
+        const brandBackgrounds = [
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-3.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-2-1.jpg",
+            "https://tucaneo.com/wp-content/uploads/2025/12/Fondoss-amari-simp-1-1.jpg"
+        ];
+
+        // 2. Aplicar de forma aleatoria a cada sección ANTES de inicializar Reveal
+        document.querySelectorAll('.slides > section').forEach((section) => {
+            const randomImg = brandBackgrounds[Math.floor(Math.random() * brandBackgrounds.length)];
+            section.setAttribute('data-background-image', randomImg);
+            section.setAttribute('data-background-size', 'cover');
+        });
+
+        // 3. Inicializar Reveal
+        const isMobile = window.innerWidth < 900;
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            width: isMobile ? 360 : 1200,
+            height: isMobile ? 600 : 700,
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+
+        function toggleDrawer() {
+            document.getElementById('tucaneo-drawer').classList.toggle('is-open');
+        }
+    </script>
+</body>
+</html>

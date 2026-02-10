@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Clase Tucaneo - El Futuro Próximo</title>
+    
+    <!-- LIBRERÍAS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- FUENTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #10b981; 
+            --accent: #f59e0b;
+            --text-main: #1f2937; 
+            --bg-light: #f8fafc;
+        }
+        
+        /* RESET BÁSICO */
+        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; overflow: hidden; }
+
+        /* --- DRAWER (HERRAMIENTAS LATERALES) --- */
+        #tucaneo-drawer {
+            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
+            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2);
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb;
+            display: flex; flex-direction: column;
+        }
+        #tucaneo-drawer.is-open { right: 0; }
+        
+        /* En móviles, el drawer ocupa toda la pantalla */
+        @media (max-width: 768px) {
+            #tucaneo-drawer { width: 100vw; right: -100vw; }
+        }
+
+        #safe-close-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 20001;
+            background: #ef4444; color: white; width: 40px; height: 40px; border-radius: 50%;
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; font-size: 20px;
+        }
+        #safe-close-btn:hover { transform: scale(1.1); }
+
+        /* --- UI ELEMENTS --- */
+        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; pointer-events: none; }
+        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; }
+        #floating-cta { 
+            position: fixed; bottom: 20px; left: 30px; z-index: 5000; 
+            font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px;
+        }
+
+        /* --- REVEAL OVERRIDES (CRÍTICO PARA RESPONSIVIDAD) --- */
+        .reveal { color: var(--text-main); font-size: 28px; } /* Base font size aumentado */
+        .reveal h1, .reveal h2, .reveal h3 { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--primary); 
+            text-transform: none; 
+            font-weight: 700;
+        }
+        
+        /* Asegurar que las secciones usen Flexbox para centrar contenido verticalmente */
+        .reveal .slides > section {
+            height: 100%;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px; 
+        }
+
+        /* --- COMPONENTS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 1000px; /* Limite de ancho para que no se estire demasiado */
+            margin: 0 auto;
+        }
+
+        .clean-input {
+            border: none; border-bottom: 2px solid #cbd5e1; background: transparent;
+            font-family: 'Lato', sans-serif; font-size: 1em; color: var(--primary);
+            text-align: center; width: 140px; transition: 0.3s;
+            margin: 0 10px;
+        }
+        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
+
+        .grammar-block {
+            display: inline-block; padding: 10px 20px; border-radius: 8px; 
+            font-weight: bold; color: white; margin: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            white-space: nowrap; /* Evita que el texto se parta feo */
+        }
+
+        /* --- LAYOUTS --- */
+        .grid-responsive { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px; 
+            width: 100%; 
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .grid-3 {
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px;
+            width: 100%; 
+            max-width: 1100px;
+            margin-top: 20px;
+        }
+
+        /* Ajuste para pantallas más pequeñas dentro del slide */
+        @media (max-width: 800px) {
+            .grid-responsive, .grid-3 { grid-template-columns: 1fr; gap: 20px; }
+            .glass-card { padding: 20px; }
+            #fixed-logo { width: 100px; top: 15px; left: 15px; }
+        }
+
+        /* --- BUTTONS --- */
+        .nav-btn {
+            font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+            padding: 10px 20px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none;
+            white-space: nowrap;
+        }
+        .nav-btn.whiteboard { background-color: var(--accent); }
+        .nav-btn.download { background-color: var(--primary); }
+        .nav-btn.exit { background-color: #374151; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+
+    </style>
+</head>
+<body>
+
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY</a>
+
+    <!-- MENÚ LATERAL (HERRAMIENTAS REACT) -->
+    <div id="tucaneo-drawer">
+        <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+        <div id="tools-root" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <!-- BOTONES SUPERIORES -->
+    <div id="top-nav">
+        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
+            <i class="fas fa-pen"></i> <span class="hidden sm:inline">Pizarra</span>
+        </button>
+        <a href="#" class="nav-btn download" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> <span class="hidden sm:inline">PDF</span>
+        </a>
+        <a href="https://tucaneo.com/" class="nav-btn exit">
+            <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Salir</span>
+        </a>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- FASE 1: CALENTAMIENTO -->
+            <!-- 1. PORTADA -->
+            <section 
+                data-background-image="https://tucaneo.com/wp-content/uploads/2025/05/93c1bf89-ccbd-42a4-80b3-e9cfba8c2d0a.png" 
+                data-background-size="cover" 
+                data-background-position="center"
+                data-background-opacity="0.3">
+                <div class="glass-card" style="text-align: center;">
+                    <span style="color: var(--accent); font-weight: 800; letter-spacing: 3px; font-size: 0.6em; text-transform: uppercase;">NIVEL A2 | PLANES Y PREDICCIONES</span>
+                    <h1 style="font-size: 3em; margin: 15px 0;">¿Qué vas a hacer mañana?</h1>
+                    <div style="width: 60px; height: 4px; background: var(--primary); margin: 30px auto;"></div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 40px; margin-top: 30px; color: #4b5563;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-calendar-alt" style="font-size: 2em; color: var(--accent); margin-bottom: 10px;"></i>
+                            <p style="font-size: 0.8em;">Organizar Planes</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-plane-departure" style="font-size: 2em; color: var(--primary); margin-bottom: 10px;"></i>
+                            <p style="font-size: 0.8em;">Viajes Futuros</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ACTIVACIÓN (Rompehielo) -->
+            <section>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="color: var(--accent); font-weight: bold; letter-spacing: 2px; font-size: 0.7em;">FASE 1: ACTIVACIÓN</span>
+                    <h2 style="font-size: 2em; margin: 10px 0;">Del Presente al Futuro</h2>
+                </div>
+
+                <div class="grid-3">
+                    <div class="glass-card" style="text-align: center; padding: 20px;">
+                        <i class="fas fa-dumbbell" style="font-size: 3em; color: #3b82f6; margin-bottom: 15px;"></i>
+                        <p style="font-weight: bold; font-size: 0.9em;">El Gimnasio</p>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 20px;">
+                        <i class="fas fa-film" style="font-size: 3em; color: #ef4444; margin-bottom: 15px;"></i>
+                        <p style="font-weight: bold; font-size: 0.9em;">El Cine</p>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 20px;">
+                        <i class="fas fa-umbrella-beach" style="font-size: 3em; color: var(--accent); margin-bottom: 15px;"></i>
+                        <p style="font-weight: bold; font-size: 0.9em;">La Playa</p>
+                    </div>
+                </div>
+
+                <div style="background: #fffbeb; padding: 15px 30px; border-radius: 12px; border: 1px solid #fcd34d; margin-top: 30px; text-align: center; max-width: 800px;">
+                    <p style="font-size: 1.1em; color: #d97706; font-weight: bold;">
+                        <i class="fas fa-comment-dots"></i> Pregunta: ¿Adónde vas tú normalmente los fines de semana?
+                    </p>
+                </div>
+            </section>
+
+            <!-- FASE 2: NÚCLEO A - TEORÍA Y PRÁCTICA -->
+            <!-- 3. LA FÓRMULA MATEMÁTICA -->
+            <section>
+                <h2 style="margin-bottom: 30px;">La Fórmula Mágica</h2>
+                
+                <div class="glass-card" style="text-align: center;">
+                    <!-- Bloques Gramaticales -->
+                    <div style="font-size: 1.2em; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-bottom: 40px;">
+                        <span class="grammar-block" style="background: #3b82f6;">SUJETO</span>
+                        <i class="fas fa-plus" style="color: #ccc;"></i>
+                        <span class="grammar-block" style="background: var(--primary);">IR (Conjugado)</span>
+                        <i class="fas fa-plus" style="color: #ccc;"></i>
+                        <span class="grammar-block" style="background: #ef4444; font-size: 1.2em; transform: scale(1.1);">a</span>
+                        <i class="fas fa-plus" style="color: #ccc;"></i>
+                        <span class="grammar-block" style="background: var(--accent);">INFINITIVO</span>
+                    </div>
+
+                    <div class="grid-responsive" style="text-align: left; align-items: start;">
+                        <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; border-left: 4px solid var(--primary);">
+                            <h4 style="color: var(--primary); font-weight: bold; margin-bottom: 10px; font-size: 0.9em;">Verbo IR</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.8em; line-height: 1.6;">
+                                <li>Yo <strong>voy</strong></li>
+                                <li>Tú <strong>vas</strong></li>
+                                <li>Él/Ella <strong>va</strong></li>
+                                <li>Nosotros <strong>vamos</strong></li>
+                                <li>Ellos <strong>van</strong></li>
+                            </ul>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center; font-size: 1em; gap: 15px;">
+                            <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Yo <strong>voy a</strong> viajar.</p>
+                            <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Tú <strong>vas a</strong> comer.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. PRÁCTICA MECÁNICA A -->
+            <section>
+                <h3 style="margin-bottom: 10px;">Completa la frase</h3>
+                <p style="color: #666; margin-bottom: 30px; font-size: 0.8em;">Usa: voy, vas, va, vamos, van</p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px; font-size: 1em; width: 100%; max-width: 800px;">
+                    
+                    <div style="background: white; padding: 15px 25px; border-radius: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-briefcase" style="color: #3b82f6;"></i>
+                        <span>El hombre y la mujer</span>
+                        <input type="text" class="clean-input" placeholder="...">
+                        <span>a trabajar.</span>
+                    </div>
+
+                    <div style="background: white; padding: 15px 25px; border-radius: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-users" style="color: var(--primary);"></i>
+                        <span>Nosotros</span>
+                        <input type="text" class="clean-input" placeholder="...">
+                        <span>al cine los sábados.</span>
+                    </div>
+
+                    <div style="background: white; padding: 15px 25px; border-radius: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-running" style="color: var(--accent);"></i>
+                        <span>Yo</span>
+                        <input type="text" class="clean-input" placeholder="...">
+                        <span>al gimnasio mañana.</span>
+                    </div>
+
+                    <div style="background: white; padding: 15px 25px; border-radius: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-tree" style="color: #ef4444;"></i>
+                        <span>¿</span>
+                        <input type="text" class="clean-input" placeholder="...">
+                        <span>(tú) al campo el fin de semana?</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 5. PRÁCTICA CONTEXTUALIZADA -->
+            <section>
+                <h2 style="margin-bottom: 20px;">¿Qué van a hacer?</h2>
+                <div class="grid-responsive" style="gap: 20px;">
+                    
+                    <div class="glass-card" style="padding: 20px; text-align: center;">
+                        <i class="fas fa-car-side" style="font-size: 2.5em; color: var(--primary); margin-bottom: 10px;"></i>
+                        <p style="font-weight: bold; font-size: 0.8em;">Ella / Manejar</p>
+                        <input type="text" class="clean-input" style="width: 90%; text-align: center;" placeholder="Respuesta...">
+                    </div>
+
+                    <div class="glass-card" style="padding: 20px; text-align: center;">
+                        <i class="fas fa-lightbulb" style="font-size: 2.5em; color: var(--accent); margin-bottom: 10px;"></i>
+                        <p style="font-weight: bold; font-size: 0.8em;">Tú / Apagar la luz</p>
+                        <input type="text" class="clean-input" style="width: 90%; text-align: center;" placeholder="Respuesta...">
+                    </div>
+
+                    <div class="glass-card" style="padding: 20px; text-align: center;">
+                        <i class="fas fa-file-signature" style="font-size: 2.5em; color: #3b82f6; margin-bottom: 10px;"></i>
+                        <p style="font-weight: bold; font-size: 0.8em;">El cliente / Firmar</p>
+                        <input type="text" class="clean-input" style="width: 90%; text-align: center;" placeholder="Respuesta...">
+                    </div>
+
+                    <div class="glass-card" style="padding: 20px; text-align: center;">
+                        <i class="fas fa-palette" style="font-size: 2.5em; color: #ef4444; margin-bottom: 10px;"></i>
+                        <p style="font-weight: bold; font-size: 0.8em;">Nosotros / Pintar</p>
+                        <input type="text" class="clean-input" style="width: 90%; text-align: center;" placeholder="Respuesta...">
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- FASE 3: NÚCLEO B - PROFUNDIZACIÓN -->
+            <!-- 6. TABLA GRAMATICAL 2 -->
+            <section>
+                <div style="text-align: center;">
+                    <span style="color: var(--accent); font-weight: bold; letter-spacing: 2px; font-size: 0.7em;">FASE 3: PROFUNDIZACIÓN</span>
+                    <h2 style="font-size: 2em; margin: 10px 0;">Preguntas y Tiempo</h2>
+                </div>
+
+                <div class="glass-card" style="margin-top: 20px; text-align: left;">
+                    <h3 style="color: var(--text-main); font-size: 1.1em; margin-bottom: 15px;"><i class="fas fa-question-circle" style="color: var(--accent);"></i> Estructura Interrogativa</h3>
+                    
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 1em; margin-bottom: 20px; border: 1px dashed #cbd5e1;">
+                        ¿ <strong>[IR]</strong> + <strong>[Sujeto]</strong> + <strong>a</strong> + <strong>[Infinitivo]</strong> ?
+                        <br><br>
+                        <em style="color: #666; font-size: 0.9em;">Ej: ¿Vas a viajar a España?</em>
+                    </div>
+
+                    <div class="grid-responsive" style="align-items: center;">
+                        <div>
+                            <h4 style="font-size: 0.9em; font-weight: bold; color: var(--primary);">Marcadores Temporales</h4>
+                            <ul style="color: #4b5563; font-size: 0.8em; line-height: 1.6;">
+                                <li>Mañana</li>
+                                <li>Esta noche</li>
+                                <li>La próxima semana</li>
+                                <li>Este fin de semana</li>
+                            </ul>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-clock" style="font-size: 4em; color: #e5e7eb;"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. TRADUCCIÓN INVERSA -->
+            <section>
+                <h3>Traducción Inversa</h3>
+                <p style="color: #666; margin-bottom: 20px; font-size: 0.8em;">Convierte estas ideas al español.</p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 800px;">
+                    
+                    <div style="background: white; padding: 15px; border-radius: 12px; border-left: 5px solid #3b82f6; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <p style="font-weight: bold; color: #3b82f6; font-size: 0.8em; margin-bottom: 5px;">🇺🇸 Where are you going to be at 10:00 tonight?</p>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; font-style: italic; margin: 0;" placeholder="Escribe en español...">
+                    </div>
+
+                    <div style="background: white; padding: 15px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <p style="font-weight: bold; color: var(--primary); font-size: 0.8em; margin-bottom: 5px;">🇺🇸 Samuel is going to sign a document tomorrow.</p>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; font-style: italic; margin: 0;" placeholder="Escribe en español...">
+                    </div>
+
+                    <div style="background: white; padding: 15px; border-radius: 12px; border-left: 5px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <p style="font-weight: bold; color: var(--accent); font-size: 0.8em; margin-bottom: 5px;">🇺🇸 Who is going to buy the tickets?</p>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; font-style: italic; margin: 0;" placeholder="Escribe en español...">
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 8. EL DETECTIVE DE ERRORES -->
+            <section>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="margin-top: 0px;">Detective de Errores</h2>
+                    <p style="font-size: 0.9em;">Encuentra el fallo en cada frase.</p>
+                </div>
+
+                <div class="grid-responsive" style="gap: 20px;">
+                    <div class="glass-card" style="border-left: 5px solid #ef4444; padding: 15px;">
+                        <p style="font-size: 1em;">❌ "Yo voy comer pizza..."</p>
+                        <p style="font-size: 0.8em; color: #ef4444; font-weight: bold;">Falta la "a"</p>
+                    </div>
+
+                    <div class="glass-card" style="border-left: 5px solid #ef4444; padding: 15px;">
+                        <p style="font-size: 1em;">❌ "Vamos a explicamos..."</p>
+                        <p style="font-size: 0.8em; color: #ef4444; font-weight: bold;">Doble conjugación</p>
+                    </div>
+
+                    <div class="glass-card" style="border-left: 5px solid #ef4444; padding: 15px;">
+                        <p style="font-size: 1em;">❌ "¿Tú va a viajar?"</p>
+                        <p style="font-size: 0.8em; color: #ef4444; font-weight: bold;">Incorrecto (vas)</p>
+                    </div>
+
+                    <div class="glass-card" style="border-left: 5px solid #ef4444; padding: 15px;">
+                        <p style="font-size: 1em;">❌ "Ellos van a no terminar..."</p>
+                        <p style="font-size: 0.8em; color: #ef4444; font-weight: bold;">Orden (No van a...)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. REORDENAR LA ORACIÓN -->
+            <section>
+                <h3>Ordena las Palabras</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 30px; width: 100%; max-width: 800px; margin-top: 30px;">
+                    
+                    <!-- Frase 1 -->
+                    <div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;">
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">a</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">gimnasio</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">hacer</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">ejercicio</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">voy</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">al</span>
+                        </div>
+                        <input type="text" class="clean-input" style="width: 100%; margin: 0;" placeholder="Tu respuesta...">
+                    </div>
+
+                    <!-- Frase 2 -->
+                    <div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;">
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">luces</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">a</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">vas</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">las</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">¿</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">apagar</span>
+                            <span class="grammar-block" style="background: #9ca3af; font-size: 0.8em;">?</span>
+                        </div>
+                        <input type="text" class="clean-input" style="width: 100%; margin: 0;" placeholder="Tu respuesta...">
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- FASE 4: PRODUCCIÓN -->
+            <!-- 10. ROLEPLAY -->
+            <section>
+                <div style="text-align: center;">
+                    <span style="color: var(--accent); font-weight: bold; letter-spacing: 2px; font-size: 0.7em;">FASE 4: PRODUCCIÓN</span>
+                    <h2 style="font-size: 2em; margin: 10px 0;">Organizador de Eventos</h2>
+                </div>
+
+                <div class="grid-responsive" style="margin-top: 20px;">
+                    <div style="text-align: center;">
+                        <i class="fas fa-birthday-cake" style="font-size: 6em; color: var(--accent);"></i>
+                        <h4 style="margin-top: 15px; font-weight: bold;">Fiesta Sorpresa</h4>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <p style="margin-bottom: 15px; font-weight: bold; color: var(--primary); font-size: 0.9em;">Lista de Tareas:</p>
+                        <ul style="list-style: none; padding: 0; line-height: 1.8; font-size: 0.8em;">
+                            <li><i class="fas fa-check" style="color: var(--primary);"></i> Preparar (la torta)</li>
+                            <li><i class="fas fa-check" style="color: var(--primary);"></i> Invitar (a los amigos)</li>
+                            <li><i class="fas fa-check" style="color: var(--primary);"></i> Comprar (bebidas)</li>
+                            <li><i class="fas fa-check" style="color: var(--primary);"></i> Limpiar (la casa)</li>
+                        </ul>
+                        <hr style="margin: 15px 0;">
+                        <p style="font-style: italic; color: #666; font-size: 0.8em;">
+                            <strong>A:</strong> "¿Qué vas a preparar?"<br>
+                            <strong>B:</strong> "Voy a preparar la torta. ¿Quién va a...?"
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. BOLA DE CRISTAL -->
+            <section>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-magic" style="font-size: 3em; color: #8b5cf6;"></i>
+                    <h2 style="margin-top: 10px;">La Bola de Cristal</h2>
+                    <p style="font-size: 1em;">3 predicciones reales para tu futuro.</p>
+                </div>
+
+                <div class="glass-card" style="border: 2px solid #8b5cf6; padding: 25px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center;">
+                        <i class="fas fa-star" style="color: #8b5cf6;"></i>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; margin: 0;" placeholder="1. El próximo año...">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center;">
+                        <i class="fas fa-star" style="color: #8b5cf6;"></i>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; margin: 0;" placeholder="2. Este fin de semana...">
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <i class="fas fa-star" style="color: #8b5cf6;"></i>
+                        <input type="text" class="clean-input" style="width: 100%; text-align: left; margin: 0;" placeholder="3. Esta tarde...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- FASE 5: CIERRE -->
+            <!-- 12. RESUMEN -->
+            <section>
+                <h2 style="margin-bottom: 30px;">¡Misión Cumplida!</h2>
+                
+                <div class="grid-responsive">
+                    <div class="glass-card" style="background: #ecfdf5; border: none; padding: 20px;">
+                        <h3 style="color: var(--primary); font-size: 1.2em; margin-bottom: 15px;">Resumen</h3>
+                        <ul style="text-align: left; line-height: 1.8; font-size: 0.9em;">
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> <strong>Ir + a + Infinitivo</strong></li>
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> "a" es el puente.</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> Verbos -ar.</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card" style="background: #fffbeb; border: none; padding: 20px;">
+                        <h3 style="color: var(--accent); font-size: 1.2em; margin-bottom: 15px;">Tarea</h3>
+                        <p style="margin-bottom: 15px; font-size: 0.9em;">5 cosas que <strong>NO</strong> vas a hacer.</p>
+                        <i class="fas fa-bed" style="font-size: 2.5em; color: var(--accent);"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 13. CIERRE OFICIAL -->
+            <section 
+                data-background-image="https://tucaneo.com/wp-content/uploads/2025/09/unnamed-e1765826932816.png" 
+                data-background-size="cover"
+                data-background-position="center"
+                data-background-opacity="0.3">
+                <div style="text-align: center;">
+                    <h1 style="font-size: 3.5em; color: #333; margin-bottom: 15px;">¡Gracias!</h1>
+                    <p style="font-size: 1.5em; color: var(--primary); font-weight: bold;">Nos vemos pronto.</p>
+                    <div style="margin-top: 50px; color: #9ca3af; font-size: 0.8em; letter-spacing: 1px;">
+                        CAMILO DÍAZ | TUCANEO ACADEMY
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- REACT COMPONENTS (PIZARRA + VOCABULARIO) -->
+    <script type="text/babel">
+        // ... (CÓDIGO DE REACT SIN CAMBIOS LÓGICOS, SOLO RENDERIZADO)
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+        const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
+        const I = {
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
+            Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
+            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
+            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
+            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+        };
+
+        function VocabModule() {
+            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
+            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
+            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
+            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
+            const copy = () => {
+                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
+                if(!text) return alert("Lista vacía");
+                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
+            };
+            return (
+                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
+                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
+                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
+                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
+                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
+                </div>
+            );
+        }
+
+        function WhiteboardModule() {
+            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
+            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
+            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
+            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const generateId = () => Math.random().toString(36).substr(2, 9);
+            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
+            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+            useLayoutEffect(() => {
+                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
+                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
+                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
+                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
+                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
+                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
+                elements.forEach(el => {
+                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
+                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
+                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
+                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
+                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
+                });
+                ctx.restore();
+            }, [elements, size, panOffset]);
+            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
+            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
+            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
+            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+            const handleDown = (e) => {
+                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
+                if(tool==='selection') { setIsPanning(true); return; }
+                const {x,y} = getPos(e);
+                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
+                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+            };
+            const handleMove = (e) => {
+                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
+                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+            };
+            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
+            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
+            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+            return (
+                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
+                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
+                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
+                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
+                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
+                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
+                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
+                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+                    </div>
+                    <div className="absolute top-4 left-4 z-40 pointer-events-none opacity-50"><img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-1-e1765224729911.png" className="h-10 w-auto"/></div>
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
+                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+                </div>
+            );
+        }
+
+        function App() {
+            const [tab, setTab] = useState('board');
+            const close = () => window.toggleDrawer();
+            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            return (
+                <div className="h-full flex flex-col bg-slate-50">
+                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                        <div className="flex-1"></div>
+                    </div>
+                    <div className="flex-1 relative overflow-hidden">
+                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
+                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('tools-root'));
+        root.render(<App />);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        // CONFIGURACIÓN MEJORADA DE REVEAL.JS
+        // Forzamos un tamaño 16:9 estándar y dejamos que Reveal escale automáticamente
+        Reveal.initialize({
+            controls: true, 
+            progress: true, 
+            center: true, 
+            hash: false, 
+            history: false,
+            
+            // Resolución base HD (se verá perfecta en PC y escalará en móvil)
+            width: 1280, 
+            height: 720,
+            
+            // Márgenes de seguridad
+            margin: 0.04,
+            
+            // Límites de escalado (permitimos que se reduzca mucho para móviles)
+            minScale: 0.1, 
+            maxScale: 2.0,
+            
+            transition: 'slide', 
+            backgroundTransition: 'fade', 
+            overview: false,
+            
+            // Ajuste crucial para móviles
+            disableLayout: false
+        });
+
+        function toggleDrawer() {
+            const d = document.getElementById('tucaneo-drawer');
+            if(d.classList.contains('is-open')) d.classList.remove('is-open');
+            else d.classList.add('is-open');
+        }
+    </script>
+</body>
+</html>

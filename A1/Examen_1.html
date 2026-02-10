@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tucaneo Worksheet - Nivel A1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+        
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+        
+        /* --- ESTILOS GENERALES --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; /* Fondo gris para simular escritorio */
+            margin: 0; 
+            padding: 40px 0; /* Espacio arriba y abajo en PC */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; /* Ancho exacto A4 */
+            min-height: 297mm; /* Alto mínimo A4 */
+            padding: 20mm 20mm 30mm 20mm; /* Márgenes internos */
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Sombra elegante */
+            box-sizing: border-box; 
+            overflow: hidden; /* Evita que imágenes grandes rompan el diseño */
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 100px; text-align: center; }
+        .short-input { width: 40px; text-align: center; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            
+            .page { 
+                width: 100%; 
+                min-height: auto; 
+                padding: 15px 15px 80px 15px; 
+                box-shadow: none; 
+                margin-bottom: 0;
+            }
+
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+
+            .btn-container { 
+                position: relative; top: 0; right: 0; 
+                flex-direction: row; justify-content: center; 
+                width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; 
+                border-radius: 0;
+            }
+
+            /* Hacemos los inputs más grandes para dedos */
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            
+            /* Tablas en bloque para móvil */
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (EL FIX CRÍTICO)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; } /* Resetea márgenes de impresora */
+            
+            body { 
+                background: white; 
+                padding: 0; 
+                margin: 0; 
+                display: block; /* Quita el flexbox que rompe la impresión */
+            }
+
+            .page {
+                width: 100%; /* Ocupa el 100% del papel físico */
+                max-width: 100%;
+                margin: 0; 
+                padding: 15mm 15mm; /* Márgenes seguros para impresora */
+                box-shadow: none; /* Quita sombra */
+                border: none;
+                page-break-after: always; /* Fuerza hoja nueva después de cada .page */
+                min-height: 290mm; /* Asegura altura completa */
+            }
+
+            /* Ocultar elementos de UI */
+            .btn-container, .no-print { display: none !important; }
+
+            /* Ajustes visuales para ahorrar tinta y mejorar claridad */
+            input[type="text"], textarea {
+                background: none !important; /* Quita fondo amarillo */
+                border-bottom: 1px solid #000; /* Línea sólida negra */
+            }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            
+            /* Evitar cortes raros */
+            .img-container, h2, table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botones UI -->
+    <div class="btn-container">
+        <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+        <button class="ui-btn print-btn" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <!-- PÁGINA 1 -->
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+            </div>
+        </div>
+
+        <h1>Parte 1: Fundamentos</h1>
+        <p class="instruction">Welcome! Read the instructions in English and complete in Spanish.</p>
+
+        <h2>1. Saludos (Greetings)</h2>
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2026/01/animales-jungla-saludando.png-scaled-e1768173240389.png" alt="Saludos">
+        </div>
+        
+        <p><strong>A. Traduce los saludos:</strong></p>
+        <table>
+            <tr>
+                <td>Good morning: <input type="text" class="inline-input"></td>
+                <td>Good night: <input type="text" class="inline-input"></td>
+            </tr>
+        </table>
+
+        <p><strong>B. Completa el diálogo:</strong></p>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+            <p>Juan: — ¡Hola! Buenos <input type="text" class="inline-input" placeholder="(Días/Tardes)">.</p>
+            <p>Ana: — ¡Hola! ¿Cómo <input type="text" class="inline-input" placeholder="(estás)">?</p>
+            <p>Juan: — Muy <input type="text" class="inline-input" placeholder="(bien)">, gracias.</p>
+        </div>
+
+        <h2>2. Género: El y La</h2>
+        <p class="instruction">Write "El" (masculine) or "La" (feminine).</p>
+
+        <table>
+            <tr>
+                <td>1. <input type="text" class="short-input"> casa</td>
+                <td>2. <input type="text" class="short-input"> perro</td>
+                <td>3. <input type="text" class="short-input"> libro</td>
+                <td>4. <input type="text" class="short-input"> familia</td>
+            </tr>
+        </table>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <!-- PÁGINA 2 -->
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+            </div>
+        </div>
+
+        <h1>Parte 2: Descripción</h1>
+
+        <h2>3. Verbo "HAY" (There is/are)</h2>
+        <div class="img-container">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/12/exploracion-tucanes-mapa.png-e1765688541647.png" alt="Escritorio">
+        </div>
+
+        <p><strong>Verdadero (V) o Falso (F):</strong></p>
+        <table style="width: 80%;">
+            <tr>
+                <td>Hay tres libros: <input type="text" class="short-input"></td>
+                <td>Hay un elefante: <input type="text" class="short-input"></td>
+            </tr>
+        </table>
+
+        <h2>4. Adjetivos</h2>
+        <p class="instruction">Select the correct form.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="padding: 5px;">
+                1. La casa es <input type="text" class="inline-input" placeholder="grande"> (Big).
+            </div>
+            <div style="padding: 5px;">
+                2. El chico es <input type="text" class="inline-input" placeholder="alto"> (Tall).
+            </div>
+            <div style="padding: 5px;">
+                3. Las manzanas son <input type="text" class="inline-input" placeholder="rojas"> (Red).
+            </div>
+        </div>
+
+        <h2>5. Escribe (Writing)</h2>
+        <p class="instruction">Describe tu habitación usando "Hay" y adjetivos.</p>
+        <textarea placeholder="Ejemplo: En mi habitación hay una cama grande..."></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,433 @@
+<style>
+  /* =========================================
+      MASTER CSS TUCANEO V2 - ACCORDION SYSTEM
+      ========================================= */
+
+  /* HEADER TRANSPARENTE & GENERAL */
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0; width: 100%; z-index: 999;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important; 
+  }
+  .main-header-menu .menu-item > .menu-link, .site-title a, .site-header a {
+      color: #ffffff !important; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+      font-weight: 700 !important; font-size: 1.1rem !important;
+  }
+  .main-header-menu .menu-item > .menu-link:hover { color: #f59e0b !important; }
+   
+  .tucaneo-container {
+    max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding-bottom: 100px;
+  }
+
+  /* PORTADA HERO */
+  .tucaneo-hero {
+    position: relative; width: 100vw; left: 50%; right: 50%;
+    margin-left: -50vw; margin-right: -50vw;
+    height: 100vh; min-height: 700px;
+    background-image: url('https://tucaneo.com/wp-content/uploads/2025/09/Gemini_Generated_Image_effo9xeffo9xeffo-1-e1765488029795.png');
+    background-size: cover; background-position: center center; background-repeat: no-repeat;
+    border-radius: 0 0 50px 50px; margin-bottom: 60px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
+  }
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, rgba(9, 23, 18, 0.6) 0%, rgba(9, 23, 18, 0.3) 40%, rgba(9, 23, 18, 0.8) 100%);
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+  .tucaneo-hero-content {
+    position: relative; z-index: 10; padding: 20px; max-width: 850px;
+    text-align: center; color: white; margin-top: 150px; 
+  }
+  .tucaneo-tagline { 
+    display: inline-block; background-color: #f59e0b; color: #000; 
+    font-weight: 800; font-size: 0.9rem; padding: 8px 16px; 
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; 
+    margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); 
+  }
+  .tucaneo-hero h1 { font-size: 4.5rem; line-height: 1.05; font-weight: 900; margin-bottom: 25px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  .tucaneo-hero p { font-size: 1.5rem; line-height: 1.6; color: #f3f4f6; margin-bottom: 45px; max-width: 80%; margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+   
+  .tucaneo-cta { 
+    background-color: #10b981; color: white !important; padding: 18px 45px; 
+    border-radius: 50px; font-weight: 800; text-decoration: none; 
+    display: inline-block; transition: all 0.3s ease; border: none; 
+    font-size: 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5); 
+  }
+  .tucaneo-cta:hover { background-color: #059669; transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); }
+
+  /* ACORDEÓN (MÓDULOS) */
+  .tucaneo-module {
+    background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+    margin-bottom: 25px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+  }
+  details.tucaneo-module[open] { box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: #06b6d4; }
+
+  .tucaneo-summary {
+    background-color: #f9fafb; padding: 20px 30px; cursor: pointer;
+    font-size: 1.1rem; font-weight: 800; color: #111827; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.3s; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tucaneo-summary:hover { background-color: #f3f4f6; }
+  .tucaneo-summary::after { content: '+'; font-size: 1.5rem; font-weight: 300; color: #6b7280; transition: transform 0.3s; }
+  details[open] .tucaneo-summary::after { content: '+'; transform: rotate(45deg); color: #0891b2; }
+  details[open] .tucaneo-summary { background-color: #ecfeff; color: #0e7490; border-bottom: 1px solid #e5e7eb; }
+  .tucaneo-summary::-webkit-details-marker { display: none; }
+   
+  .tucaneo-module-content { padding: 20px; background: #fff; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GRID Y TARJETAS */
+  .tucaneo-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px; padding-top: 10px;
+  }
+  .tucaneo-card {
+    background: #fff; border-radius: 16px; border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; display: flex;
+    flex-direction: column; height: 100%; transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .tucaneo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+   
+  .contenedor-imagen { position: relative; height: 180px; overflow: hidden; background: #e5e7eb; }
+  .tucaneo-cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .tucaneo-cover-img[src=""], .tucaneo-cover-img:not([src]) { min-height: 180px; background: linear-gradient(135deg, #d1d5db 0%, #e5e7eb 100%); }
+  .tucaneo-card:hover .tucaneo-cover-img { transform: scale(1.05); }
+   
+  .tucaneo-badge {
+    position: absolute; top: 15px; left: 15px; color: white !important; padding: 6px 12px;
+    border-radius: 8px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+    z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .tucaneo-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+  .tucaneo-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px; font-weight: 700; text-transform: uppercase; }
+  .tucaneo-title { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 800; color: #1f2937; line-height: 1.2; }
+  .tucaneo-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+   
+  /* BOTONES */
+  .tucaneo-btn {
+    display: flex; justify-content: center; align-items: center; width: 100%; padding: 14px;
+    font-weight: 800; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase;
+    font-size: 0.9rem; color: white !important; text-decoration: none !important; transition: 0.2s; 
+    box-sizing: border-box;
+  }
+  .tucaneo-btn:active { transform: scale(0.98); }
+
+  /* GAME ZONE BANNER */
+  .tucaneo-game-banner {
+      display: flex; flex-wrap: wrap; background: #eff6ff; border: 3px solid #3b82f6;
+      border-radius: 20px; overflow: hidden; margin: 40px 0; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+  }
+  .game-img-col { flex: 1 1 300px; min-height: 250px; background: #e5e7eb; }
+  .game-img-col img { width: 100%; height: 100%; object-fit: cover; }
+  .game-img-col img[src=""], .game-img-col img:not([src]) { min-height: 250px; background: linear-gradient(135deg, #d1d5db 0%, #e5e7eb 100%); }
+  .game-content-col { flex: 1 1 400px; padding: 30px 40px; display: flex; flex-direction: column; justify-content: center; }
+  .game-tag { background: #dbeafe; color: #1e40af; padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; align-self: flex-start; margin-bottom: 15px; }
+  .btn-game { background-color: #2563eb !important; max-width: 250px; }
+
+  /* EXAMEN SEPARATOR (LOGRO) */
+  .tucaneo-exam-separator {
+      background: #fdf2f8; border: 2px dashed #db2777; border-radius: 16px;
+      padding: 40px; text-align: center; margin: 40px 0;
+  }
+  .tucaneo-exam-separator h3 { color: #be185d; font-size: 1.8rem; margin-bottom: 10px; font-weight: 800; text-transform: uppercase; }
+  .tucaneo-exam-separator p { color: #86198f; margin-bottom: 25px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+  .btn-exam { background-color: #db2777 !important; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.4); }
+
+  /* COLORES */
+  .tema-a1 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .btn-a1 { background-color: #2563eb !important; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+  .btn-a1:hover { background-color: #1d4ed8 !important; }
+
+  @media (max-width: 921px) {
+    .tucaneo-hero { width: 92%; margin-left: auto; margin-right: auto; left: auto; right: auto; height: auto !important; min-height: 550px; margin-top: 130px; border-radius: 25px !important; }
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+    .tucaneo-game-banner { flex-direction: column; }
+  }
+</style>
+
+<div class="tucaneo-container">
+
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div> 
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Nivel Intermedio</span>
+      <h1>Curso de Español Nivel A2.1</h1>
+      <p>Avanza hacia la fluidez. Domina estructuras complejas como los pronombres de objeto directo y perfecciona tu capacidad de comunicación en situaciones reales.</p>
+      <a href="#modulo-1-a2-1" class="tucaneo-cta">Empezar Módulo 1</a>
+    </div>
+  </div>
+
+  <details class="tucaneo-module" id="modulo-1-a2-1" open>
+    <summary class="tucaneo-summary"><span>Módulo 1: Pronombres y Objetos</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/nina-feria-premio-scaled-e1768167846566.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2.1</span><span>• 20 min</span></div>
+            <h3 class="tucaneo-title">Pronombre de Objeto Directo</h3>
+            <p class="tucaneo-desc">Domina el Objeto Directo y aprende a usar estratégicamente 'lo', 'la', 'los' y 'las'.</p>
+            <a href="https://clases.tucaneo.com/A2/Pronombre_de_Objeto_Directo.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">PRÁCTICA</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/deportistas-competencia-premio-scaled-e1768168058556.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2.1</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Objeto Directo: Ejercicios</h3>
+            <p class="tucaneo-desc">Realiza ejercicios interactivos diseñados para perfeccionar tu agilidad mental con pronombres.</p>
+            <a href="https://clases.tucaneo.com/A2/Objeto_Directo_Ejercicios.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Ejercicios</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">REFUERZO</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/competencia_deletreo-scaled-e1768168200701.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Pronombre de Objeto Directo: Refuerzo</h3>
+            <p class="tucaneo-desc">Fortalece tu dominio gramatical y repasa los casos difíciles del objeto directo.</p>
+            <a href="https://clases.tucaneo.com/A2/Pronombre_de_Objeto_Directo_Refuerzo.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Refuerzo</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">INTRODUCCIÓN</span>
+              <img src="https://tucaneo.com/wp-content/uploads/2026/01/puerta_magica-tucan-scaled-e1768168373638.png" class="tucaneo-cover-img">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Introducción al Objeto Indirecto</h3>
+            <p class="tucaneo-desc">Comienza a dominar el Objeto Indirecto. Aprende el uso de 'le' y 'les' con naturalidad.</p>
+            <a href="https://clases.tucaneo.com/A2/Introducci%C3%B3n_al_Objeto_Indirecto.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-game-banner">
+      <div class="game-img-col">
+          <img src="https://picsum.photos/seed/gamer1/600/400" alt="Zona de Juego">
+      </div>
+      <div class="game-content-col">
+          <span class="game-tag">★ Zona de Juego</span>
+          <h3>Reto Gramatical: El Gran Desafío</h3>
+          <p>¡Es hora de divertirse! Demuestra tu agilidad mental en este juego interactivo de pronombres. ¿Estás listo?</p>
+          <a href="https://clases.tucaneo.com/A2/Reto_Gramatical_El%20Gran_Desafio.html" class="tucaneo-btn btn-game" target="_blank">¡Jugar Ahora!</a>
+      </div>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 2: Estructuras Compuestas y Rutina</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/trabajadores-resbaladero-ciudad-scaled-e1768168502434.png" class="tucaneo-cover-img">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 MIN</span></div>
+            <h3 class="tucaneo-title">El Objeto Directo y el Objeto Indirecto</h3>
+            <p class="tucaneo-desc">Domina el uso conjunto de 'lo' y 'le'. Aprende a identificarlos y sustituirlos en una misma oración.</p>
+            <a href="https://clases.tucaneo.com/A2/El_Objeto_Directo_y_el_Objeto_Indirecto.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+
+        <article class="tucaneo-card"> 
+            <div class="contenedor-imagen"> 
+                <span class="tucaneo-badge tema-a1">GRAMÁTICA</span> 
+                <img src="https://picsum.photos/seed/morning1/800/600" class="tucaneo-cover-img" alt="Verbos Reflexivos"> 
+            </div> 
+            <div class="tucaneo-body"> 
+                <div class="tucaneo-meta"><span style="color: #3b82f6;">● Nivel A2</span><span>• 20 min</span></div> 
+                <h3 class="tucaneo-title">Verbos Reflexivos</h3> 
+                <p class="tucaneo-desc">Domina los verbos reflexivos en español para describir tu rutina diaria con fluidez.</p> 
+                <a href="https://clases.tucaneo.com/A2/Verbos_Reflexivos.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a> 
+            </div> 
+        </article>
+
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">REPASO INTEGRAL</span>
+                <img src="https://tucaneo.com/wp-content/uploads/2026/01/detectives-pistas-noche-scaled-e1768168634760.png" class="tucaneo-cover-img">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 20 MIN</span></div>
+            <h3 class="tucaneo-title">Repaso General de Nivel A2</h3>
+            <p class="tucaneo-desc">Practica futuro, comparativos, pronombres y la diferencia entre Ser y Estar.</p>
+            <a href="https://clases.tucaneo.com/A2/Repaso_General_de_Nivel_A2.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-game-banner">
+      <div class="game-img-col">
+          <img src="https://picsum.photos/seed/cave1/600/400" alt="Escapa de la Cueva">
+      </div>
+      <div class="game-content-col">
+          <span class="game-tag">★ Desafío de Aventura</span>
+          <h3>Escapa de la Cueva</h3>
+          <p>¡Estás atrapado! Para encontrar la salida, deberás resolver acertijos gramaticales. Una forma emocionante de poner a prueba lo aprendido.</p>
+          <a href="https://clases.tucaneo.com/A2/Escapa_de_la_Cueva.html" class="tucaneo-btn btn-game" target="_blank">¡JUGAR Y ESCAPAR!</a>
+      </div>
+  </div>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Hito: Examen de Nivel A2</h3>
+      <p>Pon a prueba tu español con este test integral. Evaluamos tu dominio de <strong>por y para</strong>, comparativos, <strong>verbos irregulares</strong> y reflexivos. ¡Mide tu progreso!</p>
+      <a href="https://clases.tucaneo.com/A2/Examen_a2_1.html" class="tucaneo-btn btn-exam" target="_blank">Superar Evaluación</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 3: El Modo Subjuntivo y el Clima</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card"> 
+            <div class="contenedor-imagen"> 
+                <span class="tucaneo-badge tema-a1">VOCABULARIO</span> 
+                <img src="https://picsum.photos/seed/weather1/800/600" class="tucaneo-cover-img" alt="El Estado del Clima"> 
+            </div> 
+            <div class="tucaneo-body"> 
+                <div class="tucaneo-meta"><span style="color: #3b82f6;">● Nivel A2</span><span>• 25 min</span></div> 
+                <h3 class="tucaneo-title">El Estado del Clima</h3> 
+                <p class="tucaneo-desc">Aprende el vocabulario esencial para hablar sobre el tiempo en situaciones reales día a día.</p> 
+                <a href="https://clases.tucaneo.com/A2/El_Estado_del_Clima.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a> 
+            </div> 
+        </article>
+
+        <article class="tucaneo-card">
+            <div class="contenedor-imagen">
+                <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+                <img src="https://picsum.photos/seed/dream1/800/600" class="tucaneo-cover-img" alt="El Subjuntivo: Introducción">
+            </div>
+            <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 30 MIN</span></div>
+            <h3 class="tucaneo-title">El Subjuntivo: Introducción</h3>
+            <p class="tucaneo-desc">Aprende a expresar deseos, dudas y emociones con la base del modo subjuntivo.</p>
+            <a href="https://clases.tucaneo.com/A2/El_Subjuntivo_Introducci%C3%B3n.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+            </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">JUEGO</span>
+              <img src="https://picsum.photos/seed/boardgame1/800/600" class="tucaneo-cover-img" alt="Juego sobre el subjuntivo">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A2</span>
+              <span>• 20 min</span>
+            </div>
+            <h3 class="tucaneo-title">Juego sobre el subjuntivo</h3>
+            <p class="tucaneo-desc">Juego interactivo diseñado para profesores de ELE. Ideal para dinamizar tus clases en Preply o Zoom.</p>
+            <a href="https://clases.tucaneo.com/A2/juegos_subjuntivo.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Juego</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">CONSEJOS</span>
+              <img src="https://picsum.photos/seed/consejos1/800/600" class="tucaneo-cover-img" alt="Consejos sobre el subjuntivo">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Consejos sobre el subjuntivo</h3>
+            <p class="tucaneo-desc">Tips y recomendaciones para dominar el modo subjuntivo y usarlo con confianza en tus clases.</p>
+            <a href="https://clases.tucaneo.com/A2/consejos_subjuntivo" class="tucaneo-btn btn-a1" target="_blank">Ver Consejos</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://picsum.photos/seed/grammar1/800/600" class="tucaneo-cover-img" alt="Subjuntivo y pronombres">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta">
+              <span style="color: #2563eb;">● Nivel A2</span>
+              <span>• 20 min</span>
+            </div>
+            <h3 class="tucaneo-title">Subjuntivo y pronombres</h3>
+            <p class="tucaneo-desc">Material visual imprescindible. Explica claramente la conexión entre el subjuntivo y los pronombres.</p>
+            <a href="https://clases.tucaneo.com/A2/Subjuntivo_y_pronombres.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://picsum.photos/seed/study1/800/600" class="tucaneo-cover-img" alt="Ejercicios de Subjuntivo">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 min</span></div>
+            <h3 class="tucaneo-title">Ejercicios de Subjuntivo</h3>
+            <p class="tucaneo-desc">Domina el modo subjuntivo con esta serie de ejercicios prácticos intensivos.</p>
+            <a href="https://clases.tucaneo.com/A2/Ejercicios_de_Subjuntivo.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">PRÁCTICA</span>
+              <img src="https://picsum.photos/seed/puzzle1/800/600" class="tucaneo-cover-img" alt="Subjuntivo: Práctica Avanzada">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 20 min</span></div>
+            <h3 class="tucaneo-title">Subjuntivo: Práctica Avanzada</h3>
+            <p class="tucaneo-desc">Refuerza tus conocimientos con actividades interactivas diseñadas para ganar fluidez.</p>
+            <a href="https://clases.tucaneo.com/A2/Subjuntivo_Practica_Avanzada.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+  <div class="tucaneo-exam-separator">
+      <h3>Hito: Examen de Subjuntivo</h3>
+      <p>¿Dominas el <strong>presente del subjuntivo</strong>? Supera este examen diseñado para evaluar tus habilidades de conjugación en contextos reales.</p>
+      <a href="https://clases.tucaneo.com/A2/Examen_a2_2.html" class="tucaneo-btn btn-exam" target="_blank">Finalizar Certificación</a>
+  </div>
+
+  <details class="tucaneo-module">
+    <summary class="tucaneo-summary"><span>Módulo 4: Planes y Futuro Inmediato</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <article class="tucaneo-card">
+          <div class="contenedor-imagen">
+              <span class="tucaneo-badge tema-a1">GRAMÁTICA</span>
+              <img src="https://picsum.photos/seed/planning1/800/600" class="tucaneo-cover-img" alt="Misión: Futuro Inmediato">
+          </div>
+          <div class="tucaneo-body">
+            <div class="tucaneo-meta"><span style="color: #2563eb;">● Nivel A2</span><span>• 15 MIN</span></div>
+            <h3 class="tucaneo-title">Misión: Futuro Inmediato</h3>
+            <p class="tucaneo-desc">Domina la estructura "Ir a + Infinitivo" para hablar de tus planes y predicciones de forma natural.</p>
+            <a href="https://clases.tucaneo.com/A2/Repaso_final_A2.html" class="tucaneo-btn btn-a1" target="_blank">Empezar Lección</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
+
+</div>
