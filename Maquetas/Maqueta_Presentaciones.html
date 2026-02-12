@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<style>
+  /* =========================================
+     MASTER CSS TUCANEO V2 - PRESENTACIONES
+     ========================================= */
+
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0; width: 100%; z-index: 999;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important;
+  }
+  .main-header-menu .menu-item > .menu-link, .site-title a, .site-header a {
+      color: #ffffff !important;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+      font-weight: 700 !important; font-size: 1.1rem !important;
+  }
+  .main-header-menu .menu-item > .menu-link:hover { color: #f59e0b !important; }
+
+  .tucaneo-container {
+    max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding-bottom: 100px;
+  }
+
+  /* PORTADA HERO */
+  .tucaneo-hero {
+    position: relative; width: 100vw; left: 50%; right: 50%;
+    margin-left: -50vw; margin-right: -50vw;
+    height: 100vh; min-height: 700px;
+    background-image: url('https://tucaneo.com/wp-content/uploads/2025/11/Captura-de-pantalla-2025-11-25-210722-e1764460753198.png');
+    background-size: cover; background-position: center center; background-repeat: no-repeat;
+    border-radius: 0 0 50px 50px; margin-bottom: 60px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
+  }
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, rgba(9, 23, 18, 0.6) 0%, rgba(9, 23, 18, 0.3) 40%, rgba(9, 23, 18, 0.8) 100%);
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+  .tucaneo-hero-content {
+    position: relative; z-index: 10; padding: 20px; max-width: 850px;
+    text-align: center; color: white; margin-top: 150px;
+  }
+  .tucaneo-tagline {
+    display: inline-block; background-color: #f59e0b; color: #000;
+    font-weight: 800; font-size: 0.9rem; padding: 8px 16px;
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+  }
+  .tucaneo-hero h1 { font-size: 4.5rem; line-height: 1.05; font-weight: 900; margin-bottom: 25px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  .tucaneo-hero p { font-size: 1.5rem; line-height: 1.6; color: #f3f4f6; margin-bottom: 25px; max-width: 80%; margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .tucaneo-cta {
+    background-color: #10b981; color: white !important; padding: 18px 45px;
+    border-radius: 50px; font-weight: 800; text-decoration: none;
+    display: inline-block; transition: all 0.3s ease; border: none;
+    font-size: 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+  }
+  .tucaneo-cta:hover { background-color: #059669; transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); }
+
+  /* LISTA DE MATERIALES â€” fácil de escanear */
+  .tucaneo-lista-wrap {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .tucaneo-lista-header {
+    display: grid;
+    grid-template-columns: 72px 48px 1fr 150px;
+    gap: 24px;
+    padding: 18px 24px;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    background: #f8fafc;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .tucaneo-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tucaneo-lista-item {
+    display: grid;
+    grid-template-columns: 72px 48px 1fr 150px;
+    gap: 24px;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s, box-shadow 0.2s;
+    min-height: 72px;
+  }
+  .tucaneo-lista-item:last-child { border-bottom: none; }
+  .tucaneo-lista-item:hover { background: #f8fafc; }
+  .tucaneo-lista-item.tucaneo-filter-hidden { display: none; }
+  .tucaneo-lista-icon { font-size: 1.5rem; line-height: 1; text-align: center; }
+  .tucaneo-lista-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+    color: #fff !important;
+    text-decoration: none !important;
+  }
+  .tucaneo-lista-tema {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 2px;
+  }
+  .tucaneo-lista-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.4;
+    margin: 0;
+  }
+  .tucaneo-lista-titulo a { color: inherit; text-decoration: none; }
+  .tucaneo-lista-titulo a:hover { color: #0f766e; text-decoration: underline; }
+  .tucaneo-lista-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .tucaneo-lista-link:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .tucaneo-lista-link:active { transform: scale(0.98); }
+
+  /* Filtros: nivel + país/zona */
+  .tucaneo-filtros { margin-bottom: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .tucaneo-filtro-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 20px;
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .tucaneo-filtro-label { font-weight: 800; color: #334155; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 6px; min-width: 80px; }
+  .tucaneo-filtro-bar .tucaneo-filtro-btn,
+  .tucaneo-filtro-bar .tucaneo-filtro-btn-zona {
+    padding: 9px 18px; border-radius: 10px; border: 2px solid #e2e8f0; background: #fff;
+    font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+  }
+  .tucaneo-filtro-bar .tucaneo-filtro-btn:hover,
+  .tucaneo-filtro-bar .tucaneo-filtro-btn-zona:hover { border-color: #94a3b8; background: #f8fafc; }
+  .tucaneo-filtro-bar .tucaneo-filtro-btn.activo,
+  .tucaneo-filtro-bar .tucaneo-filtro-btn-zona.activo { border-color: #0f766e; background: #ccfbf1; color: #0f766e; }
+
+  @media (max-width: 768px) {
+    .tucaneo-lista-header {
+      grid-template-columns: 58px 40px 1fr 100px;
+      gap: 12px;
+      padding: 14px 16px;
+      font-size: 0.7rem;
+    }
+    .tucaneo-lista-item {
+      grid-template-columns: 58px 40px 1fr 100px;
+      gap: 12px;
+      padding: 16px;
+      min-height: 64px;
+    }
+    .tucaneo-lista-badge { padding: 6px 10px; font-size: 0.75rem; }
+    .tucaneo-lista-tema { font-size: 0.8rem; }
+    .tucaneo-lista-titulo { font-size: 0.95rem; }
+    .tucaneo-lista-link { padding: 10px 14px; font-size: 0.85rem; }
+    .tucaneo-filtro-bar { padding: 12px 16px; }
+    .tucaneo-filtro-label { min-width: 70px; font-size: 0.75rem; }
+  }
+
+  /* COLORES POR NIVEL */
+  .tema-a1 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .btn-a1 { background-color: #2563eb !important; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+  .btn-a1:hover { background-color: #1d4ed8 !important; }
+
+  .tema-a2 { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+  .btn-a2 { background-color: #0891b2 !important; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
+  .btn-a2:hover { background-color: #0e7490 !important; }
+
+  .tema-b1 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+  .btn-b1 { background-color: #f59e0b !important; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+  .btn-b1:hover { background-color: #d97706 !important; }
+
+  .tema-b2 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+  .btn-b2 { background-color: #10b981 !important; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+  .btn-b2:hover { background-color: #059669 !important; }
+
+  .tema-general { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+  .btn-general { background-color: #7c3aed !important; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
+  .btn-general:hover { background-color: #6d28d9 !important; }
+
+  @media (max-width: 921px) {
+    .tucaneo-hero { width: 92%; margin-left: auto; margin-right: auto; left: auto; right: auto; height: auto !important; min-height: 550px; margin-top: 130px; border-radius: 25px !important; }
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+    .tucaneo-hero p { font-size: 1.1rem; max-width: 100%; }
+  }
+</style>
+
+<div class="tucaneo-container">
+
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div>
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Recursos por nivel</span>
+      <h1>Presentaciones y materiales</h1>
+      <p>Material didáctico organizado por nivel y tema. Descubre presentaciones, PDFs y enlaces para tus clases de español.</p>
+      <a href="#contenido-presentaciones" class="tucaneo-cta">Ver materiales</a>
+    </div>
+  </div>
+
+  <div id="contenido-presentaciones">
+    <div id="modulos-container">
+      <section class="tucaneo-filtros">
+        <div class="tucaneo-filtro-bar" id="filtro-bar">
+          <span class="tucaneo-filtro-label">Nivel</span>
+          <button type="button" class="tucaneo-filtro-btn activo" data-nivel="">Todos</button>
+          <button type="button" class="tucaneo-filtro-btn" data-nivel="A1">A1</button>
+          <button type="button" class="tucaneo-filtro-btn" data-nivel="A2">A2</button>
+          <button type="button" class="tucaneo-filtro-btn" data-nivel="B1">B1</button>
+          <button type="button" class="tucaneo-filtro-btn" data-nivel="B2">B2</button>
+        </div>
+        <div class="tucaneo-filtro-bar" id="filtro-zona-bar">
+          <span class="tucaneo-filtro-label">País / Zona</span>
+          <button type="button" class="tucaneo-filtro-btn-zona activo" data-zona="">Todos</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="General">General</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Europa">Europa</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Alemania">Alemania</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Estados unidos">Estados Unidos</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="China">China</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Brasil">Brasil</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Global">Global</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Historia">Historia</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Conversar">Conversar</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Otros">Otros</button>
+        </div>
+      </section>
+      <div class="tucaneo-lista-wrap">
+        <div class="tucaneo-lista-header">
+          <span>Nivel</span>
+          <span></span>
+          <span>Material</span>
+          <span>Acción</span>
+        </div>
+        <ol class="tucaneo-lista" start="1" id="lista-materiales">
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🐕</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Perros o gatos (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1Qiz7D4aYCdgkC9EeGX3Qz-NtRt33Jm0b/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📋</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Mi "kit" de supervivencia (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1zwEBYRCQ2VmVnyBilqF5-ru8hfI9C6rs/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🏠</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Mi ciudad ideal: ¿Cómo es el lugar donde te gustaría vivir? (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1geKC7HMiSyGYpVeZz2WJimbdTRDtStQc/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A2" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a2">A2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📱</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">El impacto del móvil: ¿Cómo ha cambiado tu vida la tecnología? (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1BJE_yL54_WR0FAWMlcW1VXjE01JiElqO/view?usp=drive_link" class="tucaneo-lista-link btn-a2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A2" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a2">A2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🌍</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Vivir en otro país: Ventajas y desafíos de ser un expatriado. (conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1PcwpBtQH1pK5zHbHgeJ1sTYST4yQ1kN3/view?usp=drive_link" class="tucaneo-lista-link btn-a2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A2" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a2">A2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">✈️</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Tu viaje ideal (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1nx3z4bC6GxSQ0sIwWmcDQRanL3wGLIh6/view?usp=drive_link" class="tucaneo-lista-link btn-a2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Europa">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇪🇺</span>
+            <div>
+              <div class="tucaneo-lista-tema">Europa</div>
+              <h3 class="tucaneo-lista-titulo">La union europea (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1FB-YrBH9LBgPe01Be7-k7b2wP0QT1AO3/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Europa">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🗺️</span>
+            <div>
+              <div class="tucaneo-lista-tema">Europa</div>
+              <h3 class="tucaneo-lista-titulo">Paisajes de europa (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1Ie-ZayWFCGrxWcS-h2NBtzIyEYkFBb36/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Alemania">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇩🇪</span>
+            <div>
+              <div class="tucaneo-lista-tema">Alemania</div>
+              <h3 class="tucaneo-lista-titulo">sobreviviendo a alemania ( subjuntivo )</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/10KYK7WOic7Tt08JEF3fMAAwBVVain_s3/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Estados unidos">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇺🇸</span>
+            <div>
+              <div class="tucaneo-lista-tema">Estados Unidos</div>
+              <h3 class="tucaneo-lista-titulo">Deportes de Estados Unidos (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1xC_L1Sk3RDuBLXn1amxrMwjx2Rf4I8Bt/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Estados unidos">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇺🇸</span>
+            <div>
+              <div class="tucaneo-lista-tema">Estados Unidos</div>
+              <h3 class="tucaneo-lista-titulo">Lugares poco conocidos de Estados Unidos ( conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1X6nD4vBqBSCtRlqa2T5lQjTrpj9ALKuQ/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📖</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Historias de ladrones (pasado simple)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1zrrmVClcUxoVcgvRNRw2B-jtM4RHXDMm/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📖</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Tragame tierra ( pasado simple )</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/16VeKHHdKioY9czAiXsXQ5ve2TsMNCZfE/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Historia">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📜</span>
+            <div>
+              <div class="tucaneo-lista-tema">Historia</div>
+              <h3 class="tucaneo-lista-titulo">El multiverso ( pluscuamperfecto del subjuntivo )</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/11FfiI9Lm3XVX4N-Uv47s7vDesMFMmWGW/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="China">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇨🇳</span>
+            <div>
+              <div class="tucaneo-lista-tema">China</div>
+              <h3 class="tucaneo-lista-titulo">Tiger mom (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1FUfOLgOilAU4pxOmEkjNjQ-R-py711c_/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Otros">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🎬</span>
+            <div>
+              <div class="tucaneo-lista-tema">Pluscuamperfecto del subjuntivo</div>
+              <h3 class="tucaneo-lista-titulo">Cine y Videojuegos ( pluscaumperfecto del subjuntivo )</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1q3wu-DB1azDCjYEGz4EzE5Sipfe-4ZTX/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Conversar">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">💬</span>
+            <div>
+              <div class="tucaneo-lista-tema">Conversar</div>
+              <h3 class="tucaneo-lista-titulo">Mercosur ( conversación )</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1_vHl9ad2P4EFCmqNVIKNxQ6lQioo7G5q/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Otros">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">💻</span>
+            <div>
+              <div class="tucaneo-lista-tema">Consejos subjuntivo nomada digital</div>
+              <h3 class="tucaneo-lista-titulo">Nomada digital ( subjuntivo)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1ySBBGboyvPFRW1bztPoJzDLiluI7mFGr/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Brasil">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇧🇷</span>
+            <div>
+              <div class="tucaneo-lista-tema">Brasil</div>
+              <h3 class="tucaneo-lista-titulo">Brasil que hubiera pasado ( conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1UHr6sqm7IxD_9Ol-CGrcy549JKkTLCfy/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Brasil">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🇧🇷</span>
+            <div>
+              <div class="tucaneo-lista-tema">Brasil</div>
+              <h3 class="tucaneo-lista-titulo">Que no hacer en brasil ( pluscuamperfecto del subjuntivo)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/10tD-bb_dn2jE_9fv5snhMUkvKxUosAgS/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Global">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🌐</span>
+            <div>
+              <div class="tucaneo-lista-tema">Global</div>
+              <h3 class="tucaneo-lista-titulo">Vivir para trabajar o vivir para trabajar ( conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/14ebSKUgxcRsPn_l4mPuxgDTd5hjCvPfd/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Global">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🌐</span>
+            <div>
+              <div class="tucaneo-lista-tema">Global</div>
+              <h3 class="tucaneo-lista-titulo">Inmortalidad (conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1vSBL6y5CJvd1ZqGpYK6LCQZvgelDHFYe/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Global">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🌐</span>
+            <div>
+              <div class="tucaneo-lista-tema">Global</div>
+              <h3 class="tucaneo-lista-titulo">Sindrome del importor (conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/10oavRsJXexlPvGVO1epR4MxZG5gZvKki/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📱</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Aplicaciones ¿Qué usas ? (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1KqeMTEGCPqOIHwbjJkPz3SquF7RT3QRR/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  function aplicarFiltros() {
+    var nivelActivo = (document.querySelector('#filtro-bar .tucaneo-filtro-btn.activo') || {}).getAttribute('data-nivel') || '';
+    var zonaActiva = (document.querySelector('#filtro-zona-bar .tucaneo-filtro-btn-zona.activo') || {}).getAttribute('data-zona') || '';
+    document.querySelectorAll('#lista-materiales .tucaneo-lista-item').forEach(function(li) {
+      var n = li.getAttribute('data-nivel') || '';
+      var z = li.getAttribute('data-zona') || '';
+      var okNivel = !nivelActivo || n === nivelActivo;
+      var okZona = !zonaActiva || z === zonaActiva;
+      if (okNivel && okZona) li.classList.remove('tucaneo-filter-hidden');
+      else li.classList.add('tucaneo-filter-hidden');
+    });
+  }
+
+  var barNivel = document.getElementById('filtro-bar');
+  if (barNivel) {
+    barNivel.querySelectorAll('.tucaneo-filtro-btn').forEach(function(btn) {
+      btn.onclick = function() {
+        barNivel.querySelectorAll('.tucaneo-filtro-btn').forEach(function(b) { b.classList.remove('activo'); });
+        this.classList.add('activo');
+        aplicarFiltros();
+      };
+    });
+  }
+
+  var barZona = document.getElementById('filtro-zona-bar');
+  if (barZona) {
+    barZona.querySelectorAll('.tucaneo-filtro-btn-zona').forEach(function(btn) {
+      btn.onclick = function() {
+        barZona.querySelectorAll('.tucaneo-filtro-btn-zona').forEach(function(b) { b.classList.remove('activo'); });
+        this.classList.add('activo');
+        aplicarFiltros();
+      };
+    });
+  }
+})();
+</script>
+</body>
+</html>
