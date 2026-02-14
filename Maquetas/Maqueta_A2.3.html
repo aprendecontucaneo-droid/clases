@@ -127,6 +127,36 @@
   .btn-b1 { background-color: #f59e0b !important; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
   .btn-b1:hover { background-color: #d97706 !important; }
 
+  /* SEPARADORES DE EXAMEN (fases con colores característicos) */
+  .tucaneo-exam-separator {
+    margin: 50px 0; padding: 50px 30px;
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    border-radius: 20px; color: white; text-align: center;
+    box-shadow: 0 15px 35px rgba(225, 29, 72, 0.3);
+    position: relative; overflow: hidden;
+  }
+  .tucaneo-exam-separator.orange-theme {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 15px 35px rgba(217, 119, 6, 0.3);
+  }
+  .tucaneo-exam-separator.cyan-theme {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    box-shadow: 0 15px 35px rgba(8, 145, 178, 0.3);
+  }
+  .tucaneo-exam-separator h3 { color: white; margin-bottom: 15px; font-size: 2.2rem; font-weight: 900; }
+  .tucaneo-exam-separator p { color: #ffe4e6; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.1rem; }
+  .tucaneo-exam-separator.orange-theme p { color: #fff7ed; }
+  .tucaneo-exam-separator.cyan-theme p { color: #ecfeff; }
+  a.tucaneo-btn.btn-exam {
+    background: white !important; color: #e11d48 !important;
+    max-width: 280px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  a.tucaneo-btn.btn-exam:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.25); color: #be123c !important; }
+  .tucaneo-exam-separator.orange-theme a.tucaneo-btn.btn-exam { color: #d97706 !important; }
+  .tucaneo-exam-separator.orange-theme a.tucaneo-btn.btn-exam:hover { color: #b45309 !important; }
+  .tucaneo-exam-separator.cyan-theme a.tucaneo-btn.btn-exam { color: #0891b2 !important; }
+  .tucaneo-exam-separator.cyan-theme a.tucaneo-btn.btn-exam:hover { color: #0e7490 !important; }
+
   /* RESPONSIVE */
   @media (max-width: 921px) {
     header#masthead, .site-header { background-color: #ffffff !important; padding-top: 0px !important; position: fixed !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;}
@@ -304,6 +334,12 @@
       </div>
     </div>
   </details>
+
+  <div class="tucaneo-exam-separator orange-theme">
+    <h3>Examen 1: Evaluación A2.2</h3>
+    <p>Evaluación integral de tus habilidades en tecnología, presente progresivo, subjuntivo e imperativo. Pon a prueba lo aprendido en los primeros módulos del nivel A2.</p>
+    <a href="https://aprendecontucaneo-droid.github.io/clases/A2.3/Examen_1_A2.2.html" class="tucaneo-btn btn-exam" target="_blank">Iniciar Examen</a>
+  </div>
 
   <details class="tucaneo-module">
     <summary class="tucaneo-summary">
@@ -504,5 +540,11 @@
       </div>
     </div>
   </details>
+
+  <div class="tucaneo-exam-separator">
+    <h3>Examen 2: Tiempos del Pasado (A2.3)</h3>
+    <p>Evaluación final sobre pretérito perfecto, pluscuamperfecto y voz pasiva. Demuestra tu dominio de la narración en pasado en español.</p>
+    <a href="https://aprendecontucaneo-droid.github.io/clases/A2.3/Examen_2_A2.3.html" class="tucaneo-btn btn-exam" target="_blank">Iniciar Examen</a>
+  </div>
 
 </div>

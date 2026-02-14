@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen B2 Español - Tucaneo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+        :root { --primary-color: #2E8B57; --accent-color: #FF8C00; }
+
+        /* --- ESTILOS GENERALES (PC: MODO ESCRITORIO) --- */
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: #555; /* Fondo oscuro para resaltar la hoja */
+            margin: 0; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR TIPO HOJA A4 --- */
+        .page { 
+            background-color: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm 20mm 30mm 20mm; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
+
+        /* --- TIPOGRAFÍA Y ELEMENTOS --- */
+        h1 { font-family: 'Merriweather', serif; color: var(--primary-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; font-size: 20pt; margin-top: 0; }
+        h2 { font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 14pt; margin-top: 25px; background: #e8f5e9; padding: 5px 10px; border-left: 5px solid var(--primary-color); border-radius: 4px; }
+        p, td, li { font-size: 11pt; line-height: 1.5; color: #333; }
+        .instruction { color: #666; font-style: italic; margin-bottom: 15px; }
+
+        /* --- INPUTS --- */
+        input[type="text"], textarea {
+            font-family: 'Handlee', cursive, sans-serif; 
+            color: #00008B; 
+            background: #FFFACD; 
+            border: none; 
+            border-bottom: 1px dashed #999; 
+            padding: 4px 8px; 
+            font-size: 12pt;
+            border-radius: 3px;
+        }
+        input[type="text"]:focus, textarea:focus { background: #fff59d; outline: 2px solid var(--accent-color); }
+        .inline-input { width: 140px; text-align: center; }
+        .short-input { width: 40px; text-align: center; }
+        textarea { width: 100%; height: 80px; resize: none; border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box; }
+
+        /* --- HEADER Y FOOTER --- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .header-top img { height: 70px; width: auto; }
+        .student-info { text-align: right; font-size: 10pt; }
+        .footer-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; z-index: 10; pointer-events: none; opacity: 0.9; }
+
+        /* --- IMAGENES Y TABLAS --- */
+        .img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        table { width: 100%; margin: 10px 0; border-collapse: collapse; }
+        td { padding: 8px; vertical-align: middle; }
+
+        /* --- BOTONES FLOTANTES (UI) --- */
+        .btn-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .ui-btn { 
+            color: white; border: none; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            text-decoration: none; font-family: 'Lato', sans-serif; text-align: center; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .print-btn { background-color: var(--accent-color); }
+        .exit-btn { background-color: #d32f2f; }
+        .ui-btn:hover { transform: scale(1.05); }
+
+        /* =========================================
+           RESPONSIVE (MÓVILES)
+           ========================================= */
+        @media screen and (max-width: 820px) {
+            body { padding: 0; background-color: #fff; display: block; }
+            .page { width: 100%; min-height: auto; padding: 15px 15px 80px 15px; box-shadow: none; margin-bottom: 0; }
+            .header-top { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .student-info { text-align: center; width: 100%; }
+            .student-info input { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+            .btn-container { position: relative; top: 0; right: 0; flex-direction: row; justify-content: center; width: 100%; background: #333; padding: 10px 0; margin-bottom: 10px; border-radius: 0; }
+            .inline-input, .short-input, input[type="text"] { width: 100%; margin: 5px 0; height: 35px; }
+            table, tr, td { display: block; width: 100%; padding: 5px 0; border: none; }
+        }
+
+        /* =========================================
+           MODO IMPRESIÓN (Limpio A4)
+           ========================================= */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; padding: 0; margin: 0; display: block; }
+            .page { width: 100%; max-width: 100%; margin: 0; padding: 15mm 15mm; box-shadow: none; border: none; page-break-after: always; min-height: 290mm; }
+            .btn-container, .no-print { display: none !important; }
+            input[type="text"], textarea { background: none !important; border-bottom: 1px solid #000; }
+            h2 { background: none !important; border: 1px solid var(--primary-color); }
+            .img-container, h2, table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
+        <button class="ui-btn print-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Fecha:</strong> <input type="text" style="width: 120px;"></div>
+                <div style="margin-top:5px;"><strong>Tiempo estimado:</strong> 60 minutos</div>
+            </div>
+        </div>
+
+        <h1>EXAMEN DE ESPAÑOL – NIVEL B2</h1>
+        
+        <div class="img-container">
+            <img src="https://image.pollinations.ai/prompt/roommates_searching_apartment_city_map_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Búsqueda de vivienda">
+        </div>
+
+        <h2>SECCIÓN 1: La vida en la ciudad y la búsqueda de vivienda</h2>
+        <p class="instruction"><strong>Contexto:</strong> Estás buscando un compañero de piso. Completa conjugando el verbo en <strong>Indicativo</strong> o <strong>Subjuntivo</strong>.</p>
+
+        <h3>A. ¿Existe o no existe? (Cláusulas Adjetivas)</h3>
+        <ol>
+            <li>Hola, busco un compañero de piso que <input type="text" class="inline-input"> (ser) responsable y limpio.</li>
+            <li>Tengo un amigo en la universidad que <input type="text" class="inline-input"> (conocer) muy bien la zona y puede ayudarnos.</li>
+            <li>No hay ningún apartamento en este barrio que <input type="text" class="inline-input"> (tener) tres baños por ese precio.</li>
+            <li>Necesito una habitación donde <input type="text" class="inline-input"> (entrar) mucha luz natural, porque pinto cuadros.</li>
+            <li>Aquí vive la chica que <input type="text" class="inline-input"> (trabajar) en la cafetería de la esquina.</li>
+        </ol>
+
+        <h3>B. Expresando deseos y dudas (Cláusulas Nominales)</h3>
+        <ol start="6">
+            <li>(Ella) Tiene miedo de que el barrio <input type="text" class="inline-input"> (ser) peligroso.</li>
+            <li>Es verdad que el alquiler <input type="text" class="inline-input"> (estar) muy caro últimamente.</li>
+            <li>No creo que nosotros <input type="text" class="inline-input"> (poder) pagar la fianza esta semana.</li>
+            <li>Espero que tú <input type="text" class="inline-input"> (encontrar) algo pronto.</li>
+            <li>Me molesta que la inmobiliaria nos <input type="text" class="inline-input"> (pedir) tantos documentos.</li>
+        </ol>
+
+        <h2>SECCIÓN 2: ¿Qué está pasando ahora mismo?</h2>
+        <p class="instruction"><strong>Contexto:</strong> Videollamada. Usa <strong>Estar + Gerundio</strong>.</p>
+        
+        <table style="width: 100%;">
+            <tr>
+                <td><strong>11.</strong> Dormir: <input type="text" class="inline-input"></td>
+                <td><strong>12.</strong> Leer: <input type="text" class="inline-input"></td>
+            </tr>
+            <tr>
+                <td><strong>13.</strong> Pedir: <input type="text" class="inline-input"></td>
+                <td><strong>14.</strong> Decir: <input type="text" class="inline-input"></td>
+            </tr>
+        </table>
+
+        <ol start="15">
+            <li>
+                <strong>(Tú / ducharse):</strong> "Lo siento, <input type="text" class="inline-input" style="width: 250px;">." 
+                <br><span style="font-size: 10pt; color: #777;">(Pronombre ANTES del verbo estar).</span>
+            </li>
+            <li>
+                <strong>(Los niños / mentir):</strong> "Creo que los niños <input type="text" class="inline-input" style="width: 250px;">."
+            </li>
+            <li>
+                <strong>(Nosotros / vestirse):</strong> "Espera, <input type="text" class="inline-input" style="width: 250px;">."
+                <br><span style="font-size: 10pt; color: #777;">(Pronombre PEGADO al gerundio).</span>
+            </li>
+        </ol>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Página:</strong> 2 de 3</div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://image.pollinations.ai/prompt/advice_columnist_writing_magazine_office_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Consultorio de consejos">
+        </div>
+
+        <h2>SECCIÓN 3: El Consultorio (Imperativo + Pronombres)</h2>
+        <p class="instruction"><strong>Contexto:</strong> Das consejos. Cuidado con los acentos y posición de pronombres.</p>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <p><strong>Caso 1: "Quiero comprar el coche rojo, pero es muy caro."</strong> (Verbo: Comprar + lo/la)</p>
+            <p>18. (Afirmativo - Tú): ¡<input type="text" class="inline-input" style="width: 200px;">! Es una oportunidad.</p>
+            <p>19. (Negativo - Tú): ¡No, <input type="text" class="inline-input" style="width: 200px;">! Es tirar el dinero.</p>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <p><strong>Caso 2: "Tengo que decir la verdad a mi jefe."</strong> (Verbo: Decir + se + lo)</p>
+            <p>20. (Afirmativo - Usted): Sí, por favor, <input type="text" class="inline-input" style="width: 200px;"> inmediatamente.</p>
+            <p>21. (Negativo - Tú): No, mejor <input type="text" class="inline-input" style="width: 200px;"> todavía.</p>
+        </div>
+
+        <h3>Instrucciones rápidas (Imperativo Irregular Tú)</h3>
+        <table style="width: 100%;">
+            <tr>
+                <td><strong>22. (Hacer)</strong> <input type="text" class="inline-input"> los deberes.</td>
+                <td><strong>23. (Poner)</strong> <input type="text" class="inline-input"> la mesa.</td>
+            </tr>
+            <tr>
+                <td><strong>24. (Ir)</strong> <input type="text" class="inline-input"> al súper.</td>
+                <td><strong>25. (Salir)</strong> <input type="text" class="inline-input"> de aquí.</td>
+            </tr>
+        </table>
+
+        <h2>SECCIÓN 4: Planes de Futuro vs. Hábitos</h2>
+        <p class="instruction"><strong>Contexto:</strong> Entrevista de trabajo. Escribe el verbo conjugado correctamente.</p>
+
+        <div class="img-container" style="height: 120px;">
+             <img src="https://image.pollinations.ai/prompt/job_interview_office_scene_vector_illustration_flat_white_background?width=800&height=250&nologo=true" alt="Entrevista de trabajo">
+        </div>
+
+        <ol start="26">
+            <li>
+                <strong>Entrevistador:</strong> "¿Qué haces normalmente después de trabajar?"<br>
+                <strong>Candidato:</strong> "Cuando <input type="text" class="inline-input"> (llegue / llego) a casa, siempre leo un poco."
+            </li>
+            <li style="margin-top: 15px;">
+                <strong>Entrevistador:</strong> "¿Y cuáles son tus planes para el próximo año?"<br>
+                <strong>Candidato:</strong> "En cuanto <input type="text" class="inline-input"> (ahorre / ahorro) suficiente dinero, haré un máster."
+            </li>
+            <li style="margin-top: 15px;">
+                <strong>Entrevistador:</strong> "¿Podemos llamarte mañana?"<br>
+                <strong>Candidato:</strong> "Sí, llámenme tan pronto como <input type="text" class="inline-input"> (tengan / tienen) una decisión."
+            </li>
+            <li style="margin-top: 15px;">
+                <strong>Entrevistador:</strong> "¿Hasta cuándo piensas quedarte?"<br>
+                <strong>Candidato:</strong> "Me quedaré hasta que <input type="text" class="inline-input"> (encuentre / encuentro) una oportunidad fuera."
+            </li>
+            <li style="margin-top: 15px;">
+                <strong>Entrevistador:</strong> "¿Y antes?"<br>
+                <strong>Candidato:</strong> "Antes vivía en Madrid. Cuando <input type="text" class="inline-input"> (fui / fuera) estudiante, trabajaba de camarero."
+            </li>
+        </ol>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
+            <div class="student-info">
+                <div><strong>Estudiante:</strong> <input type="text" style="width: 200px;"></div>
+                <div style="margin-top:5px;"><strong>Página:</strong> 3 de 3</div>
+            </div>
+        </div>
+
+        <div class="img-container">
+            <img src="https://image.pollinations.ai/prompt/girl_writing_email_travel_planning_mexico_vector_illustration_flat_white_background?width=800&height=400&nologo=true" alt="Escribiendo un correo">
+        </div>
+
+        <h2>SECCIÓN 5: Comprensión y Gramática Integrada</h2>
+        <p class="instruction">Lee el correo de Sofía y completa los huecos con la conjugación correcta (Imperativo, Subjuntivo, Indicativo o Gerundio).</p>
+
+        <div style="border: 2px solid #ddd; padding: 25px; border-radius: 5px; background: #fff;">
+            <p><strong>Asunto:</strong> ¡Novedades!</p>
+            <p>Hola Ana,</p>
+            <p>
+                ¿Cómo estás? Te escribo porque necesito que me <strong>(31)</strong> <input type="text" class="inline-input"> (hacer) un favor enorme. 
+                Estoy <strong>(32)</strong> <input type="text" class="inline-input"> (organizar – gerundio) mi viaje a México y estoy muy estresada.
+            </p>
+            <p>
+                Primero, recomiéndame un hotel que <strong>(33)</strong> <input type="text" class="inline-input"> (ser) barato pero seguro; 
+                no conozco ninguno que me <strong>(34)</strong> <input type="text" class="inline-input"> (gustar) de verdad.
+            </p>
+            <p>
+                Segundo, sobre el gato... Cuando yo me <strong>(35)</strong> <input type="text" class="inline-input"> (ir – futuro) al aeropuerto la semana que viene, 
+                ¿puedes venir a darle de comer? Normalmente, cuando viajo, él se <strong>(36)</strong> <input type="text" class="inline-input"> (poner – hábito) triste.
+            </p>
+            <p>
+                Por último, ¡no se lo <strong>(37)</strong> <input type="text" class="inline-input"> (decir – imperativo negativo) a mamá todavía! 
+                Quiero que sea una sorpresa. <strong>(38)</strong> <input type="text" class="inline-input"> (Decir – imperativo afirmativo) tú a papá si quieres, pero a mamá no.
+            </p>
+            <p>
+                Espero que todo te <strong>(39)</strong> <input type="text" class="inline-input"> (ir) bien en el trabajo. 
+                ¡Ojalá nos <strong>(40)</strong> <input type="text" class="inline-input"> (ver) pronto!
+            </p>
+            <p>Un beso, Sofía.</p>
+        </div>
+
+        <h2>Notas / Correcciones del Profesor</h2>
+        <p class="instruction">Espacio reservado para retroalimentación o apuntes adicionales.</p>
+        <textarea style="height: 150px; background: white;"></textarea>
+
+        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
+    </div>
+
+</body>
+</html>

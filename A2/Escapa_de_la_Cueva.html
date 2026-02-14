@@ -108,25 +108,31 @@
         }
 
         @keyframes heartbeat {
-            0% {
-                transform: scale(1);
-            }
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.3); }
+            60% { transform: scale(1); }
+        }
 
-            15% {
-                transform: scale(1.3);
-            }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.6); }
+        }
 
-            30% {
-                transform: scale(1);
-            }
+        @keyframes stagger-in {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-            45% {
-                transform: scale(1.3);
-            }
+        @keyframes particle-float {
+            0%, 100% { opacity: 0.3; transform: translateY(0) translateX(0); }
+            50% { opacity: 0.6; transform: translateY(-15px) translateX(5px); }
+        }
 
-            60% {
-                transform: scale(1);
-            }
+        @keyframes text-reveal {
+            0% { clip-path: inset(0 100% 0 0); opacity: 0; }
+            100% { clip-path: inset(0 0 0 0); opacity: 1; }
         }
 
         .animate-float {
@@ -136,6 +142,17 @@
         .animate-enter {
             animation: slide-in-bottom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
+
+        .animate-enter-stagger > * {
+            animation: stagger-in 0.5s ease-out backwards;
+        }
+
+        .animate-enter-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+        .animate-enter-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+        .animate-enter-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+        .animate-enter-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+        .animate-enter-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+        .animate-enter-stagger > *:nth-child(6) { animation-delay: 0.6s; }
 
         .animate-fade {
             animation: fade-in 1s ease-out;
@@ -148,6 +165,27 @@
         .animate-heartbeat {
             animation: heartbeat 1.5s infinite;
         }
+
+        .animate-glow {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        .animate-particle {
+            animation: particle-float 5s ease-in-out infinite;
+        }
+
+        @keyframes enemy-float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 1; }
+            25% { transform: translateY(-8px) translateX(5px); opacity: 0.9; }
+            50% { transform: translateY(-3px) translateX(-5px); opacity: 1; }
+            75% { transform: translateY(-10px) translateX(-2px); opacity: 0.85; }
+        }
+        @keyframes enemy-pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5)); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.8)); }
+        }
+        .enemy-float { animation: enemy-float 2s ease-in-out infinite; }
+        .enemy-pulse { animation: enemy-pulse 1.5s ease-in-out infinite; }
 
         /* UI */
         .glass-panel {
@@ -165,6 +203,20 @@
         .typewriter::after {
             content: '|';
             animation: blink 1s infinite;
+        }
+
+        /* Evitar que se corten las primeras letras del texto */
+        .text-story {
+            padding: 0 1.5rem;
+            overflow: visible;
+            min-width: 0;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .text-story p {
+            padding-left: 0.5rem;
+            overflow: visible;
+            word-wrap: break-word;
         }
 
         @keyframes blink {
@@ -284,215 +336,274 @@
         }
         const audio = new AudioEngine();
 
-        // --- CONTENIDO: 15 SECCIONES ---
-
-        // Items: 'torch' (antorcha), 'potion' (poción), 'key' (llave)
+        // --- CONTENIDO: Aventura A2 con lógica, acertijos y combates ---
+        // Items: 'torch', 'key'
 
         const STORY = {
-            // 1. INTRO
             'start': {
                 id: 'start',
                 bg: 'bg-start',
                 icon: 'fa-dungeon',
-                text: "Despiertas en una cueva fría. No recuerdas cómo llegaste aquí. Solo ves una salida lejana.",
-                options: [
-                    { text: "Caminar hacia la luz", next: 's2_crossroads' }
-                ]
+                text: "Te despiertas dentro de una cueva. Hace frío y está oscuro. No recuerdas cómo has llegado. Solo ves un poco de luz al fondo.",
+                options: [{ text: "Caminar hacia la luz", next: 's2_crossroads' }]
             },
-            // 2. CRUCE
             's2_crossroads': {
                 id: 's2_crossroads',
                 bg: 'bg-start',
                 icon: 'fa-signs-post',
-                text: "Llegas a un cruce. A la izquierda escuchas agua. A la derecha hay silencio total.",
+                text: "Llegas a un cruce. A la izquierda oyes agua. A la derecha no se oye nada. Tienes que elegir un camino.",
                 options: [
-                    { text: "Ir al Río (Izquierda)", next: 's3_river' },
-                    { text: "Ir al Túnel Seco (Derecha)", next: 's3_dry' }
+                    { text: "Ir hacia el río (izquierda)", next: 's3_river' },
+                    { text: "Ir por el túnel seco (derecha)", next: 's3_dry' }
                 ]
             },
-            // 3A. RÍO (Puzzle Preposiciones)
             's3_river': {
                 id: 's3_river',
                 bg: 'bg-river',
                 icon: 'fa-water',
                 type: 'puzzle',
-                text: "Un río bloquea el paso. Hay piedras mágicas con palabras. Debes formar un puente.",
-                solution: ["El", "puente", "es", "largo"],
-                words: ["largo", "El", "es", "puente", "río", "azul"],
-                successMsg: "Las piedras se unen y puedes cruzar.",
+                text: "Un río corta el camino. En la orilla hay piedras con palabras. Para cruzar, tienes que formar una frase correcta con las piedras.",
+                solution: ["El", "puente", "está", "lejos"],
+                words: ["lejos", "El", "está", "puente", "río", "agua"],
+                successMsg: "Las piedras brillan y aparece un puente. Puedes pasar.",
                 next: 's4_camp'
             },
-            // 3B. TÚNEL SECO (Combate Murciélagos)
             's3_dry': {
                 id: 's3_dry',
                 bg: 'bg-start',
                 icon: 'fa-bat',
                 type: 'combat',
                 enemyName: "Murciélagos",
-                text: "¡Murciélagos atacan desde el techo!",
-                hp: 2,
+                text: "De repente salen murciélagos del techo. Tienes que responder bien para ahuyentarlos.",
+                hp: 3,
                 topic: 'verbs',
                 next: 's4_camp'
             },
-            // 4. CAMPAMENTO (Item: Antorcha)
             's4_camp': {
                 id: 's4_camp',
                 bg: 'bg-ruins',
                 icon: 'fa-campground',
-                type: 'rest', // Recupera vida
+                type: 'rest',
                 item: 'torch',
-                text: "Encuentras un campamento abandonado. Hay una antorcha encendida y comida.",
+                text: "Encuentras un campamento viejo. Nadie está. Hay una antorcha encendida y algo de comida. Puedes descansar un poco.",
                 heal: true,
+                options: [{ text: "Coger la antorcha y descansar", next: 's4b_sala' }]
+            },
+            's4b_sala': {
+                id: 's4b_sala',
+                bg: 'bg-ruins',
+                icon: 'fa-map',
+                text: "Ves dos pasillos. Uno está muy oscuro. El otro lleva a una sala con mapas dibujados en la pared.",
                 options: [
-                    { text: "Tomar la antorcha y descansar", next: 's5_dark_tunnel' }
+                    { text: "Ir por el túnel oscuro", next: 's5_dark_tunnel' },
+                    { text: "Entrar en la sala de mapas", next: 's4c_mapas' }
                 ]
             },
-            // 5. TÚNEL OSCURO (Check de Item)
+            's4c_mapas': {
+                id: 's4c_mapas',
+                bg: 'bg-forest',
+                icon: 'fa-scroll',
+                type: 'logic',
+                text: "En el mapa hay un acertijo: En un restaurante el camarero dice «¿Qué desea tomar?». ¿Qué respuesta es la correcta?",
+                correct: "Un café con leche, por favor.",
+                options: ["La cuenta, por favor.", "Un café con leche, por favor.", "¿Dónde está el baño?", "Buenos días."],
+                next: 's4d_logic'
+            },
+            's4d_logic': {
+                id: 's4d_logic',
+                bg: 'bg-forest',
+                icon: 'fa-brain',
+                type: 'logic',
+                text: "En el mapa pone: «Hay 4 velas. Apago 2. ¿Cuántas velas quedan encendidas?»",
+                correct: "Dos",
+                options: ["Una", "Dos", "Tres", "Cuatro"],
+                next: 's5_dark_tunnel'
+            },
             's5_dark_tunnel': {
                 id: 's5_dark_tunnel',
                 bg: 'bg-start',
-                icon: 'fa-skull', // Trampa potencial
-                text: "El siguiente túnel es muy oscuro. No se ve nada.",
+                icon: 'fa-skull',
+                text: "El siguiente túnel está muy oscuro. No ves nada delante.",
                 checkItem: 'torch',
-                itemSuccess: { text: "Usas tu antorcha. Ves un agujero en el suelo y lo esquivas.", next: 's6_ruins' },
-                itemFail: { text: "¡Está muy oscuro! Caes en un agujero y te lastimas.", damage: 1, next: 's6_ruins' }
+                itemSuccess: { text: "Enciendes la antorcha. Ves un agujero en el suelo y lo evitas. Sigues adelante.", next: 's6_ruins' },
+                itemFail: { text: "No ves el agujero. Te caes y te haces daño. Te levantas y sigues.", damage: 1, next: 's6_ruins' }
             },
-            // 6. RUINAS ANTIGUAS
             's6_ruins': {
                 id: 's6_ruins',
                 bg: 'bg-ruins',
                 icon: 'fa-scroll',
-                text: "Llegas a unas ruinas antiguas. Un esqueleto guarda una puerta.",
+                text: "Llegas a unas ruinas. Un esqueleto guarda la puerta. Puedes hablar con él o pelear.",
                 options: [
                     { text: "Hablar con el esqueleto", next: 's7_skeleton_riddle' },
-                    { text: "Atacar al esqueleto", next: 's7_combat_skeleton' }
+                    { text: "Pelear con el esqueleto", next: 's7_combat_skeleton' }
                 ]
             },
-            // 7A. ACERTIJO ESQUELETO
             's7_skeleton_riddle': {
                 id: 's7_skeleton_riddle',
                 bg: 'bg-ruins',
                 icon: 'fa-skull-crossbones',
                 type: 'riddle',
-                text: "El esqueleto dice: 'Tengo hojas pero no soy un árbol. Tengo lomo pero no soy un gato. ¿Qué soy?'",
+                text: "El esqueleto dice: «Tengo hojas pero no soy árbol. Tengo lomo pero no soy animal. La gente me abre para leer. ¿Qué soy?»",
                 correct: "El libro",
-                options: ["El árbol", "El libro", "El gato", "La mesa"],
+                options: ["El árbol", "El libro", "El gato", "La puerta"],
+                next: 's7b_logic'
+            },
+            's7b_logic': {
+                id: 's7b_logic',
+                bg: 'bg-ruins',
+                icon: 'fa-brain',
+                type: 'logic',
+                text: "El esqueleto te da otra pista: «En la cueva no hay ventanas ni luz del sol. ¿Aquí dentro siempre es de día o de noche?» Piensa bien.",
+                correct: "Siempre es de noche",
+                options: ["Siempre es de día", "Siempre es de noche", "A veces es de día", "Hay ventanas"],
                 next: 's8_lab'
             },
-            // 7B. COMBATE ESQUELETO
             's7_combat_skeleton': {
                 id: 's7_combat_skeleton',
                 bg: 'bg-ruins',
                 icon: 'fa-khanda',
                 type: 'combat',
                 enemyName: "Guerrero Esqueleto",
-                text: "El esqueleto levanta su espada.",
-                hp: 3,
+                text: "El esqueleto coge su espada. Tienes que ganar con el español.",
+                hp: 4,
                 topic: 'verbs',
                 next: 's8_lab'
             },
-            // 8. LABORATORIO (Item: Poción o Llave)
             's8_lab': {
                 id: 's8_lab',
                 bg: 'bg-ruins',
                 icon: 'fa-flask',
-                text: "Un laboratorio de alquimia. Ves una Llave Dorada en una mesa y una Poción Roja.",
+                text: "Hay un laboratorio con frascos y libros. En una mesa ves una llave dorada y una poción roja. Solo puedes llevar una cosa.",
                 options: [
-                    { text: "Tomar la Llave", getItem: 'key', next: 's9_hallway' },
-                    { text: "Beber la Poción (Curar)", heal: true, next: 's9_hallway' }
+                    { text: "Coger la llave", getItem: 'key', next: 's8b_logic' },
+                    { text: "Beber la poción (te cura un poco)", heal: true, next: 's8b_logic' }
                 ]
             },
-            // 9. PASILLO LARGO
+            's8b_logic': {
+                id: 's8b_logic',
+                bg: 'bg-ruins',
+                icon: 'fa-key',
+                type: 'logic',
+                text: "Hay una caja cerrada y tres llaves: roja, verde y azul. Un papel dice: «La llave correcta no es la roja ni la azul.» ¿Cuál llave abre la caja?",
+                correct: "La verde",
+                options: ["La roja", "La verde", "La azul", "Ninguna"],
+                next: 's9_hallway'
+            },
             's9_hallway': {
                 id: 's9_hallway',
                 bg: 'bg-start',
                 icon: 'fa-walking',
-                type: 'combat', // Emboscada sorpresa
+                type: 'logic',
+                text: "Un fantasma aparece y te dice: «Ana tiene tres manzanas. Le da una a Pedro. ¿Cuántas manzanas tiene ahora Ana?» Responde con lógica.",
+                correct: "Dos",
+                options: ["Una", "Dos", "Tres", "Cuatro"],
+                next: 's9b_combat'
+            },
+            's9b_combat': {
+                id: 's9b_combat',
+                bg: 'bg-start',
+                icon: 'fa-ghost',
+                type: 'combat',
                 enemyName: "Sombra",
-                text: "Caminas por un pasillo largo... ¡Una Sombra aparece detrás de ti!",
-                hp: 2,
+                text: "La Sombra no se va. Tienes que vencerla con pronombres correctos.",
+                hp: 3,
                 topic: 'pronouns',
                 next: 's10_locked_door'
             },
-            // 10. PUERTA CERRADA (Check Key)
             's10_locked_door': {
                 id: 's10_locked_door',
                 bg: 'bg-ruins',
                 icon: 'fa-door-closed',
-                text: "Una gran puerta de metal bloquea el camino.",
+                text: "Una puerta de metal cierra el paso. Tiene cerradura.",
                 checkItem: 'key',
-                itemSuccess: { text: "¡Tienes la llave! La puerta se abre suavemente.", next: 's11_bridge' },
-                itemFail: { text: "No tienes la llave. Debes forzar la cerradura (Cuesta energía).", damage: 1, next: 's11_bridge' }
+                itemSuccess: { text: "Tienes la llave. La puerta se abre. Puedes seguir.", next: 's11_bridge' },
+                itemFail: { text: "No tienes llave. Tienes que forzar la cerradura y te cansas mucho.", damage: 1, next: 's11_bridge' }
             },
-            // 11. PUENTE DE LA VERDAD
             's11_bridge': {
                 id: 's11_bridge',
                 bg: 'bg-river',
                 icon: 'fa-bridge',
                 type: 'riddle',
-                text: "Un guardián invisible pregunta: '¿Cuál oración es correcta?'",
-                correct: "Mañana voy a comer.",
-                options: ["Mañana voy comer.", "Mañana voy a comer.", "Mañana comer voy.", "Voy comer mañana."],
+                text: "Un guardián invisible pregunta: «¿Cuál frase es correcta en español?»",
+                correct: "Mañana voy a comer con mi amigo.",
+                options: [
+                    "Mañana voy comer con mi amigo.",
+                    "Mañana voy a comer con mi amigo.",
+                    "Mañana comer voy con mi amigo.",
+                    "Voy comer mañana con mi amigo."
+                ],
+                next: 's11b_logic'
+            },
+            's11b_logic': {
+                id: 's11b_logic',
+                bg: 'bg-river',
+                icon: 'fa-question',
+                type: 'logic',
+                text: "El guardián dice: «Luis llega a las 8. El autobús tarda 30 minutos. ¿A qué hora tiene que salir Luis de casa?»",
+                correct: "A las 7 y media",
+                options: ["A las 8", "A las 7 y media", "A las 9", "A las 30"],
                 next: 's12_boss_intro'
             },
-            // 12. JEFE INTRO
             's12_boss_intro': {
                 id: 's12_boss_intro',
                 bg: 'bg-boss',
                 icon: 'fa-dragon',
-                text: "Llegas a la salida, pero el Gran Dragón Gramatical despierta. '¡Nadie sale sin demostrar dominio del idioma!'",
-                options: [
-                    { text: "¡Estoy listo!", next: 's13_boss_p1' }
-                ]
+                text: "Casi sales de la cueva, pero un dragón enorme se despierta. Dice: «Nadie sale sin demostrar que sabe español.»",
+                options: [{ text: "Estoy listo", next: 's13_boss_p1' }]
             },
-            // 13. JEFE FASE 1 (Verbos)
             's13_boss_p1': {
                 id: 's13_boss_p1',
                 bg: 'bg-boss',
                 icon: 'fa-fire',
                 type: 'combat',
                 enemyName: "Dragón (Fase 1)",
-                text: "El Dragón lanza fuego. ¡Usa verbos fuertes para protegerte!",
-                hp: 3,
+                text: "El dragón lanza fuego. Responde bien para defenderte.",
+                hp: 4,
                 topic: 'verbs',
                 next: 's14_boss_p2'
             },
-            // 14. JEFE FASE 2 (Puzzle Final)
             's14_boss_p2': {
                 id: 's14_boss_p2',
                 bg: 'bg-boss',
                 icon: 'fa-bomb',
                 type: 'puzzle',
-                text: "El Dragón está débil. ¡Prepara el hechizo final!",
+                text: "El dragón está débil. Para vencerlo tienes que formar el hechizo correcto con las palabras.",
                 solution: ["Yo", "soy", "un", "maestro"],
                 words: ["soy", "maestro", "Yo", "un", "el", "es"],
-                successMsg: "¡El hechizo golpea al Dragón!",
+                successMsg: "El hechizo golpea al dragón. ¡Lo has vencido!",
                 next: 'victory'
             },
-            // 15. VICTORIA
             'victory': { type: 'win' },
             'gameover': { type: 'lose' }
         };
 
         const QUESTIONS = {
             verbs: [
-                { q: "Yo ____ (vivir) aquí.", correct: "vivo", opts: ["vive", "viven"] },
-                { q: "Nosotros ____ (comer) pan.", correct: "comemos", opts: ["comen", "comes"] },
-                { q: "Ellos ____ (ser) altos.", correct: "son", opts: ["es", "sois"] },
-                { q: "Tú ____ (tener) tiempo.", correct: "tienes", opts: ["tiene", "tenemos"] }
+                { q: "Yo ____ (vivir) aquí desde hace un año.", correct: "vivo", opts: ["vive", "viven", "vivimos"] },
+                { q: "Nosotros ____ (comer) pan cada día.", correct: "comemos", opts: ["comen", "comes", "como"] },
+                { q: "Ellos ____ (ser) muy altos.", correct: "son", opts: ["es", "sois", "somos"] },
+                { q: "Tú ____ (tener) que descansar.", correct: "tienes", opts: ["tiene", "tenemos", "tienen"] },
+                { q: "Ella ____ (ir) al mercado los lunes.", correct: "va", opts: ["voy", "vamos", "van"] },
+                { q: "¿Qué ____ (hacer) tú ahora?", correct: "haces", opts: ["hace", "hacen", "hago"] }
             ],
             pronouns: [
-                { q: "¿Ves a Juan? Sí, ___ veo.", correct: "lo", opts: ["le", "se"] },
-                { q: "¿Compraste la mesa? Sí, ___ compré.", correct: "la", opts: ["lo", "le"] },
-                { q: "Ellos ___ levantan temprano.", correct: "se", opts: ["nos", "os"] }
+                { q: "¿Ves a Juan? Sí, ___ veo.", correct: "lo", opts: ["le", "se", "la"] },
+                { q: "¿Compraste la mesa? Sí, ___ compré ayer.", correct: "la", opts: ["lo", "le", "los"] },
+                { q: "Ellos ___ levantan muy temprano.", correct: "se", opts: ["nos", "os", "les"] },
+                { q: "Mi hermana ___ lava el pelo cada día.", correct: "se", opts: ["me", "te", "le"] },
+                { q: "¿____ puedes pasar el agua? (a mí)", correct: "Me", opts: ["Te", "Se", "Lo"] }
             ]
         };
 
         // --- COMPONENTES ---
 
-        const Typewriter = ({ text, speed = 20 }) => {
-            const [display, setDisplay] = useState('');
+        const Typewriter = ({ text, speed = 20, instant = false }) => {
+            const [display, setDisplay] = useState(instant ? text : '');
             useEffect(() => {
+                if (instant) {
+                    setDisplay(text);
+                    return;
+                }
                 setDisplay('');
                 let i = 0;
                 const t = setInterval(() => {
@@ -503,8 +614,12 @@
                     } else clearInterval(t);
                 }, speed);
                 return () => clearInterval(t);
-            }, [text]);
-            return <p className="text-xl md:text-2xl text-slate-200 leading-relaxed font-cinzel typewriter min-h-[80px]">{display}</p>;
+            }, [text, instant]);
+            return (
+                <div className="text-story w-full max-w-xl px-4">
+                    <p className={`text-xl md:text-2xl text-slate-200 leading-relaxed min-h-[80px] ${instant ? '' : 'typewriter'}`} style={{ fontFamily: 'Metamorphous, serif' }}>{display}</p>
+                </div>
+            );
         };
 
         const RuneGame = ({ puzzle, onWin, onFail }) => {
@@ -534,9 +649,9 @@
 
             return (
                 <div className="w-full max-w-xl animate-enter">
-                    <div className="flex gap-2 justify-center mb-6 min-h-[60px] p-4 glass-panel rounded-xl">
+                    <div className="flex flex-wrap gap-2 justify-center mb-6 min-h-[60px] p-4 glass-panel rounded-xl">
                         {slots.map((s, i) => (
-                            <div key={i} className="border-b-2 border-slate-500 w-24 flex items-center justify-center text-amber-400 font-bold">{s ? s.w : ''}</div>
+                            <div key={i} className="border-b-2 border-slate-500 min-w-[5rem] flex-1 flex items-center justify-center text-amber-400 font-bold px-2">{s ? s.w : ''}</div>
                         ))}
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -575,15 +690,15 @@
             if (!q) return <div>Cargando...</div>;
 
             return (
-                <div className="w-full max-w-lg animate-enter">
-                    <div className="glass-panel p-6 rounded-xl border-l-4 border-red-500 mb-6 relative">
+                <div className="w-full max-w-lg animate-enter px-3">
+                    <div className="glass-panel p-6 rounded-xl border-l-4 border-red-500 mb-6 relative overflow-visible">
                         <div className="absolute top-0 right-0 p-2 text-xs text-red-400 font-tech">ENEMIGO: {enemy}</div>
-                        <div className="text-center text-xl mb-6 mt-4">
-                            {q.q.split('____').map((part, i) => <span key={i}>{part}{i === 0 && <span className="text-amber-400 border-b-2 border-amber-400 mx-1">?</span>}</span>)}
+                        <div className="text-center text-xl mb-6 mt-4 px-4 font-[Metamorphous]" style={{ fontFamily: 'Metamorphous, serif' }}>
+                            {q.q.split('____').map((part, i) => <span key={i}>{part}{i === 0 && <span className="text-amber-400 border-b-2 border-amber-400 px-1 font-bold">_____</span>}</span>)}
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4 animate-enter-stagger">
                             {q.mixedOpts.map((opt, i) => (
-                                <button key={i} onClick={() => answer(opt)} className="p-4 bg-slate-800 border border-slate-600 hover:border-amber-400 rounded-lg font-bold">{opt}</button>
+                                <button key={i} onClick={() => answer(opt)} className="p-4 bg-slate-800 border border-slate-600 hover:border-amber-400 rounded-lg font-bold transition-all hover:scale-[1.02]">{opt}</button>
                             ))}
                         </div>
                     </div>
@@ -612,21 +727,7 @@
                 audio.startAmbience();
             };
 
-            // ITEM CHECK LOGIC
-            useEffect(() => {
-                if (currentNode && currentNode.checkItem) {
-                    const hasItem = items.includes(currentNode.checkItem);
-                    const outcome = hasItem ? currentNode.itemSuccess : currentNode.itemFail;
-
-                    // Show outcome text after a small delay
-                    setTimeout(() => {
-                        if (outcome.damage) takeDamage(outcome.damage);
-                        // We modify the current node essentially to show the result
-                        // But simpler: just auto-transition to a temp state or alert?
-                        // Let's create a temporary "result" node in state
-                    }, 500);
-                }
-            }, [nodeId]);
+            // Item check: el daño solo se aplica al pulsar "Continuar", no al entrar al nodo
 
             const takeDamage = (amount = 1) => {
                 setOverlay('damage');
@@ -660,13 +761,22 @@
                 setNodeId(opt.next);
             };
 
-            // Riddle Handler
             const handleRiddle = (txt) => {
                 if (txt === currentNode.correct) {
                     audio.sfx.item();
                     setNodeId(currentNode.next);
                 } else {
-                    takeDamage();
+                    takeDamage(1);
+                    audio.sfx.damage();
+                }
+            };
+
+            const handleLogic = (txt) => {
+                if (txt === currentNode.correct) {
+                    audio.sfx.item();
+                    setNodeId(currentNode.next);
+                } else {
+                    takeDamage(1);
                     audio.sfx.damage();
                 }
             };
@@ -678,7 +788,7 @@
                 return (
                     <div className="max-w-xl text-center animate-enter">
                         <div className="text-4xl mb-4">{hasItem ? '✨' : '⚠️'}</div>
-                        <Typewriter text={outcome.text} />
+                        <Typewriter text={outcome.text} instant={true} />
                         <button
                             onClick={() => {
                                 if (outcome.damage) takeDamage(outcome.damage);
@@ -699,14 +809,28 @@
                         <h1 className="text-6xl md:text-8xl text-amber-500 font-cinzel mb-2 animate-float">ESCAPE</h1>
                         <h2 className="text-2xl text-slate-400 font-cinzel mb-12">La Gran Odisea</h2>
                         <button onClick={start} className="bg-amber-700 hover:bg-amber-600 text-white font-bold py-4 px-12 rounded-full animate-pulse transition-transform hover:scale-105">COMENZAR AVENTURA</button>
-                        <p className="mt-4 text-slate-500 text-sm">Duración: ~15 mins • Nivel A2 • 15 Secciones</p>
+                        <p className="mt-4 text-slate-500 text-sm">Nivel A2 • Lógica, gramática y acertijos • ~20 min</p>
                     </div>
                 );
             }
 
-            if (currentNode?.type === 'lose') return <div className="w-full h-full bg-red-950 flex flex-col items-center justify-center animate-shake"><h2 className="text-6xl text-white font-cinzel">HAS MUERTO</h2><button onClick={start} className="mt-8 px-6 py-3 bg-red-800 text-white rounded">Reintentar</button></div>;
+            if (currentNode?.type === 'lose') return (
+                <div className="w-full h-full bg-red-950/95 flex flex-col items-center justify-center animate-shake">
+                    <i className="fas fa-skull text-8xl text-red-400 mb-6 animate-float"></i>
+                    <h2 className="text-5xl md:text-6xl text-white font-cinzel">Has perdido</h2>
+                    <p className="text-slate-300 mt-4 text-lg">La cueva te ha vencido. Pero puedes intentarlo otra vez.</p>
+                    <button onClick={start} className="mt-10 px-8 py-4 bg-red-700 hover:bg-red-600 text-white rounded-xl font-bold transition-all hover:scale-105">Reintentar</button>
+                </div>
+            );
 
-            if (currentNode?.type === 'win') return <div className="w-full h-full bg-blue-950 flex flex-col items-center justify-center"><h2 className="text-6xl text-white font-cinzel">¡VICTORIA!</h2><p className="text-xl text-slate-300 mt-4">Has escapado con éxito.</p><button onClick={start} className="mt-8 px-6 py-3 bg-green-700 text-white rounded">Jugar de Nuevo</button></div>;
+            if (currentNode?.type === 'win') return (
+                <div className="w-full h-full bg-gradient-to-b from-amber-950/30 to-slate-900 flex flex-col items-center justify-center animate-fade">
+                    <i className="fas fa-trophy text-8xl text-amber-400 mb-6 animate-float"></i>
+                    <h2 className="text-5xl md:text-7xl text-amber-400 font-cinzel animate-glow">¡Victoria!</h2>
+                    <p className="text-xl text-slate-300 mt-6 max-w-md text-center">Has escapado de la cueva. Has usado bien el español y la lógica. Enhorabuena.</p>
+                    <button onClick={start} className="mt-10 px-8 py-4 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded-xl transition-all hover:scale-105">Jugar de nuevo</button>
+                </div>
+            );
 
             return (
                 <div className={`relative w-full h-full flex flex-col p-4 md:p-8 transition-colors duration-1000 ${currentNode.bg || 'bg-black'}`}>
@@ -729,6 +853,13 @@
                         </div>
                     </div>
 
+                    {/* Partículas de ambiente */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="absolute w-2 h-2 rounded-full bg-amber-500/20 animate-particle" style={{ left: `${15 + i * 15}%`, top: `${20 + (i % 3) * 25}%`, animationDelay: `${i * 0.5}s` }}></div>
+                        ))}
+                    </div>
+
                     {/* SCENE */}
                     <div className="flex-1 flex flex-col items-center justify-center relative z-0">
                         {/* Check Item Logic Overlay */}
@@ -736,18 +867,27 @@
                             renderItemCheck()
                         ) : (
                             <>
-                                <i className={`fas ${currentNode.icon} text-8xl text-slate-300 mb-8 animate-float ${currentNode.type === 'combat' ? 'text-red-400' : ''}`}></i>
+                                <div className="relative mb-8">
+                                    {currentNode.type === 'combat' && (
+                                        <>
+                                            <i className={`fas ${currentNode.icon} text-6xl absolute -top-2 -left-4 text-red-400/60 enemy-float`} style={{ animationDelay: '0s' }}></i>
+                                            <i className={`fas ${currentNode.icon} text-5xl absolute -top-4 right-0 text-red-400/50 enemy-float`} style={{ animationDelay: '0.5s' }}></i>
+                                            <i className={`fas ${currentNode.icon} text-4xl absolute top-2 -right-6 text-red-400/40 enemy-float`} style={{ animationDelay: '1s' }}></i>
+                                        </>
+                                    )}
+                                    <i className={`fas ${currentNode.icon} text-8xl text-slate-300 ${currentNode.type === 'combat' ? 'text-red-400 enemy-pulse' : 'animate-float'}`}></i>
+                                </div>
 
-                                <div className="w-full flex justify-center min-h-[40vh]">
+                                <div className="w-full flex justify-center min-h-[40vh] overflow-visible">
 
                                     {/* NARRATIVE */}
                                     {(!currentNode.type || currentNode.type === 'rest') && (
-                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center">
-                                            <Typewriter text={currentNode.text} />
-                                            {currentNode.heal && <div className="text-green-400 mt-2 font-mono text-sm">+1 VIDA RECUPERADA</div>}
-                                            <div className="mt-8 w-full grid gap-4">
+                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center px-4">
+                                            <Typewriter text={currentNode.text} instant={true} />
+                                            {currentNode.heal && <div className="text-green-400 mt-2 font-mono text-sm animate-fade">+1 VIDA RECUPERADA</div>}
+                                            <div className="mt-8 w-full grid gap-4 animate-enter-stagger">
                                                 {currentNode.options.map((opt, i) => (
-                                                    <button key={i} onClick={() => handleChoice(opt)} className="btn-rpg w-full p-4 bg-slate-800/90 border border-slate-600 rounded-xl text-lg hover:border-amber-400 text-left">
+                                                    <button key={i} onClick={() => handleChoice(opt)} className="btn-rpg w-full p-4 bg-slate-800/90 border border-slate-600 rounded-xl text-lg hover:border-amber-400 hover:scale-[1.02] text-left transition-all duration-300">
                                                         {opt.text}
                                                     </button>
                                                 ))}
@@ -758,7 +898,7 @@
                                     {/* PUZZLE */}
                                     {currentNode.type === 'puzzle' && (
                                         <div className="flex flex-col items-center w-full">
-                                            <p className="mb-6 text-slate-300 text-center max-w-lg">{currentNode.text}</p>
+                                            <p className="mb-6 text-slate-300 text-center max-w-lg px-4">{currentNode.text}</p>
                                             <RuneGame puzzle={currentNode} onWin={() => { setOverlay('heal'); setNodeId(currentNode.next); }} onFail={() => takeDamage(1)} />
                                         </div>
                                     )}
@@ -779,11 +919,26 @@
 
                                     {/* RIDDLE */}
                                     {currentNode.type === 'riddle' && (
-                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center">
-                                            <Typewriter text={currentNode.text} />
-                                            <div className="grid grid-cols-2 gap-4 mt-8 w-full">
+                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center px-4">
+                                            <Typewriter text={currentNode.text} instant={true} />
+                                            <div className="grid grid-cols-2 gap-4 mt-8 w-full animate-enter-stagger">
                                                 {currentNode.options.map((opt, i) => (
-                                                    <button key={i} onClick={() => handleRiddle(opt)} className="btn-rpg p-4 bg-slate-800 border border-slate-600 rounded-lg hover:bg-slate-700">{opt}</button>
+                                                    <button key={i} onClick={() => handleRiddle(opt)} className="btn-rpg p-4 bg-slate-800 border border-slate-600 rounded-lg hover:border-amber-400 hover:bg-slate-700">{opt}</button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* LÓGICA (situación + respuesta correcta) */}
+                                    {currentNode.type === 'logic' && (
+                                        <div className="max-w-xl w-full flex flex-col items-center animate-enter text-center px-4">
+                                            <div className="mb-4 text-amber-300/80 text-sm font-tech flex items-center gap-2">
+                                                <i className="fas fa-brain"></i> Piensa y elige la respuesta lógica
+                                            </div>
+                                            <Typewriter text={currentNode.text} instant={true} />
+                                            <div className="grid grid-cols-2 gap-4 mt-8 w-full animate-enter-stagger">
+                                                {currentNode.options.map((opt, i) => (
+                                                    <button key={i} onClick={() => handleLogic(opt)} className="btn-rpg p-4 bg-slate-800/90 border border-slate-600 rounded-xl hover:border-amber-400 hover:bg-slate-700 text-left">{opt}</button>
                                                 ))}
                                             </div>
                                         </div>
