@@ -165,9 +165,12 @@
   .tucaneo-filtro-bar .tucaneo-filtro-btn-zona {
     padding: 9px 18px; border-radius: 10px; border: 2px solid #e2e8f0; background: #fff;
     font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+    color: #334155;
   }
   .tucaneo-filtro-bar .tucaneo-filtro-btn:hover,
-  .tucaneo-filtro-bar .tucaneo-filtro-btn-zona:hover { border-color: #94a3b8; background: #f8fafc; }
+  .tucaneo-filtro-bar .tucaneo-filtro-btn-zona:hover {
+    border-color: #94a3b8; background: #f1f5f9; color: #1e293b;
+  }
   .tucaneo-filtro-bar .tucaneo-filtro-btn.activo,
   .tucaneo-filtro-bar .tucaneo-filtro-btn-zona.activo { border-color: #0f766e; background: #ccfbf1; color: #0f766e; }
 
@@ -250,10 +253,12 @@
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Europa">Europa</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Alemania">Alemania</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Estados unidos">Estados Unidos</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Paises bajos">Países Bajos</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="China">China</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Brasil">Brasil</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Global">Global</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Historia">Historia</button>
+          <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Condicional">Condicional</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Conversar">Conversar</button>
           <button type="button" class="tucaneo-filtro-btn-zona" data-zona="Otros">Otros</button>
         </div>
@@ -266,6 +271,24 @@
           <span>Acción</span>
         </div>
         <ol class="tucaneo-lista" start="1" id="lista-materiales">
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🔢</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Números en la vida real (números)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1lsJDQIIzguBk7r8TuD3DWj3vHH-J8g4U/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a1">A1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📅</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Rutina con irregulares en el presente simple (presente simple)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1ULKcmdxBD1uL6sVZMLE3o2z4UMTGH7x4/view?usp=drive_link" class="tucaneo-lista-link btn-a1" target="_blank" rel="noopener">Ver material</a>
+          </li>
           <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
             <span class="tucaneo-lista-badge tema-a1">A1</span>
             <span class="tucaneo-lista-icon" aria-hidden="true">🐕</span>
@@ -320,6 +343,15 @@
             </div>
             <a href="https://drive.google.com/file/d/1nx3z4bC6GxSQ0sIwWmcDQRanL3wGLIh6/view?usp=drive_link" class="tucaneo-lista-link btn-a2" target="_blank" rel="noopener">Ver material</a>
           </li>
+          <li class="tucaneo-lista-item" data-nivel="A2" data-zona="General">
+            <span class="tucaneo-lista-badge tema-a2">A2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🦁</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Zoo_Debate_prision_o_salvación (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1Uu_bVCS9rJBWgsvHjigsmUg8JB9Cmg1r/view?usp=drive_link" class="tucaneo-lista-link btn-a2" target="_blank" rel="noopener">Ver material</a>
+          </li>
           <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Europa">
             <span class="tucaneo-lista-badge tema-b1">B1</span>
             <span class="tucaneo-lista-icon" aria-hidden="true">🇪🇺</span>
@@ -337,6 +369,24 @@
               <h3 class="tucaneo-lista-titulo">Paisajes de europa (conversar)</h3>
             </div>
             <a href="https://drive.google.com/file/d/1Ie-ZayWFCGrxWcS-h2NBtzIyEYkFBb36/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Europa">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🛒</span>
+            <div>
+              <div class="tucaneo-lista-tema">Europa</div>
+              <h3 class="tucaneo-lista-titulo">El precio real de las compras (conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1V8VYD3sHDsPD8YQFrPW181WESFpA0yM3/view" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Paises bajos">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🌷</span>
+            <div>
+              <div class="tucaneo-lista-tema">Países Bajos</div>
+              <h3 class="tucaneo-lista-titulo">Viaje a Países bajos (futuro)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1ZWNvN46GtYJxuJCXqCMPuON2WifBI8a-/view" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
           </li>
           <li class="tucaneo-lista-item" data-nivel="B1" data-zona="Alemania">
             <span class="tucaneo-lista-badge tema-b1">B1</span>
@@ -367,6 +417,24 @@
           </li>
           <li class="tucaneo-lista-item" data-nivel="B1" data-zona="General">
             <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">📊</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Marketing (conversación)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/19Z3buQ5H6ZEfQdiAzrJqrYSUd4Xm5HFD/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">👥</span>
+            <div>
+              <div class="tucaneo-lista-tema">General</div>
+              <h3 class="tucaneo-lista-titulo">Guerra de generaciones (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1m2cfho6ZZ5IM0oOMowTVuBtu-EYl8EVM/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B1" data-zona="General">
+            <span class="tucaneo-lista-badge tema-b1">B1</span>
             <span class="tucaneo-lista-icon" aria-hidden="true">📖</span>
             <div>
               <div class="tucaneo-lista-tema">General</div>
@@ -382,6 +450,15 @@
               <h3 class="tucaneo-lista-titulo">Tragame tierra ( pasado simple )</h3>
             </div>
             <a href="https://drive.google.com/file/d/16VeKHHdKioY9czAiXsXQ5ve2TsMNCZfE/view?usp=drive_link" class="tucaneo-lista-link btn-b1" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Condicional">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">❓</span>
+            <div>
+              <div class="tucaneo-lista-tema">Condicional</div>
+              <h3 class="tucaneo-lista-titulo">¿Qué harías? (condicional)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1XDa5wuSVQfGi88ksc2wYL-yjRM1kpbAF/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
           </li>
           <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Historia">
             <span class="tucaneo-lista-badge tema-b2">B2</span>
@@ -462,16 +539,25 @@
               <div class="tucaneo-lista-tema">Global</div>
               <h3 class="tucaneo-lista-titulo">Inmortalidad (conversación)</h3>
             </div>
-            <a href="https://drive.google.com/file/d/1vSBL6y5CJvd1ZqGpYK6LCQZvgelDHFYe/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+            <a href="https://drive.google.com/file/d/1lGW5mH7mX3HjAmFQ_wx3jUzsnXaygMnL/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
           </li>
           <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Global">
             <span class="tucaneo-lista-badge tema-b2">B2</span>
             <span class="tucaneo-lista-icon" aria-hidden="true">🌐</span>
             <div>
               <div class="tucaneo-lista-tema">Global</div>
-              <h3 class="tucaneo-lista-titulo">Sindrome del importor (conversación)</h3>
+              <h3 class="tucaneo-lista-titulo">Síndrome del impostor (conversación)</h3>
             </div>
-            <a href="https://drive.google.com/file/d/10oavRsJXexlPvGVO1epR4MxZG5gZvKki/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+            <a href="https://drive.google.com/file/d/1JKP7XoUCGB24Pkt7kZ9PqV8lMVTldpF7/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
+          </li>
+          <li class="tucaneo-lista-item" data-nivel="B2" data-zona="Global">
+            <span class="tucaneo-lista-badge tema-b2">B2</span>
+            <span class="tucaneo-lista-icon" aria-hidden="true">🚩</span>
+            <div>
+              <div class="tucaneo-lista-tema">Global</div>
+              <h3 class="tucaneo-lista-titulo">Red flags (conversar)</h3>
+            </div>
+            <a href="https://drive.google.com/file/d/1djHRU-XQH5o0UQCkbYNZdM-NGQBI3jIp/view?usp=drive_link" class="tucaneo-lista-link btn-b2" target="_blank" rel="noopener">Ver material</a>
           </li>
           <li class="tucaneo-lista-item" data-nivel="A1" data-zona="General">
             <span class="tucaneo-lista-badge tema-a1">A1</span>

@@ -93,6 +93,11 @@
         }
 
 
+        /* Títulos en banners oscuros: forzar blanco para buen contraste */
+        .reveal .bg-blue-900 h2 {
+            color: #ffffff !important;
+        }
+
         .reveal h2 {
             font-size: 1.8em !important;
             color: var(--primary);
@@ -827,517 +832,1844 @@
         <div class="slides">
 
 
-            <section data-transition="zoom">
-    <div class="slide-container h-full flex flex-col justify-center items-center">
-        <div class="glass-card text-center p-10 animate-fade-in-up border-t-8 border-orange-500">
-            <div class="mb-6 flex justify-center">
-                <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center shadow-lg">
-                    <i class="fas fa-history text-5xl text-orange-400"></i>
-                </div>
-            </div>
-            <h1 class="text-5xl md:text-6xl font-playfair font-bold text-slate-800 mb-4 tracking-tight">
-                La Voz Pasiva
-            </h1>
-            <p class="text-xl text-slate-600 font-lato mb-8">
-                El arte, la historia y los crímenes.
-            </p>
-            <div class="inline-block px-6 py-3 bg-slate-100 rounded-full text-slate-500 font-mono text-sm">
-                <i class="fas fa-code-branch mr-2"></i>Estructura: SER + PARTICIPIO
-            </div>
-        </div>
-    </div>
-</section>
+            <section data-transition="slide" class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+                <div class="slide-container h-full flex flex-col justify-center items-center relative overflow-hidden">
 
-<section data-transition="slide">
-    <div class="slide-container">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-8 flex items-center gap-3">
-            <i class="fas fa-flask text-orange-500"></i> La Fórmula
-        </h2>
+                    <!-- Background: sutiles reflejos fríos (sobrio y dinámico) -->
+                    <div
+                        class="absolute top-0 right-0 w-[28rem] h-[28rem] bg-cyan-500/10 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 w-[24rem] h-[24rem] bg-slate-400/10 rounded-full blur-3xl"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div class="p-6 bg-white/50 rounded-xl border border-slate-200 opacity-70">
-                <h3 class="font-bold text-slate-500 uppercase text-sm mb-2">Normal (Activa)</h3>
-                <p class="text-xl text-slate-800">Cervantes escribió el libro.</p>
-                <div class="mt-2 text-sm text-slate-400">Importante: Cervantes</div>
-            </div>
-            
-            <div class="p-6 bg-white rounded-xl border-2 border-emerald-500 shadow-xl transform scale-105">
-                <h3 class="font-bold text-emerald-600 uppercase text-sm mb-2">Pasiva</h3>
-                <p class="text-2xl font-bold text-slate-800">
-                    El libro <span class="text-orange-500">fue escrito</span> por Cervantes.
-                </p>
-                <div class="mt-2 text-sm text-emerald-600 font-bold">Importante: El libro</div>
-            </div>
-        </div>
+                    <div
+                        class="glass-card w-full max-w-6xl p-8 md:p-12 border border-white/10 bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl relative z-10">
 
-        <div class="flex flex-wrap justify-center gap-2 md:gap-4 font-bold text-white text-lg font-handlee">
-            <div class="bg-slate-700 p-4 rounded-lg shadow-lg flex-1 min-w-[120px] text-center">
-                Sujeto<br><span class="text-xs font-sans font-normal text-slate-300">(El libro)</span>
-            </div>
-            <div class="flex items-center text-slate-400"><i class="fas fa-plus"></i></div>
-            <div class="bg-orange-500 p-4 rounded-lg shadow-lg flex-1 min-w-[120px] text-center">
-                SER<br><span class="text-xs font-sans font-normal text-orange-100">(fue/es)</span>
-            </div>
-            <div class="flex items-center text-slate-400"><i class="fas fa-plus"></i></div>
-            <div class="bg-emerald-600 p-4 rounded-lg shadow-lg flex-1 min-w-[120px] text-center relative">
-                Participio
-                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse">!</span>
-                <br><span class="text-xs font-sans font-normal text-emerald-100">(escrito/a/os/as)</span>
-            </div>
-            <div class="flex items-center text-slate-400"><i class="fas fa-plus"></i></div>
-            <div class="bg-slate-400 p-4 rounded-lg shadow-lg flex-1 min-w-[100px] text-center">
-                POR...
-            </div>
-        </div>
-        
-        <div class="mt-6 text-center text-sm text-red-500 bg-red-50 inline-block px-4 py-2 rounded-lg mx-auto w-full">
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-            ¡Ojo! El participio cambia: El libr<b>o</b> fue escrit<b>o</b> / Las cart<b>as</b> fueron escrit<b>as</b>.
-        </div>
-    </div>
-</section>
-
-<section data-transition="convex">
-    <div class="slide-container">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-6">
-            <i class="fas fa-monument text-slate-400 mr-2"></i> Museo de Historia
-        </h2>
-        <p class="text-slate-600 mb-6 text-center">¿Son estas oraciones pasivas verdaderas o falsas?</p>
-
-        <div class="grid grid-cols-1 gap-4">
-            <div class="glass-card p-4 flex justify-between items-center group hover:bg-white transition">
-                <div class="flex items-center gap-4">
-                    <span class="text-3xl">📱</span>
-                    <p class="text-lg font-bold text-slate-700">
-                        "El iPhone <span class="text-emerald-600">fue creado</span> por Steve Jobs."
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="this.classList.add('bg-green-500','text-white'); this.innerHTML='<i class=\'fas fa-check\'></i> Correcto'" class="px-4 py-2 border-2 border-green-500 text-green-500 rounded-lg font-bold hover:bg-green-50 transition">V</button>
-                    <button onclick="alert('¡Incorrecto! Es verdadero.')" class="px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-bold hover:bg-red-50 transition">F</button>
-                </div>
-            </div>
-
-            <div class="glass-card p-4 flex justify-between items-center group hover:bg-white transition">
-                <div class="flex items-center gap-4">
-                    <span class="text-3xl">🎨</span>
-                    <p class="text-lg font-bold text-slate-700">
-                        "La Mona Lisa <span class="text-emerald-600">fue pintada</span> por Picasso."
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="alert('¡No! Fue pintada por Da Vinci.')" class="px-4 py-2 border-2 border-green-500 text-green-500 rounded-lg font-bold hover:bg-green-50 transition">V</button>
-                    <button onclick="this.classList.add('bg-green-500','text-white'); this.innerHTML='<i class=\'fas fa-check\'></i> Correcto'" class="px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-bold hover:bg-red-50 transition">F</button>
-                </div>
-            </div>
-
-            <div class="glass-card p-4 flex justify-between items-center group hover:bg-white transition">
-                <div class="flex items-center gap-4">
-                    <span class="text-3xl">🌎</span>
-                    <p class="text-lg font-bold text-slate-700">
-                        "América <span class="text-emerald-600">fue descubierta</span> en 1992."
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="alert('¡Casi! Fue en 1492.')" class="px-4 py-2 border-2 border-green-500 text-green-500 rounded-lg font-bold hover:bg-green-50 transition">V</button>
-                    <button onclick="this.classList.add('bg-green-500','text-white'); this.innerHTML='<i class=\'fas fa-check\'></i> Correcto'" class="px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-bold hover:bg-red-50 transition">F</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section data-transition="slide">
-    <div class="slide-container">
-        <div class="bg-orange-100 border-l-8 border-orange-500 p-6 mb-8 rounded-r-xl">
-            <h2 class="text-2xl font-bold text-orange-800 mb-2">⚠️ Zona de Peligro: Concordancia</h2>
-            <p class="text-orange-900">
-                El participio es como un camaleón: cambia según el sujeto.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="bg-white p-6 rounded-xl shadow text-center border-b-4 border-blue-400">
-                <i class="fas fa-car text-4xl text-blue-200 mb-2"></i>
-                <p class="text-lg text-slate-600">El coche fue...</p>
-                <div class="mt-4 space-y-2">
-                    <button class="w-full py-2 border rounded hover:bg-blue-50 transition" onclick="alert('¡Correcto! Masculino Singular')">Robado</button>
-                    <button class="w-full py-2 border rounded hover:bg-red-50 opacity-50 transition" onclick="alert('Error: Coche es masculino')">Robada</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow text-center border-b-4 border-pink-400">
-                <i class="fas fa-cookie-bite text-4xl text-pink-200 mb-2"></i>
-                <p class="text-lg text-slate-600">Las galletas fueron...</p>
-                <div class="mt-4 space-y-2">
-                    <button class="w-full py-2 border rounded hover:bg-red-50 opacity-50 transition" onclick="alert('Error: Galletas son plural y femenino')">Comido</button>
-                    <button class="w-full py-2 border rounded hover:bg-pink-50 transition" onclick="alert('¡Excelente! Femenino Plural')">Comidas</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow text-center border-b-4 border-blue-600">
-                <i class="fas fa-file-contract text-4xl text-blue-300 mb-2"></i>
-                <p class="text-lg text-slate-600">Los contratos fueron...</p>
-                <div class="mt-4 space-y-2">
-                    <button class="w-full py-2 border rounded hover:bg-blue-50 transition" onclick="alert('¡Correcto! Masculino Plural')">Firmados</button>
-                    <button class="w-full py-2 border rounded hover:bg-red-50 opacity-50 transition" onclick="alert('Error: Contratos es plural')">Firmado</button>
-                </div>
-            </div>
-            
-            <div class="bg-white p-6 rounded-xl shadow text-center border-b-4 border-pink-600">
-                <i class="fas fa-city text-4xl text-pink-300 mb-2"></i>
-                <p class="text-lg text-slate-600">La ciudad fue...</p>
-                <div class="mt-4 space-y-2">
-                    <button class="w-full py-2 border rounded hover:bg-red-50 opacity-50 transition" onclick="alert('Error: Ciudad es femenino')">Destruido</button>
-                    <button class="w-full py-2 border rounded hover:bg-pink-50 transition" onclick="alert('¡Correcto! Femenino Singular')">Destruida</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section data-transition="zoom" class="bg-slate-900">
-    <div class="slide-container">
-        <div class="text-center mb-6">
-            <span class="inline-block p-3 bg-slate-800 rounded-full border border-slate-600">
-                <i class="fas fa-user-secret text-4xl text-orange-500"></i>
-            </span>
-            <h2 class="text-3xl font-playfair font-bold text-white mt-4">
-                La Escena del Crimen
-            </h2>
-            <p class="text-slate-400">Ordena las pistas para descubrir qué pasó.</p>
-        </div>
-
-        <div class="max-w-3xl mx-auto bg-slate-800 p-6 rounded-xl shadow-2xl border border-slate-700">
-            <p class="text-center text-emerald-400 font-mono text-sm mb-4">Misión: Construye la frase pasiva correcta.</p>
-            
-            <div class="bg-slate-900 p-4 rounded-lg mb-6 min-h-[80px] flex items-center justify-center gap-2 border-2 border-dashed border-slate-600" id="dropzone">
-                <span class="text-slate-600 italic">Haz clic en las palabras en orden...</span>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-3">
-                <button onclick="addToZone(this, 'El banco')" class="puzzle-piece px-4 py-2 bg-blue-600 text-white rounded font-bold hover:scale-105 transition shadow-lg">El banco</button>
-                <button onclick="addToZone(this, 'fue')" class="puzzle-piece px-4 py-2 bg-orange-600 text-white rounded font-bold hover:scale-105 transition shadow-lg">fue</button>
-                <button onclick="addToZone(this, 'robado')" class="puzzle-piece px-4 py-2 bg-emerald-600 text-white rounded font-bold hover:scale-105 transition shadow-lg">robado</button>
-                <button onclick="addToZone(this, 'por')" class="puzzle-piece px-4 py-2 bg-slate-600 text-white rounded font-bold hover:scale-105 transition shadow-lg">por</button>
-                <button onclick="addToZone(this, 'dos payasos')" class="puzzle-piece px-4 py-2 bg-purple-600 text-white rounded font-bold hover:scale-105 transition shadow-lg">dos payasos</button>
-            </div>
-            
-            <div class="mt-6 text-center">
-                 <button onclick="resetPuzzle()" class="text-slate-400 text-sm hover:text-white underline">Reiniciar pistas</button>
-            </div>
-        </div>
-
-        <script>
-            function addToZone(btn, text) {
-                const zone = document.getElementById('dropzone');
-                if(zone.innerText.includes('Haz clic')) zone.innerHTML = '';
-                
-                const span = document.createElement('span');
-                span.className = "px-3 py-1 bg-slate-700 rounded text-white mx-1 animate-bounce-short";
-                span.innerText = text;
-                zone.appendChild(span);
-                btn.style.display = 'none';
-                
-                if(zone.children.length === 5) {
-                    setTimeout(() => alert('¡CASO RESUELTO! El banco fue robado por dos payasos.'), 500);
-                }
-            }
-            function resetPuzzle() {
-                document.getElementById('dropzone').innerHTML = '<span class="text-slate-600 italic">Haz clic en las palabras en orden...</span>';
-                document.querySelectorAll('.puzzle-piece').forEach(b => b.style.display = 'inline-block');
-            }
-        </script>
-    </div>
-</section>
-
-<section data-transition="slide">
-    <div class="slide-container">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-6 text-center">
-            <i class="fas fa-pencil-alt text-orange-500 mr-2"></i> Tu Turno: Titulares de Noticias
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="glass-card p-0 overflow-hidden group">
-                <div class="h-32 bg-slate-200 flex items-center justify-center text-5xl">
-                    🏆
-                </div>
-                <div class="p-6">
-                    <p class="text-xs font-bold text-slate-400 uppercase">Noticia de última hora</p>
-                    <p class="text-slate-600 text-sm mb-4">Convierte a Pasiva:</br> "Brasil ganó la copa."</p>
-                    <div class="border-t pt-4">
-                        <p class="font-playfair font-bold text-xl text-emerald-900 group-hover:text-orange-600 transition">
-                            "La copa..."
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card p-0 overflow-hidden group">
-                <div class="h-32 bg-slate-200 flex items-center justify-center text-5xl">
-                    👽
-                </div>
-                <div class="p-6">
-                    <p class="text-xs font-bold text-slate-400 uppercase">Ciencia Ficción</p>
-                    <p class="text-slate-600 text-sm mb-4">Convierte a Pasiva:</br> "Los aliens invadieron la Tierra."</p>
-                    <div class="border-t pt-4">
-                        <p class="font-playfair font-bold text-xl text-emerald-900 group-hover:text-orange-600 transition">
-                            "La Tierra..."
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="mt-8 text-center">
-             <p class="text-slate-500 italic">Recuerda: Ser (fue) + Participio (ado/ida) + Por...</p>
-        </div>
-    </div>
-</section>
-
-
-<section data-transition="zoom">
-    <div class="slide-container">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-6 flex items-center gap-3">
-            <span class="text-4xl">🎬</span> La Alfombra Roja
-        </h2>
-        <p class="text-slate-600 mb-8 text-center">Une la película con su director usando la voz pasiva.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-black p-4 rounded-xl shadow-2xl border-2 border-yellow-500 relative group">
-                <div class="absolute -top-4 -right-4 bg-yellow-500 text-black font-bold w-10 h-10 rounded-full flex items-center justify-center">1</div>
-                <div class="text-5xl text-center mb-4">🦖</div>
-                <h3 class="text-white font-bold text-center mb-2">Jurassic Park</h3>
-                <div class="bg-white/10 p-2 rounded text-center">
-                    <p class="text-yellow-500 text-xs uppercase mb-1">Director:</p>
-                    <select class="w-full bg-slate-800 text-white border border-slate-600 rounded p-1 text-sm" onchange="if(this.value=='Spielberg') { this.classList.add('border-green-500', 'text-green-500'); alert('¡Correcto! Fue dirigida por Spielberg.'); }">
-                        <option>¿Quién fue?</option>
-                        <option value="Tarantino">Tarantino</option>
-                        <option value="Spielberg">Spielberg</option>
-                        <option value="Nolan">Nolan</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="bg-black p-4 rounded-xl shadow-2xl border-2 border-yellow-500 relative group">
-                <div class="absolute -top-4 -right-4 bg-yellow-500 text-black font-bold w-10 h-10 rounded-full flex items-center justify-center">2</div>
-                <div class="text-5xl text-center mb-4">🚢</div>
-                <h3 class="text-white font-bold text-center mb-2">Titanic</h3>
-                <div class="bg-white/10 p-2 rounded text-center">
-                    <p class="text-yellow-500 text-xs uppercase mb-1">Director:</p>
-                    <select class="w-full bg-slate-800 text-white border border-slate-600 rounded p-1 text-sm" onchange="if(this.value=='Cameron') { this.classList.add('border-green-500', 'text-green-500'); alert('¡Correcto! Fue dirigida por James Cameron.'); }">
-                        <option>¿Quién fue?</option>
-                        <option value="Cameron">James Cameron</option>
-                        <option value="Scorsese">Scorsese</option>
-                        <option value="Almodóvar">Almodóvar</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="bg-black p-4 rounded-xl shadow-2xl border-2 border-yellow-500 relative group">
-                <div class="absolute -top-4 -right-4 bg-yellow-500 text-black font-bold w-10 h-10 rounded-full flex items-center justify-center">3</div>
-                <div class="text-5xl text-center mb-4">🧙‍♂️</div>
-                <h3 class="text-white font-bold text-center mb-2">Harry Potter 3</h3>
-                <div class="bg-white/10 p-2 rounded text-center">
-                    <p class="text-yellow-500 text-xs uppercase mb-1">Director:</p>
-                    <select class="w-full bg-slate-800 text-white border border-slate-600 rounded p-1 text-sm" onchange="if(this.value=='Cuarón') { this.classList.add('border-green-500', 'text-green-500'); alert('¡Sí! Fue dirigida por el mexicano Alfonso Cuarón.'); }">
-                        <option>¿Quién fue?</option>
-                        <option value="DelToro">Guillermo del Toro</option>
-                        <option value="Cuarón">Alfonso Cuarón</option>
-                        <option value="Lucas">George Lucas</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <p class="mt-6 text-center font-handlee text-xl text-emerald-800">
-            "La película <b>fue dirigida</b> por..."
-        </p>
-    </div>
-</section>
-
-<section data-transition="fade" class="bg-slate-900">
-    <div class="slide-container">
-        <div class="flex items-center justify-center gap-4 mb-8">
-            <span class="text-6xl animate-pulse">👻</span>
-            <h2 class="text-4xl font-playfair font-bold text-purple-300">
-                La Mansión Fantasma
-            </h2>
-        </div>
-        
-        <div class="glass-card bg-slate-800/80 border border-purple-500 p-8 max-w-3xl mx-auto relative overflow-hidden">
-            <div class="absolute top-0 right-0 text-slate-600 text-6xl opacity-30 pointer-events-none">🕸️</div>
-            
-            <p class="text-xl text-slate-300 leading-relaxed font-lato">
-                Ayer entré en la casa abandonada. Todo era extraño...
-            </p>
-            <div class="mt-6 space-y-4">
-                <div class="flex items-center gap-3 bg-slate-900/50 p-3 rounded border border-purple-900">
-                    <span class="text-2xl">🚪</span>
-                    <p class="text-slate-400">La puerta <span class="text-purple-400 font-bold">fue...</span> (abrir)</p>
-                    <button onclick="this.innerText='ABIERTA'; this.classList.add('text-green-400', 'font-bold');" class="ml-auto px-3 py-1 bg-purple-900/50 rounded text-xs hover:bg-purple-700 transition">Revelar</button>
-                </div>
-
-                <div class="flex items-center gap-3 bg-slate-900/50 p-3 rounded border border-purple-900">
-                    <span class="text-2xl">🕯️</span>
-                    <p class="text-slate-400">Las velas <span class="text-purple-400 font-bold">fueron...</span> (encender)</p>
-                    <button onclick="this.innerText='ENCENDIDAS'; this.classList.add('text-green-400', 'font-bold');" class="ml-auto px-3 py-1 bg-purple-900/50 rounded text-xs hover:bg-purple-700 transition">Revelar</button>
-                </div>
-
-                <div class="flex items-center gap-3 bg-slate-900/50 p-3 rounded border border-purple-900">
-                    <span class="text-2xl">💀</span>
-                    <p class="text-slate-400">El grito <span class="text-purple-400 font-bold">fue...</span> (oír)</p>
-                    <button onclick="this.innerText='OÍDO'; this.classList.add('text-green-400', 'font-bold');" class="ml-auto px-3 py-1 bg-purple-900/50 rounded text-xs hover:bg-purple-700 transition">Revelar</button>
-                </div>
-            </div>
-            
-            <p class="mt-6 text-center text-purple-300 italic text-sm">
-                ...por nadie. <i class="fas fa-ghost"></i>
-            </p>
-        </div>
-    </div>
-</section>
-
-<section data-transition="slide">
-    <div class="slide-container">
-        <div class="bg-red-100 border-l-8 border-red-500 p-4 mb-6 flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-red-800">🍽️ Pesadilla en la Cocina</h2>
-                <p class="text-red-700 text-sm">El chef "Pepe Desastres" cocinó hoy. Describe qué pasó.</p>
-            </div>
-            <div class="text-4xl">🤢</div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-4 rounded-xl shadow-md border border-slate-200">
-                <div class="flex justify-center -mt-8">
-                    <span class="bg-slate-100 p-3 rounded-full text-4xl shadow-sm border border-slate-300">🥣</span>
-                </div>
-                <p class="mt-4 text-center font-bold text-slate-700">La sopa</p>
-                <div class="mt-4 text-center">
-                    <p class="text-sm text-slate-500 mb-2">¿Preparada con qué?</p>
-                    <button onclick="alert('¡Qué asco! La sopa fue preparada con agua sucia.')" class="w-full mb-2 p-2 bg-red-50 text-red-700 rounded hover:bg-red-100 text-sm font-bold border border-red-200 transition">
-                        Agua sucia
-                    </button>
-                    <p class="text-xs text-slate-400 italic">"La sopa fue preparada con..."</p>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-md border border-slate-200">
-                <div class="flex justify-center -mt-8">
-                    <span class="bg-slate-100 p-3 rounded-full text-4xl shadow-sm border border-slate-300">🍕</span>
-                </div>
-                <p class="mt-4 text-center font-bold text-slate-700">La pizza</p>
-                <div class="mt-4 text-center">
-                    <p class="text-sm text-slate-500 mb-2">¿Quemada por quién?</p>
-                    <button onclick="alert('¡Pobre pizza! Fue quemada por el chef.')" class="w-full mb-2 p-2 bg-orange-50 text-orange-700 rounded hover:bg-orange-100 text-sm font-bold border border-orange-200 transition">
-                        El chef dormido
-                    </button>
-                    <p class="text-xs text-slate-400 italic">"La pizza fue quemada por..."</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="mt-6 bg-white p-4 rounded-lg shadow-inner text-center">
-             <p class="text-lg font-handlee text-emerald-600 font-bold">
-                 <i class="fas fa-check-circle"></i> Reto:
-             </p>
-             <p class="text-slate-600">Inventa un plato asqueroso: <br> "La ensalada fue mezclada con..."</p>
-        </div>
-    </div>
-</section>
-
-<section data-transition="convex">
-    <div class="slide-container flex flex-col items-center">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-6">
-            <i class="fab fa-instagram text-pink-500"></i> InstaGramática
-        </h2>
-        
-        <div class="bg-white border-8 border-slate-800 rounded-3xl p-4 shadow-2xl max-w-sm w-full relative">
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-slate-800 rounded-b-xl"></div>
-            
-            <div class="mt-4">
-                <div class="flex items-center gap-2 mb-2">
-                    <div class="w-8 h-8 bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-full p-[2px]">
-                        <div class="w-full h-full bg-white rounded-full p-[2px]">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="rounded-full" alt="avatar">
+                        <!-- Hero Icon -->
+                        <div class="mb-12 flex justify-center">
+                            <div class="relative">
+                                <div
+                                    class="absolute inset-0 bg-cyan-400 rounded-full blur-2xl opacity-30"></div>
+                                <div
+                                    class="relative w-48 h-48 bg-slate-800 rounded-full flex items-center justify-center border-2 border-cyan-400/60 shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                                    <i class="fas fa-history text-8xl text-cyan-400 drop-shadow-md"></i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <span class="font-bold text-sm">viajero_loco</span>
-                </div>
-                
-                <div class="bg-slate-200 h-40 rounded flex items-center justify-center text-slate-400 mb-2 relative overflow-hidden group">
-                     <span class="text-6xl z-10">🗽</span>
-                     <img src="https://source.unsplash.com/random/400x300/?newyork" class="absolute inset-0 object-cover opacity-50 group-hover:opacity-80 transition" alt="NY">
-                </div>
-                
-                <div class="text-sm text-slate-800 mb-2">
-                    <span class="font-bold">viajero_loco</span> ¡Increíble viaje! ❤️
-                </div>
-                
-                <div class="bg-slate-50 p-2 rounded text-xs space-y-2">
-                    <p class="text-slate-400 font-bold uppercase text-[10px]">Corrige el comentario:</p>
-                    
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-slate-700">fan_numero1:</span>
-                        <div class="flex-1">
-                            <p class="text-red-400 line-through decoration-2">"La foto tomó por mi hermano."</p>
-                            <div class="mt-1 flex gap-1">
-                                <button onclick="alert('¡Correcto! La foto es femenina singular.')" class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition">Fue tomada</button>
-                                <button onclick="alert('Error: Tomado es masculino.')" class="px-2 py-1 bg-slate-100 text-slate-500 rounded hover:bg-red-100 transition">Fue tomado</button>
+
+                        <!-- Main Title -->
+                        <h1
+                            class="text-7xl md:text-9xl font-playfair font-black text-white mb-8 tracking-tight drop-shadow-2xl">
+                            La Voz Pasiva
+                        </h1>
+
+                        <!-- Subtitle -->
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-16">
+                            <span
+                                class="hidden md:block h-0.5 w-24 bg-gradient-to-r from-transparent to-cyan-400"></span>
+                            <p
+                                class="text-3xl md:text-5xl text-slate-200 font-lato font-light tracking-wide text-center">
+                                El arte, la historia y los crímenes
+                            </p>
+                            <span
+                                class="hidden md:block h-0.5 w-24 bg-gradient-to-l from-transparent to-cyan-400"></span>
+                        </div>
+
+                        <!-- Structure Badge -->
+                        <div
+                            class="inline-flex flex-col md:flex-row items-center gap-6 px-12 py-8 bg-slate-800/80 rounded-2xl border border-slate-600 shadow-2xl hover:border-cyan-400/70 transition-colors group">
+                            <div
+                                class="p-4 bg-cyan-400/15 rounded-full group-hover:bg-cyan-400/25 transition-colors">
+                                <i class="fas fa-code-branch text-5xl text-cyan-400"></i>
+                            </div>
+                            <div class="text-center md:text-left">
+                                <span
+                                    class="block text-2xl text-slate-300 font-bold uppercase tracking-wider mb-2">Estructura</span>
+                                <span class="block text-3xl md:text-5xl text-white font-mono font-bold tracking-widest">
+                                    SER + PARTICIPIO
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+            </section>
 
-<section data-transition="zoom">
-    <div class="slide-container">
-        <h2 class="text-3xl font-playfair font-bold text-emerald-800 mb-4 text-center">
-            <i class="fas fa-gavel text-orange-600 transform -rotate-12"></i> La Subasta Millonaria
-        </h2>
-        <p class="text-center text-slate-600 mb-8">¿Por cuánto dinero fueron vendidos estos objetos?</p>
+            <section data-transition="slide">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
 
-        <div class="flex flex-col gap-4">
-            <div class="bg-white p-4 rounded-xl shadow-lg border-l-8 border-yellow-400 flex items-center justify-between group hover:scale-[1.02] transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-3xl">💎</div>
-                    <div>
-                        <p class="font-bold text-slate-800 text-lg">El Diamante Rosa</p>
-                        <p class="text-sm text-slate-500">Vendido por...</p>
+                    <!-- Header -->
+                    <h2
+                        class="text-5xl md:text-6xl font-playfair font-bold text-emerald-900 mb-8 flex items-center gap-4">
+                        <i class="fas fa-flask text-orange-500 text-6xl"></i> La Fórmula Maestra
+                    </h2>
+
+                    <!-- Introduction for Students -->
+                    <div
+                        class="bg-white/90 p-8 rounded-3xl shadow-xl mb-10 border-l-[12px] border-emerald-500 transform hover:scale-[1.01] transition-transform">
+                        <h3 class="text-3xl font-bold text-emerald-800 mb-3">¿Por qué usamos esto?</h3>
+                        <p class="text-3xl text-slate-700 leading-normal font-lato">
+                            En la Voz Pasiva, <strong>el objeto</strong> se convierte en el protagonista. <br>
+                            No importa "quién" lo hizo, lo importante es <strong>"qué" pasó</strong>.
+                            <span class="block mt-4 text-emerald-600 italic">"La acción es más importante que la
+                                persona"</span>
+                        </p>
+                    </div>
+
+                    <!-- Visual Formula (Huge & Clear) -->
+                    <div
+                        class="flex flex-wrap justify-center items-stretch gap-4 mb-12 text-center font-bold font-handlee text-white">
+                        <!-- Subject -->
+                        <div
+                            class="bg-slate-700 p-8 rounded-2xl shadow-2xl flex-1 min-w-[220px] flex flex-col justify-center transform hover:-translate-y-2 transition">
+                            <span class="text-4xl md:text-5xl mb-2">Sujeto</span>
+                            <span class="text-2xl text-slate-300 font-sans font-normal">(El libro)</span>
+                        </div>
+
+                        <!-- Plus -->
+                        <div class="flex items-center text-slate-400 text-5xl"><i class="fas fa-plus"></i></div>
+
+                        <!-- SER -->
+                        <div
+                            class="bg-orange-500 p-8 rounded-2xl shadow-2xl flex-1 min-w-[220px] flex flex-col justify-center transform hover:-translate-y-2 transition">
+                            <span class="text-4xl md:text-5xl mb-2">SER</span>
+                            <span class="text-2xl text-orange-100 font-sans font-normal">(fue / es)</span>
+                        </div>
+
+                        <!-- Plus -->
+                        <div class="flex items-center text-slate-400 text-5xl"><i class="fas fa-plus"></i></div>
+
+                        <!-- Participio -->
+                        <div
+                            class="bg-emerald-600 p-8 rounded-2xl shadow-2xl flex-1 min-w-[250px] flex flex-col justify-center transform hover:-translate-y-2 transition relative group">
+                            <span class="text-4xl md:text-5xl mb-2">Participio</span>
+                            <div
+                                class="absolute -top-6 -right-6 bg-red-500 w-16 h-16 rounded-full flex items-center justify-center text-4xl shadow-lg animate-pulse border-4 border-white">
+                                !</div>
+                            <span
+                                class="text-2xl text-emerald-100 font-sans font-normal group-hover:text-white transition">(ado
+                                / ido / a / as)</span>
+                        </div>
+
+                        <!-- Plus -->
+                        <div class="flex items-center text-slate-400 text-5xl"><i class="fas fa-plus"></i></div>
+
+                        <!-- Agent -->
+                        <div
+                            class="bg-slate-500 p-8 rounded-2xl shadow-2xl flex-1 min-w-[180px] flex flex-col justify-center transform hover:-translate-y-2 transition">
+                            <span class="text-4xl md:text-5xl mb-2">POR...</span>
+                            <span class="text-2xl text-slate-200 font-sans font-normal">(Persona)</span>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Examples Grid -->
+                    <div class="grid grid-cols-1 gap-8 w-full pb-10">
+
+                        <!-- Example 1: Masculine Singular -->
+                        <div
+                            class="glass-card p-8 flex flex-col md:flex-row items-center justify-between gap-8 border-l-[12px] border-blue-500 bg-white/60">
+                            <div class="text-center md:text-left flex-1">
+                                <span
+                                    class="inline-block px-3 py-1 bg-slate-200 text-slate-600 rounded-full text-xl font-bold mb-3">ACTIVA</span>
+                                <p class="text-3xl md:text-4xl text-slate-800">Cervantes escribió <strong>el
+                                        libro</strong>.</p>
+                            </div>
+                            <i class="fas fa-arrow-right text-5xl text-blue-400 hidden md:block animate-pulse"></i>
+                            <i class="fas fa-arrow-down text-5xl text-blue-400 md:hidden animate-pulse"></i>
+                            <div class="text-center md:text-right flex-1">
+                                <span
+                                    class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xl font-bold mb-3">PASIVA
+                                    (Masc. Sing.)</span>
+                                <div class="text-3xl md:text-4xl text-slate-900 font-bold p-2 bg-white/50 rounded-lg">
+                                    <strong>El libro</strong> fue escrit<span
+                                        class="text-red-600 text-5xl relative top-1">o</span> por Cervantes.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Example 2: Feminine Plural -->
+                        <div
+                            class="glass-card p-8 flex flex-col md:flex-row items-center justify-between gap-8 border-l-[12px] border-pink-500 bg-white/60">
+                            <div class="text-center md:text-left flex-1">
+                                <span
+                                    class="inline-block px-3 py-1 bg-slate-200 text-slate-600 rounded-full text-xl font-bold mb-3">ACTIVA</span>
+                                <p class="text-3xl md:text-4xl text-slate-800">La arquitecta diseñó <strong>las
+                                        casas</strong>.</p>
+                            </div>
+                            <i class="fas fa-arrow-right text-5xl text-pink-400 hidden md:block animate-pulse"></i>
+                            <i class="fas fa-arrow-down text-5xl text-pink-400 md:hidden animate-pulse"></i>
+                            <div class="text-center md:text-right flex-1">
+                                <span
+                                    class="inline-block px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-xl font-bold mb-3">PASIVA
+                                    (Fem. Plural)</span>
+                                <div class="text-3xl md:text-4xl text-slate-900 font-bold p-2 bg-white/50 rounded-lg">
+                                    <strong>Las casas</strong> fueron diseñad<span
+                                        class="text-red-600 text-5xl relative top-1">as</span> por la arquitecta.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section data-transition="slide">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="bg-indigo-600 p-4 rounded-full shadow-lg">
+                            <i class="fas fa-globe-americas text-4xl text-white"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-4xl md:text-5xl font-playfair font-bold text-indigo-900 leading-tight">
+                                Desafío de Cultura Global
+                            </h2>
+                            <p class="text-2xl text-slate-600 font-lato mt-2">
+                                ¿Verdadero o Falso? Lee y decide.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Introduction Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+
+                        <!-- Card 1 -->
+                        <div class="glass-card p-6 border-l-8 border-indigo-500 bg-white/80" id="card-1">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                1. La Torre Eiffel <span class="text-indigo-600">fue construida</span> en Londres.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-1-wrong').classList.remove('hidden'); this.classList.add('opacity-50')"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-1-correct').classList.remove('hidden'); this.classList.add('bg-indigo-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <!-- Feedback -->
+                            <div id="feedback-1-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Correcto! Fue construida en París.
+                            </div>
+                            <div id="feedback-1-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Incorrecto. Está en París.
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="glass-card p-6 border-l-8 border-emerald-500 bg-white/80" id="card-2">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                2. El Quijote <span class="text-emerald-600">fue escrito</span> por Miguel de Cervantes.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-2-correct').classList.remove('hidden'); this.classList.add('bg-emerald-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-2-wrong').classList.remove('hidden'); this.classList.add('opacity-50')"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <!-- Feedback -->
+                            <div id="feedback-2-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Exacto! Es su obra maestra.
+                            </div>
+                            <div id="feedback-2-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Incorrecto. Cervantes es el autor.
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="glass-card p-6 border-l-8 border-indigo-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                3. La Capilla Sixtina <span class="text-indigo-600">fue pintada</span> por Da Vinci.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-3-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-3-correct').classList.remove('hidden'); this.classList.add('bg-indigo-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-3-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Bien! Fue pintada por Miguel Ángel.
+                            </div>
+                            <div id="feedback-3-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Error. Fue Miguel Ángel.
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="glass-card p-6 border-l-8 border-emerald-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                4. La bombilla <span class="text-emerald-600">fue inventada</span> por Thomas Edison.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-4-correct').classList.remove('hidden'); this.classList.add('bg-emerald-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-4-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-4-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Correcto! Y comercializada por él.
+                            </div>
+                            <div id="feedback-4-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Incorrecto. Sí fue él (principalmente).
+                            </div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="glass-card p-6 border-l-8 border-indigo-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                5. El papel <span class="text-indigo-600">fue inventado</span> en Alemania.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-5-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-5-correct').classList.remove('hidden'); this.classList.add('bg-indigo-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-5-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Correcto! Fue inventado en China.
+                            </div>
+                            <div id="feedback-5-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> No. Fue inventado en China.
+                            </div>
+                        </div>
+
+                        <!-- Card 6 -->
+                        <div class="glass-card p-6 border-l-8 border-emerald-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                6. *Avatar* <span class="text-emerald-600">fue dirigida</span> por James Cameron.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-6-correct').classList.remove('hidden'); this.classList.add('bg-emerald-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-6-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-6-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Sí! Es el director.
+                            </div>
+                            <div id="feedback-6-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Error. Es verdadero.
+                            </div>
+                        </div>
+
+                        <!-- Card 7 -->
+                        <div class="glass-card p-6 border-l-8 border-indigo-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                7. Los Juegos Olímpicos <span class="text-indigo-600">fueron celebrados</span> en Roma
+                                (originalmente).
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-7-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-7-correct').classList.remove('hidden'); this.classList.add('bg-indigo-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-7-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Correcto! Fue en Grecia (Olimpia).
+                            </div>
+                            <div id="feedback-7-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Falso. Fue en Grecia.
+                            </div>
+                        </div>
+
+                        <!-- Card 8 -->
+                        <div class="glass-card p-6 border-l-8 border-emerald-500 bg-white/80">
+                            <p class="text-2xl font-bold text-slate-800 mb-4 leading-normal">
+                                8. La penicilina <span class="text-emerald-600">fue descubierta</span> por Fleming.
+                            </p>
+                            <div class="flex gap-3 mb-2">
+                                <button
+                                    onclick="document.getElementById('feedback-8-correct').classList.remove('hidden'); this.classList.add('bg-emerald-600', 'text-white')"
+                                    class="flex-1 py-3 text-2xl font-bold text-green-600 border-2 border-green-500 rounded-xl hover:bg-green-50 transition">
+                                    SÍ
+                                </button>
+                                <button
+                                    onclick="document.getElementById('feedback-8-wrong').classList.remove('hidden');"
+                                    class="flex-1 py-3 text-2xl font-bold text-red-500 border-2 border-red-500 rounded-xl hover:bg-red-50 transition">
+                                    NO
+                                </button>
+                            </div>
+                            <div id="feedback-8-correct"
+                                class="hidden mt-2 p-3 bg-green-100 text-green-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-check-circle mr-2"></i> ¡Correcto! Alexander Fleming.
+                            </div>
+                            <div id="feedback-8-wrong"
+                                class="hidden mt-2 p-3 bg-red-100 text-red-800 rounded-lg text-xl font-bold animate-fade-in">
+                                <i class="fas fa-times-circle mr-2"></i> Incorrecto. Es verdadero.
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <div class="text-right">
-                    <span class="block text-2xl font-black text-emerald-600 font-mono">$50,000,000</span>
-                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">Fue vendido ayer</span>
-                </div>
-            </div>
+            </section>
 
-            <div class="bg-white p-4 rounded-xl shadow-lg border-l-8 border-blue-400 flex items-center justify-between group hover:scale-[1.02] transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-3xl">🎸</div>
-                    <div>
-                        <p class="font-bold text-slate-800 text-lg">La Guitarra de Elvis</p>
-                        <p class="text-sm text-slate-500">Comprada por...</p>
+            <section data-transition="slide" id="concordance-game-section">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+                    <!-- Header with Lives -->
+                    <div class="flex justify-between items-center mb-8 bg-white/50 p-4 rounded-2xl backdrop-blur-sm">
+                        <h2
+                            class="text-3xl md:text-4xl font-playfair font-bold text-orange-800 flex items-center gap-3">
+                            <i class="fas fa-exclamation-triangle text-orange-500"></i> Zona de Peligro
+                        </h2>
+                        <div id="lives-container" class="flex gap-2">
+                            <i class="fas fa-heart text-4xl text-red-500 heart-icon"></i>
+                            <i class="fas fa-heart text-4xl text-red-500 heart-icon"></i>
+                            <i class="fas fa-heart text-4xl text-red-500 heart-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- INTRO SCREEN -->
+                    <div id="game-intro"
+                        class="flex flex-col items-center justify-center flex-grow text-center animate-fade-in">
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl border-b-8 border-orange-500 max-w-3xl">
+                            <i class="fas fa-gamepad text-8xl text-orange-400 mb-6"></i>
+                            <h3 class="text-5xl font-bold text-slate-800 mb-6 font-playfair">El Reto de Concordancia
+                            </h3>
+                            <p class="text-3xl text-slate-600 mb-8 leading-relaxed font-lato">
+                                El participio es como un camaleón: cambia según el sujeto.
+                                <br><span class="text-orange-600 font-bold">¡Tienes 3 vidas para sobrevivir!</span>
+                            </p>
+                            <button onclick="startGame()"
+                                class="px-12 py-4 bg-orange-500 hover:bg-orange-600 text-white text-3xl font-bold rounded-2xl shadow-lg transition transform hover:scale-105 active:scale-95">
+                                ¡JUGAR AHORA!
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GAMEPLAY SCREEN -->
+                    <div id="game-play"
+                        class="hidden flex-col items-center justify-center flex-grow w-full max-w-4xl mx-auto">
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-200 rounded-full h-4 mb-8">
+                            <div id="progress-bar" class="bg-orange-500 h-4 rounded-full transition-all duration-500"
+                                style="width: 0%"></div>
+                        </div>
+
+                        <!-- Question Card -->
+                        <div class="glass-card w-full p-8 md:p-12 relative overflow-hidden transition-all duration-300"
+                            id="question-card">
+
+                            <div class="game-content">
+                                <!-- Icon & Context -->
+                                <div class="text-center mb-6">
+                                    <div id="level-icon" class="text-7xl mb-4 text-slate-700"></div>
+                                    <h3 class="text-4xl text-slate-800 font-bold mb-2 font-playfair">
+                                        <span id="subject-text" class="text-indigo-700">El coche</span>...
+                                    </h3>
+                                </div>
+
+                                <!-- Options -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                    <button id="btn-opt-1" onclick="checkAnswer(0)"
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-3xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[100px]"></button>
+                                    <button id="btn-opt-2" onclick="checkAnswer(1)"
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-3xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[100px]"></button>
+                                </div>
+                            </div>
+
+                            <!-- Feedback Overlay -->
+                            <div id="feedback-overlay"
+                                class="absolute inset-0 bg-white/95 flex flex-col items-center justify-center hidden z-20">
+                                <i id="feedback-icon" class="text-8xl mb-4"></i>
+                                <p id="feedback-text" class="text-4xl font-bold"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WIN SCREEN -->
+                    <div id="game-win"
+                        class="hidden flex-col items-center justify-center flex-grow text-center animate-fade-in">
+                        <div class="bg-green-100 p-10 rounded-3xl shadow-2xl border-b-8 border-green-500 max-w-3xl">
+                            <i class="fas fa-trophy text-8xl text-yellow-500 mb-6 animate-bounce"></i>
+                            <h3 class="text-5xl font-bold text-green-800 mb-4 font-playfair">¡VICTORIA!</h3>
+                            <p class="text-3xl text-green-700 mb-8">Eres un maestro de la concordancia.</p>
+                            <div class="flex flex-col gap-4">
+                                <button onclick="startGame()"
+                                    class="px-10 py-3 bg-green-500 text-white text-2xl font-bold rounded-xl shadow hover:bg-green-600 transition">
+                                    Jugar de nuevo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOSE SCREEN -->
+                    <div id="game-lose"
+                        class="hidden flex-col items-center justify-center flex-grow text-center animate-fade-in">
+                        <div class="bg-red-100 p-10 rounded-3xl shadow-2xl border-b-8 border-red-500 max-w-3xl">
+                            <i class="fas fa-heart-broken text-8xl text-red-500 mb-6 animate-pulse"></i>
+                            <h3 class="text-5xl font-bold text-red-800 mb-4 font-playfair">GAME OVER</h3>
+                            <p class="text-3xl text-red-700 mb-8">Cuidado con el género y número.</p>
+                            <button onclick="startGame()"
+                                class="px-10 py-3 bg-red-500 text-white text-2xl font-bold rounded-xl shadow hover:bg-red-600 transition">
+                                Intentar de nuevo
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Game Logic Script (Scoped) -->
+                <script>
+                    // Game Data
+                    const gameLevels = [
+                        {
+                            subject: "El coche 🚗 fue...",
+                            icon: '',
+                            options: ["Robado", "Robada"],
+                            correct: 0,
+                            feedback: "¡Correcto! Masculino Singular."
+                        },
+                        {
+                            subject: "Las galletas 🍪 fueron...",
+                            icon: '',
+                            options: ["Comido", "Comidas"],
+                            correct: 1,
+                            feedback: "¡Bien! Femenino Plural."
+                        },
+                        {
+                            subject: "Los contratos 📄 fueron...",
+                            icon: '',
+                            options: ["Firmados", "Firmado"],
+                            correct: 0,
+                            feedback: "¡Exacto! Masculino Plural."
+                        },
+                        {
+                            subject: "La ciudad 🏙️ fue...",
+                            icon: '',
+                            options: ["Destruido", "Destruida"],
+                            correct: 1,
+                            feedback: "¡Sí! Femenino Singular."
+                        },
+                        {
+                            subject: "Los libros 📚 fueron...",
+                            icon: '',
+                            options: ["Leídos", "Leída"],
+                            correct: 0,
+                            feedback: "¡Perfecto! Masculino Plural."
+                        }
+                    ];
+
+                    let currentLevelIndex = 0;
+                    let livesCount = 3;
+                    let isGameProcessing = false;
+
+                    // Use window scope to ensure buttons can access these functions
+                    window.startGame = function () {
+                        currentLevelIndex = 0;
+                        livesCount = 3;
+                        isGameProcessing = false;
+
+                        updateLivesUI();
+
+                        document.getElementById('game-intro').classList.add('hidden');
+                        document.getElementById('game-win').classList.add('hidden');
+                        document.getElementById('game-lose').classList.add('hidden');
+
+                        const gamePlay = document.getElementById('game-play');
+                        gamePlay.classList.remove('hidden');
+                        gamePlay.classList.add('flex');
+
+                        loadLevel();
+                    }
+
+                    function updateLivesUI() {
+                        const container = document.getElementById('lives-container');
+                        container.innerHTML = '';
+                        for (let i = 0; i < 3; i++) {
+                            if (i < livesCount) {
+                                container.innerHTML += '<i class="fas fa-heart text-4xl text-red-500 animate-pulse" style="margin: 0 5px;"></i>';
+                            } else {
+                                container.innerHTML += '<i class="fas fa-heart-broken text-4xl text-slate-300" style="margin: 0 5px;"></i>';
+                            }
+                        }
+                    }
+
+                    function loadLevel() {
+                        if (currentLevelIndex >= gameLevels.length) {
+                            showWin();
+                            return;
+                        }
+
+                        const data = gameLevels[currentLevelIndex];
+
+                        // Update Progress
+                        const progress = (currentLevelIndex / gameLevels.length) * 100;
+                        document.getElementById('progress-bar').style.width = progress + '%';
+
+                        // Update Content
+                        document.getElementById('subject-text').innerHTML = data.subject;
+
+                        const btn1 = document.getElementById('btn-opt-1');
+                        const btn2 = document.getElementById('btn-opt-2');
+
+                        btn1.innerText = data.options[0];
+                        btn2.innerText = data.options[1];
+
+                        // Hide feedback
+                        document.getElementById('feedback-overlay').classList.add('hidden');
+                        isGameProcessing = false;
+                    }
+
+                    window.checkAnswer = function (choiceIndex) {
+                        if (isGameProcessing) return;
+                        isGameProcessing = true;
+
+                        const data = gameLevels[currentLevelIndex];
+                        const isCorrect = (choiceIndex === data.correct);
+
+                        const feedbackOverlay = document.getElementById('feedback-overlay');
+                        const feedbackIcon = document.getElementById('feedback-icon');
+                        const feedbackText = document.getElementById('feedback-text');
+
+                        feedbackOverlay.classList.remove('hidden');
+
+                        if (isCorrect) {
+                            // Correct
+                            feedbackIcon.className = "fas fa-check-circle text-8xl text-green-500 mb-4 animate-bounce";
+                            feedbackText.className = "text-5xl font-bold text-green-600";
+                            feedbackText.innerText = data.feedback || "¡Correcto!";
+
+                            if (window.confetti) {
+                                confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, zIndex: 9999 });
+                            }
+
+                            setTimeout(() => {
+                                currentLevelIndex++;
+                                loadLevel();
+                            }, 1500);
+
+                        } else {
+                            // Incorrect
+                            livesCount--;
+                            updateLivesUI();
+
+                            feedbackIcon.className = "fas fa-times-circle text-8xl text-red-500 mb-4";
+                            feedbackText.className = "text-5xl font-bold text-red-600";
+                            feedbackText.innerText = "¡Oh no! Incorrecto.";
+
+                            // CSS Shake animation class would normally be added here if defined, relying on visual feedback for now
+
+                            setTimeout(() => {
+                                if (livesCount <= 0) {
+                                    showLose();
+                                } else {
+                                    // Hide feedback and let them try again (Standard Life Mechanic: You lose a life but can convert the error to learning immediately)
+                                    document.getElementById('feedback-overlay').classList.add('hidden');
+                                    isGameProcessing = false;
+                                }
+                            }, 1500);
+                        }
+                    }
+
+                    function showWin() {
+                        document.getElementById('game-play').classList.add('hidden');
+                        document.getElementById('game-play').classList.remove('flex');
+
+                        const winScreen = document.getElementById('game-win');
+                        winScreen.classList.remove('hidden');
+                        winScreen.classList.add('flex');
+
+                        if (window.confetti) {
+                            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, zIndex: 9999 });
+                        }
+                    }
+
+                    function showLose() {
+                        document.getElementById('game-play').classList.add('hidden');
+                        document.getElementById('game-play').classList.remove('flex');
+
+                        const loseScreen = document.getElementById('game-lose');
+                        loseScreen.classList.remove('hidden');
+                        loseScreen.classList.add('flex');
+                    }
+                </script>
+            </section>
+
+            <section data-transition="slide" class="bg-slate-900" id="detective-game-section">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-slate-800 p-3 rounded-full border border-slate-600 shadow-inner">
+                                <i class="fas fa-user-secret text-4xl text-orange-500"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-3xl md:text-4xl font-playfair font-bold text-slate-100">
+                                    Agencia de Detectives
+                                </h2>
+                                <p class="text-xl text-slate-400 font-mono">Caso #<span id="case-number">001</span>: Palabras Perdidas <span class="text-cyan-400 font-bold">(Nivel <span id="crime-level-num">1</span> de 5)</span></p>
+                            </div>
+                        </div>
+                        <!-- Progress Dots -->
+                        <div class="flex gap-2" id="crime-progress-dots">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- INTRO SCREEN -->
+                    <div id="crime-intro"
+                        class="flex flex-col items-center justify-center flex-grow text-center animate-fade-in py-10">
+                        <div
+                            class="bg-slate-800/80 p-12 rounded-3xl shadow-2xl border border-slate-600 max-w-4xl backdrop-blur-md relative overflow-hidden">
+                            <!-- Tape effect -->
+                            <div
+                                class="absolute top-0 left-0 w-full h-2 bg-yellow-400/80 -rotate-1 transform scale-x-110 origin-center box-shadow-yellow">
+                            </div>
+                            <div
+                                class="absolute bottom-0 right-0 w-full h-2 bg-yellow-400/80 rotate-1 transform scale-x-110 origin-center">
+                            </div>
+
+                            <i class="fas fa-search text-8xl text-emerald-400 mb-8 animate-pulse-slow"></i>
+                            <h3 class="text-5xl font-bold text-white mb-6 font-playfair">¿Puedes resolver el misterio?
+                            </h3>
+                            <p class="text-3xl text-slate-300 mb-6 leading-relaxed font-lato">
+                                El informe policial está desordenado.
+                            </p>
+                            <div class="bg-slate-700/50 rounded-xl p-6 mb-8 text-left border border-slate-600">
+                                <p class="text-2xl text-white font-bold mb-2">Qué tienes que hacer:</p>
+                                <ul class="text-xl text-slate-200 space-y-2 list-disc list-inside">
+                                    <li>Verás <strong>palabras desordenadas</strong> debajo del recuadro.</li>
+                                    <li><strong>Haz clic</strong> en cada palabra para colocarla en el recuadro, en el orden correcto.</li>
+                                    <li>Forma la oración en <strong>voz pasiva</strong>. Si te equivocas, haz clic en la palabra dentro del recuadro para quitarla.</li>
+                                    <li>Hay <strong>5 casos</strong> (niveles). Resuelve todos para cerrar la misión.</li>
+                                </ul>
+                            </div>
+                            <button onclick="startCrimeGame()"
+                                class="group relative px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white text-3xl font-bold rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                                <span class="relative z-10"><i class="fas fa-fingerprint mr-3"></i> ACEPTAR CASO</span>
+                                <div
+                                    class="absolute inset-0 bg-emerald-400 rounded-xl blur opacity-20 group-hover:opacity-40 transition">
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GAME SCREEN -->
+                    <div id="crime-game-board" class="hidden flex-col items-center w-full max-w-5xl mx-auto flex-grow">
+
+                        <!-- Instrucción visible durante el juego -->
+                        <div class="w-full mb-4 p-4 bg-slate-800 rounded-xl border border-slate-600">
+                            <p class="text-xl text-slate-200 text-center">
+                                <i class="fas fa-info-circle text-cyan-400 mr-2"></i>
+                                <strong>Ordena las palabras</strong> haciendo clic en cada una. Se irán añadiendo al recuadro. Si te equivocas, haz clic en la palabra dentro del recuadro para quitarla.
+                            </p>
+                        </div>
+
+                        <!-- Evidence Board (Dropzone) -->
+                        <div class="w-full bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-600 min-h-[160px] flex flex-wrap items-center justify-center p-6 gap-3 mb-8 transition-colors relative"
+                            id="evidence-zone">
+                            <p class="text-slate-400 italic text-2xl pointer-events-none"
+                                id="evidence-placeholder">
+                                Haz clic en las palabras de abajo para colocarlas aquí en orden...
+                            </p>
+                            <!-- Selected words go here -->
+                        </div>
+
+                        <!-- Validation Feedback Area -->
+                        <div id="crime-feedback" class="h-16 mb-6 w-full text-center hidden">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Scrambled Words Source -->
+                        <div class="flex flex-wrap justify-center gap-4 w-full" id="word-pool">
+                            <!-- Buttons go here -->
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="mt-12 flex gap-4">
+                            <button onclick="resetCurrentCrimeLevel()"
+                                class="px-6 py-3 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition font-bold text-xl uppercase tracking-wider">
+                                <i class="fas fa-undo mr-2"></i> Reiniciar
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- VICTORY SCREEN -->
+                    <div id="crime-victory"
+                        class="hidden flex-col items-center justify-center flex-grow text-center animate-fade-in py-10">
+                        <div
+                            class="bg-slate-800 p-12 rounded-3xl shadow-2xl border border-emerald-500 max-w-4xl relative">
+                            <div class="absolute -top-10 -right-10 text-9xl rotate-12 opacity-20">🕵️‍♂️</div>
+
+                            <h3
+                                class="text-6xl font-bold text-emerald-400 mb-6 font-playfair uppercase tracking-widest">
+                                ¡Caso Cerrado!
+                            </h3>
+                            <div class="w-24 h-2 bg-emerald-500 mx-auto mb-8 rounded-full"></div>
+                            <p class="text-3xl text-slate-200 mb-10 font-lato">
+                                Has reconstruido todos los expedientes con éxito. <br>
+                                <span class="text-orange-400 font-bold">La verdad ha sido revelada.</span>
+                            </p>
+                            <button onclick="startCrimeGame()"
+                                class="px-12 py-4 bg-slate-700 hover:bg-slate-600 text-white text-2xl font-bold rounded-xl shadow-lg transition border border-slate-500">
+                                Siguiente Misión
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Game Logic -->
+                <script>
+                    const crimeLevels = [
+                        {
+                            words: ["El banco", "fue", "robado", "por", "dos payasos"],
+                            correct: "El banco fue robado por dos payasos"
+                        },
+                        {
+                            words: ["Las joyas", "fueron", "encontradas", "en", "el jardín"],
+                            correct: "Las joyas fueron encontradas en el jardín"
+                        },
+                        {
+                            words: ["El sospechoso", "fue", "interrogado", "por", "la policía"],
+                            correct: "El sospechoso fue interrogado por la policía"
+                        },
+                        {
+                            words: ["La carta", "fue", "escrita", "con", "tinta invisible"],
+                            correct: "La carta fue escrita con tinta invisible"
+                        },
+                        {
+                            words: ["El misterio", "fue", "resuelto", "por", "los estudiantes"],
+                            correct: "El misterio fue resuelto por los estudiantes"
+                        }
+                    ];
+
+                    let crimeCurrentIndex = 0;
+                    let crimeCurrentSelection = []; // Stores words added to evidence zone
+
+                    window.startCrimeGame = function () {
+                        crimeCurrentIndex = 0;
+                        updateCrimeProgress();
+
+                        // Switch Screens
+                        document.getElementById('crime-intro').classList.add('hidden');
+                        document.getElementById('crime-victory').classList.add('hidden');
+
+                        const gameBoard = document.getElementById('crime-game-board');
+                        gameBoard.classList.remove('hidden');
+                        gameBoard.classList.add('flex');
+
+                        loadCrimeLevel();
+                    }
+
+                    function updateCrimeProgress() {
+                        const dotsContainer = document.getElementById('crime-progress-dots');
+                        dotsContainer.innerHTML = '';
+                        crimeLevels.forEach((_, idx) => {
+                            const dot = document.createElement('div');
+                            dot.className = `w-4 h-4 rounded-full transition-colors duration-300 ${idx === crimeCurrentIndex ? 'bg-orange-500 scale-125' : (idx < crimeCurrentIndex ? 'bg-emerald-500' : 'bg-slate-700')}`;
+                            dotsContainer.appendChild(dot);
+                        });
+                        document.getElementById('case-number').innerText = String(crimeCurrentIndex + 1).padStart(3, '0');
+                        const levelNumEl = document.getElementById('crime-level-num');
+                        if (levelNumEl) levelNumEl.innerText = String(crimeCurrentIndex + 1);
+                    }
+
+                    function loadCrimeLevel() {
+                        updateCrimeProgress();
+                        resetCurrentCrimeLevel();
+                    }
+
+                    window.resetCurrentCrimeLevel = function () {
+                        const levelData = crimeLevels[crimeCurrentIndex];
+                        crimeCurrentSelection = [];
+
+                        // Reset Zone (volver a crear el placeholder para que siempre sea visible cuando está vacío)
+                        const zone = document.getElementById('evidence-zone');
+                        zone.innerHTML = '';
+                        const placeholder = document.createElement('p');
+                        placeholder.id = 'evidence-placeholder';
+                        placeholder.className = 'text-slate-400 italic text-2xl pointer-events-none';
+                        placeholder.textContent = 'Haz clic en las palabras de abajo para colocarlas aquí en orden...';
+                        zone.appendChild(placeholder);
+                        zone.className = "w-full bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-600 min-h-[160px] flex flex-wrap items-center justify-center p-6 gap-3 mb-8 transition-colors relative";
+
+                        // Hide Feedback
+                        const feedbackEl = document.getElementById('crime-feedback');
+                        feedbackEl.innerHTML = '';
+                        feedbackEl.classList.add('hidden');
+
+                        // Scramble Words
+                        let shuffled = [...levelData.words];
+                        shuffled.sort(() => Math.random() - 0.5);
+
+                        // Render Buttons
+                        const pool = document.getElementById('word-pool');
+                        pool.innerHTML = '';
+
+                        shuffled.forEach((word) => {
+                            const btn = document.createElement('button');
+                            btn.className = "puzzle-piece px-6 py-4 bg-slate-700 text-slate-200 border-b-4 border-slate-900 rounded-lg font-bold text-2xl hover:bg-slate-600 hover:-translate-y-1 transition shadow-lg active:translate-y-0 active:border-b-0";
+                            btn.innerText = word;
+                            btn.onclick = () => addToEvidence(btn, word);
+                            pool.appendChild(btn);
+                        });
+                    }
+
+                    function addToEvidence(sourceBtn, text) {
+                        // Remove from pool visually
+                        sourceBtn.style.visibility = 'hidden';
+                        sourceBtn.classList.add('used-word'); // Mark for identification if needed
+
+                        // Add to Zone
+                        const zone = document.getElementById('evidence-zone');
+                        document.getElementById('evidence-placeholder').style.display = 'none';
+
+                        const span = document.createElement('div');
+                        span.className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-2xl font-bold mx-1 animate-fade-in-up border border-indigo-400 shadow-md cursor-pointer hover:bg-red-500 transition-colors relative group";
+                        span.innerHTML = `${text} <i class="fas fa-times-circle ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-sm align-middle"></i>`;
+
+                        // Allow removing/undoing a single word
+                        span.onclick = () => {
+                            span.remove();
+                            sourceBtn.style.visibility = 'visible';
+                            sourceBtn.classList.remove('used-word');
+                            crimeCurrentSelection = crimeCurrentSelection.filter(w => w !== text); // Simple filter might fail dups, but for this game words are unique usually. If not, would need IDs.
+                            // Re-check emptiness
+                            if (crimeCurrentSelection.length === 0) document.getElementById('evidence-placeholder').style.display = 'block';
+                        };
+
+                        zone.appendChild(span);
+                        crimeCurrentSelection.push(text);
+
+                        // Check if full
+                        const levelData = crimeLevels[crimeCurrentIndex];
+                        if (crimeCurrentSelection.length === levelData.words.length) {
+                            checkCrimeSolution();
+                        }
+                    }
+
+                    function checkCrimeSolution() {
+                        const currentSentence = crimeCurrentSelection.join(' ');
+                        const targetSentence = crimeLevels[crimeCurrentIndex].correct;
+                        const feedbackArea = document.getElementById('crime-feedback');
+                        const zone = document.getElementById('evidence-zone');
+
+                        feedbackArea.classList.remove('hidden');
+
+                        if (currentSentence === targetSentence) {
+                            // Success
+                            zone.classList.remove('border-slate-600', 'border-dashed');
+                            zone.classList.add('border-emerald-500', 'bg-emerald-900/20');
+
+                            feedbackArea.innerHTML = `
+                    <div class="text-3xl font-bold text-emerald-400 animate-bounce">
+                        <i class="fas fa-check-circle mr-2"></i> ¡EXCELENTE!
+                    </div>
+                `;
+
+                            if (window.confetti) confetti({ particleCount: 50, origin: { y: 0.7 } });
+
+                            setTimeout(() => {
+                                crimeCurrentIndex++;
+                                if (crimeCurrentIndex < crimeLevels.length) {
+                                    loadLevelSequence(); // Custom animation between levels? Or just load.
+                                } else {
+                                    showCrimeVictory();
+                                }
+                            }, 2000);
+
+                        } else {
+                            // Fail
+                            zone.classList.add('border-red-500', 'animate-shake');
+                            setTimeout(() => zone.classList.remove('animate-shake'), 500);
+
+                            feedbackArea.innerHTML = `
+                    <div class="text-3xl font-bold text-red-500">
+                        <i class="fas fa-times-circle mr-2"></i> Incorrecto, intenta de nuevo.
+                    </div>
+                `;
+
+                            // Optional: Auto reset after delay? or let user fix it. 
+                            // Let's let user fix it manually or hit reset.
+                        }
+                    }
+
+                    function loadLevelSequence() {
+                        const zone = document.getElementById('evidence-zone');
+                        zone.classList.add('opacity-0');
+                        setTimeout(() => {
+                            loadCrimeLevel();
+                            zone.classList.remove('opacity-0');
+                        }, 300);
+                    }
+
+                    function showCrimeVictory() {
+                        document.getElementById('crime-game-board').classList.add('hidden');
+                        document.getElementById('crime-game-board').classList.remove('flex');
+
+                        const victory = document.getElementById('crime-victory');
+                        victory.classList.remove('hidden');
+                        victory.classList.add('flex');
+
+                        if (window.confetti) confetti({ particleCount: 200, spread: 120 });
+                    }
+
+                    // Mostrar los 5 niveles en los puntos desde el inicio
+                    updateCrimeProgress();
+                </script>
+
+                <style>
+                    .animate-pulse-slow {
+                        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                    }
+
+                    .box-shadow-yellow {
+                        box-shadow: 0 4px 20px rgba(250, 204, 21, 0.2);
+                    }
+
+                    /* Custom Shake for this section */
+                    @keyframes shake-x {
+
+                        0%,
+                        100% {
+                            transform: translateX(0);
+                        }
+
+                        20% {
+                            transform: translateX(-10px);
+                        }
+
+                        40% {
+                            transform: translateX(10px);
+                        }
+
+                        60% {
+                            transform: translateX(-10px);
+                        }
+
+                        80% {
+                            transform: translateX(10px);
+                        }
+                    }
+
+                    .animate-shake {
+                        animation: shake-x 0.5s ease-in-out;
+                    }
+                </style>
+            </section>
+
+            <section data-transition="slide">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="bg-blue-900 text-white p-6 rounded-2xl shadow-lg mb-8 border-l-8 border-orange-500">
+                        <h2 class="text-white text-4xl md:text-5xl font-playfair font-bold mb-4 flex items-center gap-4">
+                            <i class="fas fa-newspaper text-orange-400"></i> Redacción de Noticias
+                        </h2>
+                        <p class="text-2xl font-lato text-blue-100">
+                            ¡Eres el <strong>Editor Jefe</strong>! Transforma estas notas simples en titulares pasivos
+                            dramáticos.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-10">
+
+                        <!-- News Item 1: Sports -->
+                        <div
+                            class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 group hover:shadow-2xl transition">
+                            <div class="bg-green-100 p-6 flex justify-between items-center border-b border-green-200">
+                                <span
+                                    class="px-4 py-1 bg-green-600 text-white rounded-full font-bold text-xl uppercase tracking-wider">Deportes</span>
+                                <span class="text-5xl">🏆</span>
+                            </div>
+                            <div class="p-8">
+                                <p class="text-slate-700 text-xl italic mb-2">Un partido histórico...</p>
+                                <p class="text-3xl text-slate-800 font-bold mb-6">"Brasil ganó la copa."</p>
+
+                                <div class="bg-slate-50 p-6 rounded-xl border-l-4 border-slate-400 cursor-pointer hover:bg-green-50 hover:border-green-500 transition"
+                                    onclick="this.querySelector('.answer').classList.remove('hidden'); this.querySelector('.prompt').classList.add('hidden');">
+                                    <p class="prompt text-2xl font-handlee text-slate-800 font-bold">
+                                        <i class="fas fa-pen mr-2"></i> La copa... <span
+                                            class="text-slate-600 font-normal">(clic para ver)</span>
+                                    </p>
+                                    <p
+                                        class="answer hidden text-3xl font-playfair font-bold text-green-700 animate-fade-in-up">
+                                        La copa <span class="text-orange-600">fue ganada</span> por Brasil.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Item 2: Sci-Fi -->
+                        <div
+                            class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 group hover:shadow-2xl transition">
+                            <div class="bg-indigo-100 p-6 flex justify-between items-center border-b border-indigo-200">
+                                <span
+                                    class="px-4 py-1 bg-indigo-600 text-white rounded-full font-bold text-xl uppercase tracking-wider">Ciencia</span>
+                                <span class="text-5xl">👽</span>
+                            </div>
+                            <div class="p-8">
+                                <p class="text-slate-700 text-xl italic mb-2">Pánico en las calles...</p>
+                                <p class="text-3xl text-slate-800 font-bold mb-6">"Los aliens invadieron la Tierra."</p>
+
+                                <div class="bg-slate-50 p-6 rounded-xl border-l-4 border-slate-400 cursor-pointer hover:bg-indigo-50 hover:border-indigo-500 transition"
+                                    onclick="this.querySelector('.answer').classList.remove('hidden'); this.querySelector('.prompt').classList.add('hidden');">
+                                    <p class="prompt text-2xl font-handlee text-slate-800 font-bold">
+                                        <i class="fas fa-pen mr-2"></i> La Tierra... <span
+                                            class="text-slate-600 font-normal">(clic para ver)</span>
+                                    </p>
+                                    <p
+                                        class="answer hidden text-3xl font-playfair font-bold text-indigo-700 animate-fade-in-up">
+                                        La Tierra <span class="text-orange-600">fue invadida</span> por los aliens.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Item 3: Culture -->
+                        <div
+                            class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 group hover:shadow-2xl transition">
+                            <div class="bg-pink-100 p-6 flex justify-between items-center border-b border-pink-200">
+                                <span
+                                    class="px-4 py-1 bg-pink-600 text-white rounded-full font-bold text-xl uppercase tracking-wider">Fama</span>
+                                <span class="text-5xl">🎤</span>
+                            </div>
+                            <div class="p-8">
+                                <p class="text-slate-700 text-xl italic mb-2">El concierto del año...</p>
+                                <p class="text-3xl text-slate-800 font-bold mb-6">"Shakira cantó la canción."</p>
+
+                                <div class="bg-slate-50 p-6 rounded-xl border-l-4 border-slate-400 cursor-pointer hover:bg-pink-50 hover:border-pink-500 transition"
+                                    onclick="this.querySelector('.answer').classList.remove('hidden'); this.querySelector('.prompt').classList.add('hidden');">
+                                    <p class="prompt text-2xl font-handlee text-slate-800 font-bold">
+                                        <i class="fas fa-pen mr-2"></i> La canción... <span
+                                            class="text-slate-600 font-normal">(clic para ver)</span>
+                                    </p>
+                                    <p
+                                        class="answer hidden text-3xl font-playfair font-bold text-pink-700 animate-fade-in-up">
+                                        La canción <span class="text-orange-600">fue cantada</span> por Shakira.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Item 4: Crime -->
+                        <div
+                            class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 group hover:shadow-2xl transition">
+                            <div class="bg-slate-100 p-6 flex justify-between items-center border-b border-slate-200">
+                                <span
+                                    class="px-4 py-1 bg-slate-600 text-white rounded-full font-bold text-xl uppercase tracking-wider">Sucesos</span>
+                                <span class="text-5xl">💎</span>
+                            </div>
+                            <div class="p-8">
+                                <p class="text-slate-700 text-xl italic mb-2">Robo en el museo...</p>
+                                <p class="text-3xl text-slate-800 font-bold mb-6">"El ladrón robó el diamante."</p>
+
+                                <div class="bg-slate-50 p-6 rounded-xl border-l-4 border-slate-400 cursor-pointer hover:bg-slate-200 hover:border-slate-500 transition"
+                                    onclick="this.querySelector('.answer').classList.remove('hidden'); this.querySelector('.prompt').classList.add('hidden');">
+                                    <p class="prompt text-2xl font-handlee text-slate-800 font-bold">
+                                        <i class="fas fa-pen mr-2"></i> El diamante... <span
+                                            class="text-slate-600 font-normal">(clic para ver)</span>
+                                    </p>
+                                    <p
+                                        class="answer hidden text-3xl font-playfair font-bold text-slate-700 animate-fade-in-up">
+                                        El diamante <span class="text-orange-600">fue robado</span> por el ladrón.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <div class="text-right">
-                    <span class="block text-2xl font-black text-emerald-600 font-mono">$1,200,000</span>
-                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">Fue comprada hoy</span>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="mt-8 text-center animate-bounce-slow">
-            <p class="text-xl font-handlee text-orange-600 font-bold mb-4">¿Quién compró la guitarra?</p>
-            <button onclick="this.innerHTML='La guitarra <b>fue comprada</b> por un coleccionista.'; this.className='px-6 py-3 bg-emerald-600 text-white rounded-full font-bold shadow-lg transform scale-110 transition'" class="px-6 py-3 bg-white border-2 border-emerald-600 text-emerald-600 rounded-full font-bold hover:bg-emerald-50 transition">
-                Ver respuesta
-            </button>
-        </div>
-    </div>
-</section>
+
+
+            <section data-transition="slide" class="bg-slate-900" id="haunted-section">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <span class="text-6xl animate-bounce-slow">👻</span>
+                        <div class="text-center">
+                            <h2 class="text-4xl md:text-5xl font-playfair font-bold text-purple-300 drop-shadow-lg">
+                                La Mansión de los Irregulares
+                            </h2>
+                            <p class="text-2xl text-slate-400 font-lato mt-2">
+                                Completa con el participio correcto. <span class="text-purple-400 font-bold">¡Cuidado
+                                    con la concordancia!</span>
+                            </p>
+                        </div>
+                        <span class="text-6xl animate-bounce-slow" style="animation-delay: 1s">🕸️</span>
+                    </div>
+
+                    <!-- Exercises Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 max-w-6xl mx-auto">
+
+                        <!-- Card 1: Door (Abierta) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">🚪</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">Entrada Principal
+                                </p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"La puerta fue..." <span
+                                        class="text-slate-500 text-xl">(abrir)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-1"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(1, 'abierta')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-1" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Mirrors (Rotos) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">🪞</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Pasillo</p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"Los espejos fueron..." <span
+                                        class="text-slate-500 text-xl">(romper)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-2"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(2, 'rotos')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-2" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Candles (Encendidas) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">🕯️</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Salón</p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"Las velas fueron..." <span
+                                        class="text-slate-500 text-xl">(encender)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-3"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(3, 'encendidas')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-3" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Message (Escrito) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">🩸</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">La Pared</p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"Un mensaje fue..." <span
+                                        class="text-slate-500 text-xl">(escribir)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-4"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(4, 'escrito')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-4" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Ghost (Visto) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">👻</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Ático</p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"El fantasma fue..." <span
+                                        class="text-slate-500 text-xl">(ver)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-5"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(5, 'visto')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-5" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Truth (Descubierta) -->
+                        <div
+                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
+                                    <span class="text-4xl">🗝️</span>
+                                </div>
+                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Final</p>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-2xl text-white">"La verdad fue..." <span
+                                        class="text-slate-500 text-xl">(descubrir)</span></p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-6"
+                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
+                                        placeholder="Escribe aquí...">
+                                    <button onclick="checkGhost(6, 'descubierta')"
+                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <p id="feedback-6" class="hidden text-xl font-bold animate-fade-in"></p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <script>
+                        function checkGhost(id, correct) {
+                            const input = document.getElementById('input-' + id);
+                            const feedback = document.getElementById('feedback-' + id);
+                            const val = input.value.trim().toLowerCase();
+
+                            feedback.classList.remove('hidden');
+
+                            if (val === correct.toLowerCase()) {
+                                feedback.className = "text-xl font-bold text-green-400 animate-bounce";
+                                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! ' + correct;
+                                input.classList.add('border-green-500', 'text-green-400');
+                            } else {
+                                feedback.className = "text-xl font-bold text-red-400 animate-shake";
+                                feedback.innerHTML = '<i class="fas fa-times-circle"></i> Intenta de nuevo...';
+                                input.classList.add('border-red-500', 'text-red-400');
+                            }
+                        }
+                    </script>
+
+                    <style>
+                        .animate-bounce-slow {
+                            animation: bounce 3s infinite;
+                        }
+                    </style>
+                </div>
+            </section>
+
+
+            <section data-transition="slide" id="instagram-section">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <i
+                            class="fab fa-instagram text-6xl text-transparent bg-clip-text bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600"></i>
+                        <div>
+                            <h2 class="text-4xl md:text-5xl font-playfair font-bold text-slate-800">
+                                InstaGramática
+                            </h2>
+                            <p class="text-2xl text-slate-500 font-lato mt-2">
+                                Eres un <span class="font-bold text-pink-600">Influencer de la Lengua</span>.
+                                <br>Corrige los errores en los comentarios de tus fans.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Feed Grid -->
+                    <div class="flex flex-col md:flex-row gap-8 justify-center items-start pb-20">
+
+                        <!-- Post 1: NY (Multiple Choice - Basic) -->
+                        <div
+                            class="bg-white border text-left border-gray-200 rounded-xl max-w-sm w-full shadow-lg overflow-hidden group hover:shadow-2xl transition relative">
+                            <!-- User Info -->
+                            <div class="flex items-center p-4">
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-full p-[2px] mr-3">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                                        class="rounded-full bg-white relative z-10" alt="avatar">
+                                </div>
+                                <span class="font-bold text-slate-800">viajero_loco</span>
+                            </div>
+                            <!-- Image Placeholder -->
+                            <div
+                                class="h-64 bg-slate-100 flex items-center justify-center text-8xl text-slate-300 relative overflow-hidden">
+                                🗽
+                                <div class="absolute inset-0 bg-blue-500/10 mix-blend-multiply"></div>
+                            </div>
+                            <!-- Interactions -->
+                            <div class="p-4">
+                                <div class="flex gap-4 text-2xl mb-4 text-slate-700">
+                                    <i class="far fa-heart hover:text-red-500 cursor-pointer transition"></i>
+                                    <i class="far fa-comment"></i>
+                                    <i class="far fa-paper-plane"></i>
+                                </div>
+                                <p class="mb-2"><span class="font-bold text-slate-800">viajero_loco</span> ¡Increíble
+                                    viaje! ❤️</p>
+
+                                <!-- Comment Task -->
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mt-4">
+                                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Corrige a @fan_numero1:
+                                    </p>
+                                    <p class="text-red-400 line-through decoration-2 mb-2">"La foto tomó por mi
+                                        hermano."</p>
+
+                                    <div class="flex flex-col gap-2" id="insta-1-options">
+                                        <button onclick="instaCheck(1, 'tomado', this)"
+                                            class="w-full text-left px-4 py-2 border border-slate-300 rounded hover:bg-slate-100 text-slate-600 text-lg">
+                                            A) Fue tomado
+                                        </button>
+                                        <button onclick="instaCheck(1, 'tomada', this)"
+                                            class="w-full text-left px-4 py-2 border border-slate-300 rounded hover:bg-slate-100 text-slate-600 text-lg">
+                                            B) Fue tomada
+                                        </button>
+                                    </div>
+                                    <div id="insta-feedback-1"
+                                        class="hidden mt-2 p-2 rounded text-lg font-bold text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Post 2: Food (Fill in Blank - Medium) -->
+                        <div
+                            class="bg-white border text-left border-gray-200 rounded-xl max-w-sm w-full shadow-lg overflow-hidden group hover:shadow-2xl transition relative">
+                            <!-- User Info -->
+                            <div class="flex items-center p-4">
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-full p-[2px] mr-3">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria"
+                                        class="rounded-full bg-white relative z-10" alt="avatar">
+                                </div>
+                                <span class="font-bold text-slate-800">la_foodie</span>
+                            </div>
+                            <!-- Image Placeholder -->
+                            <div
+                                class="h-64 bg-slate-100 flex items-center justify-center text-8xl text-slate-300 relative overflow-hidden">
+                                🍝
+                                <div class="absolute inset-0 bg-orange-500/10 mix-blend-multiply"></div>
+                            </div>
+                            <!-- Interactions -->
+                            <div class="p-4">
+                                <div class="flex gap-4 text-2xl mb-4 text-slate-700">
+                                    <i class="far fa-heart hover:text-red-500 cursor-pointer transition"></i>
+                                    <i class="far fa-comment"></i>
+                                    <i class="far fa-paper-plane"></i>
+                                </div>
+                                <p class="mb-2"><span class="font-bold text-slate-800">la_foodie</span> Cena
+                                    romántica... 🕯️</p>
+
+                                <!-- Comment Task -->
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mt-4">
+                                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Completa el comentario:
+                                    </p>
+                                    <p class="text-slate-600 mb-2">"Esta pasta __________ (preparar) por mi novio."</p>
+
+                                    <div class="flex gap-2" id="insta-2-area">
+                                        <input type="text" id="insta-input-2"
+                                            class="w-full border border-slate-300 rounded px-3 py-2 text-lg focus:ring-pink-500 focus:border-pink-500"
+                                            placeholder="Escribe aquí...">
+                                        <button onclick="instaValidate(2, 'fue preparada')"
+                                            class="bg-pink-500 text-white px-4 rounded hover:bg-pink-600 transition">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                    <div id="insta-feedback-2"
+                                        class="hidden mt-2 p-2 rounded text-lg font-bold text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Post 3: Art (Reorder/Complex - Hard) -->
+                        <div
+                            class="bg-white border text-left border-gray-200 rounded-xl max-w-sm w-full shadow-lg overflow-hidden group hover:shadow-2xl transition relative">
+                            <!-- User Info -->
+                            <div class="flex items-center p-4">
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-pink-500 rounded-full p-[2px] mr-3">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Vincent"
+                                        class="rounded-full bg-white relative z-10" alt="avatar">
+                                </div>
+                                <span class="font-bold text-slate-800">arte_urbano</span>
+                            </div>
+                            <!-- Image Placeholder -->
+                            <div
+                                class="h-64 bg-slate-100 flex items-center justify-center text-8xl text-slate-300 relative overflow-hidden">
+                                🎨
+                                <div class="absolute inset-0 bg-purple-500/10 mix-blend-multiply"></div>
+                            </div>
+                            <!-- Interactions -->
+                            <div class="p-4">
+                                <div class="flex gap-4 text-2xl mb-4 text-slate-700">
+                                    <i class="far fa-heart hover:text-red-500 cursor-pointer transition"></i>
+                                    <i class="far fa-comment"></i>
+                                    <i class="far fa-paper-plane"></i>
+                                </div>
+                                <p class="mb-2"><span class="font-bold text-slate-800">arte_urbano</span> Mural nuevo en
+                                    el centro.</p>
+
+                                <!-- Comment Task -->
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mt-4">
+                                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">¿Cómo se dice en Pasiva?
+                                    </p>
+                                    <p class="text-slate-500 italic text-sm mb-2">Active: "El artista pintó el mural."
+                                    </p>
+                                    <p class="text-slate-800 text-lg mb-2">"El mural __________ por el artista."</p>
+
+                                    <div class="flex gap-2" id="insta-3-area">
+                                        <input type="text" id="insta-input-3"
+                                            class="w-full border border-slate-300 rounded px-3 py-2 text-lg focus:ring-pink-500 focus:border-pink-500"
+                                            placeholder="Escribe aquí...">
+                                        <button onclick="instaValidate(3, 'fue pintado')"
+                                            class="bg-pink-500 text-white px-4 rounded hover:bg-pink-600 transition">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                    <div id="insta-feedback-3"
+                                        class="hidden mt-2 p-2 rounded text-lg font-bold text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <script>
+                    function instaCheck(id, val, btn) {
+                        const feedback = document.getElementById('insta-feedback-' + id);
+                        const options = document.getElementById('insta-1-options');
+
+                        feedback.classList.remove('hidden');
+
+                        if (val === 'tomada') {
+                            feedback.className = "mt-2 p-2 rounded text-lg font-bold text-center bg-green-100 text-green-700 animate-bounce";
+                            feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! La foto (ella).';
+                            btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+                            btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+                            // Disable sibling
+                            Array.from(options.children).forEach(c => {
+                                if (c !== btn) c.disabled = true;
+                            });
+                        } else {
+                            feedback.className = "mt-2 p-2 rounded text-lg font-bold text-center bg-red-100 text-red-700 animate-shake";
+                            feedback.innerHTML = '<i class="fas fa-times-circle"></i> Incorrecto. Mira el género.';
+                            btn.classList.add('bg-red-100', 'text-red-700');
+                        }
+                    }
+
+                    function instaValidate(id, correct) {
+                        const input = document.getElementById('insta-input-' + id);
+                        const feedback = document.getElementById('insta-feedback-' + id);
+                        const val = input.value.trim().toLowerCase();
+
+                        feedback.classList.remove('hidden');
+
+                        if (val === correct) {
+                            feedback.className = "mt-2 p-2 rounded text-lg font-bold text-center bg-green-100 text-green-700 animate-bounce";
+                            feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Excelente!';
+                            input.classList.add('border-green-500', 'bg-green-50');
+                        } else {
+                            feedback.className = "mt-2 p-2 rounded text-lg font-bold text-center bg-red-100 text-red-700 animate-shake";
+                            feedback.innerHTML = '<i class="fas fa-times-circle"></i> Casi... intenta de nuevo.';
+                            input.classList.add('border-red-500', 'bg-red-50');
+                        }
+                    }
+                </script>
+            </section>
+
+            <section data-transition="slide" id="auction-section">
+                <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
+
+                    <!-- Header -->
+                    <div class="text-center mb-8 relative">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-yellow-500/30"></div>
+                        <h2
+                            class="text-4xl md:text-5xl font-playfair font-bold text-slate-900 inline-block bg-[#f0f4f8] px-6 relative z-10">
+                            <i class="fas fa-gavel text-yellow-600 transform -rotate-12 mr-3"></i> La Subasta Millonaria
+                        </h2>
+                        <p class="text-2xl text-slate-600 font-lato mt-4">
+                            Eres el cronista. <span class="font-bold text-emerald-700">Reescribe los reportes de venta
+                                usando la Voz Pasiva.</span>
+                        </p>
+                    </div>
+
+                    <!-- Auction Items Container -->
+                    <div class="flex flex-col gap-8 max-w-5xl mx-auto pb-20">
+
+                        <!-- Item 1: Diamond (Simple Masculine) -->
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-yellow-400 flex flex-col md:flex-row gap-6 items-center">
+                            <div class="flex-shrink-0 text-center">
+                                <div
+                                    class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl shadow-inner mb-2 border border-slate-200">
+                                    💎
+                                </div>
+                                <span
+                                    class="bg-emerald-100 text-emerald-800 text-sm font-bold px-3 py-1 rounded-full">$50M</span>
+                            </div>
+                            <div class="flex-grow w-full">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-2">Lote #1: El Diamante Rosa</h3>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-3">
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Voz Activa (Reporte
+                                        original):</span>
+                                    <p class="text-xl text-slate-700 italic">"Un coleccionista anónimo <strong
+                                            class="text-red-500">compró</strong> el diamante ayer."</p>
+                                </div>
+                                <div class="relative">
+                                    <input type="text" id="auction-input-1"
+                                        class="w-full bg-white border-2 border-slate-300 rounded-lg p-3 pr-12 text-xl focus:border-yellow-500 focus:ring-0 transition placeholder-slate-400"
+                                        placeholder="Escribe: El diamante..."
+                                        onkeypress="if(event.key === 'Enter') checkAuction(1, 'fue comprado')">
+                                    <button onclick="checkAuction(1, 'fue comprado')"
+                                        class="absolute right-2 top-2 bottom-2 bg-yellow-500 text-white px-4 rounded-md font-bold hover:bg-yellow-600 transition">
+                                        <i class="fas fa-pen-fancy"></i>
+                                    </button>
+                                </div>
+                                <div id="auction-feedback-1" class="hidden mt-2 text-lg font-bold"></div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Painting (Feminine) -->
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-blue-400 flex flex-col md:flex-row gap-6 items-center">
+                            <div class="flex-shrink-0 text-center">
+                                <div
+                                    class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl shadow-inner mb-2 border border-slate-200">
+                                    🎨
+                                </div>
+                                <span
+                                    class="bg-emerald-100 text-emerald-800 text-sm font-bold px-3 py-1 rounded-full">$120M</span>
+                            </div>
+                            <div class="flex-grow w-full">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-2">Lote #2: La Obra Maestra</h3>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-3">
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Voz Activa (Reporte
+                                        original):</span>
+                                    <p class="text-xl text-slate-700 italic">"Picasso <strong
+                                            class="text-red-500">pintó</strong> esa obra en 1932."</p>
+                                </div>
+                                <div class="relative">
+                                    <input type="text" id="auction-input-2"
+                                        class="w-full bg-white border-2 border-slate-300 rounded-lg p-3 pr-12 text-xl focus:border-blue-500 focus:ring-0 transition placeholder-slate-400"
+                                        placeholder="Escribe: Esa obra..."
+                                        onkeypress="if(event.key === 'Enter') checkAuction(2, 'fue pintada')">
+                                    <button onclick="checkAuction(2, 'fue pintada')"
+                                        class="absolute right-2 top-2 bottom-2 bg-blue-500 text-white px-4 rounded-md font-bold hover:bg-blue-600 transition">
+                                        <i class="fas fa-pen-fancy"></i>
+                                    </button>
+                                </div>
+                                <div id="auction-feedback-2" class="hidden mt-2 text-lg font-bold"></div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3: Letters (Plural Feminine) -->
+                        <div
+                            class="bg-white p-6 rounded-2xl shadow-xl border-l-8 border-purple-400 flex flex-col md:flex-row gap-6 items-center">
+                            <div class="flex-shrink-0 text-center">
+                                <div
+                                    class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl shadow-inner mb-2 border border-slate-200">
+                                    📜
+                                </div>
+                                <span
+                                    class="bg-emerald-100 text-emerald-800 text-sm font-bold px-3 py-1 rounded-full">$3M</span>
+                            </div>
+                            <div class="flex-grow w-full">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-2">Lote #3: Cartas Perdidas</h3>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-3">
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Voz Activa (Reporte
+                                        original):</span>
+                                    <p class="text-xl text-slate-700 italic">"Napoleón <strong
+                                            class="text-red-500">escribió</strong> estas cartas."</p>
+                                </div>
+                                <div class="relative">
+                                    <input type="text" id="auction-input-3"
+                                        class="w-full bg-white border-2 border-slate-300 rounded-lg p-3 pr-12 text-xl focus:border-purple-500 focus:ring-0 transition placeholder-slate-400"
+                                        placeholder="Escribe: Estas cartas..."
+                                        onkeypress="if(event.key === 'Enter') checkAuction(3, 'fueron escritas')">
+                                    <button onclick="checkAuction(3, 'fueron escritas')"
+                                        class="absolute right-2 top-2 bottom-2 bg-purple-500 text-white px-4 rounded-md font-bold hover:bg-purple-600 transition">
+                                        <i class="fas fa-pen-fancy"></i>
+                                    </button>
+                                </div>
+                                <div id="auction-feedback-3" class="hidden mt-2 text-lg font-bold"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <script>
+                        function checkAuction(id, keyword) {
+                            const input = document.getElementById('auction-input-' + id);
+                            const feedback = document.getElementById('auction-feedback-' + id);
+                            const val = input.value.trim().toLowerCase();
+
+                            // Simple validation checking for key passive structure
+                            feedback.classList.remove('hidden');
+
+                            if (val.includes(keyword)) {
+                                feedback.className = "mt-2 p-3 bg-green-100 text-green-800 rounded-lg animate-fade-in";
+                                feedback.innerHTML = `<i class="fas fa-check-circle text-2xl mr-2 align-middle"></i> <span class="align-middle">¡Vendido! Tu reporte es correcto.</span>`;
+                                input.classList.add('border-green-500', 'bg-green-50');
+                            } else {
+                                feedback.className = "mt-2 p-3 bg-red-100 text-red-800 rounded-lg animate-shake";
+                                let tip = "";
+                                if (id == 2) tip = " (Pista: La obra es *ella*)";
+                                if (id == 3) tip = " (Pista: Las cartas son *ellas*, plural)";
+                                feedback.innerHTML = `<i class="fas fa-exclamation-circle text-2xl mr-2 align-middle"></i> <span class="align-middle">No exacto. Busca: <b>"${keyword}"</b>${tip}</span>`;
+                            }
+                        }
+                    </script>
+                </div>
+            </section>
+
+            <section data-transition="slide" class="bg-gradient-to-br from-slate-900 via-purple-900 to-black">
+                <div
+                    class="slide-container h-full flex flex-col justify-center items-center text-center relative overflow-hidden">
+
+                    <!-- Background Effects -->
+                    <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+                        <div class="absolute top-10 left-10 text-9xl animate-spin-slow opacity-30">⚙️</div>
+                        <div class="absolute bottom-10 right-10 text-9xl animate-bounce-slow opacity-30">🌍</div>
+                    </div>
+
+                    <!-- Logo -->
+                    <div class="mb-8 animate-fade-in-down">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png"
+                            alt="Tucaneo Logo" class="h-32 md:h-40 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    </div>
+
+                    <!-- Title -->
+                    <h2
+                        class="text-5xl md:text-6xl font-playfair font-bold text-white mb-6 animate-pulse-slow drop-shadow-[0_0_8px_rgba(0,0,0,0.5)]">
+                        ¡Misión Cumplida!
+                    </h2>
+
+                    <!-- Task Card -->
+                    <div
+                        class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl max-w-4xl w-full mb-8 transform hover:scale-[1.01] transition duration-500 text-left">
+                        <h3 class="text-3xl font-bold text-yellow-400 mb-4 font-playfair text-center">
+                            <i class="fas fa-feather-alt mr-3"></i> Tarea Final
+                        </h3>
+
+                        <p class="text-2xl text-white leading-relaxed font-lato mb-4">
+                            Investiga y escribe <strong>5 datos curiosos</strong> de la historia, cada uno usando la <span
+                                class="text-yellow-300 font-bold">Voz Pasiva</span>. Debes incluir al menos:
+                        </p>
+                        <ul class="text-xl text-slate-200 mb-6 list-disc list-inside space-y-1">
+                            <li>1 <strong>invento</strong></li>
+                            <li>1 <strong>descubrimiento</strong></li>
+                            <li>1 <strong>evento histórico</strong></li>
+                            <li>1 <strong>obra o construcción</strong> famosa</li>
+                            <li>1 hecho sobre un <strong>personaje</strong> histórico</li>
+                        </ul>
+
+                        <p class="text-xl text-white mb-4">
+                            Además, responde en <strong>2-3 líneas</strong>: <em>¿Por qué crees que en noticias e historia se usa tanto la voz pasiva?</em>
+                        </p>
+
+                        <p class="text-lg text-slate-300 mb-4">
+                            <i class="fas fa-star text-yellow-400 mr-2"></i> Extra: Escribe una oración más en voz pasiva sobre un <strong>hecho reciente</strong> (últimos 10 años).
+                        </p>
+
+                        <p class="text-slate-400 text-base mb-4">Ejemplos de formato:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div class="bg-black/30 p-4 rounded-xl border-l-4 border-emerald-500">
+                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Invento</p>
+                                <p class="text-lg text-white">"La bombilla <span class="text-emerald-200 font-semibold">fue inventada</span> por Edison."</p>
+                            </div>
+                            <div class="bg-black/30 p-4 rounded-xl border-l-4 border-purple-500">
+                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Descubrimiento</p>
+                                <p class="text-lg text-white">"América <span class="text-purple-200 font-semibold">fue descubierta</span> en 1492."</p>
+                            </div>
+                            <div class="bg-black/30 p-4 rounded-xl border-l-4 border-cyan-500">
+                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Construcción</p>
+                                <p class="text-lg text-white">"La torre Eiffel <span class="text-cyan-200 font-semibold">fue construida</span> para la Exposición de 1889."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Farewell -->
+                    <p class="text-3xl text-white font-handlee italic animate-fade-in-up delay-300">
+                        ¡Nos vemos en la próxima aventura! 👋
+                    </p>
+
+                </div>
+            </section>
 
         </div>
     </div>
