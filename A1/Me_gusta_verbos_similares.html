@@ -786,6 +786,7 @@
         .demo-ex-row.row-blue { border-left-color: #2563eb; }
         .demo-ex-row.row-amber { border-left-color: #d97706; }
         .demo-ex-row.row-violet { border-left-color: #7c3aed; }
+        .demo-ex-row.row-emerald { border-left-color: #059669; }
         .demo-btn { background: var(--primary); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: transform .15s, box-shadow .15s; }
         .demo-btn.btn-orange { background: #ea580c; }
         .demo-btn.btn-blue { background: #2563eb; }
@@ -810,6 +811,16 @@
         .gustar-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
         .gustar-pill { padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; border: 1px solid #6ee7b7; transition: transform .15s, box-shadow .15s; }
         .gustar-pill:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(5,150,105,.2); }
+
+        /* Final slide: dark gradient background */
+        .reveal section.slide-final-gustar {
+            background: linear-gradient(135deg, #0f766e 0%, #064e3b 50%, #065f46 100%) !important;
+        }
+        .reveal section.slide-final-gustar h2,
+        .reveal section.slide-final-gustar p,
+        .reveal section.slide-final-gustar .text-slate-200 {
+            color: #ffffff !important;
+        }
     </style>
 
 
@@ -887,248 +898,267 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- ========== COVER ========== -->
+            <!-- ========== SLIDE 1: Welcome ========== -->
             <section data-state="from-emerald-900">
                 <div class="h-full flex flex-col justify-center items-center text-center p-6">
-                    <div class="glass-card w-full max-w-5xl p-12 rounded-[3rem] border border-white/20 shadow-2xl relative overflow-hidden bg-gradient-to-br from-emerald-900/90 via-teal-900/85 to-cyan-900/90">
+                    <div class="glass-card w-full max-w-5xl p-12 rounded-[3rem] border border-white/20 shadow-2xl relative overflow-hidden bg-gradient-to-br from-emerald-900/90 via-teal-900/85 to-violet-900/80">
                         <div class="relative z-10 flex flex-col items-center">
-                            <h1 class="font-playfair text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">Gustar &amp; Similar Verbs</h1>
-                            <p class="text-2xl text-slate-100 mb-2">Verbos similares a <em>gustar</em></p>
-                            <p class="text-lg text-amber-200/90 max-w-xl">Express preferences, interests, feelings and dislikes in Spanish. Same structure, more vocabulary.</p>
-                            <div class="w-32 h-1 bg-amber-400 rounded-full my-6"></div>
-                            <p class="text-slate-200 text-sm uppercase tracking-widest font-bold">Level A1 · Spanish</p>
+                            <h1 class="font-playfair text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">Welcome to the &quot;Gustar&quot; Universe</h1>
+                            <p class="text-2xl text-amber-200 mb-2 font-semibold">Verbs with a &quot;Backwards&quot; Logic</p>
+                            <p class="text-lg text-slate-100/90 max-w-xl mt-2">Mastering the structure for expressing feelings, needs, and physical sensations.</p>
+                            <div class="flex gap-4 mt-8 flex-wrap justify-center">
+                                <span class="px-5 py-2 rounded-full bg-amber-500/30 text-amber-100 font-bold text-sm">Level: A1</span>
+                                <span class="px-5 py-2 rounded-full bg-teal-500/30 text-teal-100 font-bold text-sm">Beginner</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ========== WHAT ARE THEY (English) ========== -->
+            <!-- ========== SLIDE 2: Why do we use them? ========== -->
             <section>
                 <div class="slide-container pt-6 px-4">
-                    <h2 class="text-3xl font-bold text-emerald-800 mb-2 font-playfair text-center">What are &quot;verbos similares a gustar&quot;?</h2>
-                    <p class="demo-instr text-center mb-6">These verbs work like <strong>gustar</strong>: the thing that causes the feeling is the <strong>subject</strong>; the person who feels it is the <strong>indirect object</strong> (me, te, le, nos, les).</p>
+                    <h2 class="text-3xl font-bold text-emerald-800 mb-4 font-playfair text-center">Why do we use them? <span class="text-amber-600">(The Logic)</span></h2>
                     <div class="gustar-concept-slide">
-                        <div class="gustar-concept-grid">
-                            <div class="gustar-concept-visual">
-                                <p class="text-sm font-bold text-emerald-800 uppercase tracking-wide mb-3">The logic (Spanish)</p>
-                                <p class="text-slate-700 text-lg leading-relaxed mb-2"><span class="font-bold text-amber-600">Subject</span> <span class="arrow">→</span> thing that causes the feeling</p>
-                                <p class="text-slate-700 text-lg leading-relaxed mb-2"><span class="font-bold text-blue-600">IOP</span> <span class="arrow">→</span> me, te, le, nos, les (who feels it)</p>
-                                <p class="text-slate-600 text-base mt-4">Example: <span class="bg-white px-2 py-1 rounded font-semibold text-emerald-700">Me gusta el café</span> = To me (IOP) is pleasing (verb) the coffee (subject).</p>
+                        <div class="gustar-concept-grid gap-6">
+                            <div class="demo-card card-accent-orange p-6 rounded-2xl shadow-lg border-l-4 border-orange-500">
+                                <p class="text-sm font-bold text-orange-700 uppercase tracking-wide mb-3">English</p>
+                                <p class="text-slate-700 text-lg"><strong>You</strong> do the action:</p>
+                                <p class="text-xl font-bold text-orange-600 mt-2 italic">&quot;I like the book.&quot;</p>
                             </div>
-                            <div class="gustar-concept-text">
-                                <p class="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">English vs Spanish</p>
-                                <p class="text-slate-700 mb-4"><strong class="text-slate-800">In English</strong> we say &quot;I like coffee&quot; or &quot;History interests me&quot;.</p>
-                                <p class="text-slate-700 mb-4"><strong class="text-slate-800">In Spanish</strong> we say &quot;To me is pleasing coffee&quot; or &quot;To me interests history&quot; — same <em>backwards</em> logic for all these verbs.</p>
-                                <p class="text-slate-600 text-sm mb-3">Use them to express:</p>
-                                <div class="gustar-pills">
-                                    <span class="gustar-pill">likes</span>
-                                    <span class="gustar-pill">dislikes</span>
-                                    <span class="gustar-pill">boredom</span>
-                                    <span class="gustar-pill">fear</span>
-                                    <span class="gustar-pill">interest</span>
-                                    <span class="gustar-pill">pain</span>
-                                    <span class="gustar-pill">annoyance</span>
-                                    <span class="gustar-pill">surprise</span>
-                                    <span class="gustar-pill">and more</span>
-                                </div>
+                            <div class="demo-card card-accent-blue p-6 rounded-2xl shadow-lg border-l-4 border-blue-500">
+                                <p class="text-sm font-bold text-blue-700 uppercase tracking-wide mb-3">Spanish</p>
+                                <p class="text-slate-700 text-lg"><strong>The book</strong> does the action to you:</p>
+                                <p class="text-xl font-bold text-blue-600 mt-2 italic">&quot;The book is pleasing to me.&quot;</p>
+                            </div>
+                        </div>
+                        <div class="demo-card card-accent-emerald p-6 rounded-2xl shadow-lg border-l-4 border-emerald-500 mt-6 max-w-3xl mx-auto">
+                            <p class="text-emerald-800 font-bold text-lg mb-2">Key concept:</p>
+                            <p class="text-slate-700">The person is the <strong>receiver</strong> (Indirect Object), and the thing/activity is the <strong>subject</strong>.</p>
+                            <p class="mt-4 text-slate-600 italic">Example: <span class="font-bold text-emerald-700 not-italic">Me gustan los tacos.</span> (The tacos are pleasing to me.)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 3: The Golden Formula ========== -->
+            <section>
+                <div class="slide-container gustar-center">
+                    <h2 class="h2-violet text-3xl">The Golden Formula</h2>
+                    <p class="demo-instr mb-6">To build a sentence, you need these three blocks:</p>
+                    <div class="gustar-card-wrap max-w-2xl">
+                        <div class="flex flex-col gap-4">
+                            <div class="demo-card card-accent-violet p-5 rounded-xl flex items-center gap-4">
+                                <span class="w-12 h-12 rounded-full bg-violet-500 text-white flex items-center justify-center font-black text-xl">1</span>
+                                <div><strong class="text-violet-800">Clarifier (Optional):</strong> A mí, A Juan, A nosotros...</div>
+                            </div>
+                            <div class="demo-card card-accent-blue p-5 rounded-xl flex items-center gap-4">
+                                <span class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-xl">2</span>
+                                <div><strong class="text-blue-800">Pronoun (Mandatory):</strong> me, te, le, nos, os, les.</div>
+                            </div>
+                            <div class="demo-card card-accent-amber p-5 rounded-xl flex items-center gap-4">
+                                <span class="w-12 h-12 rounded-full bg-amber-500 text-white flex items-center justify-center font-black text-xl">3</span>
+                                <div><strong class="text-amber-800">The Verb:</strong> Use singular (-a) for one thing/verb, or plural (-an) for many things.</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ========== INDIRECT OBJECT PRONOUNS ========== -->
+            <!-- ========== SLIDE 4: Verb List Group 1 (Feelings) ========== -->
+            <section>
+                <div class="slide-container pt-6">
+                    <h2 class="text-3xl font-bold text-rose-700 mb-2 font-playfair text-center">Expanded Verb List <span class="text-rose-500">(Group 1: Feelings)</span></h2>
+                    <p class="demo-instr text-center mb-6">These verbs express how you feel about something</p>
+                    <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+                        <div class="demo-card card-accent-emerald p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-emerald-700">Encantar:</strong> <span class="text-slate-600">To love (stronger than gustar)</span></div>
+                        <div class="demo-card card-accent-violet p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-violet-700">Fascinar:</strong> <span class="text-slate-600">To be fascinated by</span></div>
+                        <div class="demo-card p-4 rounded-xl w-[280px] hover:shadow-lg transition border-l-4 border-orange-500"><strong class="text-orange-700">Molestar:</strong> <span class="text-slate-600">To be bothered/annoyed by</span></div>
+                        <div class="demo-card card-accent-amber p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-amber-700">Aburrir:</strong> <span class="text-slate-600">To be bored by</span></div>
+                        <div class="demo-card card-accent-blue p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-blue-700">Interesar:</strong> <span class="text-slate-600">To be interested in</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 5: Verb List Group 2 (Needs & Results) ========== -->
+            <section>
+                <div class="slide-container pt-6">
+                    <h2 class="text-3xl font-bold text-teal-700 mb-2 font-playfair text-center">Expanded Verb List <span class="text-teal-500">(Group 2: Needs &amp; Results)</span></h2>
+                    <p class="demo-instr text-center mb-6">These verbs describe status or what you have/lack</p>
+                    <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+                        <div class="demo-card card-accent-blue p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-blue-700">Faltar:</strong> <span class="text-slate-600">To be missing / To need. (<em>Me falta un tenedor</em>)</span></div>
+                        <div class="demo-card card-accent-emerald p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-emerald-700">Quedar:</strong> <span class="text-slate-600">To have left / To fit (clothing). (<em>Me quedan 5 euros</em>)</span></div>
+                        <div class="demo-card card-accent-amber p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-amber-700">Parecer:</strong> <span class="text-slate-600">To seem / To think. (<em>Me parece bien</em>)</span></div>
+                        <div class="demo-card card-accent-violet p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-violet-700">Importar:</strong> <span class="text-slate-600">To matter / To care. (<em>No me importa el ruido</em>)</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 6: Verb List Group 3 (Sensations) ========== -->
+            <section>
+                <div class="slide-container pt-6">
+                    <h2 class="text-3xl font-bold text-amber-700 mb-2 font-playfair text-center">Expanded Verb List <span class="text-amber-500">(Group 3: Sensations)</span></h2>
+                    <p class="demo-instr text-center mb-6">Commonly used for physical or sudden feelings</p>
+                    <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+                        <div class="demo-card p-4 rounded-xl w-[280px] hover:shadow-lg transition border-l-4 border-rose-500"><strong class="text-rose-700">Doler (o→ue):</strong> <span class="text-slate-600">To hurt. (<em>Me duele la espalda</em>)</span></div>
+                        <div class="demo-card p-4 rounded-xl w-[280px] hover:shadow-lg transition border-l-4 border-cyan-500"><strong class="text-cyan-700">Sorprender:</strong> <span class="text-slate-600">To be surprised by. (<em>Me sorprende el clima</em>)</span></div>
+                        <div class="demo-card card-accent-orange p-4 rounded-xl w-[280px] hover:shadow-lg transition"><strong class="text-orange-700">Picar:</strong> <span class="text-slate-600">To itch. (<em>Me pica la nariz</em>)</span></div>
+                        <div class="demo-card p-4 rounded-xl w-[280px] hover:shadow-lg transition border-l-4 border-indigo-500"><strong class="text-indigo-700">Dar miedo:</strong> <span class="text-slate-600">To be scared of. (<em>Me dan miedo las arañas</em>)</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 7: Exercise 1 - Pronoun Puzzle ========== -->
             <section>
                 <div class="slide-container gustar-center">
-                    <h2 class="h2-blue">Indirect object pronouns (IOP)</h2>
-                    <p class="demo-instr">With <em>gustar</em> and similar verbs we use these pronouns. &quot;Who&quot; is affected = indirect object.</p>
-                    <div class="gustar-card-wrap table-wrap" style="max-width:580px;">
+                    <h2 class="h2-orange">Exercise 1 — The Pronoun Puzzle</h2>
+                    <p class="demo-instr">Fill in the blank with the correct pronoun (<strong>me, te, le, nos, os, les</strong>):</p>
+                    <div class="gustar-card-wrap gustar-ex-grid-1col max-w-2xl">
+                        <div class="demo-ex-row row-orange">1. (A ella) ______ encanta el chocolate.</div>
+                        <div class="demo-ex-row row-orange">2. (A nosotros) ______ faltan los pasaportes.</div>
+                        <div class="demo-ex-row row-orange">3. (A mí) ______ duele la garganta.</div>
+                        <div class="demo-ex-row row-orange">4. (A mis padres) ______ importa mucho mi educación.</div>
+                        <div class="demo-ex-row row-orange">5. (A ti) ¿______ quedan bien los pantalones?</div>
+                        <div class="demo-ex-row row-orange">6. (A Juan y Ana) ______ molestan los mosquitos.</div>
+                        <div class="demo-ex-row row-orange">7. (A vosotros) ______ fascina la música clásica.</div>
+                        <div class="demo-ex-row row-orange">8. (A mi perro) ______ asustan los truenos.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 8: Exercise 2 - Singular or Plural ========== -->
+            <section>
+                <div class="slide-container gustar-center">
+                    <h2 class="h2-blue">Exercise 2 — Singular or Plural?</h2>
+                    <p class="demo-instr">Choose the correct form. Remember: look at what comes <strong>after</strong> the verb.</p>
+                    <div class="gustar-card-wrap gustar-ex-grid-1col max-w-2xl">
+                        <div class="demo-ex-row row-blue">1. Me (gusta / gustan) <strong>los videojuegos</strong>.</div>
+                        <div class="demo-ex-row row-blue">2. ¿Te (duele / duelen) <strong>el brazo</strong>?</div>
+                        <div class="demo-ex-row row-blue">3. Nos (interesa / interesan) <strong>aprender</strong> español.</div>
+                        <div class="demo-ex-row row-blue">4. A él le (falta / faltan) <strong>tres páginas</strong> para terminar.</div>
+                        <div class="demo-ex-row row-blue">5. Me (parece / parecen) <strong>aburrida</strong> esa película.</div>
+                        <div class="demo-ex-row row-blue">6. Les (encanta / encantan) <strong>cocinar</strong> para sus amigos.</div>
+                        <div class="demo-ex-row row-blue">7. ¿Os (queda / quedan) <strong>dinero</strong> en la cartera?</div>
+                        <div class="demo-ex-row row-blue">8. A ella le (pica / pican) <strong>los ojos</strong>.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 9: Exercise 3 - The Fixer ========== -->
+            <section>
+                <div class="slide-container gustar-center">
+                    <h2 class="h2-violet">Exercise 3 — &quot;The Fixer&quot; (Error Correction)</h2>
+                    <p class="demo-instr">Each sentence has ONE mistake. Find it and fix it:</p>
+                    <div class="gustar-card-wrap gustar-ex-grid-1col max-w-2xl">
+                        <div class="demo-ex-row row-violet">1. Yo gusto la pizza de pepperoni. __________</div>
+                        <div class="demo-ex-row row-violet">2. A nosotros nos gustan comer pizza. __________</div>
+                        <div class="demo-ex-row row-violet">3. Me duelen el pie derecho. __________</div>
+                        <div class="demo-ex-row row-violet">4. A María le fascinan el libro. __________</div>
+                        <div class="demo-ex-row row-violet">5. ¿Te importan tu familia? __________</div>
+                        <div class="demo-ex-row row-violet">6. A mí me falta un zapatos. __________</div>
+                        <div class="demo-ex-row row-violet">7. A ellos les encanta los gatos. __________</div>
+                        <div class="demo-ex-row row-violet">8. Nosotros nos aburre la clase. __________</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 10: Exercise 4 - Sentence Scramble ========== -->
+            <section>
+                <div class="slide-container gustar-center">
+                    <h2 class="h2-emerald">Exercise 4 — Sentence Scramble</h2>
+                    <p class="demo-instr">Put the words in the correct order to form a logical sentence:</p>
+                    <div class="gustar-card-wrap gustar-ex-grid-1col max-w-2xl">
+                        <div class="demo-ex-row row-emerald">1. gusta / café / me / el / mucho.</div>
+                        <div class="demo-ex-row row-emerald">2. le / los / aburren / museos / a él.</div>
+                        <div class="demo-ex-row row-emerald">3. dinero / falta / nos / el.</div>
+                        <div class="demo-ex-row row-emerald">4. ¿te / los / molestan / perros?</div>
+                        <div class="demo-ex-row row-emerald">5. a mí / importa / el / no / clima.</div>
+                        <div class="demo-ex-row row-emerald">6. quedan / zapatos / te / bien / los.</div>
+                        <div class="demo-ex-row row-emerald">7. sorprende / me / la / noticia.</div>
+                        <div class="demo-ex-row row-emerald">8. a / ellos / les / encanta / viajar.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== SLIDE 11: Exercise 5 - A + Person Detective ========== -->
+            <section>
+                <div class="slide-container pt-6">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4 font-playfair text-center">Exercise 5 — The &quot;A + Person&quot; Detective</h2>
+                    <p class="demo-instr text-center mb-4">Match the clarifier with the correct sentence:</p>
+                    <div class="table-wrap max-w-4xl mx-auto">
                         <table class="demo-table table-blue">
-                            <thead><tr><th>Person / Clarifier</th><th>Pronoun (IOP)</th><th>Meaning</th></tr></thead>
+                            <thead><tr><th>Clarifier</th><th>Sentence</th></tr></thead>
                             <tbody>
-                                <tr><td>A mí (yo)</td><td class="pronoun-cell">Me</td><td>to me</td></tr>
-                                <tr><td>A ti (tú)</td><td class="pronoun-cell">Te</td><td>to you (informal)</td></tr>
-                                <tr><td>A él / ella / usted</td><td class="pronoun-cell">Le</td><td>to him / her / you (formal)</td></tr>
-                                <tr><td>A nosotros/as</td><td class="pronoun-cell">Nos</td><td>to us</td></tr>
-                                <tr><td>A vosotros/as</td><td class="pronoun-cell">Os</td><td>to you all (Spain)</td></tr>
-                                <tr><td>A ellos / ellas / ustedes</td><td class="pronoun-cell">Les</td><td>to them / you all</td></tr>
+                                <tr><td>1. A Carmen</td><td>a. ... nos faltan las llaves.</td></tr>
+                                <tr><td>2. A mis amigos</td><td>b. ... le duele la cabeza.</td></tr>
+                                <tr><td>3. A nosotros</td><td>c. ... le gusta bailar salsa.</td></tr>
+                                <tr><td>4. A ti</td><td>d. ... les interesan los deportes.</td></tr>
+                                <tr><td>5. A los niños</td><td>e. ... te parece buena la idea.</td></tr>
+                                <tr><td>6. A Pablo</td><td>f. ... les da miedo la oscuridad.</td></tr>
+                                <tr><td>7. A mí</td><td>g. ... os molesta el humo.</td></tr>
+                                <tr><td>8. A vosotros</td><td>h. ... me fascina el arte moderno.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- ========== SINGULAR vs PLURAL ========== -->
+            <!-- ========== SLIDE 12: Exercise 6 - Real-Life Situations ========== -->
             <section>
                 <div class="slide-container gustar-center">
-                    <h2 class="h2-orange">Singular vs plural: the verb agrees with the <strong>subject</strong></h2>
-                    <p class="demo-instr">One thing (or one activity/infinitive) → singular form. More than one thing → plural form.</p>
-                    <div class="gustar-card-wrap" style="max-width:720px;">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="demo-card card-accent-orange rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-0" style="border-top: 4px solid #ea580c !important;">
-                                <div class="flex items-center gap-2 mb-3"><span class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold">1</span><h3 class="text-lg font-bold text-orange-700 m-0">Singular</h3></div>
-                                <p class="text-slate-600 text-sm mb-3">Subject = one noun or infinitive</p>
-                                <div class="demo-ex-row row-orange"><strong>Me gusta</strong> el café.</div>
-                                <div class="demo-ex-row row-orange"><strong>Le encanta</strong> leer.</div>
-                                <div class="demo-ex-row row-orange"><strong>Te duele</strong> la cabeza.</div>
-                            </div>
-                            <div class="demo-card card-accent-blue rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-0" style="border-top: 4px solid #2563eb !important;">
-                                <div class="flex items-center gap-2 mb-3"><span class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">2</span><h3 class="text-lg font-bold text-blue-700 m-0">Plural</h3></div>
-                                <p class="text-slate-600 text-sm mb-3">Subject = plural noun(s)</p>
-                                <div class="demo-ex-row row-blue"><strong>Me gustan</strong> los viajes.</div>
-                                <div class="demo-ex-row row-blue"><strong>Les encantan</strong> los perros.</div>
-                                <div class="demo-ex-row row-blue"><strong>Te duelen</strong> las piernas.</div>
-                            </div>
-                        </div>
+                    <h2 class="h2-amber">Exercise 6 — &quot;Real-Life Situations&quot;</h2>
+                    <p class="demo-instr">How would you say these in Spanish? (Translate or describe the feeling)</p>
+                    <div class="gustar-card-wrap gustar-ex-grid-1col max-w-2xl">
+                        <div class="demo-ex-row row-amber">1. I love to sleep late.</div>
+                        <div class="demo-ex-row row-amber">2. My feet hurt (after walking).</div>
+                        <div class="demo-ex-row row-amber">3. I don&apos;t care about the result.</div>
+                        <div class="demo-ex-row row-amber">4. Does this dress fit me well?</div>
+                        <div class="demo-ex-row row-amber">5. We are missing two chairs.</div>
+                        <div class="demo-ex-row row-amber">6. History bores them.</div>
+                        <div class="demo-ex-row row-amber">7. The noise bothers you (singular/informal).</div>
+                        <div class="demo-ex-row row-amber">8. I&apos;m fascinated by Spanish culture.</div>
                     </div>
                 </div>
             </section>
 
-            <!-- ========== SIMILAR VERBS LIST ========== -->
-            <section>
-                <div class="slide-container pt-6">
-                    <h2 class="text-3xl font-bold text-emerald-800 mb-4 font-playfair text-center">Verbs that work like <em>gustar</em></h2>
-                    <p class="demo-instr text-center">Same structure: (optional clarifier) + IOP + verb (singular/plural) + subject. Meaning in English.</p>
-                    <div class="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
-                        <span class="px-4 py-2.5 bg-amber-100 text-amber-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-amber-200/60">aburrir (to bore)</span>
-                        <span class="px-4 py-2.5 bg-blue-100 text-blue-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-blue-200/60">encantar (to love)</span>
-                        <span class="px-4 py-2.5 bg-violet-100 text-violet-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-violet-200/60">fascinar (to fascinate)</span>
-                        <span class="px-4 py-2.5 bg-red-100 text-red-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-red-200/60">molestar (to bother)</span>
-                        <span class="px-4 py-2.5 bg-emerald-100 text-emerald-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-emerald-200/60">interesar (to interest)</span>
-                        <span class="px-4 py-2.5 bg-rose-100 text-rose-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-rose-200/60">doler (to hurt)</span>
-                        <span class="px-4 py-2.5 bg-orange-100 text-orange-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-orange-200/60">preocupa(r) (to worry)</span>
-                        <span class="px-4 py-2.5 bg-slate-200 text-slate-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-slate-300/60">disgustar (to disgust)</span>
-                        <span class="px-4 py-2.5 bg-cyan-100 text-cyan-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-cyan-200/60">sorprender (to surprise)</span>
-                        <span class="px-4 py-2.5 bg-amber-100 text-amber-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-amber-200/60">caer bien/mal (to suit)</span>
-                        <span class="px-4 py-2.5 bg-indigo-100 text-indigo-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-indigo-200/60">dar miedo (to scare)</span>
-                        <span class="px-4 py-2.5 bg-teal-100 text-teal-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-teal-200/60">relajar (to relax)</span>
-                        <span class="px-4 py-2.5 bg-fuchsia-100 text-fuchsia-800 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-fuchsia-200/60">parecer (to seem)</span>
-                    </div>
-                    <p class="text-center text-slate-600 text-sm mt-6 max-w-2xl mx-auto">All use <strong>me, te, le, nos, os, les</strong> and agree in number with the subject (gusta/gustan, encanta/encantan, duele/duelen, etc.).</p>
-                </div>
-            </section>
-
-            <!-- ========== EXAMPLES COLOR-CODED ========== -->
+            <!-- ========== SLIDE 13: Summary Checklist ========== -->
             <section>
                 <div class="slide-container gustar-center">
-                    <h2 class="h2-violet">Examples (IOP · verb · subject)</h2>
-                    <p class="demo-instr">(A mí) <span class="text-orange-600 font-bold">me</span> <span class="text-blue-600 font-bold">gusta</span> <span class="text-emerald-700 font-bold">el café</span>. — I like coffee.</p>
-                    <div class="gustar-card-wrap" style="max-width:580px;">
-                        <div class="demo-card card-accent-violet rounded-2xl shadow-lg border-0" style="border-top: 4px solid #7c3aed !important;">
-                            <div class="demo-ex-row row-violet">(A ti) <strong>te</strong> <strong>fascina</strong> leer. — You love to read.</div>
-                            <div class="demo-ex-row row-violet">(A ella) <strong>le</strong> <strong>encantan</strong> los perros. — She loves dogs.</div>
-                            <div class="demo-ex-row row-violet">(A ellos) <strong>les</strong> <strong>molestan</strong> los tacos. — Rush-hour tacos bother them.</div>
-                            <div class="demo-ex-row row-violet">(A mí) <strong>me</strong> <strong>duele</strong> la cabeza. — My head hurts.</div>
-                            <div class="demo-ex-row row-violet">(A nosotros) <strong>nos</strong> <strong>interesan</strong> los museos. — Museums interest us.</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ========== EXERCISE 1 ========== -->
-            <section>
-                <div class="slide-container gustar-center">
-                    <h2 class="h2-orange">Exercise 1: Choose <strong>le</strong> or <strong>les</strong> and the correct verb form</h2>
-                    <p class="demo-instr">IOP: one person = le, more than one = les. Verb agrees with subject (singular/plural).</p>
-                    <div id="ex1-result" class="mb-4 font-bold text-slate-600 min-h-1em"></div>
-                    <div id="ex1-container" class="gustar-ex-grid-1col">
-                        <div class="demo-ex-row flex row-orange">A Julia <input type="text" class="clean-input" style="width:4rem;" data-correct="le" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="gusta" placeholder="?"> ver películas animadas.</div>
-                        <div class="demo-ex-row flex row-orange">A mis primas <input type="text" class="clean-input" style="width:4rem;" data-correct="les" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="encantan" placeholder="?"> los juegos de mesa.</div>
-                        <div class="demo-ex-row flex row-orange">A Luciana <input type="text" class="clean-input" style="width:4rem;" data-correct="le" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="duelen" placeholder="?"> las piernas.</div>
-                        <div class="demo-ex-row flex row-orange">A Diego y a Mariana <input type="text" class="clean-input" style="width:4rem;" data-correct="les" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="gusta" placeholder="?"> el cine.</div>
-                    </div>
-                    <button type="button" onclick="checkDemonstrativos('ex1-container','ex1-result')" class="demo-btn btn-orange mt-4">Check answers</button>
-                </div>
-            </section>
-
-            <!-- ========== EXERCISE 2 ========== -->
-            <section>
-                <div class="slide-container gustar-center">
-                    <h2 class="h2-blue">Exercise 2: Complete the sentence</h2>
-                    <p class="demo-instr">Use the correct IOP and verb form (singular or plural).</p>
-                    <div id="ex2-result" class="mb-4 font-bold text-slate-600 min-h-1em"></div>
-                    <div id="ex2-container" class="gustar-ex-grid-1col">
-                        <div class="demo-ex-row flex row-blue">A ellas les fascina reírse. ✓</div>
-                        <div class="demo-ex-row flex row-blue">A mí <input type="text" class="clean-input" style="width:4rem;" data-correct="me" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="encantan" placeholder="?"> las frutas frescas.</div>
-                        <div class="demo-ex-row flex row-blue">A Nina <input type="text" class="clean-input" style="width:4rem;" data-correct="le" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="gusta" placeholder="?"> organizar sus lápices.</div>
-                        <div class="demo-ex-row flex row-blue">A ella <input type="text" class="clean-input" style="width:4rem;" data-correct="le" placeholder="?"> <input type="text" class="clean-input" style="width:5rem;" data-correct="gustan" placeholder="?"> los libros de ciencia ficción.</div>
-                    </div>
-                    <button type="button" onclick="checkDemonstrativos('ex2-container','ex2-result')" class="demo-btn btn-blue mt-4">Check answers</button>
-                </div>
-            </section>
-
-            <!-- ========== EXERCISE 3: Match ========== -->
-            <section>
-                <div class="slide-container pt-6">
-                    <h2 class="text-2xl font-bold text-emerald-800 mb-4 font-playfair text-center">Exercise 3: Match the person with what they like</h2>
-                    <p class="demo-instr text-center">Model: <em>Si a ellos les interesan los museos, deben ir al Museo.</em></p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
-                        <div class="card border-l-4 border-amber-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-amber-800 mb-2">Familia Smith</p><p class="text-slate-600">Nos interesan los museos.</p></div>
-                        <div class="card border-l-4 border-blue-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-blue-800 mb-2">Katri y Misha</p><p class="text-slate-600">Nos encanta hacer rappel.</p></div>
-                        <div class="card border-l-4 border-violet-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-violet-800 mb-2">Kevin, Mia y Liz</p><p class="text-slate-600">Nos enloquece el karaoke.</p></div>
-                        <div class="card border-l-4 border-emerald-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-emerald-800 mb-2">Jonas</p><p class="text-slate-600">Me gusta el cine al aire libre.</p></div>
-                        <div class="card border-l-4 border-orange-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-orange-800 mb-2">Karina</p><p class="text-slate-600">Me fascinan las artesanías.</p></div>
-                        <div class="card border-l-4 border-rose-500 p-5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"><p class="font-bold text-rose-800 mb-2">Rob y Any</p><p class="text-slate-600">Nos encanta la bici.</p></div>
-                    </div>
-                    <p class="text-center text-slate-500 text-sm mt-4">Write one full sentence per group using <em>Si a … le/les …, …</em></p>
-                </div>
-            </section>
-
-            <!-- ========== READING ========== -->
-            <section>
-                <div class="slide-container pt-6">
-                    <h2 class="text-2xl font-bold text-emerald-800 mb-4 font-playfair text-center">Reading: Ariel&#39;s presentation</h2>
-                    <p class="demo-instr text-center">Find gustar-like verbs: gustar, encantar, molestar, interesar, caer, afectar, aburrir, convener.</p>
-                    <div class="max-w-3xl mx-auto card bg-gradient-to-br from-amber-50 to-orange-50/50 border-l-4 border-amber-500 p-6 text-left rounded-2xl shadow-lg border border-amber-100">
-                        <p class="text-slate-700 leading-relaxed mb-4">¡Hola! Me llamo Ariel y soy de Chicago. Me <strong class="text-amber-700">fascina</strong> viajar. No me <strong class="text-amber-700">gustan</strong> mucho los aviones. Me <strong class="text-amber-700">encanta</strong> tomar fotos. Me <strong class="text-amber-700">molesta</strong> dormir en hostales, pero me <strong class="text-amber-700">interesan</strong> las historias de los mochileros. Me <strong class="text-amber-700">gusta</strong> la comida; los frijoles me <strong class="text-amber-700">caen</strong> mal. A veces me <strong class="text-amber-700">afectan</strong> las historias. Me <strong class="text-amber-700">aburre</strong> viajar sola; si me <strong class="text-amber-700">conviene</strong> estar acompañada, continúo con alguien del hostal.</p>
-                        <p class="text-sm text-slate-500 italic">— Ariel</p>
-                    </div>
-                    <p class="text-center text-slate-600 text-sm mt-4">What does Ariel like? What bothers her? What interests her?</p>
-                </div>
-            </section>
-
-            <!-- ========== EXERCISE 4: Fill-in ========== -->
-            <section>
-                <div class="slide-container gustar-center">
-                    <h2 class="h2-amber">Exercise 4: Fill in the correct form</h2>
-                    <p class="demo-instr">Conjugate: correct IOP + singular or plural verb.</p>
-                    <div id="ex4-result" class="mb-4 font-bold text-slate-600 min-h-1em"></div>
-                    <div id="ex4-container" class="gustar-card-wrap text-left max-w-2xl">
-                        <div class="demo-card card-accent-amber space-y-2">
-                            <p>A mi papá <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="le gusta" placeholder="?"> la piña y a mí <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="me encanta" placeholder="?"> el kiwi.</p>
-                            <p>A ellos no <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="les gustan" placeholder="?"> los carros porque <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="les fascinan" placeholder="?"> las motos.</p>
-                            <p>A Selina <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="le duelen" placeholder="?"> los pies, pero no <input type="text" class="clean-input" style="width:6rem; display:inline-block;" data-correct="le duele" placeholder="?"> la cabeza.</p>
-                        </div>
-                    </div>
-                    <button type="button" onclick="checkDemonstrativos('ex4-container','ex4-result')" class="demo-btn btn-amber mt-4">Check answers</button>
-                </div>
-            </section>
-
-            <!-- ========== TAREA FINAL ========== -->
-            <section>
-                <div class="slide-container gustar-center">
-                    <h2 class="h2-violet">Final task (Tarea)</h2>
-                    <p class="demo-instr">Choose one option. Use <strong>gustar</strong> and at least <strong>3 similar verbs</strong> (encantar, interesar, molestar, aburrir, doler, caer bien/mal, etc.).</p>
+                    <h2 class="text-3xl font-bold text-emerald-800 mb-6 font-playfair">Summary Checklist</h2>
                     <div class="gustar-card-wrap max-w-2xl">
-                        <div class="demo-card card-accent-violet">
-                            <ol class="list-decimal list-inside space-y-3 text-slate-700">
-                                <li><strong>Paragraph:</strong> 5–6 sentences about your free time: what you like, what bores you, what interests you, what bothers you.</li>
-                                <li><strong>Interview:</strong> Answer in full sentences: ¿Qué te gusta leer? ¿Qué te molesta de tu ciudad? ¿Qué te fascina comer?</li>
-                                <li><strong>Presentation:</strong> Introduce yourself like Ariel with at least 4 gustar-like verbs.</li>
-                            </ol>
-                            <div class="mt-4 p-4 bg-violet-50 rounded-lg"><p class="text-sm text-violet-800 font-bold">Submit:</p><p class="text-slate-600 text-sm">Write or record and share with your teacher.</p></div>
+                        <div class="demo-card card-accent-emerald p-6 space-y-4">
+                            <p class="flex items-start gap-3"><span class="text-emerald-500 text-xl">✓</span> <strong>The Pronoun is key:</strong> Never use &quot;Yo&quot;, &quot;Tú&quot;, &quot;Nosotros&quot; alone. Use &quot;Me&quot;, &quot;Te&quot;, &quot;Nos&quot;, etc.</p>
+                            <p class="flex items-start gap-3"><span class="text-emerald-500 text-xl">✓</span> <strong>Singular (-a):</strong> Use for objects (el, la) and verbs (infinitive).</p>
+                            <p class="flex items-start gap-3"><span class="text-emerald-500 text-xl">✓</span> <strong>Plural (-an):</strong> Use for plural objects (los, las).</p>
+                            <p class="flex items-start gap-3"><span class="text-emerald-500 text-xl">✓</span> <strong>&quot;A mí&quot;, &quot;A ti&quot;:</strong> Use these for emphasis or to clear up confusion.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ========== FINAL ========== -->
-            <section>
-                <div class="slide-container gustar-center pt-8">
-                    <div class="rounded-full w-20 h-20 bg-emerald-600 text-white flex items-center justify-center text-4xl mx-auto mb-6">✓</div>
-                    <h2 class="text-3xl font-bold text-emerald-800 mb-2">¡Excelente!</h2>
-                    <p class="text-slate-600 mb-4">You completed <strong>Gustar &amp; Similar Verbs</strong>.</p>
-                    <p class="text-sm text-slate-500 italic">Do your final task and download as PDF if needed.</p>
+            <!-- ========== SLIDE 14: Final Challenge + Logo + Tarea ========== -->
+            <section class="slide-final-gustar" data-state="from-teal-900">
+                <div class="slide-container gustar-center pt-6">
+                    <div class="flex flex-col items-center">
+                        <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo" class="w-32 h-auto mb-6 opacity-95">
+                        <h2 class="text-3xl font-bold text-white mb-4 font-playfair">Final Challenge — &quot;Find Someone Who...&quot;</h2>
+                        <p class="text-slate-200 mb-6 text-center">Ask your classmates (in Spanish) until you find someone for each:</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-6">
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">1. ¿Te <strong>gusta</strong> el sushi?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">2. ¿Te <strong>duelen</strong> los pies hoy?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">3. ¿Te <strong>encanta</strong> el reggaeton?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">4. ¿Te <strong>interesa</strong> la política?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">5. ¿Te <strong>molesta</strong> el calor?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">6. ¿Te <strong>falta</strong> un lápiz?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">7. ¿Te <strong>parece</strong> fácil el español?</div>
+                        <div class="demo-card bg-white/95 p-4 rounded-xl shadow-lg">8. ¿Te <strong>aburre</strong> ver el golf?</div>
+                    </div>
+                    <div class="demo-card card-accent-amber p-6 rounded-2xl max-w-2xl mx-auto border-2 border-amber-400">
+                        <h3 class="text-xl font-bold text-amber-800 mb-3 flex items-center gap-2"><i class="fas fa-tasks"></i> Tarea</h3>
+                        <p class="text-slate-700 mb-2">Completa el reto &quot;Find Someone Who...&quot; en clase. Escribe los nombres de las personas que encuentres.</p>
+                        <p class="text-slate-600 text-sm italic">Entrega tu lista a tu profesor. ¡Sigue practicando en tucaneo.com!</p>
+                    </div>
                 </div>
             </section>
 

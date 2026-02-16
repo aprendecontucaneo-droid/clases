@@ -848,7 +848,11 @@
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
                         <h2><i class="fas fa-clock text-[#ff6f00] mr-2"></i>Regla básica</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> For <strong>1:00</strong> we use <strong>Es la una</strong> (singular). For <strong>2:00 to 12:00</strong> we use <strong>Son las...</strong> (plural). We use "la/las" because <em>hora</em> (hour) is feminine.</p>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">For
+                            <strong>1:00</strong> we use <strong>Es la una</strong> (singular). For <strong>2:00 to
+                                12:00</strong> we use <strong>Son las...</strong> (plural). We use "la/las" because
+                            <em>hora</em> (hour) is feminine.
+                        </p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="card p-6 bg-amber-50 border-2 border-amber-200 rounded-2xl">
                                 <h3 class="text-[#004d40] mb-2">Singular (1:00)</h3>
@@ -870,30 +874,45 @@
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
                         <h2><i class="fas fa-pen-fancy text-[#ff6f00] mr-2"></i>Practica 1: ¿Es la o Son las?</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Write <strong>Es la</strong> (only for 1:00) or <strong>Son las</strong> (for 2–12).</p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">Write <strong>Es
+                                la</strong> (only for 1:00) or <strong>Son las</strong> (for 2–12).</p>
+                        <div id="practice-1-exercises" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="card p-4 text-center">
                                 <p class="text-sm font-bold text-gray-500 mb-2">01:00</p>
                                 <p class="text-sm mb-2">_____ una.</p>
-                                <input type="text" class="clean-input text-center" maxlength="10">
+                                <input type="text" class="clean-input text-center" maxlength="10" data-correct="Es la">
                             </div>
                             <div class="card p-4 text-center">
                                 <p class="text-sm font-bold text-gray-500 mb-2">04:00</p>
                                 <p class="text-sm mb-2">_____ cuatro.</p>
-                                <input type="text" class="clean-input text-center" maxlength="10">
+                                <input type="text" class="clean-input text-center" maxlength="10"
+                                    data-correct="Son las">
                             </div>
                             <div class="card p-4 text-center">
                                 <p class="text-sm font-bold text-gray-500 mb-2">11:00</p>
                                 <p class="text-sm mb-2">_____ once.</p>
-                                <input type="text" class="clean-input text-center" maxlength="10">
+                                <input type="text" class="clean-input text-center" maxlength="10"
+                                    data-correct="Son las">
                             </div>
                             <div class="card p-4 text-center">
                                 <p class="text-sm font-bold text-gray-500 mb-2">12:00</p>
                                 <p class="text-sm mb-2">_____ doce.</p>
-                                <input type="text" class="clean-input text-center" maxlength="10">
+                                <input type="text" class="clean-input text-center" maxlength="10"
+                                    data-correct="Son las">
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 text-center">Answers: Es la, Son las, Son las, Son las</p>
+
+                        <div class="flex flex-col items-center mt-6">
+                            <button onclick="checkPractice1()"
+                                class="bg-[#ff6f00] text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-orange-700 transition transform hover:scale-105">
+                                <i class="fas fa-check mr-2"></i> Comprobar
+                            </button>
+                            <div id="practice-1-result" class="mt-4 text-center font-bold text-lg min-h-[1.5em]"></div>
+                            <div id="practice-1-answers"
+                                class="mt-2 text-sm text-gray-500 hidden text-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                                <strong>Respuestas correctas:</strong> Es la, Son las, Son las, Son las
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -903,7 +922,10 @@
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
                         <h2><i class="fas fa-sun text-[#ff6f00] mr-2"></i>Mañana, tarde y noche</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Instead of AM/PM, we use: <strong>de la mañana</strong> (morning), <strong>de la tarde</strong> (afternoon), <strong>de la noche</strong> (night).</p>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">Instead of AM/PM,
+                            we use: <strong>de la mañana</strong> (morning), <strong>de la tarde</strong> (afternoon),
+                            <strong>de la noche</strong> (night).
+                        </p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="card p-5 text-center bg-yellow-50 border-t-4 border-yellow-400">
                                 <p class="text-3xl mb-2">☀️</p>
@@ -922,7 +944,8 @@
                             </div>
                         </div>
                         <div class="card bg-slate-100 p-4 rounded-xl text-center">
-                            <p class="font-semibold">Son las ocho de la noche. (8:00 PM) &nbsp;|&nbsp; Son las diez de la mañana. (10:00 AM)</p>
+                            <p class="font-semibold">Son las ocho de la noche. (8:00 PM) &nbsp;|&nbsp; Son las diez de
+                                la mañana. (10:00 AM)</p>
                         </div>
                     </div>
                 </div>
@@ -931,18 +954,115 @@
             <!-- MINUTOS 1-30: Y -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-plus-circle text-[#ff6f00] mr-2"></i>Minutos 1 a 30: usa "y"</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> To add minutes (1–30), say the hour + <strong>y</strong> + minutes. Example: 2:05 = Son las dos <strong>y cinco</strong>.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="card p-5 border-l-4 border-[#004d40]">
-                                <p class="text-xl font-bold text-[#004d40]">2:05 → Son las dos <u>y cinco</u>.</p>
-                                <p class="text-xl font-bold text-[#004d40] mt-2">4:20 → Son las cuatro <u>y veinte</u>.</p>
+                    <div class="flex flex-col gap-4 h-full">
+                        <h2><i class="fas fa-plus-circle text-[#ff6f00] mr-2"></i>Minutos 1 a 30: Sumamos con "y"</h2>
+
+                        <!-- Rule and Visual -->
+                        <div class="bg-emerald-50 border-l-8 border-[#004d40] p-4 rounded-r-xl shadow-sm">
+                            <p class="text-xl text-[#004d40] mb-1 font-bold flex items-center gap-2 flex-wrap">
+                                <span class="bg-white px-3 py-1 rounded shadow-sm border border-emerald-200">Hora</span>
+                                <i class="fas fa-plus text-orange-500 text-sm"></i>
+                                <span class="bg-[#ff6f00] text-white px-3 py-1 rounded shadow-sm">y</span>
+                                <i class="fas fa-plus text-orange-500 text-sm"></i>
+                                <span
+                                    class="bg-white px-3 py-1 rounded shadow-sm border border-emerald-200">Minutos</span>
+                            </p>
+                            <p class="text-sm text-gray-600">Para los minutos del <strong>1 al 30</strong>, simplemente
+                                decimos la hora y añadimos los minutos con "y".</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Examples Column -->
+                            <div class="flex flex-col gap-3">
+                                <h3 class="text-[#004d40] text-lg border-b border-gray-200 pb-1 mb-0"><i
+                                        class="fas fa-lightbulb text-yellow-500 mr-2"></i>Ejemplos</h3>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">02:05</span>
+                                        <span class="text-base">Son las dos <strong>y cinco</strong>.</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">04:20</span>
+                                        <span class="text-base">Son las cuatro <strong>y veinte</strong>.</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">08:10</span>
+                                        <span class="text-base">Son las ocho <strong>y diez</strong>.</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">11:25</span>
+                                        <span class="text-base">Son las once <strong>y veinticinco</strong>.</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card p-5 space-y-3">
-                                <p class="text-sm font-bold">Practica:</p>
-                                <div><span class="text-sm">5:10 → Son las cinco _____</span><input type="text" class="clean-input mt-1" placeholder="y diez" maxlength="15"></div>
-                                <div><span class="text-sm">1:25 → Es la una _____</span><input type="text" class="clean-input mt-1" placeholder="y veinticinco" maxlength="20"></div>
+
+                            <!-- Exercises Column -->
+                            <div class="flex flex-col gap-3">
+                                <h3 class="text-[#004d40] text-lg border-b border-gray-200 pb-1 mb-0"><i
+                                        class="fas fa-pencil-alt text-orange-500 mr-2"></i>Tu turno</h3>
+                                <div id="minutes-y-exercises" class="grid grid-cols-1 gap-2">
+                                    <!-- Ex 1 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-orange-50 border border-orange-100">
+                                        <span
+                                            class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded">05:10</span>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las cinco</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-32"
+                                                placeholder="y..." data-correct="y diez">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 2 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-orange-50 border border-orange-100">
+                                        <span
+                                            class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded">01:25</span>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Es la una</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-32"
+                                                placeholder="y..." data-correct="y veinticinco">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 3 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-orange-50 border border-orange-100">
+                                        <span
+                                            class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded">07:05</span>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las siete</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-32"
+                                                placeholder="y..." data-correct="y cinco">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 4 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-orange-50 border border-orange-100">
+                                        <span
+                                            class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded">10:20</span>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las diez</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-32"
+                                                placeholder="y..." data-correct="y veinte">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Check Button -->
+                                <div class="text-center mt-1">
+                                    <button onclick="checkMinutesY()"
+                                        class="bg-[#004d40] text-white text-sm font-bold py-2 px-8 rounded-full shadow-md hover:bg-[#00382e] transition transform hover:scale-105">
+                                        <i class="fas fa-check mr-1"></i> Comprobar
+                                    </button>
+                                    <p id="minutes-y-feedback"
+                                        class="text-xs mt-1 min-h-[1.5em] font-bold text-emerald-600"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -953,8 +1073,11 @@
             <section>
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-cookie-bite text-[#ff6f00] mr-2"></i>Minutos especiales: cuarto y media</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> We usually don’t say "quince" or "treinta". Use <strong>y cuarto</strong> (:15) and <strong>y media</strong> (:30).</p>
+                        <h2><i class="fas fa-cookie-bite text-[#ff6f00] mr-2"></i>Minutos especiales: cuarto y media
+                        </h2>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">We usually don’t
+                            say "quince" or "treinta". Use <strong>y cuarto</strong> (:15) and <strong>y media</strong>
+                            (:30).</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="card p-5 bg-amber-50 rounded-2xl text-center">
                                 <p class="text-4xl mb-2">🍰</p>
@@ -970,11 +1093,13 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">8:15 → Son las ocho _____</span><input type="text" class="clean-input" maxlength="15"></div>
-                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">11:30 → Son las once _____</span><input type="text" class="clean-input" maxlength="15"></div>
-                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">1:30 → Es la una _____</span><input type="text" class="clean-input" maxlength="15"></div>
+                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">8:15 → Son las ocho
+                                    _____</span><input type="text" class="clean-input" maxlength="15"></div>
+                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">11:30 → Son las once
+                                    _____</span><input type="text" class="clean-input" maxlength="15"></div>
+                            <div class="card p-3 flex flex-col gap-1"><span class="text-sm">1:30 → Es la una
+                                    _____</span><input type="text" class="clean-input" maxlength="15"></div>
                         </div>
-                        <p class="text-xs text-gray-500 text-center">y cuarto, y media, y media</p>
                     </div>
                 </div>
             </section>
@@ -982,24 +1107,143 @@
             <!-- MINUTOS 31-59: MENOS -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-minus-circle text-[#ff6f00] mr-2"></i>Minutos 31 a 59: usa "menos"</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> We look at the <strong>next hour</strong> and subtract: [next hour] + <strong>menos</strong> + [minutes left]. 3:50 = 10 minutes before 4 → Son las cuatro <strong>menos diez</strong>.</p>
-                        <div class="card p-6 bg-rose-50 border-2 border-rose-200 rounded-2xl">
-                            <p class="font-bold text-[#004d40] mb-2">Fórmula: [Siguiente hora] + menos + [minutos que faltan]</p>
-                            <p class="text-xl">3:50 → Son las cuatro <strong>menos diez</strong>. (It's 10 to 4.)</p>
+                    <div class="flex flex-col gap-4 h-full">
+                        <h2><i class="fas fa-minus-circle text-[#ff6f00] mr-2"></i>Minutos 31-59: Restamos con "menos"
+                        </h2>
+
+                        <!-- Rule and Visual -->
+                        <div class="bg-rose-50 border-l-8 border-rose-500 p-4 rounded-r-xl shadow-sm">
+                            <p class="text-xl text-[#004d40] mb-1 font-bold flex items-center gap-2 flex-wrap">
+                                <span class="bg-white px-3 py-1 rounded shadow-sm border border-rose-200">Siguiente
+                                    Hora</span>
+                                <i class="fas fa-minus text-rose-500 text-sm"></i>
+                                <span class="bg-rose-500 text-white px-3 py-1 rounded shadow-sm">menos</span>
+                                <i class="fas fa-minus text-rose-500 text-sm"></i>
+                                <span class="bg-white px-3 py-1 rounded shadow-sm border border-rose-200">Minutos que
+                                    faltan</span>
+                            </p>
+                            <p class="text-sm text-gray-600">Cuando pasamos del minuto 30, miramos la <strong>hora
+                                    siguiente</strong> y restamos los minutos que faltan para llegar a ella.</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">8:55 (next hour is 9) → Son las nueve _____</span>
-                                <input type="text" class="clean-input" maxlength="20">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Examples Column -->
+                            <div class="flex flex-col gap-3">
+                                <h3 class="text-[#004d40] text-lg border-b border-gray-200 pb-1 mb-0"><i
+                                        class="fas fa-lightbulb text-yellow-500 mr-2"></i>Ejemplos</h3>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">03:50</span>
+                                        <div class="text-base flex flex-col leading-tight">
+                                            <span>Son las cuatro <strong>menos diez</strong>.</span>
+                                            <span class="text-xs text-slate-400">(Faltan 10 min para las 4)</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">08:55</span>
+                                        <div class="text-base flex flex-col leading-tight">
+                                            <span>Son las nueve <strong>menos cinco</strong>.</span>
+                                            <span class="text-xs text-slate-400">(Faltan 5 min para las 9)</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">10:40</span>
+                                        <div class="text-base flex flex-col leading-tight">
+                                            <span>Son las once <strong>menos veinte</strong>.</span>
+                                            <span class="text-xs text-slate-400">(Faltan 20 min para las 11)</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition">
+                                        <span
+                                            class="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded w-16 text-center">12:35</span>
+                                        <div class="text-base flex flex-col leading-tight">
+                                            <span>Es la una <strong>menos veinticinco</strong>.</span>
+                                            <span class="text-xs text-slate-400">(Faltan 25 min para la 1)</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">10:40 (next hour is 11) → Son las once _____</span>
-                                <input type="text" class="clean-input" maxlength="20">
+
+                            <!-- Exercises Column -->
+                            <div class="flex flex-col gap-3">
+                                <h3 class="text-[#004d40] text-lg border-b border-gray-200 pb-1 mb-0"><i
+                                        class="fas fa-pencil-alt text-orange-500 mr-2"></i>Tu turno</h3>
+                                <div id="minutes-menos-exercises" class="grid grid-cols-1 gap-2">
+                                    <!-- Ex 1 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-rose-50 border border-rose-100">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded text-center">07:50</span>
+                                            <span class="text-[10px] text-slate-500 text-center">Next: 8:00</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las ocho</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-36"
+                                                placeholder="menos..." data-correct="menos diez">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 2 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-rose-50 border border-rose-100">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded text-center">11:40</span>
+                                            <span class="text-[10px] text-slate-500 text-center">Next: 12:00</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las doce</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-36"
+                                                placeholder="menos..." data-correct="menos veinte">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 3 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-rose-50 border border-rose-100">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded text-center">02:55</span>
+                                            <span class="text-[10px] text-slate-500 text-center">Next: 3:00</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las tres</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-36"
+                                                placeholder="menos..." data-correct="menos cinco">
+                                        </div>
+                                    </div>
+                                    <!-- Ex 4 -->
+                                    <div
+                                        class="card p-2 flex items-center justify-between gap-2 bg-rose-50 border border-rose-100">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-mono font-bold text-slate-700 bg-white/50 px-2 rounded text-center">05:35</span>
+                                            <span class="text-[10px] text-slate-500 text-center">Next: 6:00</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 flex-1 justify-end">
+                                            <span class="text-sm whitespace-nowrap">Son las seis</span>
+                                            <input type="text" class="clean-input p-1 h-8 text-sm w-36"
+                                                placeholder="menos..." data-correct="menos veinticinco">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Check Button -->
+                                <div class="text-center mt-1">
+                                    <button onclick="checkMinutesMenos()"
+                                        class="bg-[#004d40] text-white text-sm font-bold py-2 px-8 rounded-full shadow-md hover:bg-[#00382e] transition transform hover:scale-105">
+                                        <i class="fas fa-check mr-1"></i> Comprobar
+                                    </button>
+                                    <p id="minutes-menos-feedback"
+                                        class="text-xs mt-1 min-h-[1.5em] font-bold text-emerald-600"></p>
+                                </div>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 text-center">menos cinco, menos veinte</p>
                     </div>
                 </div>
             </section>
@@ -1009,7 +1253,9 @@
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
                         <h2><i class="fas fa-exchange-alt text-[#ff6f00] mr-2"></i>Son las vs A las</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> <strong>¿Qué hora es?</strong> = What time is it (now)? → <strong>Son las...</strong> &nbsp; <strong>¿A qué hora es...?</strong> = At what time (event)? → <strong>a las...</strong></p>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>¿Qué hora
+                                es?</strong> = What time is it (now)? → <strong>Son las...</strong> &nbsp; <strong>¿A
+                                qué hora es...?</strong> = At what time (event)? → <strong>a las...</strong></p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="card p-5 bg-emerald-50 border-l-4 border-[#004d40]">
                                 <p class="text-2xl mb-2">⏰ ¿Qué hora es?</p>
@@ -1031,7 +1277,8 @@
                 <div class="slide-container">
                     <div class="flex flex-col gap-6">
                         <h2><i class="fas fa-keyboard text-[#ff6f00] mr-2"></i>Practica 2: Digital a español</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Convert the digital time to Spanish. Careful with <strong>y</strong> vs <strong>menos</strong>!</p>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">Convert the
+                            digital time to Spanish. Careful with <strong>y</strong> vs <strong>menos</strong>!</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div class="card p-4 flex flex-col gap-2">
                                 <span class="text-lg font-mono font-bold text-[#004d40]">02:10</span>
@@ -1054,158 +1301,280 @@
                                 <input type="text" class="clean-input" maxlength="15">
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 text-center">y diez, menos diez, y media, menos cuarto</p>
                     </div>
                 </div>
             </section>
 
             <!-- HORARIO TREN -->
-            <section>
-                <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-train text-[#ff6f00] mr-2"></i>Practica 3: Horario de trenes</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Look at the schedule. Answer: <strong>¿A qué hora sale el tren a...?</strong> (At what time does the train leave for...?) Use <strong>A las...</strong></p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="card overflow-x-auto">
-                                <table class="w-full text-sm">
-                                    <thead><tr class="border-b-2 border-[#004d40]"><th class="p-3 text-left">Destino</th><th class="p-3 text-left">Hora de salida</th></tr></thead>
-                                    <tbody>
-                                        <tr class="border-b"><td class="p-3">Madrid</td><td class="p-3">10:15 AM</td></tr>
-                                        <tr class="border-b"><td class="p-3">Barcelona</td><td class="p-3">02:30 PM</td></tr>
-                                        <tr><td class="p-3">Valencia</td><td class="p-3">05:45 PM</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="card p-3 flex flex-col gap-1">
-                                    <span class="text-sm">¿A qué hora sale el tren a Madrid?</span>
-                                    <input type="text" class="clean-input" placeholder="A las diez y cuarto..." maxlength="30">
-                                </div>
-                                <div class="card p-3 flex flex-col gap-1">
-                                    <span class="text-sm">¿A qué hora sale el tren a Valencia?</span>
-                                    <input type="text" class="clean-input" placeholder="A las seis menos cuarto..." maxlength="35">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- CONVERSACIÓN -->
-            <section>
-                <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-comments text-[#ff6f00] mr-2"></i>Practica 4: Completa el diálogo</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Complete the dialogue between Ana and Pedro. Use the correct time expression (Son las... y..., a las...).</p>
-                        <div class="card bg-slate-50 p-5 rounded-xl space-y-4">
-                            <p><strong>Ana:</strong> ¡Hola Pedro! ¿Tienes hora?</p>
-                            <p><strong>Pedro:</strong> Sí, claro. Son las _____ y veinte.</p>
-                            <input type="text" class="clean-input max-w-[80px] inline-block" placeholder="3" maxlength="2">
-                            <p><strong>Ana:</strong> ¡Uy, es tarde! Mi autobús sale _____ las cuatro.</p>
-                            <input type="text" class="clean-input max-w-[50px] inline-block" placeholder="a" maxlength="2">
-                            <p><strong>Pedro:</strong> No te preocupes. Tienes cuarenta minutos, _____.</p>
-                            <input type="text" class="clean-input max-w-[100px] inline-block" placeholder="Ana" maxlength="10">
-                            <p><strong>Ana:</strong> ¡Gracias! Adiós.</p>
-                        </div>
-                        <p class="text-xs text-gray-500">Example: tres, a, Ana (or similar)</p>
-                    </div>
-                </div>
-            </section>
+
 
             <!-- TRADUCCIÓN COMPLETA -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-language text-[#ff6f00] mr-2"></i>Practica 5: Traduce a español</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Translate the full sentence to Spanish (time + part of day when needed).</p>
-                        <div class="space-y-4">
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">1. It is 1:00 PM exactly.</span>
-                                <input type="text" class="clean-input" placeholder="Es la una de la tarde." maxlength="35">
+                    <div class="flex flex-col gap-4 h-full">
+                        <h2><i class="fas fa-gamepad text-[#ff6f00] mr-2"></i>Juego de Traducción: La Hora</h2>
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">Translate the
+                            sentences to Spanish. Watch out for specific times and "a las" vs "son las".</p>
+
+                        <div id="translation-game-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- 1 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">1. It is 1:00 PM.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Es la una de la tarde">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">2. The meeting is at 9:30 in the morning.</span>
-                                <input type="text" class="clean-input" placeholder="La reunión es a las nueve y media de la mañana." maxlength="55">
+                            <!-- 2 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">2. It is 3:15.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Son las tres y cuarto">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">3. It is 11:55 (five to twelve).</span>
-                                <input type="text" class="clean-input" placeholder="Son las doce menos cinco." maxlength="35">
+                            <!-- 3 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">3. It is 8:30 AM.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Son las ocho y media de la mañana">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
                             </div>
+                            <!-- 4 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">4. The party is at 10:00
+                                    PM.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="La fiesta es a las diez de la noche">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
+                            </div>
+                            <!-- 5 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">5. It is 12:45 (one minus
+                                    quarter).</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Es la una menos cuarto">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
+                            </div>
+                            <!-- 6 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">6. It is 5:50 (six minus
+                                    ten).</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Son las seis menos diez">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
+                            </div>
+                            <!-- 7 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">7. I eat at 2:00.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Yo como a las dos">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
+                            </div>
+                            <!-- 8 -->
+                            <div class="card p-3 bg-white border-l-4 border-indigo-500 shadow-sm">
+                                <span class="text-sm font-bold block mb-1 text-indigo-900">8. It is 7:20.</span>
+                                <input type="text" class="clean-input text-sm w-full" placeholder="Type here..."
+                                    data-correct="Son las siete y veinte">
+                                <div class="hidden text-xs mt-1 font-bold answer-reveal"></div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button onclick="checkTranslationGame()"
+                                class="bg-indigo-600 text-white text-base font-bold py-3 px-10 rounded-full shadow-lg hover:bg-indigo-700 transition transform hover:scale-105 active:scale-95">
+                                <i class="fas fa-check-double mr-2"></i> Review Answers
+                            </button>
+                            <p id="translation-game-feedback"
+                                class="text-sm mt-3 min-h-[1.5em] font-bold text-indigo-700"></p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- MI RUTINA -->
+            <!-- PRACTICA 4: RUTINA (DRAG & DROP) -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-user-clock text-[#ff6f00] mr-2"></i>Practica 6: Mi rutina</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Write true sentences about your routine. Example: <em>Yo como a las dos.</em> Use <strong>a las</strong> + time.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">(Despertarse) Yo me levanto a las _____</span>
-                                <input type="text" class="clean-input" maxlength="25">
+                    <div class="flex flex-col gap-4 h-full">
+                        <h2><i class="fas fa-user-clock text-[#ff6f00] mr-2"></i>Practica 4: La Rutina de Elena</h2>
+                        <p class="text-xs text-gray-600 font-semibold border-b border-slate-200 pb-2">Drag the time
+                            expressions to complete Elena's routine.</p>
+
+                        <!-- Draggable Options -->
+                        <div id="draggables-container"
+                            class="flex flex-wrap gap-2 justify-center p-2 bg-slate-100 rounded-xl border-2 border-slate-200 min-h-[60px]">
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="1">a las siete</div>
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="5">a las ocho y cuarto</div>
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="2">a las dos y media</div>
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="4">a las cinco y cuarto</div>
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="6">a las seis</div>
+                            <div class="draggable-item bg-white px-2 py-1 text-xs rounded-full shadow-md cursor-grab active:cursor-grabbing border border-indigo-200 text-indigo-700 font-bold hover:scale-110 transition-transform"
+                                draggable="true" data-id="3">a las once</div>
+                        </div>
+
+                        <!-- Drop Zones Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            <!-- 1. Wake up -->
+                            <div class="card p-2 flex flex-col items-center bg-yellow-50 border-t-4 border-yellow-400">
+                                <span class="text-xl mb-1">🌅</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">07:00 AM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Se levanta...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="1"></div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">(Dormir) Yo me duermo a las _____</span>
-                                <input type="text" class="clean-input" maxlength="25">
+
+                            <!-- 2. Breakfast -->
+                            <div class="card p-2 flex flex-col items-center bg-orange-50 border-t-4 border-orange-300">
+                                <span class="text-xl mb-1">☕</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">08:15 AM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Desayuna...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="5"></div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">(Comer) Yo como a las _____</span>
-                                <input type="text" class="clean-input" maxlength="25">
+
+                            <!-- 3. Eat -->
+                            <div class="card p-2 flex flex-col items-center bg-red-50 border-t-4 border-red-400">
+                                <span class="text-xl mb-1">🍝</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">02:30 PM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Come...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="2"></div>
                             </div>
-                            <div class="card p-4 flex flex-col gap-2">
-                                <span class="text-sm">(Estudiar) Yo estudio a las _____</span>
-                                <input type="text" class="clean-input" maxlength="25">
+
+                            <!-- 4. Study -->
+                            <div class="card p-2 flex flex-col items-center bg-indigo-50 border-t-4 border-indigo-400">
+                                <span class="text-xl mb-1">📚</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">05:15 PM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Estudia...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="4"></div>
                             </div>
+
+                            <!-- 5. Gym -->
+                            <div class="card p-2 flex flex-col items-center bg-green-50 border-t-4 border-green-400">
+                                <span class="text-xl mb-1">💪</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">06:00 PM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Va al gimnasio...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="6"></div>
+                            </div>
+
+                            <!-- 6. Sleep -->
+                            <div class="card p-2 flex flex-col items-center bg-slate-100 border-t-4 border-slate-600">
+                                <span class="text-xl mb-1">😴</span>
+                                <p class="text-slate-700 font-bold text-xs mb-1">11:00 PM</p>
+                                <p class="text-xs text-center mb-1 font-bold">Duerme...</p>
+                                <div class="drop-zone w-full h-8 bg-white/50 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center transition-colors text-xs"
+                                    data-match="3"></div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-2">
+                            <button onclick="checkDragDropRoutine()"
+                                class="bg-[#ff6f00] text-white px-6 py-2 rounded-full font-bold shadow hover:bg-orange-700 transition">Check
+                                Routine</button>
+                            <p id="routine-feedback" class="text-sm font-bold mt-2 min-h-[20px]"></p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- RETO: 12:45 = A LA UNA -->
-            <section>
-                <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-brain text-[#ff6f00] mr-2"></i>Reto: 12:45 y singular</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> 12:45 is "almost 1:00", so we use <strong>una</strong> (singular): <strong>a la una</strong> menos cuarto (or Es la una menos cuarto). Not "a las doce".</p>
-                        <div class="card p-5 bg-amber-50 border-2 border-amber-300 rounded-xl">
-                            <p class="font-bold mb-2">1. The train leaves at 3:50 PM.</p>
-                            <p class="text-sm mb-2">El tren sale a las _____ de la tarde.</p>
-                            <input type="text" class="clean-input max-w-[200px]" placeholder="cuatro menos diez" maxlength="25">
-                        </div>
-                        <div class="card p-5 bg-amber-50 border-2 border-amber-300 rounded-xl">
-                            <p class="font-bold mb-2">2. The class is at 12:45 PM.</p>
-                            <p class="text-sm mb-2">La clase es a la _____ menos cuarto de la tarde.</p>
-                            <input type="text" class="clean-input max-w-[100px]" placeholder="una" maxlength="10">
-                        </div>
-                        <p class="text-xs text-gray-500 text-center">Answers: cuatro menos diez, una</p>
-                    </div>
-                </div>
-            </section>
 
-            <!-- BONUS: VERDADERO O FALSO -->
+
+            <!-- Bonus: ¿Verdadero o falso? -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-4 h-full">
                         <h2><i class="fas fa-check-double text-[#ff6f00] mr-2"></i>Bonus: ¿Verdadero o falso?</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> Say if the sentence is correct (V) or false (F).</p>
-                        <div class="space-y-3">
-                            <div class="card p-3 flex flex-col gap-1">
-                                <span class="text-sm">1:00 in Spanish is "Son la una".</span>
-                                <input type="text" class="clean-input max-w-[80px]" placeholder="F" maxlength="5">
+                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2">Lee la frase y
+                            decide si es verdadera (V) o falsa (F).</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                            <!-- 1 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">1. 1:00 PM se dice "Son la una".
+                                </p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
                             </div>
-                            <div class="card p-3 flex flex-col gap-1">
-                                <span class="text-sm">3:15 = Son las tres y cuarto.</span>
-                                <input type="text" class="clean-input max-w-[80px]" placeholder="V" maxlength="5">
+
+                            <!-- 2 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">2. 3:15 se dice "Son las tres y
+                                    cuarto".</p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
                             </div>
-                            <div class="card p-3 flex flex-col gap-1">
-                                <span class="text-sm">For "at 8:00" we say "a las ocho".</span>
-                                <input type="text" class="clean-input max-w-[80px]" placeholder="V" maxlength="5">
+
+                            <!-- 3 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">3. Para decir "at 8:00" usamos "a
+                                    las ocho".</p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
+                            </div>
+
+                            <!-- 4 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">4. 12:00 PM (almuerzo) es
+                                    "Medianoche".</p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
+                            </div>
+
+                            <!-- 5 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">5. 7:50 se dice "Son las ocho menos
+                                    diez".</p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
+                            </div>
+
+                            <!-- 6 -->
+                            <div
+                                class="card p-3 flex flex-col justify-between bg-white border-l-4 border-indigo-400 shadow-sm hover:shadow-md transition-shadow">
+                                <p class="text-sm font-semibold text-slate-700 mb-2">6. 1:30 se dice "Son las una y
+                                    media".</p>
+                                <div class="flex gap-2 justify-end">
+                                    <button onclick="checkBonus(this, false)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">V</button>
+                                    <button onclick="checkBonus(this, true)"
+                                        class="px-3 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">F</button>
+                                </div>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 text-center">F (Es la una), V, V</p>
+                        <p id="bonus-feedback" class="text-center font-bold text-sm min-h-[20px] text-emerald-600"></p>
                     </div>
                 </div>
             </section>
@@ -1213,13 +1582,40 @@
             <!-- CIERRE -->
             <section>
                 <div class="slide-container">
-                    <div class="flex flex-col gap-6">
-                        <h2><i class="fas fa-star text-[#ff6f00] mr-2"></i>¡Excelente práctica!</h2>
-                        <p class="text-sm text-gray-600 font-semibold border-b border-slate-200 pb-2"><strong>Instructions (English):</strong> You have completed the A1 Telling Time lab. Remember: Es la una / Son las... ; y + minutes ; menos + minutes ; a las for events.</p>
-                        <div class="card bg-[#004d40] text-white p-6 rounded-xl text-center">
-                            <p class="font-bold text-lg mb-2">You have completed the A1 La Hora Lab.</p>
-                            <p class="text-sm opacity-90">Sigue practicando en tucaneo.com. Keep practicing!</p>
+                    <div class="flex flex-col items-center justify-center h-full gap-8 text-center animate-fade-in">
+
+                        <!-- Logo -->
+                        <div class="mb-4">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png"
+                                alt="TUCANEO Logo" class="h-24 md:h-32 object-contain drop-shadow-lg">
                         </div>
+
+                        <!-- Title -->
+                        <div>
+                            <h2 class="text-4xl md:text-5xl font-extrabold text-[#ff6f00] mb-2"><i
+                                    class="fas fa-star mr-3 text-yellow-400"></i>¡Excelente práctica!</h2>
+                            <p class="text-xl text-gray-600 font-medium">You have completed the A1 Telling Time lab.</p>
+                        </div>
+
+                        <!-- Summary Card -->
+                        <div
+                            class="card bg-gradient-to-r from-[#004d40] to-[#00695c] text-white p-8 rounded-2xl shadow-xl max-w-2xl border-4 border-[#004d40]/30 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-bold text-2xl mb-4 border-b border-white/20 pb-2">Resumen / Summary</h3>
+                            <ul class="text-left space-y-2 text-lg opacity-95 list-disc list-inside">
+                                <li><strong>Es la una</strong> vs. <strong>Son las...</strong></li>
+                                <li><strong>y</strong> + minutes (1-30)</li>
+                                <li><strong>menos</strong> + minutes (31-59)</li>
+                                <li><strong>a las</strong> for specific event times.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div class="mt-4">
+                            <p class="text-2xl font-bold text-slate-700">Sigue practicando en <span
+                                    class="text-[#ff6f00]">tucaneo.com</span></p>
+                            <p class="text-slate-500 italic">Keep practicing!</p>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -2302,8 +2698,283 @@
             }
         };
 
+        // Practice 1 Check Function
+        function checkPractice1() {
+            const inputs = document.querySelectorAll('#practice-1-exercises input');
+            let correctCount = 0;
+            const total = inputs.length;
+
+            inputs.forEach(input => {
+                const userVal = input.value.trim().toLowerCase();
+                const correctVal = input.getAttribute('data-correct').toLowerCase();
+
+                // Clear previous styles
+                input.style.borderColor = "";
+                input.style.backgroundColor = "";
+                input.style.color = "";
+
+                if (userVal === correctVal) {
+                    correctCount++;
+                    input.style.borderColor = "#10b981"; // emerald-500
+                    input.style.backgroundColor = "#ecfdf5"; // emerald-50
+                    input.style.color = "#047857"; // emerald-700
+                } else {
+                    input.style.borderColor = "#ef4444"; // red-500
+                    input.style.backgroundColor = "#fef2f2"; // red-50
+                    input.style.color = "#b91c1c"; // red-700
+                }
+            });
+
+            const resultDiv = document.getElementById('practice-1-result');
+            const answersDiv = document.getElementById('practice-1-answers');
+
+            answersDiv.classList.remove('hidden');
+
+            if (correctCount === total) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 ¡Excelente! Todo correcto.</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                resultDiv.innerHTML = `<span class="text-orange-600">Tienes ${correctCount} de ${total} correctas. ¡Revisa las respuestas!</span>`;
+                if (typeof playSound === 'function') playSound('error');
+            }
+        }
+
+        // Minutes 1-30 Check Function
+        function checkMinutesY() {
+            const inputs = document.querySelectorAll('#minutes-y-exercises input');
+            let correctCount = 0;
+            const total = inputs.length;
+
+            inputs.forEach(input => {
+                const userVal = input.value.trim().toLowerCase();
+                const correctVal = input.getAttribute('data-correct').toLowerCase();
+
+                input.style.borderColor = "";
+                input.style.backgroundColor = "";
+                input.style.color = "";
+
+                // Allow "y" to be optional if they just write the number word, but the prompt says "y...", so we expect it.
+                // Or if they write "cinco" instead of "y cinco". Ideally matching the placeholder pattern.
+                // Let's stick to exact match for simplicity or relaxed match.
+                // Relaxed: if data-correct is "y diez", accept "diez" or "y diez".
+
+                const normalize = (s) => s.replace(/\s+/g, ' ').trim();
+                const u = normalize(userVal);
+                const c = normalize(correctVal);
+
+                // Check if user included 'y' or not. If correct is "y diez", and user wrote "diez", we can accept it if we want, 
+                // but the instruction implies "usa y". Let's require "y" for pedagogical reasons or at least the word.
+                // Actually, let's keep it strict but case-insensitive.
+
+                if (u === c || u === c.replace('y ', '')) {
+                    correctCount++;
+                    input.style.borderColor = "#10b981";
+                    input.style.backgroundColor = "#ecfdf5";
+                    input.style.color = "#047857";
+                } else {
+                    input.style.borderColor = "#ef4444";
+                    input.style.backgroundColor = "#fef2f2";
+                    input.style.color = "#b91c1c";
+                }
+            });
+
+            const feedback = document.getElementById('minutes-y-feedback');
+            if (correctCount === total) {
+                feedback.innerHTML = "¡Excelente! <i class='fas fa-star text-yellow-500'></i>";
+                feedback.className = "text-xs mt-1 min-h-[1.5em] font-bold text-emerald-600 fade-in";
+                if (typeof react === 'function') react('confetti');
+            } else {
+                feedback.innerHTML = `Intenta de nuevo. (${correctCount}/${total})`;
+                feedback.className = "text-xs mt-1 min-h-[1.5em] font-bold text-orange-600 fade-in";
+                if (typeof playSound === 'function') playSound('error');
+            }
+        }
+
+        // Translation Game Check Function
+        function checkTranslationGame() {
+            const container = document.getElementById('translation-game-container');
+            const inputs = container.querySelectorAll('input');
+            let correctCount = 0;
+            const total = inputs.length;
+
+            inputs.forEach(input => {
+                const userVal = input.value.trim().toLowerCase().replace(/[.,!]/g, ''); // Remove basic punctuation
+                const correctVal = input.getAttribute('data-correct').toLowerCase().replace(/[.,!]/g, '');
+                const reveal = input.parentElement.querySelector('.answer-reveal');
+
+                input.style.borderColor = "";
+                input.style.backgroundColor = "";
+                input.style.color = "";
+
+                const normalize = (s) => s.replace(/\s+/g, ' ').trim();
+                const u = normalize(userVal);
+                const c = normalize(correctVal);
+
+                if (u === c) {
+                    correctCount++;
+                    input.style.borderColor = "#10b981";
+                    input.style.backgroundColor = "#ecfdf5";
+                    input.style.color = "#047857";
+                    reveal.innerHTML = `<i class="fas fa-check"></i> Correct!`;
+                    reveal.className = "text-xs text-emerald-600 mt-1 font-bold answer-reveal block fade-in";
+                } else {
+                    input.style.borderColor = "#ef4444";
+                    input.style.backgroundColor = "#fef2f2";
+                    input.style.color = "#b91c1c";
+                    reveal.innerHTML = `<span class="text-red-500">Your answer</span> <span class="text-gray-400">|</span> Correct: ${input.getAttribute('data-correct')}`;
+                    reveal.className = "text-xs text-slate-500 mt-1 font-bold answer-reveal block fade-in";
+                    reveal.classList.remove('hidden');
+                }
+            });
+
+            const feedback = document.getElementById('translation-game-feedback');
+            if (correctCount === total) {
+                feedback.innerHTML = "¡Increíble! Eres un experto en la hora. <i class='fas fa-trophy text-yellow-500'></i>";
+                if (typeof react === 'function') react('confetti');
+            } else {
+                feedback.innerHTML = `Buen intento. Acertaste ${correctCount} de ${total}.`;
+                if (typeof playSound === 'function') playSound('applause');
+            }
+        }
+
+        // DRAG AND DROP LOGIC (Unified Mouse/Touch)
+        window.initDragDropRoutine = function () {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let draggedItem = null;
+
+            // Desktop Drag Events
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggedItem = draggable;
+                    e.dataTransfer.setData('text/plain', draggable.dataset.id);
+                    setTimeout(() => draggable.classList.add('opacity-50'), 0);
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggedItem = null;
+                    draggables.forEach(d => d.classList.remove('opacity-50'));
+                });
+
+                // Touch Support (Basic "Click to Select" fallback logic is smoother for hybrid)
+                // Or implementing touch drag manually. Let's do a simple specialized "Click to Swap" or "Tap to Select" for mobile ease
+                draggable.addEventListener('click', (e) => {
+                    if (window.innerWidth < 1024 || 'ontouchstart' in window) {
+                        // Deselect others
+                        draggables.forEach(d => d.classList.remove('ring-4', 'ring-orange-400', 'selected-drag'));
+
+                        if (draggable.classList.contains('bg-gray-200')) return; // Already placed
+
+                        // Select current
+                        draggable.classList.add('ring-4', 'ring-orange-400', 'selected-drag');
+                        draggedItem = draggable;
+                    }
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault(); // Necessary to allow dropping
+                    zone.classList.add('bg-blue-100');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('bg-blue-100');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('bg-blue-100');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const item = document.querySelector(`.draggable-item[data-id="${id}"]`);
+                    if (item) {
+                        handleDrop(item, zone);
+                    }
+                });
+
+                // Click to drop (Mobile/Hybrid)
+                zone.addEventListener('click', (e) => {
+                    const selected = document.querySelector('.selected-drag');
+                    if (selected) {
+                        handleDrop(selected, zone);
+                        selected.classList.remove('ring-4', 'ring-orange-400', 'selected-drag');
+                        draggedItem = null;
+                    }
+                });
+            });
+
+            function handleDrop(item, zone) {
+                // Clear zone if it has something (optional, or just append)
+                // For this simple exercise: one item per zone.
+                if (zone.children.length > 0) {
+                    // Move existing back to container? Or swap? 
+                    // Simple: Move back to container
+                    const existing = zone.children[0];
+                    document.getElementById('draggables-container').appendChild(existing);
+                }
+                zone.appendChild(item);
+            }
+        };
+
+        // Initialize on load just in case (or rely on user interaction)
+        setTimeout(window.initDragDropRoutine, 2000);
+
+        function checkDragDropRoutine() {
+            const zones = document.querySelectorAll('.drop-zone');
+            let correctCount = 0;
+            const total = 6;
+
+            zones.forEach(zone => {
+                const item = zone.querySelector('.draggable-item');
+                if (item) {
+                    // Reset classes carefully (remove both success and error states before reapplying)
+                    item.classList.remove('bg-white', 'text-indigo-700', 'border-indigo-200', 'bg-emerald-500', 'border-emerald-600', 'bg-red-500', 'border-red-600');
+
+                    if (item.dataset.id === zone.dataset.match) {
+                        correctCount++;
+                        item.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                    } else {
+                        item.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                    }
+                }
+            });
+
+            const feedback = document.getElementById('routine-feedback');
+            if (correctCount === total) {
+                feedback.innerHTML = `<span class="text-emerald-600">🎉 ¡Fantástico! La rutina de Elena está perfecta.</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                feedback.innerHTML = `<span class="text-orange-600">Tienes ${correctCount}/${total} correctas. ¡Inténtalo de nuevo!</span>`;
+                if (typeof playSound === 'function') playSound('error');
+            }
+        }
+
+        function checkBonus(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable buttons after click
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.remove('bg-slate-200', 'text-slate-700');
+                btn.classList.add('bg-emerald-500', 'text-white');
+                if (typeof react === 'function') react('confetti');
+            } else {
+                btn.classList.remove('bg-slate-200', 'text-slate-700');
+                btn.classList.add('bg-red-500', 'text-white');
+                if (typeof playSound === 'function') playSound('error');
+            }
+        }
+
         // Expose to global
         window.CoreGame = CoreGame;
+        window.checkPractice1 = checkPractice1;
+        window.checkMinutesY = checkMinutesY;
+        window.checkMinutesMenos = checkMinutesMenos;
+        window.checkTranslationGame = checkTranslationGame;
+        window.checkDragDropRoutine = checkDragDropRoutine;
+        window.checkBonus = checkBonus;
     </script>
 </body>
 

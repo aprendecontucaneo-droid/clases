@@ -1,612 +1,1261 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clase Tucaneo - Dominando el Presente A2</title>
-    
-    <!-- LIBRERÍAS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Presente simple: repaso completo A1 | Tucaneo</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
-    <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- FUENTES -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Handlee&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        :root { 
-            --primary: #10b981; /* Verde Tucaneo */
-            --accent: #f59e0b;  /* Naranja Tropical */
-            --text-main: #1f2937; 
-            --bg-light: #f8fafc;
-        }
-        body { background-color: var(--bg-light); font-family: 'Lato', sans-serif; }
-
-        /* --- DRAWER --- */
-        #tucaneo-drawer {
-            position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh;
-            background: #fff; z-index: 20000; box-shadow: -10px 0 50px rgba(0,0,0,0.2);
-            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid #e5e7eb;
-            display: flex; flex-direction: column;
-        }
-        #tucaneo-drawer.is-open { right: 0; }
-        #safe-close-btn {
-            position: absolute; top: 20px; right: 20px; z-index: 20001;
-            background: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%;
-            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
-        }
-        #safe-close-btn:hover { transform: scale(1.1); }
-
-        /* --- UI ELEMENTS --- */
-        #fixed-logo { position: fixed; top: 30px; left: 30px; width: 140px; z-index: 5000; }
-        #top-nav { position: fixed; top: 30px; right: 30px; z-index: 5000; display: flex; gap: 12px; }
-        #floating-cta { 
-            position: fixed; bottom: 20px; left: 30px; z-index: 5000; 
-            font-size: 12px; color: #9ca3af; text-decoration: none; letter-spacing: 1px;
+        /* =========================================
+       1. VARIABLES Y BASE (VISIBILIDAD ALTA)
+       ========================================= */
+        :root {
+            --primary: #004d40;
+            --accent: #ff6f00;
+            --text-main: #0f172a;
+            /* Texto casi negro para máximo contraste */
+            --text-secondary: #334155;
+            /* Gris oscuro (antes era muy claro) */
+            --bg-light: #fefce8;
+            --danger: #ef4444;
         }
 
-        /* --- REVEAL OVERRIDES --- */
-        .reveal { color: var(--text-main); font-size: 24px; }
-        .reveal h1, .reveal h2, .reveal h3 { 
-            font-family: 'Playfair Display', serif; 
-            color: var(--primary); 
-            text-transform: none; 
+        /* Mantenemos la magia del Zoom Nativo */
+        html,
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Lato', sans-serif;
+            height: 100%;
+            overflow-y: auto !important;
+            /* CRÍTICO: NO BORRAR */
+        }
+
+        /* =========================================
+       2. REVEAL.JS - TIPOGRAFÍA (COMPACTA Y LEGIBLE)
+       ========================================= */
+        /* Bajamos un poco la base para que no se sienta "gigante" */
+        .reveal {
+            color: var(--text-main);
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        /* Títulos */
+        .reveal h1 {
+            font-size: 2.5em !important;
+            line-height: 1.1 !important;
+            color: var(--primary);
+            margin-bottom: 0.5em !important;
+        }
+
+        /* --- SKELETON FIX: ENFORCE TAILWIND COLORS --- */
+        /* Overrides Reveal.js specific selectors like '.reveal h1' */
+        .reveal .text-white {
+            color: #ffffff !important;
+        }
+
+        .reveal .text-slate-50 {
+            color: #f8fafc !important;
+        }
+
+        .reveal .text-yellow-200 {
+            color: #fef08a !important;
+        }
+
+        .reveal .text-yellow-300 {
+            color: #fde047 !important;
+        }
+
+        .reveal .text-yellow-400 {
+            color: #facc15 !important;
+        }
+
+        .reveal .text-emerald-100 {
+            color: #d1fae5 !important;
+        }
+
+        .reveal .text-emerald-200 {
+            color: #a7f3d0 !important;
+        }
+
+
+        .reveal h2 {
+            font-size: 1.8em !important;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 0.6em !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.4em !important;
             font-weight: 700;
+            color: var(--text-main);
         }
-        .reveal section { display: flex !important; flex-direction: column; justify-content: center; height: 100%; }
 
-        /* --- COMPONENTS --- */
+        /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
+        /* Forzamos un color mucho más oscuro y un peso semi-negrita */
+        .reveal .text-sm,
+        .reveal .text-xs,
+        .reveal .text-gray-400,
+        .reveal .text-gray-500 {
+            color: var(--text-secondary) !important;
+            /* Gris Oscuro */
+            font-weight: 600 !important;
+            /* Más gordita la letra */
+            opacity: 0.9 !important;
+            /* Quitamos transparencias */
+        }
+
+        .reveal .text-sm {
+            font-size: 0.85em !important;
+        }
+
+        .reveal .text-xs {
+            font-size: 0.75em !important;
+        }
+
+        /* =========================================
+       3. ESTILO DE TARJETAS (CORREGIDO Y SEGURO)
+       ========================================= */
+        /* Modificado para permitir colores de fondo (como el verde) */
         .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            /* Eliminamos la orden agresiva de transparencia */
+            backdrop-filter: blur(8px);
+            /* Efecto borroso bonito */
+            -webkit-backdrop-filter: blur(8px);
+            /* Para Safari/iPhone */
+
+            /* El resto lo dejamos que Tailwind lo controle en el HTML */
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Tarjetas internas: Más compactas y definidas */
+        .card {
+            background: white;
             border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
         }
 
+        /* =========================================
+       4. LAYOUT CONTROLADO (SCROLL + ARREGLO DE TÍTULOS)
+       ========================================= */
+        .reveal .slides {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            pointer-events: none;
+        }
+
+        .reveal section {
+            height: 100vh !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            display: block !important;
+
+            /* AUMENTÉ ESTO: 100px arriba para bajar todo y que respete el menú */
+            padding: 100px 20px 80px 20px !important;
+
+            pointer-events: auto !important;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- REGLA MÁGICA NUEVA --- */
+        /* Esto obliga al contenido a empezar desde arriba, anulando el 'justify-center' de Tailwind */
+        .reveal section>div {
+            height: auto !important;
+            /* Permite que crezca hacia abajo */
+            min-height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            /* ¡CLAVE! Alinea al inicio, no al centro */
+        }
+
+        /* AQUÍ ESTÁ EL TRUCO DE LA PROPORCIÓN: */
+        .slide-container {
+            width: 90% !important;
+            max-width: 1200px !important;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+       5. INPUTS VISIBLES (IGUAL QUE ANTES)
+       ========================================= */
         .clean-input {
-            border: none; border-bottom: 2px solid #cbd5e1; background: transparent;
-            font-family: 'Lato', sans-serif; font-size: 1em; color: var(--primary);
-            text-align: center; width: 140px; transition: 0.3s;
+            width: 100%;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Handlee', cursive;
+            font-size: 1.1em;
+            color: var(--primary) !important;
+            font-weight: bold;
+            outline: none;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
         }
-        .clean-input:focus { outline: none; border-color: var(--accent); background: #fffbeb; }
 
-        /* --- LAYOUTS --- */
-        .grid-responsive { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; 
-            align-items: center; width: 100%; padding: 0 40px;
+        .clean-input:focus {
+            border-color: var(--accent);
+            background: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- BUTTONS --- */
-        .nav-btn {
-            font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
-            padding: 10px 24px; border-radius: 50px; text-decoration: none; color: white; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 8px; border: none;
+        .clean-input::placeholder {
+            color: #64748b !important;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9em;
+            font-weight: 500;
         }
-        .nav-btn.whiteboard { background-color: var(--accent); }
-        .nav-btn.download { background-color: var(--primary); }
-        .nav-btn.exit { background-color: #374151; }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
 
-        /* UTILIDADES ESPECÍFICAS DE ESTA CLASE */
-        .verb-tag {
-            background: #e0f2fe; color: #0369a1; padding: 5px 15px; 
-            border-radius: 20px; font-size: 0.8em; font-weight: bold; margin: 5px; display: inline-block;
+        /* =========================================
+       6. UI Y UTILIDADES
+       ========================================= */
+        #tucaneo-drawer {
+            position: fixed;
+            top: 0;
+            right: -150vw;
+            width: 50vw;
+            height: 100vh;
+            background: #fff;
+            z-index: 20000;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
+            transition: right 0.4s;
+            display: flex;
+            flex-direction: column;
         }
-        .boot-visual {
-            border: 4px dashed var(--accent);
-            border-radius: 20px;
-            background-color: #fffbeb;
+
+        #tucaneo-drawer.is-open {
+            right: 0 !important;
         }
-        .no-boot {
-            background-color: #ecfdf5;
-            border: 4px solid transparent;
-            border-radius: 20px;
+
+        #safe-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20001;
+            background: var(--danger);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fixed-logo {
+            position: fixed;
+            top: 30px;
+            left: 40px;
+            width: 100px;
+            z-index: 5000;
+        }
+
+        #top-nav {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            z-index: 5000;
+            display: flex;
+            gap: 15px;
+        }
+
+        #floating-cta {
+            position: fixed;
+            bottom: 30px;
+            left: 40px;
+            z-index: 5000;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: bold;
             opacity: 0.8;
+            letter-spacing: 1px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            #tucaneo-drawer { width: 100vw; right: -100vw; }
-            .grid-responsive { grid-template-columns: 1fr; gap: 30px; text-align: center; }
-            .reveal { font-size: 18px; }
-            #fixed-logo { width: 100px; top: 15px; left: 15px; }
-            #top-nav { top: 15px; right: 15px; }
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .nav-btn.zoom {
+            display: none !important;
+        }
+
+        .nav-btn.download {
+            background-color: var(--primary);
+        }
+
+        .nav-btn.exit {
+            background-color: #64748b;
+        }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 6px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 9999;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            cursor: pointer;
+        }
+
+        #back-to-top.visible {
+            display: flex;
+        }
+
+
+        /* =========================================
+       7. MÓVIL: SOLUCIÓN FINAL (SCROLL REAL)
+       ========================================= */
+        @media (max-width: 1024px) {
+
+            /* 1. FORZAR SCROLL EN EL CUERPO (La clave para que baje) */
+
+            /* --- ¡ESTO HACE VISIBLES LOS EJERCICIOS! --- */
+            .reveal .fragment {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+
+            html,
+            body {
+                height: auto !important;
+                min-height: 100% !important;
+                overflow-y: scroll !important;
+                /* Fuerza la barra de scroll */
+                -webkit-overflow-scrolling: touch;
+                /* Scroll suave en iPhone */
+                position: relative !important;
+            }
+
+            /* 2. DESACTIVAR REVEAL.JS (Convertir en lista vertical) */
+            .reveal {
+                height: auto !important;
+                overflow: visible !important;
+                position: relative !important;
+                touch-action: auto !important;
+            }
+
+            .reveal .slides {
+                position: static !important;
+                /* Deja de flotar */
+                width: 100% !important;
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                /* Apilar uno tras otro */
+                padding: 20px 15px 150px 15px !important;
+                /* Espacio extra abajo */
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+                pointer-events: none;
+                /* El contenedor no bloquea, los hijos sí */
+            }
+
+            /* 3. CADA DIAPOSITIVA ES UN BLOQUE */
+            .reveal section {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                top: auto !important;
+                height: auto !important;
+                min-height: auto !important;
+                margin-bottom: 40px !important;
+                /* Espacio entre diapositivas */
+                pointer-events: auto !important;
+                /* ¡Habilitar interacción! */
+                transform: none !important;
+            }
+
+            /* 4. ELEMENTOS INTERNOS (Para que no se salgan) */
+            .slide-container,
+            .card,
+            .glass-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 5. INPUTS FUNCIONALES */
+            .clean-input {
+                pointer-events: auto !important;
+                z-index: 5000 !important;
+                /* Asegurar que esté encima */
+                font-size: 16px !important;
+                background: #fff !important;
+                width: 100% !important;
+            }
+
+            /* 6. ARREGLAR GRILLAS (Todo en una columna) */
+            .grid,
+            .grid-cols-2,
+            .md\:grid-cols-2,
+            .lg\:grid-cols-12 {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+
+            /* 7. LIMPIEZA VISUAL */
+            .mobile-grid-2 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+            }
+
+            .reveal h1 {
+                font-size: 2.2em !important;
+                margin-top: 20px !important;
+            }
+
+            .reveal img {
+                max-height: 250px !important;
+                width: auto !important;
+                margin: 0 auto !important;
+            }
+
+            /* Ocultar controles de PC */
+            #btn-zoom,
+            .nav-btn.zoom,
+            #premium-dock,
+            .reveal .controls,
+            .reveal .progress {
+                display: none !important;
+            }
+
+            /* Ajustar barra superior */
+            #fixed-logo {
+                width: 60px;
+                top: 10px;
+                left: 10px;
+            }
+
+            #top-nav {
+                top: 10px;
+                right: 10px;
+            }
+
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                justify-content: center;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+        }
+
+        /* --- PARCHE DE CONTRASTE (CORREGIDO) --- */
+
+        /* Usamos este selector especial para que el navegador entienda el color hexadecimal */
+        [class*="bg-[#004d40]"] h1,
+        [class*="bg-[#004d40]"] h2,
+        [class*="bg-[#004d40]"] h3,
+        [class*="bg-[#004d40]"] p,
+        [class*="bg-[#004d40]"] i,
+        [class*="bg-[#004d40]"] span,
+        [class*="bg-[#004d40]"] li,
+        [class*="bg-[#004d40]"] .text-sm,
+        [class*="bg-[#004d40]"] .text-xs,
+        [class*="bg-[#004d40]"] .text-gray-400,
+        [class*="bg-[#004d40]"] .text-gray-500 {
+            color: #ffffff !important;
+            /* BLANCO OBLIGATORIO */
+            opacity: 1 !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        /* También aplicamos la corrección para el color primario de Tailwind */
+        .bg-primary h1,
+        .bg-primary h2,
+        .bg-primary h3,
+        .bg-primary p,
+        .bg-primary span,
+        .bg-primary i {
+            color: #ffffff !important;
+        }
+
+        /* --- CORRECCIÓN DEFINITIVA PARA FONDOS OSCUROS (DETECTIVE) --- */
+        /* Esto asegura que cualquier texto dentro de un contenedor oscuro SEA BLANCO, sin importar la regla global */
+        .bg-slate-800 .text-sm,
+        .bg-slate-800 .text-xs,
+        .bg-slate-800 p,
+        .bg-slate-800 h1,
+        .bg-slate-800 h2,
+        .bg-slate-800 h3,
+        .bg-slate-800 .italic {
+            color: rgba(255, 255, 255, 0.95) !important;
+            opacity: 1 !important;
+        }
+
+        /* Y para el texto específicamente coloreado (como Clue #1 en esmeralda), lo respetamos pero brillando */
+        .bg-slate-800 .text-emerald-400 {
+            color: #34d399 !important;
+            /* Verde brillante */
+        }
+
+
+        /* --- CRITICAL CONTRAST FIX FOR DARK CARDS (V2.1 - GLOBAL MANAGE) --- */
+        /* Support for both .class on section AND data-state on parent */
+
+        /* 1. SLATE DARK CARDS */
+        .reveal [class*="bg-slate-800"],
+        .reveal.bg-slate-800,
+        /* data-state support */
+        .reveal [class*="from-slate-800"],
+        .reveal.from-slate-800,
+        /* data-state support */
+        .reveal [class*="from-gray-800"],
+        .reveal [class*="from-zinc-800"],
+        .reveal [class*="from-stone-800"],
+        .reveal [class*="from-neutral-800"] {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+
+        /* 2. PURPLE/INDIGO DARK CARDS */
+        .reveal [class*="from-purple-900"],
+        .reveal.from-purple-900,
+        .reveal [class*="from-indigo-900"],
+        .reveal.from-indigo-900 {
+            background-color: #3b0764 !important;
+            color: #ffffff !important;
+        }
+
+        /* 3. EMERALD/TEAL/BLUE DARK CARDS */
+        .reveal [class*="from-emerald-900"],
+        .reveal.from-emerald-900,
+        .reveal [class*="from-teal-900"],
+        .reveal.from-teal-900 {
+            background-color: #064e3b !important;
+            color: #ffffff !important;
+        }
+
+
+        .reveal [class*="from-blue-900"] {
+            background-color: #1e3a8a !important;
+            /* Fallback Solid Blue-900 */
+            color: #ffffff !important;
+        }
+
+        /* 1. Force Headers to White/Light by default in these cards (Overrides .reveal h3 rule) */
+        .reveal [class*="bg-slate-800"] h1,
+        .reveal.bg-slate-800 h1,
+        .reveal.bg-slate-800 h2,
+        .reveal.bg-slate-800 h3,
+        .reveal [class*="bg-slate-800"] h2,
+        .reveal [class*="bg-slate-800"] h3,
+        .reveal [class*="from-slate-800"] h1,
+        .reveal.from-slate-800 h1,
+        .reveal.from-slate-800 h2,
+        .reveal.from-slate-800 h3,
+        .reveal [class*="from-slate-800"] h2,
+        .reveal [class*="from-slate-800"] h3,
+        .reveal [class*="from-purple-900"] h1,
+        .reveal.from-purple-900 h1,
+        .reveal.from-purple-900 h2,
+        .reveal.from-purple-900 h3,
+        .reveal [class*="from-purple-900"] h2,
+        .reveal [class*="from-purple-900"] h3,
+        .reveal [class*="from-emerald-900"] h1,
+        .reveal.from-emerald-900 h1,
+        .reveal.from-emerald-900 h2,
+        .reveal.from-emerald-900 h3,
+        .reveal [class*="from-emerald-900"] h2,
+        .reveal [class*="from-emerald-900"] h3 {
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            /* Add shadow for better legibility */
+        }
+
+        /* 2. Force .text-sm and .text-xs to Light Slate (Overriding the dark gray rule) */
+        .reveal [class*="bg-slate-800"] .text-sm,
+        .reveal.bg-slate-800 .text-sm,
+        .reveal [class*="bg-slate-800"] .text-xs,
+        .reveal [class*="from-slate-800"] .text-sm,
+        .reveal.from-slate-800 .text-sm,
+        .reveal [class*="from-slate-800"] .text-xs,
+        .reveal [class*="from-purple-900"] .text-sm,
+        .reveal.from-purple-900 .text-sm,
+        .reveal [class*="from-purple-900"] .text-xs,
+        .reveal [class*="from-emerald-900"] .text-sm,
+        .reveal.from-emerald-900 .text-sm,
+        .reveal.from-emerald-900 .text-xs,
+        .reveal [class*="from-emerald-900"] .text-xs {
+            color: #e2e8f0 !important;
+            /* Slate-200 */
+            opacity: 1 !important;
+            font-weight: 500 !important;
+        }
+
+        /* 3. Restore Specific Colors for emphasized text (High Specificity) */
+        /* We use * selector to catch any element inside the dark card with these colors */
+        .reveal [class*="from-slate-800"] .text-orange-400,
+        .reveal [class*="bg-slate-800"] .text-orange-400 {
+            color: #fb923c !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-orange-300 {
+            color: #fdba74 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-emerald-300 {
+            color: #6ee7b7 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-emerald-400 {
+            color: #34d399 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-blue-300 {
+            color: #93c5fd !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-blue-400 {
+            color: #60a5fa !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-cyan-300 {
+            color: #67e8f9 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-teal-300 {
+            color: #5eead4 !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-purple-300 {
+            color: #d8b4fe !important;
+        }
+
+        .reveal [class*="from-slate-800"] .text-yellow-400 {
+            color: #facc15 !important;
+        }
+
+        /* Purple/Other Dark Cards Exceptions */
+        .reveal [class*="from-purple-900"] .text-orange-300,
+        .reveal [class*="from-purple-900"] .text-orange-400 {
+            color: #fb923c !important;
+        }
+
+        .reveal [class*="from-purple-900"] .text-purple-300 {
+            color: #d8b4fe !important;
+        }
+
+        /* Ensure bold text is white if no other color */
+        .reveal [class*="from-slate-800"] strong,
+        .reveal [class*="bg-slate-800"] strong {
+            color: white !important;
+        }
+
+        /* Opcional: Si usas la clase 'bg-primary' de Tailwind */
+        .bg-primary h1,
+        .bg-primary h2,
+        .bg-primary p {
+            color: #ffffff !important;
+        }
+
+        /* =========================================
+           INLINE TEXT INPUT STYLING
+           ========================================= */
+        .text-input-inline {
+            display: inline-block;
+            min-width: 100px;
+            max-width: 150px;
+            padding: 4px 8px;
+            margin: 0 4px;
+            border: none;
+            border-bottom: 2px solid #10b981;
+            background: transparent;
+            font-size: inherit;
+            font-weight: 600;
+            color: #059669;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .text-input-inline:focus {
+            border-bottom-color: #f97316;
+            background: #fef3c7;
+            transform: scale(1.05);
+        }
+
+        .text-input-inline.correct {
+            border-bottom-color: #10b981;
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .text-input-inline.incorrect {
+            border-bottom-color: #ef4444;
+            background: #fee2e2;
+            color: #dc2626;
         }
     </style>
+
+
+
+
 </head>
+
 <body>
 
-    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy">
-    <a href="https://tucaneo.com" id="floating-cta">TUCANEO ACADEMY | A2</a>
+    <div id="scroll-progress"></div>
 
-    <!-- MENÚ LATERAL (HERRAMIENTAS) -->
+    <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
+        alt="Tucaneo Academy">
+    <a href="https://tucaneo.com" id="floating-cta">TUCANEO.COM</a>
+
+    <div id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
     <div id="tucaneo-drawer">
         <button id="safe-close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
         <div id="tools-root" style="width: 100%; height: 100%;"></div>
     </div>
 
-    <!-- BOTONES SUPERIORES -->
     <div id="top-nav">
-        <button onclick="toggleDrawer()" class="nav-btn whiteboard">
-            <i class="fas fa-pen"></i> Pizarra
-        </button>
-        <a href="#" class="nav-btn download" onclick="window.print()">
-            <i class="fas fa-file-pdf"></i> PDF
-        </a>
-        <a href="#" class="nav-btn exit">
-            <i class="fas fa-sign-out-alt"></i> Salir
-        </a>
+        <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i
+                class="fas fa-search-plus"></i> <span>Zoom</span></button>
+        <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i>
+            <span>PDF</span></a>
+        <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+    </div>
+
+    <div id="premium-dock"
+        class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
+
+        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="openTool('board')" title="Abrir Pizarra"
+                class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-pen-nib text-xl"></i>
+                <span
+                    class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
+            </button>
+            <button onclick="openTool('vocab')" title="Glosario"
+                class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
+                <i class="fas fa-book text-xl"></i>
+                <span
+                    class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="react('confetti')" title="Fiesta"
+                class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
+                <i class="fas fa-party-popper text-xl"></i>
+            </button>
+            <button onclick="react('applause')" title="Aplausos"
+                class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
+                <i class="fas fa-hands-clapping text-xl"></i>
+            </button>
+        </div>
+
+        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
+
+        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
+            <button onclick="react('error')"
+                class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110"
+                title="Error">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
     </div>
 
     <div class="reveal">
         <div class="slides">
-            
-            <!-- 1. PORTADA -->
-            <section data-background-color="#f0fdf4">
-                <div class="glass-card text-center max-w-4xl mx-auto">
-                    <div class="mb-4 text-orange-500 font-bold tracking-widest text-sm uppercase">Nivel A2 • Consolidación</div>
-                    <h1 class="text-6xl mb-4">Dominando el Presente</h1>
-                    <div class="w-20 h-1 bg-emerald-500 mx-auto mb-8"></div>
-                    
-                    <div class="flex flex-wrap justify-center gap-3 mb-8 opacity-80">
-                        <span class="verb-tag">Jugar</span>
-                        <span class="verb-tag">Entender</span>
-                        <span class="verb-tag">Salir</span>
-                        <span class="verb-tag">Ser</span>
-                        <span class="verb-tag">Estar</span>
-                    </div>
 
-                    <div class="text-left bg-white/50 p-6 rounded-xl border border-gray-100">
-                        <h4 class="font-bold text-gray-700 mb-2"><i class="fas fa-bullseye text-emerald-500"></i> Meta de hoy:</h4>
-                        <ul class="text-gray-600 text-lg space-y-2">
-                            <li><i class="fas fa-check text-xs"></i> Repasar la estructura básica (¡rápido!).</li>
-                            <li><i class="fas fa-check text-xs"></i> Dominar los verbos "rebeldes" (Irregulares y Raíz).</li>
-                            <li><i class="fas fa-check text-xs"></i> Hablar de tu vida real y hábitos.</li>
-                        </ul>
+            <!-- SLIDE 1: Portada - Present Simple Mastery -->
+            <section class="bg-gradient-to-br from-[#004d40] via-teal-800 to-[#004d40]">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div class="absolute bottom-0 left-0 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+                <div class="slide-container flex flex-col justify-center items-center text-center relative z-10">
+                    <div class="inline-block px-6 py-1.5 rounded-full bg-amber-500/25 border border-amber-400/40 text-amber-200 text-xs font-bold uppercase tracking-[0.2em] mb-6">A1 • Gramática</div>
+                    <h1 class="text-white text-3xl md:text-5xl font-black mb-2 drop-shadow-2xl tracking-tight">The Present Simple</h1>
+                    <div class="w-24 h-1 bg-amber-400 rounded-full my-4"></div>
+                    <h2 class="text-xl md:text-2xl font-bold text-amber-200/95 mb-4">Complete Lockdown</h2>
+                    <p class="text-slate-300 text-base mb-1">Reviewing Regulars & The "Rebel" Irregulars</p>
+                    <p class="text-slate-400 text-sm max-w-md mx-auto mb-8">Essential for habits, facts, and daily life.</p>
+                    <div class="flex justify-center gap-3 flex-wrap">
+                        <span class="px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-xl text-amber-100 text-sm font-semibold border border-white/20">Hábitos</span>
+                        <span class="px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-xl text-amber-100 text-sm font-semibold border border-white/20">Hechos</span>
+                        <span class="px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-xl text-amber-100 text-sm font-semibold border border-white/20">Vida diaria</span>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. ACTIVACIÓN -->
-            <section>
-                <h2 class="text-center mb-8">¿Verdad o Mentira?</h2>
-                <div class="grid-responsive">
-                    <div class="glass-card flex flex-col items-center justify-center p-8 bg-blue-50 border-blue-100">
-                        <i class="fas fa-bed text-6xl text-blue-400 mb-4"></i>
-                        <p class="font-bold text-xl text-gray-600">Rutina Relajada</p>
-                    </div>
-                    <div class="glass-card flex flex-col items-center justify-center p-8 bg-orange-50 border-orange-100">
-                        <i class="fas fa-running text-6xl text-orange-400 mb-4"></i>
-                        <p class="font-bold text-xl text-gray-600">Rutina Activa</p>
-                    </div>
-                </div>
-                <div class="mt-8 text-center max-w-2xl mx-auto">
-                    <p class="text-gray-600 text-lg mb-4">Escribe <strong>2 frases verdaderas y 1 falsa</strong> sobre tu rutina usando:</p>
-                    <div class="flex justify-center gap-4">
-                        <span class="verb-tag bg-gray-200 text-gray-700">Desayunar</span>
-                        <span class="verb-tag bg-gray-200 text-gray-700">Trabajar</span>
-                        <span class="verb-tag bg-gray-200 text-gray-700">Odiar</span>
-                        <span class="verb-tag bg-gray-200 text-gray-700">Amar</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. FLASH REVIEW -->
-            <section>
-                <div class="text-center mb-6">
-                    <span class="text-orange-500 font-bold text-sm tracking-widest">FLASH REVIEW</span>
-                    <h2>La Base del Sistema</h2>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-4 max-w-5xl mx-auto w-full">
-                    <!-- AR -->
-                    <div class="glass-card p-4 !pt-2">
-                        <div class="text-center border-b-2 border-emerald-500 pb-2 mb-2 font-bold text-emerald-600">
-                            <i class="fas fa-comment-dots"></i> HABL<span class="text-black">AR</span>
-                        </div>
-                        <ul class="text-sm space-y-1">
-                            <li>Yo habl<strong class="text-emerald-600">o</strong></li>
-                            <li>Tú habl<strong class="text-emerald-600">as</strong></li>
-                            <li>Él habl<strong class="text-emerald-600">a</strong></li>
-                            <li class="bg-emerald-100 -mx-2 px-2 rounded">Nos. habl<strong class="text-emerald-600">amos</strong></li>
-                            <li>Ellos habl<strong class="text-emerald-600">an</strong></li>
-                        </ul>
-                    </div>
-                    <!-- ER -->
-                    <div class="glass-card p-4 !pt-2">
-                        <div class="text-center border-b-2 border-orange-500 pb-2 mb-2 font-bold text-orange-600">
-                            <i class="fas fa-utensils"></i> COM<span class="text-black">ER</span>
-                        </div>
-                        <ul class="text-sm space-y-1">
-                            <li>Yo com<strong class="text-orange-600">o</strong></li>
-                            <li>Tú com<strong class="text-orange-600">es</strong></li>
-                            <li>Él com<strong class="text-orange-600">e</strong></li>
-                            <li class="bg-orange-100 -mx-2 px-2 rounded">Nos. com<strong class="text-orange-600">emos</strong></li>
-                            <li>Ellos com<strong class="text-orange-600">en</strong></li>
-                        </ul>
-                    </div>
-                    <!-- IR -->
-                    <div class="glass-card p-4 !pt-2 border-2 border-purple-500 relative">
-                        <div class="absolute -top-3 -right-3 bg-purple-600 text-white w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold shadow-lg">!</div>
-                        <div class="text-center border-b-2 border-purple-500 pb-2 mb-2 font-bold text-purple-600">
-                            <i class="fas fa-home"></i> VIV<span class="text-black">IR</span>
-                        </div>
-                        <ul class="text-sm space-y-1">
-                            <li>Yo viv<strong class="text-purple-600">o</strong></li>
-                            <li>Tú viv<strong class="text-purple-600">es</strong></li>
-                            <li>Él viv<strong class="text-purple-600">e</strong></li>
-                            <li class="bg-purple-100 -mx-2 px-2 rounded font-bold">Nos. viv<strong class="text-purple-600">imos</strong></li>
-                            <li>Ellos viv<strong class="text-purple-600">en</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. PRACTICA VELOCIDAD -->
-            <section>
-                <h3>Práctica de Velocidad <i class="fas fa-bolt text-yellow-400"></i></h3>
-                <div class="glass-card max-w-3xl mx-auto w-full mt-6">
-                    <ul class="space-y-6 text-xl">
-                        <li class="flex justify-between items-center">
-                            <span>1. (Nosotros / Cocinar) pasta los viernes.</span>
-                            <input type="text" class="clean-input" placeholder="...">
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span>2. (Tú / Escribir) muchos correos.</span>
-                            <input type="text" class="clean-input" placeholder="...">
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span>3. (Ellas / Correr) en el parque.</span>
-                            <input type="text" class="clean-input" placeholder="...">
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span>4. (Él / Asistir) a clases de español.</span>
-                            <input type="text" class="clean-input" placeholder="...">
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span>5. (Yo / Beber) café sin azúcar.</span>
-                            <input type="text" class="clean-input" placeholder="...">
-                        </li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- 5. FRECUENCIA -->
-            <section>
-                <h2 class="mb-6">¿Con qué frecuencia...?</h2>
-                
-                <!-- Timeline -->
-                <div class="w-full max-w-4xl mx-auto mb-10 relative h-20">
-                    <div class="absolute top-1/2 left-0 w-full h-2 bg-gray-200 rounded-full -translate-y-1/2"></div>
-                    
-                    <div class="absolute top-1/2 left-0 -translate-y-1/2 text-center transform -translate-x-1/4">
-                        <div class="w-4 h-4 bg-red-500 rounded-full mx-auto border-4 border-white shadow"></div>
-                        <span class="text-sm font-bold text-red-500 mt-2 block">0% Nunca</span>
-                    </div>
-                    
-                    <div class="absolute top-1/2 left-1/2 -translate-y-1/2 text-center transform -translate-x-1/2">
-                        <div class="w-4 h-4 bg-yellow-500 rounded-full mx-auto border-4 border-white shadow"></div>
-                        <span class="text-sm font-bold text-yellow-500 mt-2 block">A veces</span>
-                    </div>
-
-                    <div class="absolute top-1/2 left-3/4 -translate-y-1/2 text-center transform -translate-x-1/2">
-                        <div class="w-4 h-4 bg-emerald-500 rounded-full mx-auto border-4 border-white shadow"></div>
-                        <span class="text-sm font-bold text-emerald-500 mt-2 block">A menudo</span>
-                    </div>
-
-                    <div class="absolute top-1/2 right-0 -translate-y-1/2 text-center transform translate-x-1/4">
-                        <div class="w-4 h-4 bg-emerald-700 rounded-full mx-auto border-4 border-white shadow"></div>
-                        <span class="text-sm font-bold text-emerald-700 mt-2 block">100% Siempre</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-400">
-                        <i class="fab fa-whatsapp text-green-500 text-xl mr-2"></i> Enviar mensajes
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-400">
-                        <i class="fas fa-broom text-blue-500 text-xl mr-2"></i> Limpiar la casa
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-red-400">
-                        <i class="fas fa-user-friends text-red-500 text-xl mr-2"></i> Discutir con amigos
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-400">
-                        <i class="fas fa-book text-purple-500 text-xl mr-2"></i> Leer libros
-                    </div>
-                </div>
-            </section>
-
-            <!-- 6. IRREGULARES -->
-            <section>
-                <h2 class="text-3xl mb-8">Los "Rebeldes" de la Persona YO</h2>
-                <div class="grid grid-cols-3 gap-4 text-center">
-                    
-                    <!-- TOTALES -->
-                    <div class="bg-red-50 p-6 rounded-xl border border-red-100">
-                        <div class="text-3xl text-red-500 mb-2"><i class="fas fa-exclamation-triangle"></i></div>
-                        <h4 class="font-bold text-red-700 mb-4">Total</h4>
-                        <ul class="text-left space-y-2 text-sm">
-                            <li class="flex justify-between"><span>Ser</span> <strong class="text-red-600">Soy</strong></li>
-                            <li class="flex justify-between"><span>Ir</span> <strong class="text-red-600">Voy</strong></li>
-                            <li class="flex justify-between"><span>Oír</span> <strong class="text-red-600">Oigo</strong></li>
-                        </ul>
-                    </div>
-
-                    <!-- GO -->
-                    <div class="bg-orange-50 p-6 rounded-xl border border-orange-100">
-                        <div class="text-3xl text-orange-500 mb-2"><i class="fas fa-rocket"></i></div>
-                        <h4 class="font-bold text-orange-700 mb-4">Tipo GO</h4>
-                        <ul class="text-left space-y-2 text-sm">
-                            <li class="flex justify-between"><span>Hacer</span> <strong class="text-orange-600">Ha<span class="underline">go</span></strong></li>
-                            <li class="flex justify-between"><span>Poner</span> <strong class="text-orange-600">Pon<span class="underline">go</span></strong></li>
-                            <li class="flex justify-between"><span>Salir</span> <strong class="text-orange-600">Sal<span class="underline">go</span></strong></li>
-                        </ul>
-                    </div>
-
-                    <!-- ZCO -->
-                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                        <div class="text-3xl text-blue-500 mb-2"><i class="fas fa-car"></i></div>
-                        <h4 class="font-bold text-blue-700 mb-4">Tipo ZCO</h4>
-                        <ul class="text-left space-y-2 text-sm">
-                            <li class="flex justify-between"><span>Conducir</span> <strong class="text-blue-600">Cond<span class="underline">uzco</span></strong></li>
-                            <li class="flex justify-between"><span>Conocer</span> <strong class="text-blue-600">Con<span class="underline">ozco</span></strong></li>
-                        </ul>
-                    </div>
-
-                </div>
-                <p class="mt-6 text-sm text-gray-500 bg-white inline-block px-4 py-2 rounded-full shadow mx-auto">
-                    ⚠️ ¡Ojo! Solo cambia en "YO". Tú haces, Él hace...
-                </p>
-            </section>
-
-            <!-- 7. LABERINTO -->
-            <section>
-                <h3>El Laberinto del YO</h3>
-                <div class="glass-card max-w-2xl mx-auto mt-6">
-                    <div class="grid grid-cols-2 gap-y-6 gap-x-10 text-lg">
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-pencil-alt text-gray-400 mr-2"></i> Hacer (tarea)</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-music text-gray-400 mr-2"></i> Poner (música)</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-brain text-gray-400 mr-2"></i> Saber (respuesta)</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-car-side text-gray-400 mr-2"></i> Conducir</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-pizza-slice text-gray-400 mr-2"></i> Traer (comida)</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <span><i class="fas fa-tv text-gray-400 mr-2"></i> Ver (tele)</span>
-                            <input class="clean-input text-right" placeholder="Yo...">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 8. BOOT VERBS -->
-            <section>
-                <div class="flex items-center justify-center gap-4 mb-4">
-                    <h2 class="m-0">Los "Boot Verbs"</h2>
-                    <i class="fas fa-shoe-prints text-4xl text-orange-500 transform -rotate-45"></i>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-center">
-                    <div class="relative">
-                        <!-- LA BOTA VISUAL -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg relative z-10">
-                            <h4 class="text-center font-bold text-gray-700 mb-4">PENSAR (E > IE)</h4>
-                            <div class="grid grid-cols-2 gap-2 text-center text-sm">
-                                <div class="boot-visual p-2">Yo <strong>pienso</strong></div>
-                                <div class="no-boot p-2 order-2">Nos. <strong>pensamos</strong></div>
-                                <div class="boot-visual p-2 order-1">Tú <strong>piensas</strong></div>
-                                <div class="no-boot p-2 order-4 text-gray-400 line-through">Vos. pensáis</div>
-                                <div class="boot-visual p-2 order-3 col-span-2 mx-10">Ellos <strong>piensan</strong></div>
+            <!-- SLIDE 2: Regular Verbs Recap -->
+            <section class="bg-gradient-to-b from-amber-50/80 to-white">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#004d40] text-white shadow-lg"><i class="fas fa-layer-group"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Regular Verbs Recap</h2>
+                                <p class="text-xs text-gray-500 font-semibold">The Foundation — pattern by ending (-AR, -ER, -IR)</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div class="glass-card p-4 border-l-4 border-orange-500">
-                            <h5 class="font-bold text-orange-600">E > IE</h5>
-                            <p class="text-sm">Querer, Empezar, Preferir</p>
-                        </div>
-                        <div class="glass-card p-4 border-l-4 border-blue-500">
-                            <h5 class="font-bold text-blue-600">O > UE</h5>
-                            <p class="text-sm">Dormir, Almorzar, Volver</p>
-                        </div>
-                        <div class="glass-card p-4 border-l-4 border-purple-500">
-                            <h5 class="font-bold text-purple-600">E > I</h5>
-                            <p class="text-sm">Pedir, Servir, Repetir</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 9. DETECTIVE DE ERRORES -->
-            <section>
-                <div class="text-center mb-6">
-                    <div class="inline-block bg-yellow-100 p-4 rounded-full mb-4">
-                        <i class="fas fa-search text-4xl text-yellow-600"></i>
-                    </div>
-                    <h2>Detective de Errores</h2>
-                </div>
-                
-                <div class="glass-card max-w-3xl mx-auto space-y-4">
-                    <div class="p-3 bg-red-50 rounded border border-red-100 flex items-center gap-3">
-                        <i class="fas fa-times-circle text-red-500"></i>
-                        <span class="line-through decoration-red-400 decoration-2">"Nosotros piensamos que es buena idea."</span>
-                        <i class="fas fa-arrow-right text-gray-400"></i>
-                        <span class="text-emerald-600 font-bold">Pensamos</span>
-                    </div>
-                    
-                    <div class="p-3 bg-red-50 rounded border border-red-100 flex items-center gap-3">
-                        <i class="fas fa-times-circle text-red-500"></i>
-                        <span class="line-through decoration-red-400 decoration-2">"Yo podo hablar español muy bien."</span>
-                         <i class="fas fa-arrow-right text-gray-400"></i>
-                        <span class="text-emerald-600 font-bold">Puedo</span>
-                    </div>
-
-                    <div class="p-3 bg-red-50 rounded border border-red-100 flex items-center gap-3">
-                        <i class="fas fa-times-circle text-red-500"></i>
-                        <span class="line-through decoration-red-400 decoration-2">"Ella duerme, pero yo dormo."</span>
-                         <i class="fas fa-arrow-right text-gray-400"></i>
-                        <span class="text-emerald-600 font-bold">Duermo</span>
-                    </div>
-
-                    <div class="p-3 bg-emerald-50 rounded border border-emerald-100 flex items-center gap-3">
-                        <i class="fas fa-check-circle text-emerald-500"></i>
-                        <span>"Nosotros pedimos el vino."</span>
-                        <span class="ml-auto text-xs font-bold text-emerald-600 uppercase border border-emerald-200 px-2 py-1 rounded">¡Correcta!</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 10. TRADUCCION -->
-            <section>
-                <h2><i class="fas fa-brain text-pink-500"></i> Traducción Inversa</h2>
-                <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto mt-8">
-                    
-                    <div class="flip-card group perspective">
-                        <div class="bg-white p-8 rounded-xl shadow border-2 border-gray-100 text-center cursor-pointer hover:border-orange-300 transition-colors">
-                            <p class="text-gray-500 mb-2 text-sm">I ask for a salad</p>
-                            <hr class="w-10 mx-auto my-3 border-gray-200">
-                            <h4 class="text-xl font-bold text-emerald-600 fragment">Pido una ensalada</h4>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-xl shadow border-2 border-gray-100 text-center">
-                        <p class="text-gray-500 mb-2 text-sm">They close the door</p>
-                        <hr class="w-10 mx-auto my-3 border-gray-200">
-                        <h4 class="text-xl font-bold text-emerald-600 fragment">Ellos cierran la puerta</h4>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-xl shadow border-2 border-gray-100 text-center">
-                        <p class="text-gray-500 mb-2 text-sm">We return home</p>
-                        <hr class="w-10 mx-auto my-3 border-gray-200">
-                        <h4 class="text-xl font-bold text-emerald-600 fragment">Volvemos a casa</h4>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-xl shadow border-2 border-gray-100 text-center">
-                        <p class="text-gray-500 mb-2 text-sm">It smells good</p>
-                        <hr class="w-10 mx-auto my-3 border-gray-200">
-                        <h4 class="text-xl font-bold text-emerald-600 fragment">Huele bien</h4>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- 11. RUTINA MARIO -->
-            <section>
-                <div class="grid-responsive">
-                    <div class="relative">
-                        <div class="absolute -top-4 -left-4 bg-orange-500 text-white px-4 py-1 rounded-full z-10 shadow">Historia</div>
-                        <img src="https://tucaneo.com/wp-content/uploads/2026/01/rutina-mario.png-scaled-e1767843264820.png" class="rounded-xl shadow-lg w-full object-cover border-4 border-white" alt="Mario Rutina">
-                    </div>
-                    <div class="text-left">
-                        <h3 class="mb-4">La Rutina de Mario</h3>
-                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-6 italic text-gray-600">
-                            "Mario <strong class="text-emerald-600">se despierta</strong> a las 5:30. <strong class="text-emerald-600">Empieza</strong> a trabajar a las 8:00. <strong class="text-emerald-600">Vuelve</strong> a casa en metro y <strong class="text-emerald-600">juega</strong> con sus hijos."
-                        </div>
-                        <div class="glass-card bg-orange-50 !p-6 border-orange-200">
-                            <h4 class="text-lg font-bold text-orange-600 mb-2"><i class="fas fa-microphone"></i> Tu Turno:</h4>
-                            <p class="text-sm">Describe tu <strong>rutina ideal</strong>. Usa:</p>
-                            <div class="mt-3 flex gap-2 flex-wrap">
-                                <span class="bg-white px-2 py-1 rounded border text-xs">Empezar</span>
-                                <span class="bg-white px-2 py-1 rounded border text-xs">Volver</span>
-                                <span class="bg-white px-2 py-1 rounded border text-xs">Almorzar</span>
-                                <span class="bg-white px-2 py-1 rounded border text-xs">Querer</span>
-                            </div>
+                        <div class="overflow-x-auto rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gradient-to-r from-[#004d40] to-teal-700 text-white">
+                                        <th class="p-3 text-left font-bold">Pronoun</th>
+                                        <th class="p-3 text-left font-bold">-AR (Hablar)</th>
+                                        <th class="p-3 text-left font-bold">-ER (Comer)</th>
+                                        <th class="p-3 text-left font-bold">-IR (Vivir)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700 font-semibold bg-white">
+                                    <tr class="border-b border-slate-100 bg-emerald-50/40"><td class="p-3">Yo</td><td class="p-3">Habl<strong class="text-[#ff6f00]">o</strong></td><td class="p-3">Com<strong class="text-[#ff6f00]">o</strong></td><td class="p-3">Viv<strong class="text-[#ff6f00]">o</strong></td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-3">Tú</td><td class="p-3">Habl<strong class="text-[#ff6f00]">as</strong></td><td class="p-3">Com<strong class="text-[#ff6f00]">es</strong></td><td class="p-3">Viv<strong class="text-[#ff6f00]">es</strong></td></tr>
+                                    <tr class="border-b border-slate-100 bg-emerald-50/40"><td class="p-3">Él/Ella/Ud.</td><td class="p-3">Habl<strong class="text-[#ff6f00]">a</strong></td><td class="p-3">Com<strong class="text-[#ff6f00]">e</strong></td><td class="p-3">Viv<strong class="text-[#ff6f00]">e</strong></td></tr>
+                                    <tr class="border-b border-slate-100"><td class="p-3">Nosotros</td><td class="p-3">Habl<strong class="text-[#ff6f00]">amos</strong></td><td class="p-3">Com<strong class="text-[#ff6f00]">emos</strong></td><td class="p-3">Viv<strong class="text-[#ff6f00]">imos</strong></td></tr>
+                                    <tr class="bg-emerald-50/40"><td class="p-3">Ellos/Uds.</td><td class="p-3">Habl<strong class="text-[#ff6f00]">an</strong></td><td class="p-3">Com<strong class="text-[#ff6f00]">en</strong></td><td class="p-3">Viv<strong class="text-[#ff6f00]">en</strong></td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 12. SPEED DATING -->
-            <section>
-                <div class="text-center mb-8">
-                    <i class="fas fa-hourglass-half text-5xl text-blue-500 mb-4 fa-spin" style="animation-duration: 3s;"></i>
-                    <h2>Entrevista "Speed Dating"</h2>
-                </div>
-                
-                <div class="glass-card max-w-3xl mx-auto">
-                    <ul class="text-left space-y-6 text-xl">
-                        <li class="flex items-start gap-3">
-                            <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</span>
-                            ¿A qué hora te levantas los domingos?
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</span>
-                            ¿Qué almuerzas generalmente?
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">3</span>
-                            ¿Pides comida a domicilio o cocinas?
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">4</span>
-                            ¿Qué haces cuando sales del trabajo/clase?
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-8 text-sm text-gray-500">⏱️ 2 minutos por pareja.</div>
-            </section>
-
-            <!-- 13. CIERRE (ACTUALIZADO CON LA IMAGEN DE FONDO) -->
-            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/09/unnamed-1-e1765818358112.png" data-background-size="cover" data-background-position="center">
-                <div class="glass-card max-w-5xl mx-auto p-8 border-t-8 border-emerald-500 shadow-2xl relative" style="background: rgba(255, 255, 255, 0.9);">
-                    
-                    <h2 class="text-center text-4xl mb-8 font-black text-gray-800">Misión Cumplida</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-left items-start">
-                        
-                        <!-- Columna de Logros -->
-                        <div class="space-y-6">
-                            <h4 class="text-gray-500 uppercase text-xs font-bold tracking-widest border-b pb-2 mb-4">Checklist de Hoy</h4>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl"><i class="fas fa-check"></i></div>
-                                <span class="text-lg font-bold text-gray-700">Regulares controlados.</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl"><i class="fas fa-check"></i></div>
-                                <span class="text-lg font-bold text-gray-700">Ojo con los "YO-GO".</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl"><i class="fas fa-check"></i></div>
-                                <span class="text-lg font-bold text-gray-700">Cuidado con la BOTA.</span>
+            <!-- SLIDE 3: Yo-Go and ZCO Rebels -->
+            <section class="bg-slate-900">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500 text-slate-900 shadow-lg"><i class="fas fa-user-ninja"></i></span>
+                            <div>
+                                <h2 class="text-white font-black text-xl mb-0">The "Yo-Go" and "ZCO" Rebels</h2>
+                                <p class="text-slate-300 text-xs">Only irregular in <strong>Yo</strong>; rest is regular.</p>
                             </div>
                         </div>
-
-                        <!-- Columna de Tarea (Card dentro de card) -->
-                        <div class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-200 shadow-inner">
-                            <h4 class="text-orange-500 font-bold mb-3 flex items-center gap-2"><i class="fas fa-rocket"></i> Tu Reto Personal:</h4>
-                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                                Escribe un párrafo sobre <strong>"Lo que hace mi mejor amigo/a todos los días"</strong>.
-                            </p>
-                            <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-xs text-yellow-800 italic">
-                                <i class="fas fa-lightbulb mr-1"></i> Tip: Usa 3ª persona para practicar la -s final y los cambios de raíz (Ej: Él pides -> Él pide).
-                            </div>
+                        <div class="overflow-x-auto rounded-2xl overflow-hidden border border-slate-600 shadow-2xl">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900">
+                                        <th class="p-3 text-left font-bold">Verb</th>
+                                        <th class="p-3 text-left font-bold">Yo form</th>
+                                        <th class="p-3 text-left font-bold">Meaning</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-slate-800 text-slate-100">
+                                    <tr class="border-b border-slate-600"><td class="p-3 font-semibold">Hacer</td><td class="p-3 text-amber-300 font-bold">Hago</td><td class="p-3 text-slate-300">To do / make</td></tr>
+                                    <tr class="border-b border-slate-600 bg-slate-800/80"><td class="p-3 font-semibold">Poner</td><td class="p-3 text-amber-300 font-bold">Pongo</td><td class="p-3 text-slate-300">To put / set</td></tr>
+                                    <tr class="border-b border-slate-600"><td class="p-3 font-semibold">Salir</td><td class="p-3 text-amber-300 font-bold">Salgo</td><td class="p-3 text-slate-300">To leave / go out</td></tr>
+                                    <tr class="border-b border-slate-600 bg-slate-800/80"><td class="p-3 font-semibold">Traer</td><td class="p-3 text-amber-300 font-bold">Traigo</td><td class="p-3 text-slate-300">To bring</td></tr>
+                                    <tr class="border-b border-slate-600"><td class="p-3 font-semibold">Tener</td><td class="p-3 text-amber-300 font-bold">Tengo</td><td class="p-3 text-slate-300">To have</td></tr>
+                                    <tr class="border-b border-slate-600 bg-slate-800/80"><td class="p-3 font-semibold">Decir</td><td class="p-3 text-amber-300 font-bold">Digo</td><td class="p-3 text-slate-300">To say</td></tr>
+                                    <tr class="border-b border-slate-600"><td class="p-3 font-semibold">Conducir</td><td class="p-3 text-violet-300 font-bold">Conduzco</td><td class="p-3 text-slate-300">To drive</td></tr>
+                                    <tr class="bg-slate-800/80"><td class="p-3 font-semibold">Conocer</td><td class="p-3 text-violet-300 font-bold">Conozco</td><td class="p-3 text-slate-300">To know (people/places)</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="mt-8 pt-6 border-t border-gray-200 text-center">
-                        <p class="text-xl font-handlee text-gray-500">"¿Alguna duda final sobre ese verbo imposible?"</p>
+            <!-- SLIDE 4: Boot Verbs (Stem-Changing) -->
+            <section class="bg-gradient-to-br from-rose-50 via-white to-amber-50">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-500 text-white shadow-lg"><i class="fas fa-boot"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Boot Verbs (Stem-Changing)</h2>
+                                <p class="text-gray-600 text-xs">Vowel change e→ie, o→ue, e→i in all forms <strong>except Nosotros</strong>.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl shadow-xl border-2 border-rose-200 overflow-hidden">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gradient-to-r from-rose-500 to-rose-600 text-white">
+                                        <th class="p-3 text-left font-bold">Pronoun</th>
+                                        <th class="p-3 text-left font-bold">Querer (e→ie)</th>
+                                        <th class="p-3 text-left font-bold">Almorzar (o→ue)</th>
+                                        <th class="p-3 text-left font-bold">Pedir (e→i)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700 font-semibold bg-white">
+                                    <tr class="border-b border-rose-100"><td class="p-3">Yo</td><td class="p-3">Qui<strong class="text-rose-600">e</strong>ro</td><td class="p-3">Almu<strong class="text-rose-600">e</strong>rzo</td><td class="p-3">P<strong class="text-rose-600">i</strong>do</td></tr>
+                                    <tr class="border-b border-rose-100 bg-rose-50/30"><td class="p-3">Tú</td><td class="p-3">Qui<strong class="text-rose-600">e</strong>res</td><td class="p-3">Almu<strong class="text-rose-600">e</strong>rzas</td><td class="p-3">P<strong class="text-rose-600">i</strong>des</td></tr>
+                                    <tr class="border-b border-rose-100"><td class="p-3">Él/Ella</td><td class="p-3">Qui<strong class="text-rose-600">e</strong>re</td><td class="p-3">Almu<strong class="text-rose-600">e</strong>rza</td><td class="p-3">P<strong class="text-rose-600">i</strong>de</td></tr>
+                                    <tr class="border-b border-rose-100 bg-amber-100"><td class="p-3">Nosotros</td><td class="p-3 text-gray-600">Queremos <span class="text-xs text-amber-700">(no change)</span></td><td class="p-3 text-gray-600">Almorzamos <span class="text-xs text-amber-700">(no change)</span></td><td class="p-3 text-gray-600">Pedimos <span class="text-xs text-amber-700">(no change)</span></td></tr>
+                                    <tr class="bg-rose-50/30"><td class="p-3">Ellos</td><td class="p-3">Qui<strong class="text-rose-600">e</strong>ren</td><td class="p-3">Almu<strong class="text-rose-600">e</strong>rzan</td><td class="p-3">P<strong class="text-rose-600">i</strong>den</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Exercise 1 - Conjugation Speed Run -->
+            <section class="bg-slate-50">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#ff6f00] text-white shadow-lg"><i class="fas fa-bolt"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Exercise 1: Conjugation Speed Run</h2>
+                                <p class="text-gray-600 text-xs">Conjugate the verb in parenthesis correctly.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-lg">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-[#004d40] text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Sentence</th>
+                                        <th class="p-2 text-left font-bold w-40">Your answer</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ex1-exercises">
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">1</td><td class="p-2">Yo ________ (traer) mi computadora a la clase.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="traigo"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">2</td><td class="p-2">Nosotros ________ (entender) la gramática perfectamente.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="entendemos"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">3</td><td class="p-2">Mi hermano ________ (conducir) un coche eléctrico en Bogotá.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="conduce"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">4</td><td class="p-2">¿Tú ________ (salir) con tus amigos los viernes?</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="sales"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">5</td><td class="p-2">Ellos ________ (almorzar) comida japonesa hoy.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="almuerzan"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">6</td><td class="p-2">Ella ________ (poner) la música muy fuerte.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="pone"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">7</td><td class="p-2">Ustedes ________ (querer) viajar a Japón en noviembre.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="quieren"></td></tr>
+                                    <tr class="hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">8</td><td class="p-2">Yo ________ (conocer) a muchos abogados en Colombia.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="conozco"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col items-center mt-2">
+                            <button onclick="checkEx1()" class="bg-[#ff6f00] text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-orange-700 transition transform hover:scale-105"><i class="fas fa-check mr-2"></i> Comprobar</button>
+                            <div id="ex1-result" class="mt-3 text-center font-bold text-sm min-h-[1.5em]"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Exercise 2 - Logic & Coherence -->
+            <section class="bg-gradient-to-b from-indigo-50/60 to-white">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600 text-white shadow-lg"><i class="fas fa-brain"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Exercise 2: Logic & Coherence</h2>
+                                <p class="text-gray-600 text-xs">Is the sentence <strong>Lógica (L)</strong> or <strong>Ilógica (I)</strong>?</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-lg">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-indigo-600 text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Sentence</th>
+                                        <th class="p-2 text-center font-bold w-20">L / I</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ex2-exercises">
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">1</td><td class="p-2">Un vegetariano pide una hamburguesa de carne.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="I"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">2</td><td class="p-2">Yo pongo mis zapatos dentro de la nevera.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="I"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">3</td><td class="p-2">Camilo es profesor, él enseña español.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="L"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">4</td><td class="p-2">Nosotros dormimos durante la clase de inglés.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="I"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">5</td><td class="p-2">Si tengo hambre, yo como algo rico.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="L"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">6</td><td class="p-2">Mi novia es ingeniera, ella trabaja con datos.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="L"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">7</td><td class="p-2">Los gatos vuelan por el cielo de la ciudad.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="I"></td></tr>
+                                    <tr class="hover:bg-indigo-50/30"><td class="p-2 text-center font-bold text-[#004d40]">8</td><td class="p-2">Cuando llueve, nosotros traemos un paraguas.</td><td class="p-2 text-center"><input type="text" class="clean-input w-14 text-center mx-auto" maxlength="1" data-correct="L"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col items-center mt-2">
+                            <button onclick="checkEx2()" class="bg-[#004d40] text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-teal-800 transition"><i class="fas fa-check mr-2"></i> Comprobar</button>
+                            <div id="ex2-result" class="mt-3 text-center font-bold text-sm min-h-[1.5em]"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Exercise 3 - Find the Error -->
+            <section class="bg-amber-50/50">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-600 text-white shadow-lg"><i class="fas fa-search"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Exercise 3: Find the Error</h2>
+                                <p class="text-gray-600 text-xs">Identify the conjugation or logic error. Write the correction.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border-2 border-amber-200 overflow-hidden bg-white shadow-lg">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-amber-600 text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Sentence (with error)</th>
+                                        <th class="p-2 text-left font-bold w-36">Correction</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ex3-exercises">
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">1</td><td class="p-2">Nosotros quieren ir a la playa.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="queremos"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">2</td><td class="p-2">Yo haco mi tarea de español por la noche.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="hago"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">3</td><td class="p-2">Mi madre pedimos un café con leche.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="pide"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">4</td><td class="p-2">¿Tú conocéis este restaurante japonés?</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="conoces"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">5</td><td class="p-2">Ellos viven en el fondo del mar. <span class="text-amber-700 text-xs">(logic)</span></td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="ilógico"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">6</td><td class="p-2">Yo sayo de mi casa a las 8:00 am.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="salgo"></td></tr>
+                                    <tr class="border-b border-amber-100 hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">7</td><td class="p-2">Ella preferes beber té en lugar de café.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="prefiere"></td></tr>
+                                    <tr class="hover:bg-amber-50/50"><td class="p-2 text-center font-bold text-[#004d40]">8</td><td class="p-2">Vosotros almorzamos muy tarde siempre.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="almorzáis"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col items-center mt-2">
+                            <button onclick="checkEx3()" class="bg-[#ff6f00] text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-orange-700 transition"><i class="fas fa-check mr-2"></i> Comprobar</button>
+                            <div id="ex3-result" class="mt-3 text-center font-bold text-sm min-h-[1.5em]"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Exercise 4 - Visual Decoder -->
+            <section class="bg-gradient-to-br from-emerald-50/80 to-teal-50/50">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600 text-white shadow-lg"><i class="fas fa-puzzle-piece"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Exercise 4: The Visual Decoder</h2>
+                                <p class="text-gray-600 text-xs">Build the sentence. Conjugate the verb in parentheses.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border-2 border-emerald-200 overflow-hidden bg-white shadow-lg">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-emerald-600 text-white">
+                                        <th class="p-2 text-center font-bold w-12">Icon</th>
+                                        <th class="p-2 text-left font-bold">Sentence</th>
+                                        <th class="p-2 text-left font-bold w-40">Your answer</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ex4-exercises">
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">👨‍💻</td><td class="p-2">Yo (trabajar) mucho en la oficina.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="trabajo"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🥑</td><td class="p-2">Nosotros (almorzar) algo saludable.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="almorzamos"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🚗</td><td class="p-2">Camilo (conducir) a su despacho.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="conduce"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🍱</td><td class="p-2">Ellos (comer) sushi en Shibuya.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="comen"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">📚</td><td class="p-2">Tú (leer) códigos de leyes.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="lees"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🏃‍♀️</td><td class="p-2">Mi novia (correr) por la mañana.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="corre"></td></tr>
+                                    <tr class="border-b border-emerald-100 hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🎸</td><td class="p-2">Ustedes (poner) música latina.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="ponen"></td></tr>
+                                    <tr class="hover:bg-emerald-50/50"><td class="p-2 text-center text-2xl">🏠</td><td class="p-2">Yo (volver) a casa muy tarde.</td><td class="p-2"><input type="text" class="clean-input text-sm w-full" data-correct="vuelvo"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col items-center mt-2">
+                            <button onclick="checkEx4()" class="bg-[#004d40] text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-teal-800 transition"><i class="fas fa-check mr-2"></i> Comprobar</button>
+                            <div id="ex4-result" class="mt-3 text-center font-bold text-sm min-h-[1.5em]"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Exercise 5 - Interview Speed Dating (Speaking) -->
+            <section class="bg-gradient-to-br from-violet-900 via-purple-900 to-slate-900">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-violet-400 text-slate-900 shadow-lg"><i class="fas fa-comments"></i></span>
+                            <div>
+                                <h2 class="text-white font-black text-xl mb-0">Exercise 5: Interview "Speed Dating"</h2>
+                                <p class="text-violet-200 text-xs">Ask your partner. Answer with at least one irregular verb.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl overflow-hidden border border-violet-500/50 shadow-2xl">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-violet-500/80 text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Question</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-slate-800/80 text-slate-100">
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">1</td><td class="p-2">¿A qué hora sales de tu casa normalmente?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">2</td><td class="p-2">¿Qué traes en tu maleta hoy?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">3</td><td class="p-2">¿Conoces algún lugar bueno para hacer senderismo en Bogotá?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">4</td><td class="p-2">¿Qué pides cuando vas a un restaurante elegante?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">5</td><td class="p-2">¿Haces ejercicio por la mañana o por la tarde?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">6</td><td class="p-2">¿A qué hora vuelves a casa después del trabajo?</td></tr>
+                                    <tr class="border-b border-violet-500/30"><td class="p-2 text-center font-bold text-violet-300">7</td><td class="p-2">¿Conduces un coche o prefieres usar el transporte público?</td></tr>
+                                    <tr><td class="p-2 text-center font-bold text-violet-300">8</td><td class="p-2">¿Pones la mesa para cenar en tu casa?</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-center text-violet-200/90 italic"><i class="fas fa-microphone-alt mr-1"></i> Oral: salir, traer, conocer, pedir, hacer, volver, conducir, poner.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Exercise 6 - Deep Reading -->
+            <section class="bg-slate-800">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500 text-slate-900 shadow-lg"><i class="fas fa-book-open"></i></span>
+                            <div>
+                                <h2 class="text-white font-black text-xl mb-0">Exercise 6: Deep Reading</h2>
+                                <p class="text-amber-200/90 text-xs">"A Lawyer's Adventure" — find: salir, conocer, traer, preferir.</p>
+                            </div>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden border border-amber-500/30 bg-slate-800/60 p-5 text-sm max-h-[36vh] overflow-y-auto">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+                            <p class="mb-2 text-slate-200 relative">"Camilo es un abogado colombiano que vive una aventura en Japón. Él se despierta temprano, pero no toma café; él <strong class="text-amber-400">prefiere</strong> beber té verde caliente. A las 9:00 am, Camilo <strong class="text-amber-400">sale</strong> de su hotel en Shinjuku y camina hacia los templos antiguos.</p>
+                            <p class="mb-0 text-slate-200 relative">En la tarde, él <strong class="text-amber-400">conoce</strong> a otros viajeros y almuerza ramen delicioso en un mercado local. Su novia, que es ingeniera, no está con él hoy, pero ellos hablan por videollamada. Camilo siempre <strong class="text-amber-400">trae</strong> su cámara profesional porque hace fotos de los paisajes de Tokio. Él dice que Japón es increíble y no quiere volver a Colombia todavía."</p>
+                        </div>
+                        <div class="rounded-2xl overflow-hidden border border-slate-600">
+                            <table class="w-full text-sm border-collapse">
+                                <thead><tr class="bg-amber-600/90 text-slate-900"><th class="p-2 text-center font-bold w-10">#</th><th class="p-2 text-left font-bold">Critical thinking question</th></tr></thead>
+                                <tbody class="bg-slate-800/80 text-slate-200">
+                                    <tr class="border-b border-slate-600"><td class="p-2 text-center font-bold text-amber-400">1</td><td class="p-2">¿Qué prefiere beber Camilo por la mañana y qué actividad hace a las 9:00 am?</td></tr>
+                                    <tr class="border-b border-slate-600"><td class="p-2 text-center font-bold text-amber-400">2</td><td class="p-2">¿Con quién habla Camilo y qué profesión tiene esa persona?</td></tr>
+                                    <tr class="border-b border-slate-600"><td class="p-2 text-center font-bold text-amber-400">3</td><td class="p-2">¿Por qué Camilo siempre trae su cámara consigo?</td></tr>
+                                    <tr><td class="p-2 text-center font-bold text-amber-400">4</td><td class="p-2">¿Qué piensa Camilo sobre Japón y qué no quiere hacer al final del texto?</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-center text-slate-400">Answer in full sentences.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: Final Challenge - Syntax Architect -->
+            <section class="bg-gradient-to-b from-slate-100 to-white">
+                <div class="slide-container">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#004d40] text-white shadow-lg"><i class="fas fa-drafting-compass"></i></span>
+                            <div>
+                                <h2 class="text-[#004d40] font-black text-xl mb-0">Final Challenge: The Syntax Architect</h2>
+                                <p class="text-gray-600 text-xs">Build a sentence. Add a complement. Respect: Negative, Question, or Affirmative.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl bg-emerald-50 border-2 border-emerald-200 p-3 text-sm mb-1">
+                            <p class="font-bold text-[#004d40] mb-1">Examples:</p>
+                            <p>(Nosotros / Almorzar / Affirmative) → Nosotros almorzamos pizza los sábados.</p>
+                            <p>(Yo / Traer / Negative) → Yo no traigo mi computadora hoy.</p>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-lg">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-[#004d40] text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Subject / Verb / Constraint</th>
+                                        <th class="p-2 text-left font-bold w-48">Your sentence</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ex11-exercises">
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">1</td><td class="p-2">Mis amigos / Preferir / Affirmative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">2</td><td class="p-2">Yo / Conocer / Negative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">3</td><td class="p-2">Tú / Poner / Question</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">4</td><td class="p-2">Mi novia / Empezar / Affirmative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">5</td><td class="p-2">Nosotros / Dormir / Negative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">6</td><td class="p-2">Ustedes / Traer / Question</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">7</td><td class="p-2">Camilo / Salir / Affirmative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                    <tr class="hover:bg-slate-50"><td class="p-2 text-center font-bold text-[#004d40]">8</td><td class="p-2">Yo / Hacer / Negative</td><td class="p-2"><input type="text" class="clean-input text-sm w-full"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center">Compare with your partner or teacher.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: Homework -->
+            <section class="bg-gradient-to-br from-slate-800 to-slate-900">
+                <div class="slide-container flex flex-col justify-center">
+                    <div class="flex flex-col gap-4 text-white relative">
+                        <div class="absolute top-0 right-0 w-48 opacity-90">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo" class="w-full h-auto max-h-24 object-contain">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500 text-slate-900 shadow-lg"><i class="fas fa-home"></i></span>
+                            <div>
+                                <h2 class="text-white font-black text-xl mb-0">Homework: The "Routine Switch"</h2>
+                                <h3 class="text-lg font-bold text-amber-200">A Day in Someone Else's Shoes</h3>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                            <table class="w-full text-sm border-collapse bg-white/10 backdrop-blur-sm">
+                                <thead>
+                                    <tr class="bg-amber-500/30 text-white">
+                                        <th class="p-2 text-center font-bold w-10">#</th>
+                                        <th class="p-2 text-left font-bold">Instruction</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-100">
+                                    <tr class="border-b border-white/10"><td class="p-3 text-center font-bold text-amber-300">1</td><td class="p-3">Choose a person with a very different job (e.g. pilot, chef, doctor).</td></tr>
+                                    <tr class="border-b border-white/10"><td class="p-3 text-center font-bold text-amber-300">2</td><td class="p-3">Write <strong class="text-amber-200">10 sentences</strong> about their daily routine.</td></tr>
+                                    <tr class="border-b border-white/10"><td class="p-3 text-center font-bold text-amber-300">3</td><td class="p-3">Use at least <strong class="text-amber-200">4 Yo-Go/ZCO verbs</strong> and <strong class="text-amber-200">4 Boot verbs</strong>.</td></tr>
+                                    <tr><td class="p-3 text-center font-bold text-amber-300">4</td><td class="p-3">Be prepared to present it in the next class!</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3 mt-1">
+                            <span class="px-3 py-1.5 bg-amber-500/30 rounded-xl text-amber-100 text-xs font-semibold border border-amber-400/30">Hacer, Poner, Salir, Traer, Conocer...</span>
+                            <span class="px-3 py-1.5 bg-rose-500/30 rounded-xl text-rose-100 text-xs font-semibold border border-rose-400/30">Querer, Preferir, Dormir, Almorzar...</span>
+                        </div>
+                        <div class="flex justify-center mt-2 pt-2 border-t border-white/20">
+                            <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy" class="h-12 w-auto opacity-90 object-contain">
+                        </div>
                     </div>
                 </div>
             </section>
@@ -614,148 +1263,1211 @@
         </div>
     </div>
 
-    <!-- REACT COMPONENTS (PIZARRA + VOCABULARIO) -->
     <script type="text/babel">
+        // --- REACT COMPONENTS (Lógica Corregida) ---
         const { useState, useEffect, useRef, useLayoutEffect } = React;
+
+        // Iconos
         const Icon = ({ p }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
         const I = {
-            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></>} />,
+            Pencil: <Icon p={<><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></>} />,
+            Eraser: <Icon p={<><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" /><path d="M22 21H7" /><path d="m5 11 9 9" /></>} />,
             Square: <Icon p={<rect width="18" height="18" x="3" y="3" rx="2" />} />,
             Circle: <Icon p={<circle cx="12" cy="12" r="10" />} />,
-            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></>} />,
+            Type: <Icon p={<><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" x2="15" y1="20" y2="20" /><line x1="12" x2="12" y1="4" y2="20" /></>} />,
             Line: <Icon p={<line x1="5" y1="12" x2="19" y2="12" />} />,
-            Undo: <Icon p={<><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></>} />,
-            Redo: <Icon p={<><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"/></>} />,
-            Trash: <Icon p={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />,
-            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></>} />,
-            Pointer: <Icon p={<path d="m12 12 5.83 2.92-2.91 5.83L12 12Zm0 0-9.1-3.64 12.73-5.46L9.1 15.64 12 12Z" />} />,
-            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>} />,
-            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5"/>} />,
-            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2"/>} />
+            Undo: <Icon p={<><path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" /></>} />,
+            Redo: <Icon p={<><path d="M21 7v6h-6" /><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7" /></>} />,
+            Trash: <Icon p={<><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></>} />,
+            Save: <Icon p={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></>} />,
+            Pointer: <Icon p={<><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /><path d="m13 13 6 6" /></>} />,
+            Book: <Icon p={<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />} />,
+            Art: <Icon p={<circle cx="13.5" cy="6.5" r=".5" />} />,
+            Copy: <Icon p={<rect width="14" height="14" x="8" y="8" rx="2" />} />
         };
 
-        function VocabModule() {
-            const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } });
-            const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null);
-            useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch {} }, [list]);
-            const add = (e) => { e.preventDefault(); if(!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); };
-            const copy = () => {
-                const text = list.map(i => `${i.w}: ${i.d}`).join('\n');
-                if(!text) return alert("Lista vacía");
-                try { navigator.clipboard.writeText(text).then(()=>alert("Copiado!"), ()=>setManualCopy(text)); } catch { setManualCopy(text); }
-            };
-            return (
-                <div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative">
-                    {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-lg w-full max-w-sm"><p className="font-bold">Copia:</p><textarea className="w-full h-32 border p-2" readOnly value={manualCopy} onClick={e=>e.target.select()}/><button onClick={()=>setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded">Cerrar</button></div></div>}
-                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex gap-2">{I.Book} Vocabulario</h2>
-                    <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border"><input value={w} onChange={e=>setW(e.target.value)} placeholder="Palabra" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500"/><input value={d} onChange={e=>setD(e.target.value)} placeholder="Significado" className="w-full border-b p-2 outline-none focus:border-orange-500"/><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600 mt-2">Añadir</button></form>
-                    <div className="flex-1 overflow-y-auto bg-white rounded-xl border p-4 shadow-inner mb-4"><ul className="space-y-2">{list.map((i,k)=>(<li key={k} className="flex justify-between border-b pb-1"><span><b>{i.w}</b> <span className="text-gray-500">{i.d}</span></span><button onClick={()=>setList(list.filter((_,x)=>x!==k))} className="text-red-400">×</button></li>))}</ul></div>
-                    <button onClick={copy} className="bg-slate-800 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-slate-900">{I.Copy} Copiar Lista</button>
-                </div>
-            );
-        }
+        const getHandles = (el) => { const pad = 0; const x = el.x; const y = el.y; const w = el.width; const h = el.height; return { tl: { x: x - pad, y: y - pad, cursor: 'nwse-resize' }, tr: { x: x + w + pad, y: y - pad, cursor: 'nesw-resize' }, bl: { x: x - pad, y: y + h + pad, cursor: 'nesw-resize' }, br: { x: x + w + pad, y: y + h + pad, cursor: 'nwse-resize' } }; };
+        const isPointInHandle = (x, y, handle) => { const size = 12; return x >= handle.x - size && x <= handle.x + size && y >= handle.y - size && y <= handle.y + size; };
 
+        // --- GLOSARIO (Sin cambios) ---
+        function VocabModule() { const [list, setList] = useState(() => { try { return JSON.parse(localStorage.getItem('tucaneo_vocab') || '[]'); } catch { return []; } }); const [w, setW] = useState(''); const [d, setD] = useState(''); const [manualCopy, setManualCopy] = useState(null); useEffect(() => { try { localStorage.setItem('tucaneo_vocab', JSON.stringify(list)); } catch { } }, [list]); const add = (e) => { e.preventDefault(); if (!w.trim()) return; setList([...list, { w, d }]); setW(''); setD(''); }; const copy = () => { const text = list.map(i => `${i.w}: ${i.d}`).join('\n'); if (!text) return alert("Lista vacía"); try { navigator.clipboard.writeText(text).then(() => alert("Copiado!"), () => setManualCopy(text)); } catch { setManualCopy(text); } }; return (<div className="flex flex-col h-full bg-slate-50 p-6 pt-8 relative font-sans"> {manualCopy && <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="bg-white p-4 rounded-xl w-full max-w-sm shadow-2xl"><p className="font-bold mb-2 text-emerald-800 font-playfair">Copiar datos:</p><textarea className="w-full h-32 border p-2 rounded-lg" readOnly value={manualCopy} onClick={e => e.target.select()} /><button onClick={() => setManualCopy(null)} className="w-full bg-slate-800 text-white py-2 mt-2 rounded-lg">Cerrar</button></div></div>} <h2 className="text-xl font-bold text-emerald-800 mb-4 flex gap-2 font-playfair">{I.Book} Glosario</h2> <form onSubmit={add} className="bg-white p-4 rounded-xl shadow-sm mb-4 border border-emerald-100"><input value={w} onChange={e => setW(e.target.value)} placeholder="Término" className="w-full border-b p-2 mb-2 outline-none focus:border-orange-500 font-bold text-slate-700" /><input value={d} onChange={e => setD(e.target.value)} placeholder="Definición" className="w-full border-b p-2 outline-none focus:border-orange-500 text-slate-500" /><button type="submit" className="w-full bg-orange-500 text-white py-2 rounded-lg font-bold hover:bg-orange-600 mt-2 shadow-md transition">Añadir</button></form> <div className="flex-1 overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 shadow-inner mb-4"><ul className="space-y-3">{list.map((i, k) => (<li key={k} className="flex justify-between border-b border-slate-50 pb-2"><div><span className="block font-bold text-slate-700">{i.w}</span><span className="text-sm text-slate-400 italic">{i.d}</span></div><button onClick={() => setList(list.filter((_, x) => x !== k))} className="text-red-300 hover:text-red-500 bg-red-50 w-6 h-6 rounded-full flex items-center justify-center">×</button></li>))}</ul></div> <button onClick={copy} className="bg-emerald-600 text-white py-2 rounded-lg font-bold flex justify-center gap-2 hover:bg-emerald-700 shadow-lg">{I.Copy} Copiar Lista</button> </div>); }
+
+        // --- PIZARRA (Corregida) ---
         function WhiteboardModule() {
-            const [elements, setElements] = useState([]); const [history, setHistory] = useState([]); const [historyStep, setHistoryStep] = useState(0);
-            const [tool, setTool] = useState('pencil'); const [action, setAction] = useState('none'); const [panOffset, setPanOffset] = useState({x:0, y:0});
-            const [isPanning, setIsPanning] = useState(false); const [writingPos, setWritingPos] = useState(null); const [confirmClear, setConfirmClear] = useState(false);
-            const [color, setColor] = useState('#000000'); const [strokeWidth, setStrokeWidth] = useState(3); const [size, setSize] = useState({w:0, h:0});
-            const containerRef = useRef(null); const canvasRef = useRef(null); const textAreaRef = useRef(null);
+            const [elements, setElements] = useState([]);
+            const [history, setHistory] = useState([]);
+            const [historyStep, setHistoryStep] = useState(0);
+            const [tool, setTool] = useState('pencil');
+            const [action, setAction] = useState('none');
+            const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+            const [writingPos, setWritingPos] = useState(null);
+            const [defaultText, setDefaultText] = useState(''); // Estado para edición
+            const [selectedId, setSelectedId] = useState(null);
+            const [confirmClear, setConfirmClear] = useState(false);
+            const [resizeHandle, setResizeHandle] = useState(null);
+            const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+            const [color, setColor] = useState('#004d40');
+            const [strokeWidth, setStrokeWidth] = useState(3);
+            const [size, setSize] = useState({ w: 0, h: 0 });
+            const [hoverCursor, setHoverCursor] = useState(null);
+            const containerRef = useRef(null);
+            const canvasRef = useRef(null);
+            const textAreaRef = useRef(null);
             const generateId = () => Math.random().toString(36).substr(2, 9);
-            useEffect(() => { if(!containerRef.current) return; const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight })); obs.observe(containerRef.current); return () => obs.disconnect(); }, []);
-            useEffect(() => { if (confirmClear) setConfirmClear(false); }, [tool, action]);
+
+            useEffect(() => {
+                if (!containerRef.current) return;
+                const obs = new ResizeObserver(() => setSize({ w: containerRef.current.offsetWidth, h: containerRef.current.offsetHeight }));
+                obs.observe(containerRef.current);
+                return () => obs.disconnect();
+            }, []);
+
+            useEffect(() => {
+                if (tool !== 'selection') { setSelectedId(null); setResizeHandle(null); }
+                if (confirmClear) setConfirmClear(false);
+                // Si cambiamos de herramienta escribiendo, guardamos
+                if (action === 'writing' && tool !== 'text') finishWriting();
+            }, [tool]);
+
+            // Enfocar textarea al escribir
+            useEffect(() => {
+                if (action === 'writing' && textAreaRef.current) {
+                    textAreaRef.current.value = defaultText; // Poner texto existente si es edición
+                    setTimeout(() => {
+                        textAreaRef.current?.focus();
+                        textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight;
+                    }, 10);
+                }
+            }, [action, writingPos]);
+
+            // Actualizar propiedades al seleccionar
+            useEffect(() => {
+                if (selectedId && !resizeHandle && action !== 'moving') {
+                    const index = elements.findIndex(el => el.id === selectedId);
+                    if (index !== -1) {
+                        const el = elements[index];
+                        if (el.color !== color || el.strokeWidth !== strokeWidth) {
+                            const newEls = [...elements];
+                            // Recalcular tamaño si es texto
+                            let newW = el.width;
+                            let newH = el.height;
+                            if (el.type === 'text') {
+                                const fontSize = Math.max(12, strokeWidth * 4);
+                                const lines = el.text.split('\n');
+                                newH = lines.length * fontSize * 1.2;
+                                const maxLineLen = Math.max(...lines.map(l => l.length));
+                                newW = maxLineLen * fontSize * 0.6;
+                            }
+                            newEls[index] = { ...el, color, strokeWidth, width: newW, height: newH };
+                            setElements(newEls);
+                        }
+                    }
+                }
+            }, [color, strokeWidth]);
+
+            useEffect(() => {
+                if (selectedId) {
+                    const el = elements.find(e => e.id === selectedId);
+                    if (el) { setColor(el.color); setStrokeWidth(el.strokeWidth); }
+                }
+            }, [selectedId]);
+
+            // RENDERIZADO (Con soporte multilínea)
             useLayoutEffect(() => {
-                const ctx = canvasRef.current?.getContext('2d'); if(!ctx || size.w === 0) return;
-                canvasRef.current.width = size.w; canvasRef.current.height = size.h;
-                ctx.clearRect(0,0,size.w,size.h); ctx.save(); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size.w,size.h);
-                ctx.strokeStyle='#f4f4f5'; ctx.lineWidth=1; ctx.beginPath();
-                for(let x=panOffset.x%40; x<size.w; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,size.h); }
-                for(let y=panOffset.y%40; y<size.h; y+=40) { ctx.moveTo(0,y); ctx.lineTo(size.w,y); }
-                ctx.stroke(); ctx.restore(); ctx.save(); ctx.translate(panOffset.x, panOffset.y);
-                elements.forEach(el => {
-                    ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.fillStyle = el.color;
-                    if(el.type === 'pencil' && el.points.length > 1) { ctx.beginPath(); ctx.moveTo(el.points[0].x, el.points[0].y); for(let i=1; i<el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y); ctx.stroke(); }
-                    else if (el.type === 'rectangle') ctx.strokeRect(el.x, el.y, el.width, el.height);
-                    else if (el.type === 'circle') { ctx.beginPath(); const r = Math.sqrt(Math.pow(el.width,2)+Math.pow(el.height,2))/2; ctx.arc(el.x+el.width/2, el.y+el.height/2, Math.abs(r), 0, 2*Math.PI); ctx.stroke(); }
-                    else if (el.type === 'line') { ctx.beginPath(); ctx.moveTo(el.x, el.y); ctx.lineTo(el.x+el.width, el.y+el.height); ctx.stroke(); }
-                    else if (el.type === 'text' && el.text) { ctx.font = `${el.strokeWidth*6}px sans-serif`; ctx.textBaseline='top'; ctx.fillText(el.text, el.x, el.y); }
-                });
+                const ctx = canvasRef.current?.getContext('2d');
+                if (!ctx || size.w === 0) return;
+                canvasRef.current.width = size.w;
+                canvasRef.current.height = size.h;
+                ctx.clearRect(0, 0, size.w, size.h);
+
+                // Grid
+                ctx.save();
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, size.w, size.h);
+                ctx.strokeStyle = '#f1f5f9';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                const gridSize = 40;
+                const offsetX = panOffset.x % gridSize;
+                const offsetY = panOffset.y % gridSize;
+                for (let x = offsetX; x < size.w; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, size.h); }
+                for (let y = offsetY; y < size.h; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(size.w, y); }
+                ctx.stroke();
                 ctx.restore();
-            }, [elements, size, panOffset]);
-            const updateHistory = (newEls) => { const newHist = history.slice(0, historyStep + 1); newHist.push(newEls); setHistory(newHist); setHistoryStep(newHist.length - 1); };
-            const undo = () => { if(historyStep>0) { setHistoryStep(s=>s-1); setElements(history[historyStep-1]); } else { setHistoryStep(-1); setElements([]); } };
-            const redo = () => { if(historyStep<history.length-1) { setHistoryStep(s=>s+1); setElements(history[historyStep+1]); } };
-            const getPos = (e) => { const rect = canvasRef.current.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y }; };
+
+                ctx.save();
+                ctx.translate(panOffset.x, panOffset.y);
+
+                elements.forEach(el => {
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    if (el.type === 'eraser') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = el.strokeWidth * 4; }
+                    else { ctx.strokeStyle = el.color; ctx.lineWidth = el.strokeWidth; ctx.fillStyle = el.color; }
+
+                    if ((el.type === 'pencil' || el.type === 'eraser') && el.points.length > 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(el.points[0].x, el.points[0].y);
+                        for (let i = 1; i < el.points.length; i++) ctx.lineTo(el.points[i].x, el.points[i].y);
+                        ctx.stroke();
+                    } else if (el.type === 'rectangle') {
+                        ctx.strokeRect(el.x, el.y, el.width, el.height);
+                    } else if (el.type === 'circle') {
+                        ctx.beginPath();
+                        const r = Math.sqrt(Math.pow(el.width, 2) + Math.pow(el.height, 2)) / 2;
+                        ctx.arc(el.x + el.width / 2, el.y + el.height / 2, Math.abs(r), 0, 2 * Math.PI);
+                        ctx.stroke();
+                    } else if (el.type === 'line') {
+                        ctx.beginPath();
+                        ctx.moveTo(el.x, el.y);
+                        ctx.lineTo(el.x + el.width, el.y + el.height);
+                        ctx.stroke();
+                    } else if (el.type === 'text' && el.text) {
+                        const fontSize = Math.max(12, el.strokeWidth * 4);
+                        ctx.font = `${fontSize}px 'Lato', sans-serif`;
+                        ctx.textBaseline = 'top';
+
+                        // LÓGICA DE MULTILÍNEA
+                        const lines = el.text.split('\n');
+                        let maxWidth = 0;
+                        lines.forEach((line, index) => {
+                            ctx.fillText(line, el.x, el.y + (index * fontSize * 1.2));
+                            const m = ctx.measureText(line);
+                            if (m.width > maxWidth) maxWidth = m.width;
+                        });
+
+                        el.width = maxWidth;
+                        el.height = lines.length * fontSize * 1.2;
+                    }
+                });
+
+                if (selectedId) {
+                    const el = elements.find(e => e.id === selectedId);
+                    if (el) {
+                        const isPencil = el.type === 'pencil' || el.type === 'eraser';
+                        ctx.strokeStyle = '#ff6f00';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);
+                        let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                        if (isPencil) {
+                            const xs = el.points.map(p => p.x); const ys = el.points.map(p => p.y);
+                            bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by;
+                        } else {
+                            if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                            if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                        }
+                        ctx.strokeRect(bx - 5, by - 5, bw + 10, bh + 10);
+                        ctx.setLineDash([]);
+                        if (!isPencil) {
+                            const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                            ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#ff6f00'; ctx.lineWidth = 2;
+                            Object.values(handles).forEach(h => { ctx.beginPath(); ctx.rect(h.x - 4, h.y - 4, 8, 8); ctx.fill(); ctx.stroke(); });
+                        }
+                    }
+                }
+                ctx.restore();
+            }, [elements, size, panOffset, selectedId]);
+
+            const updateHistory = (newEls) => {
+                const newHist = history.slice(0, historyStep + 1);
+                newHist.push(newEls);
+                setHistory(newHist);
+                setHistoryStep(newHist.length - 1);
+            };
+            const undo = () => { if (historyStep > 0) { setHistoryStep(s => s - 1); setElements(history[historyStep - 1]); setSelectedId(null); } else { setHistoryStep(-1); setElements([]); setSelectedId(null); } };
+            const redo = () => { if (historyStep < history.length - 1) { setHistoryStep(s => s + 1); setElements(history[historyStep + 1]); setSelectedId(null); } };
+            const getPos = (e) => {
+                const rect = canvasRef.current.getBoundingClientRect();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: cx - rect.left - panOffset.x, y: cy - rect.top - panOffset.y };
+            };
+
+            const isPointInElement = (x, y, el) => {
+                const padding = 10;
+                let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                if (el.type === 'pencil' || el.type === 'eraser') {
+                    const xs = el.points.map(p => p.x); const ys = el.points.map(p => p.y);
+                    bx = Math.min(...xs); by = Math.min(...ys); bw = Math.max(...xs) - bx; bh = Math.max(...ys) - by;
+                } else {
+                    if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                    if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                }
+                return x >= bx - padding && x <= bx + bw + padding && y >= by - padding && y <= by + bh + padding;
+            };
+
+            // MANEJO DE DOBLE CLIC (EDITAR)
+            const handleDoubleClick = (e) => {
+                const { x, y } = getPos(e);
+                for (let i = elements.length - 1; i >= 0; i--) {
+                    const el = elements[i];
+                    if (el.type === 'text' && isPointInElement(x, y, el)) {
+                        setDefaultText(el.text);
+                        setWritingPos({ x: el.x, y: el.y });
+                        setTool('text');
+                        setAction('writing');
+                        setColor(el.color);
+                        setStrokeWidth(el.strokeWidth);
+                        const newEls = elements.filter(item => item.id !== el.id);
+                        setElements(newEls);
+                        return;
+                    }
+                }
+            };
+
             const handleDown = (e) => {
-                if(['BUTTON','INPUT','TEXTAREA'].includes(e.target.tagName)) return; e.preventDefault();
-                if(tool==='selection') { setIsPanning(true); return; }
-                const {x,y} = getPos(e);
-                if(tool==='text') { if(action==='writing') finishWriting(); setAction('writing'); setWritingPos({x,y}); return; }
-                setAction('drawing'); setElements(prev=>[...prev, {id:generateId(), type:tool, x, y, width:0, height:0, color, strokeWidth, points:tool==='pencil'?[{x,y}]:undefined}]);
+                if (['BUTTON', 'INPUT', 'TEXTAREA', 'LABEL', 'SELECT'].includes(e.target.tagName)) return;
+                e.preventDefault();
+
+                const { x, y } = getPos(e);
+
+                if (tool === 'selection') {
+                    if (selectedId) {
+                        const el = elements.find(e => e.id === selectedId);
+                        if (el && (el.type !== 'pencil' && el.type !== 'eraser')) {
+                            let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                            if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                            if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                            const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                            for (const key in handles) {
+                                if (isPointInHandle(x, y, handles[key])) { setResizeHandle(key); setAction('resizing'); return; }
+                            }
+                        }
+                    }
+                    let foundId = null;
+                    if (selectedId) {
+                        const el = elements.find(e => e.id === selectedId);
+                        if (el && isPointInElement(x, y, el)) foundId = selectedId;
+                    }
+                    if (!foundId) {
+                        for (let i = elements.length - 1; i >= 0; i--) {
+                            if (isPointInElement(x, y, elements[i])) { foundId = elements[i].id; break; }
+                        }
+                    }
+                    setSelectedId(foundId);
+                    if (foundId) {
+                        setAction('moving');
+                        const el = elements.find(e => e.id === foundId);
+                        setDragOffset({ x: x - el.x, y: y - el.y });
+                    } else {
+                        setAction('panning');
+                    }
+                    return;
+                }
+
+                if (tool === 'text') {
+                    if (action === 'writing') {
+                        finishWriting();
+                    } else {
+                        setDefaultText('');
+                        setAction('writing');
+                        setWritingPos({ x, y });
+                    }
+                    return;
+                }
+
+                setAction('drawing');
+                const newEl = {
+                    id: generateId(),
+                    type: tool,
+                    x, y,
+                    width: 0, height: 0,
+                    color, strokeWidth,
+                    points: (tool === 'pencil' || tool === 'eraser') ? [{ x, y }] : undefined
+                };
+                setElements(prev => [...prev, newEl]);
             };
+
             const handleMove = (e) => {
-                if(isPanning) { setPanOffset(p=>({x:p.x+(e.movementX||0), y:p.y+(e.movementY||0)})); return; }
-                if(action==='drawing') { const {x,y} = getPos(e); const els = [...elements]; const curr = els[els.length-1]; if(tool==='pencil') curr.points.push({x,y}); else { curr.width = x - curr.x; curr.height = y - curr.y; } setElements(els); }
+                const { x, y } = getPos(e);
+                if (tool === 'selection' && selectedId && action === 'none') {
+                    const el = elements.find(e => e.id === selectedId);
+                    if (el) {
+                        if (el.type !== 'pencil' && el.type !== 'eraser') {
+                            let bx = el.x, by = el.y, bw = el.width, bh = el.height;
+                            if (bw < 0) { bx += bw; bw = Math.abs(bw); }
+                            if (bh < 0) { by += bh; bh = Math.abs(bh); }
+                            const handles = getHandles({ x: bx, y: by, width: bw, height: bh });
+                            let cursor = null;
+                            for (const key in handles) { if (isPointInHandle(x, y, handles[key])) cursor = handles[key].cursor; }
+                            setHoverCursor(cursor);
+                        }
+                        if (!hoverCursor && isPointInElement(x, y, el)) { setHoverCursor('move'); }
+                    } else { setHoverCursor(null); }
+                } else if (action === 'none') { setHoverCursor(null); }
+
+                if (action === 'panning') { setPanOffset(p => ({ x: p.x + (e.movementX || 0), y: p.y + (e.movementY || 0) })); return; }
+
+                if (action === 'moving' && selectedId) {
+                    const els = [...elements];
+                    const index = els.findIndex(e => e.id === selectedId);
+                    const el = els[index];
+                    const newX = x - dragOffset.x;
+                    const newY = y - dragOffset.y;
+                    if (el.type === 'pencil' || el.type === 'eraser') {
+                        const dx = newX - el.x; const dy = newY - el.y;
+                        const newPoints = el.points.map(p => ({ x: p.x + dx, y: p.y + dy }));
+                        els[index] = { ...el, x: newX, y: newY, points: newPoints };
+                    } else {
+                        els[index] = { ...el, x: newX, y: newY };
+                    }
+                    setElements(els);
+                    return;
+                }
+
+                if (action === 'resizing' && selectedId && resizeHandle) {
+                    const els = [...elements];
+                    const index = els.findIndex(e => e.id === selectedId);
+                    const el = els[index];
+                    if (el.type === 'text') {
+                        let newHeight = el.height;
+                        if (resizeHandle.includes('b')) newHeight = y - el.y;
+                        if (resizeHandle.includes('t')) newHeight = el.y + el.height - y;
+                        if (newHeight < 10) newHeight = 10;
+                        const newStrokeWidth = newHeight / 4;
+                        const lines = el.text.split('\n');
+                        const maxLen = Math.max(...lines.map(l => l.length));
+                        els[index] = {
+                            ...el,
+                            strokeWidth: newStrokeWidth,
+                            height: lines.length * newHeight * 1.2,
+                            width: maxLen * newHeight * 0.6
+                        };
+                    } else {
+                        let newX = el.x, newY = el.y, newW = el.width, newH = el.height;
+                        if (resizeHandle === 'br') { newW = x - newX; newH = y - newY; }
+                        else if (resizeHandle === 'bl') { newW = (newX + newW) - x; newX = x; newH = y - newY; }
+                        else if (resizeHandle === 'tr') { newW = x - newX; newH = (newY + newH) - y; newY = y; }
+                        else if (resizeHandle === 'tl') { newW = (newX + newW) - x; newX = x; newH = (newY + newH) - y; newY = y; }
+                        els[index] = { ...el, x: newX, y: newY, width: newW, height: newH };
+                    }
+                    setElements(els);
+                    return;
+                }
+
+                if (action === 'drawing') {
+                    const els = [...elements];
+                    const curr = els[els.length - 1];
+                    if (tool === 'pencil' || tool === 'eraser') curr.points.push({ x, y });
+                    else { curr.width = x - curr.x; curr.height = y - curr.y; }
+                    setElements(els);
+                }
             };
-            const handleUp = () => { if(action==='drawing') { setAction('none'); updateHistory(elements); } setIsPanning(false); };
-            const finishWriting = () => { if(!textAreaRef.current || !writingPos) return; const text = textAreaRef.current.value.trim(); if(text) { const newEls = [...elements, {id:generateId(), type:'text', x:writingPos.x, y:writingPos.y, text, color, strokeWidth:3}]; setElements(newEls); updateHistory(newEls); } setAction('none'); setWritingPos(null); };
-            const save = () => { const a = document.createElement('a'); a.download='tucaneo-board.png'; a.href=canvasRef.current.toDataURL(); a.click(); };
+
+            const handleUp = () => {
+                if (action === 'drawing' || action === 'resizing' || action === 'moving') updateHistory(elements);
+                if (action !== 'writing') { setAction('none'); setResizeHandle(null); }
+            };
+
+            const finishWriting = () => {
+                if (!textAreaRef.current || !writingPos) {
+                    setAction('none'); setWritingPos(null); return;
+                }
+                const text = textAreaRef.current.value.trim();
+                if (text) {
+                    const fontSize = Math.max(12, strokeWidth * 4);
+                    const lines = text.split('\n');
+                    const totalHeight = lines.length * fontSize * 1.2;
+                    const maxLineLen = Math.max(...lines.map(l => l.length));
+                    const approxWidth = maxLineLen * fontSize * 0.6;
+
+                    const newEls = [...elements, {
+                        id: generateId(),
+                        type: 'text',
+                        x: writingPos.x,
+                        y: writingPos.y,
+                        text, color, strokeWidth,
+                        width: approxWidth,
+                        height: totalHeight
+                    }];
+                    setElements(newEls);
+                    updateHistory(newEls);
+                }
+                setAction('none');
+                setWritingPos(null);
+                setDefaultText('');
+            };
+
+            const save = () => {
+                const a = document.createElement('a'); a.download = 'pizarra-tucaneo.png'; a.href = canvasRef.current.toDataURL(); a.click();
+            };
+
+            let cursorClass = 'cursor-crosshair';
+            if (hoverCursor) cursorClass = `cursor-${hoverCursor}`;
+            else if (tool === 'selection') cursorClass = action === 'panning' ? 'cursor-grabbing' : 'cursor-default';
+            else if (tool === 'text') cursorClass = 'cursor-text';
+            else if (tool === 'eraser') cursorClass = 'cursor-eraser';
+
             return (
-                <div ref={containerRef} className="absolute inset-0 bg-white select-none touch-none">
-                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border">
-                        <button onClick={()=>setTool('selection')} className={`p-3 rounded-lg ${tool==='selection'?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
+                <div ref={containerRef}
+                    onDoubleClick={handleDoubleClick}
+                    className={`absolute inset-0 bg-white select-none touch-none overflow-hidden ${cursorClass}`}>
+
+                    <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 flex flex-col gap-2 bg-white/95 p-2 rounded-xl shadow-lg border border-slate-200">
+                        <button onClick={() => setTool('selection')} title="Seleccionar (Mover y Editar)" className={`p-3 rounded-lg transition-colors ${tool === 'selection' ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{I.Pointer}</button>
                         <div className="w-full h-px bg-gray-200 my-1"></div>
-                        {[{id:'pencil',i:I.Pencil},{id:'rectangle',i:I.Square},{id:'circle',i:I.Circle},{id:'line',i:I.Line},{id:'text',i:I.Type}].map(t=> (<button key={t.id} onClick={()=>setTool(t.id)} className={`p-3 rounded-lg ${tool===t.id?'bg-orange-100 text-orange-600':'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>))}
+                        <button onClick={() => setTool('eraser')} title="Borrador" className={`p-3 rounded-lg transition-colors ${tool === 'eraser' ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{I.Eraser}</button>
+                        {[{ id: 'pencil', i: I.Pencil, t: 'Lápiz' }, { id: 'rectangle', i: I.Square, t: 'Cuadrado' }, { id: 'circle', i: I.Circle, t: 'Círculo' }, { id: 'line', i: I.Line, t: 'Línea' }, { id: 'text', i: I.Type, t: 'Texto' }].map(t => (
+                            <button key={t.id} onClick={() => setTool(t.id)} title={t.t} className={`p-3 rounded-lg transition-colors ${tool === t.id ? 'bg-orange-100 text-orange-600' : 'text-gray-400 hover:bg-gray-100'}`}>{t.i}</button>
+                        ))}
                     </div>
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border flex items-center gap-4 w-max">
-                        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer" />
-                        <div className="hidden md:flex items-center gap-2"><span className="text-xs font-bold text-gray-400">GROSOR</span><input type="range" min="1" max="20" value={strokeWidth} onChange={e=>setStrokeWidth(Number(e.target.value))} className="w-24 accent-orange-500"/></div>
-                        <div className="w-px h-8 bg-gray-200 mx-1"></div>
-                        <div className="flex gap-1"><button onClick={undo} disabled={historyStep<0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button><button onClick={redo} disabled={historyStep>=history.length-1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button><button onClick={()=>{if(!confirmClear){setConfirmClear(true);setTimeout(()=>setConfirmClear(false),3000)}else{setElements([]);setConfirmClear(false);}}} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear?'bg-red-500 text-white px-3':'text-red-500 hover:bg-red-50'}`}>{confirmClear?'¿?':I.Trash}</button></div>
-                        <button onClick={save} className="ml-2 bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center">{I.Save} Guardar</button>
+
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 px-6 py-3 rounded-full shadow-lg border border-slate-200 flex items-center gap-4 w-max max-w-[90vw] overflow-x-auto">
+                        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-8 h-8 rounded-full border-none cursor-pointer flex-shrink-0" title="Color" />
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className="text-xs font-bold text-gray-400 hidden md:block">GROSOR</span>
+                            <input type="range" min="1" max="20" value={strokeWidth} onChange={e => setStrokeWidth(Number(e.target.value))} className="w-24 accent-emerald-500" title="Tamaño" />
+                        </div>
+                        <div className="w-px h-8 bg-gray-200 mx-1 hidden md:block"></div>
+                        <div className="flex gap-1 flex-shrink-0">
+                            <button onClick={undo} disabled={historyStep < 0} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Undo}</button>
+                            <button onClick={redo} disabled={historyStep >= history.length - 1} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full disabled:opacity-30">{I.Redo}</button>
+                            <button onClick={() => { if (!confirmClear) { setConfirmClear(true); setTimeout(() => setConfirmClear(false), 3000) } else { setElements([]); setConfirmClear(false); } }} className={`p-2 rounded-full font-bold text-xs transition-colors ${confirmClear ? 'bg-red-500 text-white px-3' : 'text-red-500 hover:bg-red-50'}`}>{confirmClear ? 'CONFIRMAR' : I.Trash}</button>
+                        </div>
+                        <button onClick={save} className="ml-2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold flex gap-2 items-center hover:bg-slate-900 transition-colors flex-shrink-0 uppercase tracking-wider">{I.Save} <span className="hidden md:inline">Guardar</span></button>
                     </div>
-                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className={`absolute inset-0 w-full h-full z-20 ${tool==='text'?'cursor-text':tool==='selection'?'cursor-move':'cursor-crosshair'}`} />
-                    {action==='writing' && writingPos && <div className="fixed z-50" style={{left:writingPos.x+panOffset.x+(containerRef.current?.getBoundingClientRect().left||0), top:writingPos.y+panOffset.y}}><textarea ref={textAreaRef} autoFocus onBlur={finishWriting} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finishWriting()}}} className="bg-white/90 border-2 border-orange-500 rounded p-2 shadow-xl min-w-[200px]" style={{font:`${strokeWidth*6}px sans-serif`}} placeholder="Escribe..." /></div>}
+
+                    <canvas ref={canvasRef} onMouseDown={handleDown} onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchStart={handleDown} onTouchMove={handleMove} onTouchEnd={handleUp} className="absolute inset-0 w-full h-full z-20" />
+
+                    {action === 'writing' && writingPos && (
+                        <div className="fixed z-[100] fade-in" style={{ left: writingPos.x + panOffset.x + (containerRef.current?.getBoundingClientRect().left || 0), top: writingPos.y + panOffset.y, }}>
+                            <textarea
+                                ref={textAreaRef}
+                                onKeyDown={(e) => {
+                                    // Evitar que el evento suba a Reveal.js
+                                    e.stopPropagation();
+                                    // Si es ESC, cerramos, pero ENTER ahora funciona normal (salto de línea)
+                                    if (e.key === 'Escape') finishWriting();
+                                }}
+                                onBlur={finishWriting}
+                                className="bg-white border-2 border-emerald-500 rounded-lg p-3 shadow-2xl outline-none text-slate-900 placeholder-slate-400 overflow-hidden resize-both font-sans"
+                                style={{ font: `${Math.max(12, strokeWidth * 4)}px 'Lato', sans-serif`, minWidth: '200px', minHeight: '60px' }}
+                                placeholder="Escriba aquí..."
+                            />
+                        </div>
+                    )}
                 </div>
             );
         }
 
+        // --- APP PRINCIPAL (Contenedor) ---
         function App() {
             const [tab, setTab] = useState('board');
             const close = () => window.toggleDrawer();
-            useEffect(() => { const handler = (e) => { if(e.key.toLowerCase()==='h' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) close(); }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, []);
+            useEffect(() => {
+                const handler = (e) => {
+                    if (e.key.toLowerCase() === 'h' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) close();
+                };
+                window.addEventListener('keydown', handler);
+                const toolHandler = (e) => {
+                    const toolName = e.detail;
+                    setTab(toolName);
+                    const drawer = document.getElementById('tucaneo-drawer');
+                    if (drawer && !drawer.classList.contains('is-open')) {
+                        drawer.classList.add('is-open');
+                    }
+                };
+                window.addEventListener('open-tool', toolHandler);
+                return () => {
+                    window.removeEventListener('keydown', handler);
+                    window.removeEventListener('open-tool', toolHandler);
+                };
+            }, []);
             return (
                 <div className="h-full flex flex-col bg-slate-50">
-                    <div className="bg-white border-b h-14 shrink-0 flex items-center px-4 gap-6">
-                        <button onClick={()=>setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='board'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
-                        <button onClick={()=>setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab==='vocab'?'border-orange-500 text-orange-600':'border-transparent text-gray-400'}`}>{I.Book} Vocabulario</button>
+                    <div className="bg-white border-b border-slate-200 h-14 shrink-0 flex items-center px-4 gap-6">
+                        <button onClick={() => setTab('board')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab === 'board' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-400'}`}>{I.Art} Pizarra</button>
+                        <button onClick={() => setTab('vocab')} className={`h-full flex items-center gap-2 border-b-2 font-bold px-2 transition-colors ${tab === 'vocab' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-400'}`}>{I.Book} Glosario</button>
                         <div className="flex-1"></div>
                     </div>
                     <div className="flex-1 relative overflow-hidden">
-                        <div className={`absolute inset-0 ${tab==='board'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule/></div>
-                        <div className={`absolute inset-0 ${tab==='vocab'?'z-10':'-z-10 opacity-0 pointer-events-none'}`}><VocabModule/></div>
+                        <div className={`absolute inset-0 ${tab === 'board' ? 'z-10' : '-z-10 opacity-0 pointer-events-none'}`}><WhiteboardModule /></div>
+                        <div className={`absolute inset-0 ${tab === 'vocab' ? 'z-10' : '-z-10 opacity-0 pointer-events-none'}`}><VocabModule /></div>
                     </div>
                 </div>
             );
         }
 
+        // RENDERIZADO FINAL
         const root = ReactDOM.createRoot(document.getElementById('tools-root'));
         root.render(<App />);
     </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
     <script>
-        const isMobile = window.innerWidth < 900;
-        Reveal.initialize({
-            controls: true, progress: true, center: true, hash: false, history: false,
-            width: isMobile ? 360 : 1200, height: isMobile ? 600 : 700,
-            margin: isMobile ? 0.05 : 0.04, minScale: 0.2, maxScale: 2.0,
-            transition: 'slide', backgroundTransition: 'fade', overview: false
-        });
-        function toggleDrawer() {
-            const d = document.getElementById('tucaneo-drawer');
-            if(d.classList.contains('is-open')) d.classList.remove('is-open');
-            else d.classList.add('is-open');
+        // Lógica Principal
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isSmallScreen = window.innerWidth < 1024;
+        const isMobile = isTouch || isSmallScreen;
+
+        if (isMobile) {
+            console.log("Modo Móvil: Desactivando lógica de presentación.");
+            document.body.classList.add('is-mobile');
+
+            // NO INICIAMOS REVEAL.JS EN MÓVIL
+            // Dejamos que el CSS haga todo el trabajo de scroll vertical.
+
+            // Barra de progreso manual
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                const progressBar = document.getElementById('scroll-progress');
+                if (progressBar) progressBar.style.width = scrolled + '%';
+
+                const btn = document.getElementById('back-to-top');
+                if (btn) (winScroll > 300) ? btn.classList.add('visible') : btn.classList.remove('visible');
+            });
+        } else {
+            // PC: Iniciamos Reveal (Solo aquí)
+            Reveal.initialize({
+                // ... tu configuración de PC ...
+                width: "100%", height: "100%", margin: 0, minScale: 1, maxScale: 1,
+                transition: 'slide', backgroundTransition: 'fade', background: '#fefce8'
+            });
         }
+
+        function toggleDrawer() { document.getElementById('tucaneo-drawer').classList.toggle('is-open'); }
+        function openTool(toolName) { window.dispatchEvent(new CustomEvent('open-tool', { detail: toolName })); }
+
+        // --- CONTROL INTELIGENTE DE TECLAS (VERSIÓN FINAL) ---
+        function handleZoomNavigation(e) {
+            // 1. Ignorar si el usuario escribe en un input
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+            // 2. Guardamos la posición EXACTA (diapositiva H y V) antes de movernos
+            const indicesBefore = Reveal.getIndices();
+            let actionTriggered = false;
+
+            // 3. Ejecutamos la acción de Reveal
+            if (e.key === 'ArrowLeft') {
+                Reveal.prev();
+                actionTriggered = true;
+            } else if (e.key === 'ArrowRight' || e.code === 'Space') {
+                Reveal.next();
+                actionTriggered = true;
+            }
+
+            // 4. Decidimos si hacer scroll arriba o no
+            if (actionTriggered) {
+                const indicesAfter = Reveal.getIndices();
+
+                // LÓGICA: Si la diapositiva Horizontal (h) o Vertical (v) cambió, es una diapositiva nueva -> SCROLL TOP
+                // Si h y v son iguales, significa que solo cambió el fragmento (f) -> NO SCROLL
+                if (indicesBefore.h !== indicesAfter.h || indicesBefore.v !== indicesAfter.v) {
+                    window.scrollTo(0, 0);
+                }
+                // Si no, nos quedamos quietos para ver la respuesta que acabamos de revelar.
+            }
+        }
+
+        function forceZoom() {
+            if (isMobile) return;
+
+            const container = document.querySelector('.reveal');
+            const btn = document.getElementById('btn-zoom');
+            const html = document.documentElement;
+            const body = document.body;
+
+            const isActive = container.classList.contains('is-zoomed');
+
+            if (!isActive) {
+                // --- ACTIVAR ZOOM ---
+                html.classList.add('is-scrollable');
+                body.classList.add('is-scrollable');
+                container.classList.add('is-zoomed');
+
+                // Apagamos teclado nativo de Reveal y encendemos el nuestro
+                Reveal.configure({ keyboard: false });
+                document.addEventListener('keydown', handleZoomNavigation);
+
+                btn.classList.add('active');
+
+            } else {
+                // --- DESACTIVAR ZOOM ---
+                window.scrollTo(0, 0);
+                html.classList.remove('is-scrollable');
+                body.classList.remove('is-scrollable');
+                container.classList.remove('is-zoomed');
+
+                // Restauramos todo
+                Reveal.configure({ keyboard: true });
+                document.removeEventListener('keydown', handleZoomNavigation);
+                Reveal.layout();
+
+                btn.classList.remove('active');
+            }
+        }
+
+        const sounds = {
+            confetti: new Audio('https://www.myinstants.com/media/sounds/success-sound-effect.mp3'),
+            applause: new Audio('https://www.myinstants.com/media/sounds/kids-cheering.mp3'),
+            error: new Audio('https://www.myinstants.com/media/sounds/error-sound.mp3')
+        };
+
+        function playSound(name) {
+            console.log("Playing sound:", name);
+            if (sounds[name]) {
+                sounds[name].currentTime = 0;
+                sounds[name].volume = 0.5;
+                sounds[name].play().then(() => {
+                    console.log("Sound played successfully");
+                }).catch(e => {
+                    console.warn("Audio play failed:", e);
+                });
+            }
+        }
+
+        function react(type) {
+            playSound(type);
+            switch (type) {
+                case 'confetti':
+                    var duration = 2000; var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#004d40', '#ff6f00'], zIndex: 8000 });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                    break;
+                case 'applause':
+                    confetti({ shapes: ['emoji'], emoji: ['👏', '🦜', '☀️'], scalar: 3, spread: 100, particleCount: 30, origin: { y: 1 }, zIndex: 8000, startVelocity: 45 });
+                    break;
+                case 'error':
+                    break;
+            }
+        }
+
+        // Mental Agility Check Function
+        function checkMentalAgility() {
+            const inputs = document.querySelectorAll('#mental-agility-exercises input[data-correct]');
+            let correctCount = 0;
+            let totalCount = inputs.length;
+
+            inputs.forEach((input, index) => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                const resultIcon = input.parentElement.querySelector('.result-icon');
+                const exerciseDiv = input.parentElement;
+
+                // Normalize answers (remove accents for comparison)
+                const normalizeText = (text) => {
+                    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                };
+
+                const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer) || userAnswer === correctAnswer;
+
+                if (isCorrect) {
+                    correctCount++;
+                    resultIcon.innerHTML = '<i class="fas fa-check-circle text-emerald-500 text-xl"></i>';
+                    exerciseDiv.classList.remove('border-red-300', 'bg-red-50');
+                    exerciseDiv.classList.add('border-emerald-300', 'bg-emerald-50');
+                    input.classList.add('text-emerald-700', 'font-bold');
+                } else {
+                    resultIcon.innerHTML = '<i class="fas fa-times-circle text-red-500 text-xl"></i>';
+                    exerciseDiv.classList.remove('border-emerald-300', 'bg-emerald-50');
+                    exerciseDiv.classList.add('border-red-300', 'bg-red-50');
+                    input.classList.add('text-red-600');
+
+                    // Show correct answer
+                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('correct-answer')) {
+                        const correctSpan = document.createElement('span');
+                        correctSpan.className = 'correct-answer text-emerald-600 font-bold text-sm ml-2';
+                        correctSpan.textContent = `✓ ${correctAnswer}`;
+                        resultIcon.after(correctSpan);
+                    }
+                }
+            });
+
+            // Display results
+            const resultDiv = document.getElementById('mental-agility-result');
+            const percentage = Math.round((correctCount / totalCount) * 100);
+
+            if (correctCount === totalCount) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 Perfect! ${correctCount}/${totalCount} - ¡Perfecto!</span>`;
+                react('confetti');
+            } else if (percentage >= 70) {
+                resultDiv.innerHTML = `<span class="text-orange-600">👍 Good! ${correctCount}/${totalCount} (${percentage}%) - ¡Bien!</span>`;
+                playSound('applause');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">📝 Keep practicing! ${correctCount}/${totalCount} (${percentage}%) - ¡Sigue practicando!</span>`;
+            }
+        }
+
+        // Translation Challenge Check Function
+        function checkTranslation() {
+            const inputs = document.querySelectorAll('#translation-exercises input[data-correct]');
+            let correctCount = 0;
+            let totalCount = inputs.length;
+
+            inputs.forEach((input, index) => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                const feedbackDiv = input.parentElement.querySelector('.result-feedback');
+                const exerciseDiv = input.parentElement;
+
+                // Normalize answers (remove accents and punctuation for comparison)
+                const normalizeText = (text) => {
+                    return text
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace(/[¿?¡!.,;:]/g, "")
+                        .trim();
+                };
+
+                const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer) || userAnswer === correctAnswer;
+
+                if (isCorrect) {
+                    correctCount++;
+                    feedbackDiv.innerHTML = '<div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 text-lg"></i><span class="text-emerald-600 font-bold text-sm">¡Correcto! / Correct!</span></div>';
+                    exerciseDiv.classList.remove('border-red-300', 'bg-red-50');
+                    exerciseDiv.classList.add('border-emerald-300', 'bg-emerald-50');
+                    input.classList.add('text-emerald-700', 'font-bold');
+                    input.classList.remove('text-red-600');
+                } else {
+                    feedbackDiv.innerHTML = `<div class="flex flex-col gap-1"><div class="flex items-center gap-2"><i class="fas fa-times-circle text-red-500 text-lg"></i><span class="text-red-600 font-bold text-sm">Incorrecto / Incorrect</span></div><div class="text-emerald-600 font-bold text-sm">✓ ${correctAnswer}</div></div>`;
+                    exerciseDiv.classList.remove('border-emerald-300', 'bg-emerald-50');
+                    exerciseDiv.classList.add('border-red-300', 'bg-red-50');
+                    input.classList.add('text-red-600');
+                    input.classList.remove('text-emerald-700', 'font-bold');
+                }
+            });
+
+            // Display results
+            const resultDiv = document.getElementById('translation-result');
+            const percentage = Math.round((correctCount / totalCount) * 100);
+
+            if (correctCount === totalCount) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 Perfect! ${correctCount}/${totalCount} - ¡Perfecto!</span>`;
+                react('confetti');
+            } else if (percentage >= 70) {
+                resultDiv.innerHTML = `<span class="text-orange-600">👍 Good! ${correctCount}/${totalCount} (${percentage}%) - ¡Bien!</span>`;
+                playSound('applause');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">📝 Keep practicing! ${correctCount}/${totalCount} (${percentage}%) - ¡Sigue practicando!</span>`;
+            }
+        }
+
+        // Check Colombia Text Exercise
+        function checkColombiaText() {
+            const inputs = document.querySelectorAll('#colombia-text-exercise .text-input-inline');
+            let correctCount = 0;
+            const totalCount = inputs.length;
+
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim();
+                const correctAnswer = input.getAttribute('data-correct');
+
+                // Normalize text for comparison (case-insensitive)
+                const normalizeText = (text) => {
+                    return text
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .trim();
+                };
+
+                const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer);
+
+                // Remove previous classes
+                input.classList.remove('correct', 'incorrect');
+
+                if (isCorrect) {
+                    correctCount++;
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            });
+
+            // Display results
+            const resultDiv2 = document.getElementById('colombia-result');
+            const percentage2 = Math.round((correctCount / totalCount) * 100);
+
+            if (correctCount === totalCount) {
+                resultDiv2.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${totalCount} - Perfect!</span>`;
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            } else if (percentage2 >= 70) {
+                resultDiv2.innerHTML = `<span class="text-orange-600">👍 ¡Bien! ${correctCount}/${totalCount} (${percentage2}%) - Good!</span>`;
+            } else {
+                resultDiv2.innerHTML = `<span class="text-slate-600">📝 Sigue practicando - ${correctCount}/${totalCount} (${percentage2}%)</span>`;
+            }
+        }
+
+        function normalizeForCompare(text) {
+            return (text || '').toLowerCase().trim()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ');
+        }
+
+        function checkEx1() {
+            const inputs = document.querySelectorAll('#ex1-exercises input[data-correct]');
+            let correctCount = 0;
+            inputs.forEach(input => {
+                const user = normalizeForCompare(input.value);
+                const correct = normalizeForCompare(input.getAttribute('data-correct'));
+                const row = input.closest('tr');
+                if (user === correct) {
+                    correctCount++;
+                    if (row) { row.classList.remove('bg-red-50', 'border-red-300'); row.classList.add('bg-emerald-50'); }
+                    input.classList.add('text-emerald-700', 'font-bold');
+                } else {
+                    if (row) { row.classList.remove('bg-emerald-50'); row.classList.add('bg-red-50'); }
+                    input.classList.add('text-red-600');
+                }
+            });
+            const resultDiv = document.getElementById('ex1-result');
+            const pct = Math.round((correctCount / inputs.length) * 100);
+            if (correctCount === inputs.length) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${inputs.length}</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">${correctCount}/${inputs.length} (${pct}%) — Sigue practicando</span>`;
+            }
+        }
+
+        function checkEx2() {
+            const inputs = document.querySelectorAll('#ex2-exercises input[data-correct]');
+            let correctCount = 0;
+            inputs.forEach(input => {
+                const user = (input.value || '').trim().toUpperCase().charAt(0);
+                const correct = (input.getAttribute('data-correct') || '').toUpperCase().charAt(0);
+                const row = input.closest('tr');
+                if (user === correct) {
+                    correctCount++;
+                    if (row) { row.classList.remove('bg-red-50'); row.classList.add('bg-emerald-50'); }
+                    input.classList.add('text-emerald-700', 'font-bold');
+                } else {
+                    if (row) { row.classList.remove('bg-emerald-50'); row.classList.add('bg-red-50'); }
+                    input.classList.add('text-red-600');
+                }
+            });
+            const resultDiv = document.getElementById('ex2-result');
+            const pct = Math.round((correctCount / inputs.length) * 100);
+            if (correctCount === inputs.length) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${inputs.length}</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">${correctCount}/${inputs.length} (${pct}%)</span>`;
+            }
+        }
+
+        function checkEx3() {
+            const inputs = document.querySelectorAll('#ex3-exercises input[data-correct]');
+            let correctCount = 0;
+            const alternatives = {
+                'ilógico': ['ilogico', 'i', 'logic', 'ilógica'],
+                'conozco': ['conoco'],
+                'hago': ['haco'],
+                'queremos': ['quieren'],
+                'pide': ['pedimos'],
+                'conoces': ['conocéis'],
+                'salgo': ['sayo'],
+                'prefiere': ['preferes'],
+                'almorzáis': ['almorzamos', 'almorzais']
+            };
+            inputs.forEach(input => {
+                const user = normalizeForCompare(input.value);
+                const correct = normalizeForCompare(input.getAttribute('data-correct'));
+                let ok = user === correct;
+                if (!ok && alternatives[correct]) {
+                    ok = alternatives[correct].some(alt => user === alt || user.includes(correct) || correct.includes(user));
+                }
+                if (!ok && correct === 'ilógico') ok = /ilog|logic|error|i\b/.test(user);
+                const row = input.closest('tr');
+                if (ok) {
+                    correctCount++;
+                    if (row) { row.classList.remove('bg-red-50'); row.classList.add('bg-emerald-50'); }
+                    input.classList.add('text-emerald-700', 'font-bold');
+                } else {
+                    if (row) { row.classList.remove('bg-emerald-50'); row.classList.add('bg-red-50'); }
+                    input.classList.add('text-red-600');
+                }
+            });
+            const resultDiv = document.getElementById('ex3-result');
+            const pct = Math.round((correctCount / inputs.length) * 100);
+            if (correctCount === inputs.length) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${inputs.length}</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">${correctCount}/${inputs.length} (${pct}%)</span>`;
+            }
+        }
+
+        function checkEx4() {
+            const inputs = document.querySelectorAll('#ex4-exercises input[data-correct]');
+            let correctCount = 0;
+            inputs.forEach(input => {
+                const user = normalizeForCompare(input.value);
+                const correct = normalizeForCompare(input.getAttribute('data-correct'));
+                const ok = user === correct;
+                const row = input.closest('tr');
+                if (ok) {
+                    correctCount++;
+                    if (row) { row.classList.remove('bg-red-50'); row.classList.add('bg-emerald-50'); }
+                    input.classList.add('text-emerald-700', 'font-bold');
+                } else {
+                    if (row) { row.classList.remove('bg-emerald-50'); row.classList.add('bg-red-50'); }
+                    input.classList.add('text-red-600');
+                }
+            });
+            const resultDiv = document.getElementById('ex4-result');
+            const pct = Math.round((correctCount / inputs.length) * 100);
+            if (correctCount === inputs.length) {
+                resultDiv.innerHTML = `<span class="text-emerald-600">🎉 ¡Perfecto! ${correctCount}/${inputs.length}</span>`;
+                if (typeof react === 'function') react('confetti');
+            } else {
+                resultDiv.innerHTML = `<span class="text-slate-600">${correctCount}/${inputs.length} (${pct}%)</span>`;
+            }
+        }
+
+    </script>
+    <style>
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes float-up {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(-50%);
+            }
+
+            50% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        /* Custom Classes for JS injection */
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }
+
+        .animate-spin-reverse {
+            animation: spin-reverse 8s linear infinite;
+        }
+
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
+
+    <script>
+        // --- GAME LOGIC: ENERGY CORE ---
+        const CoreGame = {
+            state: {
+                level: 0,
+                score: 0,
+                maxLevels: 10,
+                currentVerb: null,
+                isLocked: false
+            },
+            data: [
+                { verb: "HACER", yo: "Hago", distractors: ["Haco", "Haca", "Hacer"] },
+                { verb: "PONER", yo: "Pongo", distractors: ["Pono", "Pona", "Poni"] },
+                { verb: "SALIR", yo: "Salgo", distractors: ["Salo", "Sali", "Sala"] },
+                { verb: "TRAER", yo: "Traigo", distractors: ["Traio", "Trao", "Trae"] },
+                { verb: "VER", yo: "Veo", distractors: ["Vo", "Voi", "Vi"] },
+                { verb: "SABER", yo: "Sé", distractors: ["Sabo", "Se", "Sabe"] },
+                { verb: "DAR", yo: "Doy", distractors: ["Do", "Da", "Dio"] },
+                { verb: "IR", yo: "Voy", distractors: ["Iro", "Yo", "Va"] },
+                { verb: "ESTAR", yo: "Estoy", distractors: ["Esto", "Estoy", "Esta"] },
+                { verb: "CONOCER", yo: "Conozco", distractors: ["Conoco", "Conoce", "Conoca"] }
+            ],
+
+            init: function () {
+                this.state.level = 0;
+                this.state.score = 0;
+                this.state.isLocked = false;
+
+                // Shuffle data
+                this.data.sort(() => Math.random() - 0.5);
+
+                document.getElementById('game-intro').classList.remove('hidden');
+                document.getElementById('game-interface').classList.add('hidden');
+                document.getElementById('game-result').classList.add('hidden');
+
+                // Reset HUD
+                this.updateHUD();
+            },
+
+            start: function () {
+                document.getElementById('game-intro').classList.add('hidden');
+                document.getElementById('game-interface').classList.remove('hidden');
+                this.loadLevel();
+            },
+
+            loadLevel: function () {
+                if (this.state.level >= this.state.maxLevels) {
+                    this.endGame();
+                    return;
+                }
+
+                this.state.isLocked = false;
+                const currentData = this.data[this.state.level];
+                this.state.currentVerb = currentData;
+
+                // Update HUD
+                this.updateHUD();
+
+                // Set Core Verb
+                const coreOrb = document.getElementById('core-orb');
+                coreOrb.className = "w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-purple-800 shadow-[0_0_50px_rgba(124,58,237,0.5)] flex items-center justify-center transform transition-all duration-300 z-10 relative overflow-hidden";
+                document.getElementById('target-verb').innerText = currentData.verb;
+
+                // Generate Options
+                const options = [currentData.yo, ...currentData.distractors];
+                options.sort(() => Math.random() - 0.5);
+
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                // Positions for 4 satellites (Top, Right, Bottom, Left) - Handling positioning via translate classes to center them relative to container center
+                const positions = [
+                    "top-4 left-1/2 -translate-x-1/2",           // Top
+                    "top-1/2 right-4 translate-x-1/2 -translate-y-1/2", // Right
+                    "bottom-4 left-1/2 -translate-x-1/2",        // Bottom
+                    "top-1/2 left-4 -translate-x-1/2 -translate-y-1/2"  // Left
+                ];
+
+                options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    // Add some randomness to float animation delay
+                    const delay = Math.random() * 2;
+                    // We use inline style for delay
+                    // Note: 'absolute' positioning with specific coordinate classes
+                    btn.className = `absolute ${positions[index]} pointer-events-auto bg-white hover:bg-purple-50 text-slate-800 font-bold py-3 px-6 rounded-full shadow-lg transform transition-all hover:scale-110 active:scale-95 border-2 border-slate-100`;
+                    btn.innerText = opt;
+                    btn.style.animation = `float-up 3s ease-in-out infinite ${delay}s`; // Use custom keyframe
+
+                    btn.onclick = () => this.handleChoice(opt, btn);
+                    container.appendChild(btn);
+                });
+            },
+
+            updateHUD: function () {
+                const levelContainer = document.getElementById('level-indicator');
+                if (!levelContainer) return;
+                levelContainer.innerHTML = '';
+                for (let i = 0; i < this.state.maxLevels; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = `w-2 h-2 rounded-full transition-colors ${i < this.state.level ? 'bg-purple-500' : 'bg-slate-200'}`;
+                    levelContainer.appendChild(dot);
+                }
+                const scoreDisplay = document.getElementById('score-display');
+                if (scoreDisplay) scoreDisplay.innerText = this.state.score.toString().padStart(4, '0');
+            },
+
+            handleChoice: function (choice, btnElement) {
+                if (this.state.isLocked) return;
+                this.state.isLocked = true;
+
+                const correct = this.state.currentVerb.yo;
+                const coreOrb = document.getElementById('core-orb');
+
+                // Disable all buttons
+                const allBtns = document.getElementById('options-container').querySelectorAll('button');
+                allBtns.forEach(b => b.classList.add('pointer-events-none', 'opacity-50'));
+                btnElement.classList.remove('opacity-50');
+
+                if (choice === correct) {
+                    // Correct
+                    this.state.score += 100;
+                    if (typeof playSound === 'function') playSound('confetti');
+
+                    // Visuals
+                    btnElement.classList.remove('bg-white', 'text-slate-800');
+                    btnElement.classList.add('bg-green-500', 'text-white', 'border-green-400', 'scale-125');
+
+                    coreOrb.className = "w-32 h-32 rounded-full bg-gradient-to-br from-green-400 via-emerald-500 to-green-600 shadow-[0_0_50px_rgba(16,185,129,0.8)] flex items-center justify-center transform scale-110 transition-all duration-300 z-10 relative overflow-hidden";
+
+                    setTimeout(() => {
+                        this.state.level++;
+                        this.loadLevel();
+                    }, 1200);
+                } else {
+                    // Incorrect
+                    if (typeof playSound === 'function') playSound('error');
+                    this.state.score = Math.max(0, this.state.score - 50);
+
+                    btnElement.classList.add('bg-red-500', 'text-white', 'animate-shake');
+
+                    // Shake core
+                    coreOrb.classList.add('animate-shake');
+                    setTimeout(() => coreOrb.classList.remove('animate-shake'), 500);
+
+                    setTimeout(() => {
+                        this.state.isLocked = false;
+                        // Re-enable buttons
+                        allBtns.forEach(b => {
+                            b.classList.remove('pointer-events-none', 'opacity-50', 'bg-red-500', 'text-white', 'animate-shake');
+                            // Reset style if needed, but simplest is just continue
+                            if (b === btnElement) {
+                                b.classList.add('bg-white', 'text-slate-800');
+                                b.classList.remove('bg-red-500', 'text-white');
+                            }
+                        });
+                        this.updateHUD();
+                    }, 1000);
+                }
+            },
+
+            endGame: function () {
+                document.getElementById('game-interface').classList.add('hidden');
+                document.getElementById('game-result').classList.remove('hidden');
+                document.getElementById('final-score').innerText = this.state.score;
+
+                const msg = document.getElementById('result-message');
+                if (this.state.score >= 800) {
+                    msg.innerText = "Amazing! The core is fully charged!";
+                    if (typeof react === 'function') react('confetti');
+                } else {
+                    msg.innerText = "Good effort! Try again for 100% efficiency.";
+                }
+            }
+        };
+
+        // Expose to global
+        window.CoreGame = CoreGame;
     </script>
 </body>
+
 </html>

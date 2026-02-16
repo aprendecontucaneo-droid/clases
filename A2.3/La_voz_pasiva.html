@@ -84,6 +84,11 @@
             color: #facc15 !important;
         }
 
+        /* Títulos de tarjetas (Invento, Descubrimiento, Construcción): amarillo que resalta en fondos oscuros */
+        .reveal .card-title-yellow {
+            color: #fef08a !important;
+        }
+
         .reveal .text-emerald-100 {
             color: #d1fae5 !important;
         }
@@ -1277,10 +1282,11 @@
                             <i class="fas fa-gamepad text-8xl text-orange-400 mb-6"></i>
                             <h3 class="text-5xl font-bold text-slate-800 mb-6 font-playfair">El Reto de Concordancia
                             </h3>
-                            <p class="text-3xl text-slate-600 mb-8 leading-relaxed font-lato">
-                                El participio es como un camaleón: cambia según el sujeto.
-                                <br><span class="text-orange-600 font-bold">¡Tienes 3 vidas para sobrevivir!</span>
+                            <p class="text-3xl text-slate-600 mb-6 leading-relaxed font-lato">
+                                Concordancia del participio en voz pasiva — <strong>Nivel B2</strong>.
+                                <br><span class="text-orange-600 font-bold">3 vidas</span> · <span class="text-indigo-600 font-bold">Tiempo limitado por pregunta</span> · 4 opciones.
                             </p>
+                            <p class="text-xl text-slate-500 mb-8">Oraciones más complejas, participios irregulares y trampas de género y número.</p>
                             <button onclick="startGame()"
                                 class="px-12 py-4 bg-orange-500 hover:bg-orange-600 text-white text-3xl font-bold rounded-2xl shadow-lg transition transform hover:scale-105 active:scale-95">
                                 ¡JUGAR AHORA!
@@ -1311,12 +1317,24 @@
                                     </h3>
                                 </div>
 
-                                <!-- Options -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                <!-- Timer (B2 dinámico) -->
+                                <div class="flex justify-center mb-6">
+                                    <div id="question-timer-wrap" class="flex items-center gap-2 bg-slate-100 px-6 py-3 rounded-full">
+                                        <i class="fas fa-clock text-2xl text-orange-500"></i>
+                                        <span id="question-timer" class="text-2xl font-bold text-slate-700">20</span>
+                                        <span class="text-slate-600">seg</span>
+                                    </div>
+                                </div>
+                                <!-- Opciones (2x2 para 4 opciones) -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                     <button id="btn-opt-1" onclick="checkAnswer(0)"
-                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-3xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[100px]"></button>
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-2xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[90px] option-btn"></button>
                                     <button id="btn-opt-2" onclick="checkAnswer(1)"
-                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-3xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[100px]"></button>
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-2xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[90px] option-btn"></button>
+                                    <button id="btn-opt-3" onclick="checkAnswer(2)"
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-2xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[90px] option-btn hidden"></button>
+                                    <button id="btn-opt-4" onclick="checkAnswer(3)"
+                                        class="p-6 bg-white border-4 border-slate-100 rounded-2xl text-2xl font-bold text-slate-700 hover:border-orange-400 hover:bg-orange-50 transition shadow-sm transform hover:scale-105 active:scale-95 min-h-[90px] option-btn hidden"></button>
                                 </div>
                             </div>
 
@@ -1335,7 +1353,7 @@
                         <div class="bg-green-100 p-10 rounded-3xl shadow-2xl border-b-8 border-green-500 max-w-3xl">
                             <i class="fas fa-trophy text-8xl text-yellow-500 mb-6 animate-bounce"></i>
                             <h3 class="text-5xl font-bold text-green-800 mb-4 font-playfair">¡VICTORIA!</h3>
-                            <p class="text-3xl text-green-700 mb-8">Eres un maestro de la concordancia.</p>
+                            <p class="text-3xl text-green-700 mb-8">Dominas la concordancia del participio en voz pasiva (B2).</p>
                             <div class="flex flex-col gap-4">
                                 <button onclick="startGame()"
                                     class="px-10 py-3 bg-green-500 text-white text-2xl font-bold rounded-xl shadow hover:bg-green-600 transition">
@@ -1351,7 +1369,7 @@
                         <div class="bg-red-100 p-10 rounded-3xl shadow-2xl border-b-8 border-red-500 max-w-3xl">
                             <i class="fas fa-heart-broken text-8xl text-red-500 mb-6 animate-pulse"></i>
                             <h3 class="text-5xl font-bold text-red-800 mb-4 font-playfair">GAME OVER</h3>
-                            <p class="text-3xl text-red-700 mb-8">Cuidado con el género y número.</p>
+                            <p class="text-3xl text-red-700 mb-8">Repasa género, número y participios irregulares. ¡Tú puedes!</p>
                             <button onclick="startGame()"
                                 class="px-10 py-3 bg-red-500 text-white text-2xl font-bold rounded-xl shadow hover:bg-red-600 transition">
                                 Intentar de nuevo
@@ -1361,69 +1379,150 @@
 
                 </div>
 
-                <!-- Game Logic Script (Scoped) -->
+                <!-- Game Logic Script (Scoped) - B2 + dinámico -->
                 <script>
-                    // Game Data
+                    // B2: oraciones complejas, participios irregulares, 4 opciones, feedback explicativo
                     const gameLevels = [
                         {
-                            subject: "El coche 🚗 fue...",
-                            icon: '',
-                            options: ["Robado", "Robada"],
-                            correct: 0,
-                            feedback: "¡Correcto! Masculino Singular."
-                        },
-                        {
-                            subject: "Las galletas 🍪 fueron...",
-                            icon: '',
-                            options: ["Comido", "Comidas"],
+                            subject: "Las actas de la reunión fueron ... por la secretaria.",
+                            options: ["redactada", "redactadas", "redactado", "redactados"],
                             correct: 1,
-                            feedback: "¡Bien! Femenino Plural."
+                            feedback: "«Las actas» es femenino plural → participio en femenino plural: redactadas."
                         },
                         {
-                            subject: "Los contratos 📄 fueron...",
-                            icon: '',
-                            options: ["Firmados", "Firmado"],
+                            subject: "El informe que mencionabas fue ... la semana pasada.",
+                            options: ["entregado", "entregada", "entregados", "entregadas"],
                             correct: 0,
-                            feedback: "¡Exacto! Masculino Plural."
+                            feedback: "Sujeto «El informe»: masculino singular → entregado."
                         },
                         {
-                            subject: "La ciudad 🏙️ fue...",
-                            icon: '',
-                            options: ["Destruido", "Destruida"],
-                            correct: 1,
-                            feedback: "¡Sí! Femenino Singular."
+                            subject: "Las pruebas del delito fueron ... por el juez.",
+                            options: ["revisado", "revisada", "revisados", "revisadas"],
+                            correct: 3,
+                            feedback: "«Las pruebas»: femenino plural → revisadas."
                         },
                         {
-                            subject: "Los libros 📚 fueron...",
-                            icon: '',
-                            options: ["Leídos", "Leída"],
+                            subject: "Los datos personales no han sido ... correctamente.",
+                            options: ["protegido", "protegida", "protegidos", "protegidas"],
+                            correct: 2,
+                            feedback: "«Los datos»: masculino plural → protegidos."
+                        },
+                        {
+                            subject: "La noticia del accidente fue ... por varios medios.",
+                            options: ["cubierta", "cubierto", "cubiertos", "cubiertas"],
                             correct: 0,
-                            feedback: "¡Perfecto! Masculino Plural."
+                            feedback: "«La noticia»: femenino singular. Participio irregular de cubrir: cubierta."
+                        },
+                        {
+                            subject: "Las cartas que enviaste fueron ... ayer.",
+                            options: ["escrito", "escrita", "escritos", "escritas"],
+                            correct: 3,
+                            feedback: "«Las cartas»: femenino plural. Participio irregular: escritas."
+                        },
+                        {
+                            subject: "El edificio había sido ... antes del terremoto.",
+                            options: ["construidos", "construidas", "construido", "construida"],
+                            correct: 2,
+                            feedback: "«El edificio»: masculino singular → construido."
+                        },
+                        {
+                            subject: "Las condiciones del contrato serán ... por el abogado.",
+                            options: ["revisada", "revisados", "revisadas", "revisado"],
+                            correct: 2,
+                            feedback: "«Las condiciones»: femenino plural → revisadas."
+                        },
+                        {
+                            subject: "Los documentos confidenciales fueron ... por error.",
+                            options: ["destruida", "destruidas", "destruido", "destruidos"],
+                            correct: 3,
+                            feedback: "«Los documentos»: masculino plural → destruidos."
+                        },
+                        {
+                            subject: "La propuesta de reforma fue ... por la mayoría.",
+                            options: ["aprobados", "aprobadas", "aprobado", "aprobada"],
+                            correct: 3,
+                            feedback: "«La propuesta»: femenino singular → aprobada."
                         }
                     ];
 
+                    const TIMER_SECONDS = 20;
                     let currentLevelIndex = 0;
                     let livesCount = 3;
                     let isGameProcessing = false;
+                    let timerInterval = null;
+                    let shuffledOptions = [];
+                    let shuffledCorrectIndex = 0;
 
-                    // Use window scope to ensure buttons can access these functions
+                    function shuffleArray(arr) {
+                        const a = arr.slice();
+                        for (let i = a.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [a[i], a[j]] = [a[j], a[i]];
+                        }
+                        return a;
+                    }
+
+                    function startTimer() {
+                        stopTimer();
+                        const el = document.getElementById('question-timer');
+                        let left = TIMER_SECONDS;
+                        el.textContent = left;
+                        el.closest('#question-timer-wrap').classList.remove('hidden');
+                        timerInterval = setInterval(function () {
+                            left--;
+                            el.textContent = left;
+                            if (left <= 5) el.classList.add('text-red-600');
+                            if (left <= 0) {
+                                stopTimer();
+                                onTimeUp();
+                            }
+                        }, 1000);
+                    }
+
+                    function stopTimer() {
+                        if (timerInterval) {
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                        }
+                        document.getElementById('question-timer').classList.remove('text-red-600');
+                    }
+
+                    function onTimeUp() {
+                        if (isGameProcessing) return;
+                        isGameProcessing = true;
+                        livesCount--;
+                        updateLivesUI();
+                        const feedbackOverlay = document.getElementById('feedback-overlay');
+                        const feedbackIcon = document.getElementById('feedback-icon');
+                        const feedbackText = document.getElementById('feedback-text');
+                        feedbackOverlay.classList.remove('hidden');
+                        feedbackIcon.className = "fas fa-clock text-8xl text-amber-500 mb-4";
+                        feedbackText.className = "text-3xl font-bold text-amber-700";
+                        feedbackText.innerText = "¡Se acabó el tiempo! " + (gameLevels[currentLevelIndex].feedback || "");
+                        setTimeout(function () {
+                            if (livesCount <= 0) showLose();
+                            else {
+                                feedbackOverlay.classList.add('hidden');
+                                isGameProcessing = false;
+                                startTimer();
+                            }
+                        }, 2500);
+                    }
+
                     window.startGame = function () {
                         currentLevelIndex = 0;
                         livesCount = 3;
                         isGameProcessing = false;
-
+                        stopTimer();
                         updateLivesUI();
-
                         document.getElementById('game-intro').classList.add('hidden');
                         document.getElementById('game-win').classList.add('hidden');
                         document.getElementById('game-lose').classList.add('hidden');
-
                         const gamePlay = document.getElementById('game-play');
                         gamePlay.classList.remove('hidden');
                         gamePlay.classList.add('flex');
-
                         loadLevel();
-                    }
+                    };
 
                     function updateLivesUI() {
                         const container = document.getElementById('lives-container');
@@ -1439,89 +1538,87 @@
 
                     function loadLevel() {
                         if (currentLevelIndex >= gameLevels.length) {
+                            stopTimer();
                             showWin();
                             return;
                         }
 
                         const data = gameLevels[currentLevelIndex];
+                        shuffledOptions = shuffleArray(data.options);
+                        shuffledCorrectIndex = shuffledOptions.indexOf(data.options[data.correct]);
 
-                        // Update Progress
                         const progress = (currentLevelIndex / gameLevels.length) * 100;
                         document.getElementById('progress-bar').style.width = progress + '%';
-
-                        // Update Content
                         document.getElementById('subject-text').innerHTML = data.subject;
 
-                        const btn1 = document.getElementById('btn-opt-1');
-                        const btn2 = document.getElementById('btn-opt-2');
+                        var btns = [
+                            document.getElementById('btn-opt-1'),
+                            document.getElementById('btn-opt-2'),
+                            document.getElementById('btn-opt-3'),
+                            document.getElementById('btn-opt-4')
+                        ];
+                        for (var i = 0; i < 4; i++) {
+                            if (i < shuffledOptions.length) {
+                                btns[i].innerText = shuffledOptions[i];
+                                btns[i].classList.remove('hidden');
+                            } else {
+                                btns[i].classList.add('hidden');
+                            }
+                        }
 
-                        btn1.innerText = data.options[0];
-                        btn2.innerText = data.options[1];
-
-                        // Hide feedback
                         document.getElementById('feedback-overlay').classList.add('hidden');
                         isGameProcessing = false;
+                        startTimer();
                     }
 
                     window.checkAnswer = function (choiceIndex) {
                         if (isGameProcessing) return;
                         isGameProcessing = true;
+                        stopTimer();
 
                         const data = gameLevels[currentLevelIndex];
-                        const isCorrect = (choiceIndex === data.correct);
+                        const isCorrect = (choiceIndex === shuffledCorrectIndex);
 
                         const feedbackOverlay = document.getElementById('feedback-overlay');
                         const feedbackIcon = document.getElementById('feedback-icon');
                         const feedbackText = document.getElementById('feedback-text');
-
                         feedbackOverlay.classList.remove('hidden');
 
                         if (isCorrect) {
-                            // Correct
                             feedbackIcon.className = "fas fa-check-circle text-8xl text-green-500 mb-4 animate-bounce";
-                            feedbackText.className = "text-5xl font-bold text-green-600";
-                            feedbackText.innerText = data.feedback || "¡Correcto!";
+                            feedbackText.className = "text-2xl md:text-3xl font-bold text-green-600";
+                            feedbackText.innerText = "¡Correcto! " + (data.feedback || "");
 
                             if (window.confetti) {
                                 confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, zIndex: 9999 });
                             }
-
-                            setTimeout(() => {
+                            setTimeout(function () {
                                 currentLevelIndex++;
                                 loadLevel();
-                            }, 1500);
-
+                            }, 2200);
                         } else {
-                            // Incorrect
                             livesCount--;
                             updateLivesUI();
-
                             feedbackIcon.className = "fas fa-times-circle text-8xl text-red-500 mb-4";
-                            feedbackText.className = "text-5xl font-bold text-red-600";
-                            feedbackText.innerText = "¡Oh no! Incorrecto.";
-
-                            // CSS Shake animation class would normally be added here if defined, relying on visual feedback for now
-
-                            setTimeout(() => {
-                                if (livesCount <= 0) {
-                                    showLose();
-                                } else {
-                                    // Hide feedback and let them try again (Standard Life Mechanic: You lose a life but can convert the error to learning immediately)
-                                    document.getElementById('feedback-overlay').classList.add('hidden');
+                            feedbackText.className = "text-2xl md:text-3xl font-bold text-red-600";
+                            feedbackText.innerText = "Incorrecto. " + (data.feedback || "");
+                            setTimeout(function () {
+                                if (livesCount <= 0) showLose();
+                                else {
+                                    feedbackOverlay.classList.add('hidden');
                                     isGameProcessing = false;
+                                    startTimer();
                                 }
-                            }, 1500);
+                            }, 2200);
                         }
-                    }
+                    };
 
                     function showWin() {
                         document.getElementById('game-play').classList.add('hidden');
                         document.getElementById('game-play').classList.remove('flex');
-
                         const winScreen = document.getElementById('game-win');
                         winScreen.classList.remove('hidden');
                         winScreen.classList.add('flex');
-
                         if (window.confetti) {
                             confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, zIndex: 9999 });
                         }
@@ -1530,7 +1627,6 @@
                     function showLose() {
                         document.getElementById('game-play').classList.add('hidden');
                         document.getElementById('game-play').classList.remove('flex');
-
                         const loseScreen = document.getElementById('game-lose');
                         loseScreen.classList.remove('hidden');
                         loseScreen.classList.add('flex');
@@ -2030,205 +2126,94 @@
 
 
 
-            <section data-transition="slide" class="bg-slate-900" id="haunted-section">
+            <section data-transition="slide" class="bg-gradient-to-b from-slate-100 to-slate-200" id="fill-text-section">
                 <div class="slide-container h-full flex flex-col justify-start pt-6 overflow-y-auto">
 
                     <!-- Header -->
                     <div class="flex items-center justify-center gap-4 mb-6">
-                        <span class="text-6xl animate-bounce-slow">👻</span>
+                        <span class="text-5xl">📝</span>
                         <div class="text-center">
-                            <h2 class="text-4xl md:text-5xl font-playfair font-bold text-purple-300 drop-shadow-lg">
-                                La Mansión de los Irregulares
+                            <h2 class="text-4xl md:text-5xl font-playfair font-bold text-slate-800">
+                                Un día cualquiera
                             </h2>
-                            <p class="text-2xl text-slate-400 font-lato mt-2">
-                                Completa con el participio correcto. <span class="text-purple-400 font-bold">¡Cuidado
-                                    con la concordancia!</span>
+                            <p class="text-2xl text-slate-600 font-lato mt-2">
+                                Completa el texto con el participio correcto. <span class="font-bold text-orange-600">¡Cuidado con la concordancia!</span>
                             </p>
                         </div>
-                        <span class="text-6xl animate-bounce-slow" style="animation-delay: 1s">🕸️</span>
+                        <span class="text-5xl">🏠</span>
                     </div>
 
-                    <!-- Exercises Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 max-w-6xl mx-auto">
-
-                        <!-- Card 1: Door (Abierta) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">🚪</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">Entrada Principal
-                                </p>
+                    <!-- Texto continuo para rellenar (~60 palabras, vida real) -->
+                    <div class="max-w-4xl mx-auto pb-16">
+                        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-slate-200">
+                            <p class="text-xl md:text-2xl text-slate-800 leading-relaxed font-lato text-justify">
+                                Por la mañana la puerta del garaje fue
+                                <input type="text" id="fill-1" class="clean-input inline-block w-32 md:w-40 mx-1 text-center text-lg" placeholder="(abrir)" title="abrir">
+                                por mi padre. El desayuno fue
+                                <input type="text" id="fill-2" class="clean-input inline-block w-36 md:w-44 mx-1 text-center text-lg" placeholder="(preparar)" title="preparar">
+                                por mi madre. Las noticias fueron
+                                <input type="text" id="fill-3" class="clean-input inline-block w-28 md:w-36 mx-1 text-center text-lg" placeholder="(ver)" title="ver">
+                                en la televisión. A mediodía el paquete fue
+                                <input type="text" id="fill-4" class="clean-input inline-block w-36 md:w-44 mx-1 text-center text-lg" placeholder="(entregar)" title="entregar">
+                                por el cartero. Por la tarde las flores del jardín fueron
+                                <input type="text" id="fill-5" class="clean-input inline-block w-32 md:w-40 mx-1 text-center text-lg" placeholder="(regar)" title="regar">
+                                por mi hermano. Al anochecer la cena fue
+                                <input type="text" id="fill-6" class="clean-input inline-block w-32 md:w-40 mx-1 text-center text-lg" placeholder="(cocinar)" title="cocinar">
+                                entre todos. Los platos fueron
+                                <input type="text" id="fill-7" class="clean-input inline-block w-28 md:w-36 mx-1 text-center text-lg" placeholder="(lavar)" title="lavar">
+                                y la casa quedó ordenada.
+                            </p>
+                            <div class="flex flex-wrap items-center gap-4 mt-8">
+                                <button onclick="checkFillText()"
+                                    class="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold rounded-xl shadow-lg transition transform hover:scale-105 active:scale-95">
+                                    <i class="fas fa-check-double mr-2"></i> Comprobar
+                                </button>
+                                <p id="fill-summary" class="text-xl font-bold hidden"></p>
                             </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"La puerta fue..." <span
-                                        class="text-slate-500 text-xl">(abrir)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-1"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(1, 'abierta')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-1" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
+                            <div id="fill-feedbacks" class="mt-4 space-y-2"></div>
                         </div>
-
-                        <!-- Card 2: Mirrors (Rotos) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">🪞</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Pasillo</p>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"Los espejos fueron..." <span
-                                        class="text-slate-500 text-xl">(romper)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-2"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(2, 'rotos')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-2" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
-                        </div>
-
-                        <!-- Card 3: Candles (Encendidas) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">🕯️</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Salón</p>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"Las velas fueron..." <span
-                                        class="text-slate-500 text-xl">(encender)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-3"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(3, 'encendidas')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-3" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
-                        </div>
-
-                        <!-- Card 4: Message (Escrito) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">🩸</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">La Pared</p>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"Un mensaje fue..." <span
-                                        class="text-slate-500 text-xl">(escribir)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-4"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(4, 'escrito')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-4" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
-                        </div>
-
-                        <!-- Card 5: Ghost (Visto) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">👻</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Ático</p>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"El fantasma fue..." <span
-                                        class="text-slate-500 text-xl">(ver)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-5"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(5, 'visto')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-5" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
-                        </div>
-
-                        <!-- Card 6: Truth (Descubierta) -->
-                        <div
-                            class="bg-slate-800/80 p-6 rounded-2xl border border-purple-500/50 shadow-lg relative group overflow-hidden">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-slate-900 p-3 rounded-full border border-purple-500/30">
-                                    <span class="text-4xl">🗝️</span>
-                                </div>
-                                <p class="text-slate-300 text-sm font-bold uppercase tracking-widest">El Final</p>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-2xl text-white">"La verdad fue..." <span
-                                        class="text-slate-500 text-xl">(descubrir)</span></p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-6"
-                                        class="clean-input flex-1 bg-slate-900/50 border-purple-500/30 text-white placeholder-slate-600 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-xl p-3 rounded-lg"
-                                        placeholder="Escribe aquí...">
-                                    <button onclick="checkGhost(6, 'descubierta')"
-                                        class="bg-purple-600 hover:bg-purple-500 text-white px-6 rounded-lg font-bold transition">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p id="feedback-6" class="hidden text-xl font-bold animate-fade-in"></p>
-                            </div>
-                        </div>
-
                     </div>
 
                     <script>
-                        function checkGhost(id, correct) {
-                            const input = document.getElementById('input-' + id);
-                            const feedback = document.getElementById('feedback-' + id);
-                            const val = input.value.trim().toLowerCase();
+                        var fillAnswers = ['abierta', 'preparado', 'vistas', 'entregado', 'regadas', 'cocinada', 'lavados'];
 
-                            feedback.classList.remove('hidden');
+                        function checkFillText() {
+                            var ok = 0;
+                            var list = document.getElementById('fill-feedbacks');
+                            list.innerHTML = '';
+                            list.classList.remove('hidden');
 
-                            if (val === correct.toLowerCase()) {
-                                feedback.className = "text-xl font-bold text-green-400 animate-bounce";
-                                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! ' + correct;
-                                input.classList.add('border-green-500', 'text-green-400');
+                            for (var i = 1; i <= 7; i++) {
+                                var input = document.getElementById('fill-' + i);
+                                var val = (input.value || '').trim().toLowerCase().replace(/^\s+|\s+$/g, '');
+                                var correct = fillAnswers[i - 1].toLowerCase();
+                                var isCorrect = val === correct;
+
+                                input.classList.remove('border-green-500', 'border-red-500', 'text-green-600', 'text-red-600');
+                                if (isCorrect) {
+                                    ok++;
+                                    input.classList.add('border-green-500', 'text-green-600');
+                                } else {
+                                    input.classList.add('border-red-500', 'text-red-600');
+                                    var item = document.createElement('p');
+                                    item.className = 'text-red-600 font-bold text-lg';
+                                    item.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Hueco ' + i + ': se esperaba <strong>' + fillAnswers[i - 1] + '</strong>.';
+                                    list.appendChild(item);
+                                }
+                            }
+
+                            var summary = document.getElementById('fill-summary');
+                            summary.classList.remove('hidden');
+                            if (ok === 7) {
+                                summary.className = 'text-xl font-bold text-green-600';
+                                summary.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ¡Todo correcto!';
+                                if (window.confetti) confetti({ particleCount: 80, spread: 70, origin: { y: 0.7 }, zIndex: 9999 });
                             } else {
-                                feedback.className = "text-xl font-bold text-red-400 animate-shake";
-                                feedback.innerHTML = '<i class="fas fa-times-circle"></i> Intenta de nuevo...';
-                                input.classList.add('border-red-500', 'text-red-400');
+                                summary.className = 'text-xl font-bold text-amber-600';
+                                summary.innerHTML = ok + ' de 7 correctos. Revisa los huecos en rojo.';
                             }
                         }
                     </script>
-
-                    <style>
-                        .animate-bounce-slow {
-                            animation: bounce 3s infinite;
-                        }
-                    </style>
                 </div>
             </section>
 
@@ -2649,15 +2634,15 @@
                         <p class="text-slate-400 text-base mb-4">Ejemplos de formato:</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                             <div class="bg-black/30 p-4 rounded-xl border-l-4 border-emerald-500">
-                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Invento</p>
+                                <p class="card-title-yellow text-sm uppercase font-bold mb-1"><span class="text-[#ffb703]">Invento</p>
                                 <p class="text-lg text-white">"La bombilla <span class="text-emerald-200 font-semibold">fue inventada</span> por Edison."</p>
                             </div>
                             <div class="bg-black/30 p-4 rounded-xl border-l-4 border-purple-500">
-                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Descubrimiento</p>
+                                <p class="card-title-yellow text-sm uppercase font-bold mb-1"></p><span class="text-[#ffb703]">Descubrimiento</p>
                                 <p class="text-lg text-white">"América <span class="text-purple-200 font-semibold">fue descubierta</span> en 1492."</p>
                             </div>
                             <div class="bg-black/30 p-4 rounded-xl border-l-4 border-cyan-500">
-                                <p class="text-slate-100 text-sm uppercase font-bold mb-1">Construcción</p>
+                                <p class="card-title-yellow text-sm uppercase font-bold mb-1"><span class="text-[#ffb703]">Construcción</p>
                                 <p class="text-lg text-white">"La torre Eiffel <span class="text-cyan-200 font-semibold">fue construida</span> para la Exposición de 1889."</p>
                             </div>
                         </div>
