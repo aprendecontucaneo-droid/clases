@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Taller de Irregulares - Presente Simple | Tucaneo</title>
+    <title>Colombian Adventure: The "Rebel" Verbs | Tucaneo</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
@@ -749,6 +749,23 @@
             background: #fee2e2;
             color: #dc2626;
         }
+
+        /* Colombian Adventure - Animations */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.9; } }
+        .animate-fade-in { animation: fadeInUp 0.5s ease both; }
+        .animate-slide-in { animation: slideInLeft 0.4s ease both; }
+        .animate-scale-in { animation: scaleIn 0.4s ease both; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
+        .col-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .col-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        .match-dropzone { transition: all 0.3s; }
+        .match-dropzone.drag-over { background: #d1fae5 !important; border-color: #059669 !important; transform: scale(1.02); }
+        .syntax-block { cursor: grab; user-select: none; transition: all 0.2s; }
+        .syntax-block:hover { transform: scale(1.05); }
+        .syntax-block:active { cursor: grabbing; }
     </style>
 
 
@@ -826,227 +843,112 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- PORTADA -->
-            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/09/Gemini_Generated_Image_hq9vq3hq9vq3hq9v-e1764773221752.png" data-background-size="cover">
+            <!-- SLIDE 1: PORTADA - Colombian Adventure -->
+            <section data-background-image="https://tucaneo.com/wp-content/uploads/2025/09/Gemini_Generated_Image_hq9vq3hq9vq3hq9v-e1764773221752.png" data-background-size="cover" data-transition="zoom">
                 <div class="slide-container h-full flex flex-col items-center justify-center">
-                    <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70"></div>
-                    <div class="relative z-10 text-center text-white max-w-3xl">
-                        <span class="inline-block bg-amber-400 text-black font-black text-sm px-4 py-2 rounded-full mb-6 uppercase tracking-wider">Nivel A1</span>
-                        <h1 class="text-5xl md:text-6xl font-black mb-4 font-playfair drop-shadow-lg">Taller de Irregulares</h1>
-                        <p class="text-2xl md:text-3xl font-bold text-amber-200 mb-2">Practice Lab: Present Simple</p>
-                        <p class="text-lg text-slate-200">Ejercicios prácticos, historias y diálogos para dominar los verbos irregulares</p>
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/80"></div>
+                    <div class="relative z-10 text-center max-w-2xl mx-auto px-6">
+                        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-10 border border-white/50">
+                            <span class="inline-block bg-amber-500 text-white font-black text-xs px-4 py-1.5 rounded-full mb-5 uppercase tracking-widest animate-fade-in">Nivel A1 · Colombian Adventure</span>
+                            <h1 class="text-4xl md:text-5xl font-black text-slate-800 mb-3 font-playfair animate-fade-in delay-1">The &quot;Rebel&quot; Verbs</h1>
+                            <p class="text-xl md:text-2xl font-bold text-teal-600 mb-4 animate-fade-in delay-2">Exploring Colombia</p>
+                            <hr class="w-24 h-1 bg-amber-400 mx-auto mb-5 rounded-full animate-fade-in delay-2">
+                            <p class="text-slate-600 text-base md:text-lg leading-relaxed animate-fade-in delay-3">Master irregularities while traveling from Bogotá to Cartagena</p>
+                            <p class="text-sm text-slate-500 mt-4 font-medium animate-fade-in delay-4">Travel · Gastronomy · Traditions</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- RECAP E > IE -->
+            <!-- SLIDE 2: Deep Dive E → IE "Energy" Shift -->
             <section>
                 <div class="slide-container">
                     <div class="glass-card bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
-                        <h2 class="text-3xl font-black text-emerald-800 mb-6 font-playfair flex items-center gap-3"><i class="fas fa-leaf text-amber-500"></i> Quick Recap: E ➜ IE</h2>
-                        <p class="text-slate-600 mb-6">Algunos verbos cambian la vocal de la raíz. <strong>¡Nosotros nunca cambia!</strong></p>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Querer</span> ➜ Qu<u>ie</u>ro</div>
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Pensar</span> ➜ P<u>ie</u>nso</div>
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Cerrar</span> ➜ C<u>ie</u>rro</div>
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Preferir</span> ➜ Pref<u>ie</u>ro</div>
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Entender</span> ➜ Enti<u>e</u>ndo</div>
-                            <div class="card bg-white border-l-4 border-emerald-500 p-4"><span class="text-2xl font-black text-emerald-600">Empezar</span> ➜ Emp<u>ie</u>zo</div>
+                        <h2 class="text-3xl font-black text-emerald-800 mb-4 font-playfair flex items-center gap-3 animate-fade-in"><i class="fas fa-bolt text-amber-500"></i> Deep Dive: The e→ie &quot;Energy&quot; Shift</h2>
+                        <p class="text-slate-600 mb-4 animate-fade-in delay-1">In Spanish, certain verbs &quot;break&quot; their stem vowel when they receive the word&apos;s stress. The single <strong>e</strong> splits into <strong>ie</strong> to create a stronger sound.</p>
+                        <p class="text-sm text-emerald-700 font-bold mb-6 animate-fade-in delay-2">The Rule: This happens in all forms except Nosotros (and Vosotros). In Nosotros, the stress is on the ending, so the root stays regular.</p>
+                        <div class="overflow-x-auto mb-6 animate-fade-in delay-3">
+                            <table class="w-full text-left border-collapse">
+                                <thead><tr class="bg-emerald-600 text-white"><th class="p-3 rounded-tl-lg">Person</th><th class="p-3">Querer (to want/love)</th><th class="p-3">Empezar (to start)</th><th class="p-3 rounded-tr-lg">Preferir (to prefer)</th></tr></thead>
+                                <tbody class="bg-white">
+                                    <tr class="border-b"><td class="p-3 font-bold">Yo</td><td class="p-3">Qui<u>e</u>ro</td><td class="p-3">Empi<u>e</u>zo</td><td class="p-3">Prefi<u>e</u>ro</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Tú</td><td class="p-3">Qui<u>e</u>res</td><td class="p-3">Empi<u>e</u>zas</td><td class="p-3">Prefi<u>e</u>res</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Él/Ella</td><td class="p-3">Qui<u>e</u>re</td><td class="p-3">Empi<u>e</u>za</td><td class="p-3">Prefi<u>e</u>re</td></tr>
+                                    <tr class="border-b bg-emerald-50"><td class="p-3 font-bold">Nosotros</td><td class="p-3">Queremos</td><td class="p-3">Empezamos</td><td class="p-3">Preferimos</td></tr>
+                                    <tr><td class="p-3 font-bold">Ellos/Uds.</td><td class="p-3">Qui<u>e</u>ren</td><td class="p-3">Empi<u>e</u>zan</td><td class="p-3">Prefi<u>e</u>ren</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border-l-4 border-amber-500 animate-fade-in delay-4">
+                            <i class="fas fa-lightbulb text-amber-600 text-2xl mt-0.5"></i>
+                            <p class="text-slate-700"><strong class="text-amber-800">Tucaneo Tip:</strong> In Colombia, we use Querer a lot to order food politely: &quot;Quiero una arepa, por favor&quot;. It&apos;s direct but common!</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- RECAP O > UE -->
+            <!-- SLIDE 3: Deep Dive O → UE "Rounding" -->
             <section>
                 <div class="slide-container">
                     <div class="glass-card bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
-                        <h2 class="text-3xl font-black text-amber-800 mb-6 font-playfair flex items-center gap-3"><i class="fas fa-sun text-amber-500"></i> Quick Recap: O ➜ UE</h2>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Dormir</span> ➜ D<u>ue</u>rmo</div>
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Poder</span> ➜ P<u>ue</u>do</div>
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Volver</span> ➜ V<u>ue</u>lvo</div>
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Almorzar</span> ➜ Alm<u>ue</u>rzo</div>
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Encontrar</span> ➜ Encu<u>e</u>ntro</div>
-                            <div class="card bg-white border-l-4 border-amber-500 p-4"><span class="text-2xl font-black text-amber-600">Jugar</span> (u➜ue) ➜ J<u>ue</u>go</div>
+                        <h2 class="text-3xl font-black text-amber-800 mb-4 font-playfair flex items-center gap-3 animate-fade-in"><i class="fas fa-sun text-amber-500"></i> Deep Dive: The o→ue &quot;Rounding&quot;</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Similar to the e→ie shift, the <strong>o</strong> becomes <strong>ue</strong> when stressed. This is a phonetic change to make the word easier to pronounce in fast-paced conversations.</p>
+                        <div class="overflow-x-auto mb-6 animate-fade-in delay-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead><tr class="bg-amber-600 text-white"><th class="p-3 rounded-tl-lg">Person</th><th class="p-3">Almorzar (to have lunch)</th><th class="p-3">Volver (to return)</th><th class="p-3 rounded-tr-lg">Dormir (to sleep)</th></tr></thead>
+                                <tbody class="bg-white">
+                                    <tr class="border-b"><td class="p-3 font-bold">Yo</td><td class="p-3">Alm<u>ue</u>rzo</td><td class="p-3">V<u>ue</u>lvo</td><td class="p-3">D<u>ue</u>rmo</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Tú</td><td class="p-3">Alm<u>ue</u>rzas</td><td class="p-3">V<u>ue</u>lves</td><td class="p-3">D<u>ue</u>rmes</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Él/Ella</td><td class="p-3">Alm<u>ue</u>rza</td><td class="p-3">V<u>ue</u>lve</td><td class="p-3">D<u>ue</u>rme</td></tr>
+                                    <tr class="border-b bg-amber-50"><td class="p-3 font-bold">Nosotros</td><td class="p-3">Almorzamos</td><td class="p-3">Volvemos</td><td class="p-3">Dormimos</td></tr>
+                                    <tr><td class="p-3 font-bold">Ellos/Uds.</td><td class="p-3">Alm<u>ue</u>rzan</td><td class="p-3">V<u>ue</u>lven</td><td class="p-3">D<u>ue</u>rmen</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 bg-amber-100 rounded-xl border-l-4 border-amber-600 animate-fade-in delay-3">
+                            <i class="fas fa-utensils text-amber-700 text-2xl mt-0.5"></i>
+                            <p class="text-slate-700"><strong class="text-amber-900">Tucaneo Tip:</strong> The Colombian &quot;Almuerzo&quot; is the most important meal of the day. We usually almorzamos between 12:30 and 2:00 PM.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- RECAP E > I -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-200">
-                        <h2 class="text-3xl font-black text-indigo-800 mb-6 font-playfair flex items-center gap-3"><i class="fas fa-mug-hot text-indigo-500"></i> Quick Recap: E ➜ I</h2>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            <div class="card bg-white border-l-4 border-indigo-500 p-4"><span class="text-2xl font-black text-indigo-600">Pedir</span> ➜ P<u>i</u>do</div>
-                            <div class="card bg-white border-l-4 border-indigo-500 p-4"><span class="text-2xl font-black text-indigo-600">Servir</span> ➜ S<u>i</u>rvo</div>
-                            <div class="card bg-white border-l-4 border-indigo-500 p-4"><span class="text-2xl font-black text-indigo-600">Repetir</span> ➜ Rep<u>i</u>to</div>
-                            <div class="card bg-white border-l-4 border-indigo-500 p-4"><span class="text-2xl font-black text-indigo-600">Seguir</span> ➜ S<u>i</u>go</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- YO FORMS -->
+            <!-- SLIDE 4: The "Special Yo" Club (Orthographic Changes) -->
             <section>
                 <div class="slide-container">
                     <div class="glass-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-200">
-                        <h2 class="text-3xl font-black text-purple-800 mb-6 font-playfair flex items-center gap-3"><i class="fas fa-coffee text-amber-700"></i> Formas de YO (irregulares)</h2>
-                        <p class="text-slate-600 mb-6">Estos verbos son especiales solo en primera persona. La mayoría termina en <strong>-GO</strong>.</p>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div class="card bg-white p-4"><strong>Hacer</strong> ➜ Yo hago</div>
-                            <div class="card bg-white p-4"><strong>Poner</strong> ➜ Yo pongo</div>
-                            <div class="card bg-white p-4"><strong>Salir</strong> ➜ Yo salgo</div>
-                            <div class="card bg-white p-4"><strong>Traer</strong> ➜ Yo traigo</div>
-                            <div class="card bg-white p-4"><strong>Tener</strong> ➜ Yo tengo (también e➜ie)</div>
-                            <div class="card bg-white p-4"><strong>Venir</strong> ➜ Yo vengo (también e➜ie)</div>
-                            <div class="card bg-white p-4"><strong>Ver</strong> ➜ Yo veo</div>
-                            <div class="card bg-white p-4"><strong>Saber</strong> ➜ Yo sé</div>
+                        <h2 class="text-3xl font-black text-purple-800 mb-4 font-playfair flex items-center gap-3 animate-fade-in"><i class="fas fa-star text-amber-500"></i> The &quot;Special Yo&quot; Club</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">These verbs are &quot;rebels&quot; only in the Yo form. This usually happens to preserve the original sound or because of historical evolution from Latin.</p>
+                        <div class="grid md:grid-cols-2 gap-4 mb-6 animate-fade-in delay-2">
+                            <div class="card bg-white p-4 border-l-4 border-purple-500 col-card">
+                                <p class="font-bold text-purple-700 mb-2">The &quot;GO&quot; Group</p>
+                                <p class="text-sm text-slate-600">Verbs like Hacer, Poner, Salir add a &quot;g&quot; to create a strong bridge between root and &quot;-o&quot;</p>
+                            </div>
+                            <div class="card bg-white p-4 border-l-4 border-indigo-500 col-card">
+                                <p class="font-bold text-indigo-700 mb-2">The &quot;ZCO&quot; Group</p>
+                                <p class="text-sm text-slate-600">Verbs in -cer/-cir change &quot;c&quot; to &quot;zc&quot; in Yo to keep the soft &quot;s&quot; sound</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto animate-fade-in delay-3">
+                            <table class="w-full text-left border-collapse">
+                                <thead><tr class="bg-purple-600 text-white"><th class="p-3 rounded-tl-lg">Verb</th><th class="p-3">Yo Form</th><th class="p-3 rounded-tr-lg">Transformation</th></tr></thead>
+                                <tbody class="bg-white">
+                                    <tr class="border-b"><td class="p-3 font-bold">Hacer</td><td class="p-3">Hago</td><td class="p-3 text-slate-600">G-insertion</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Traer</td><td class="p-3">Traigo</td><td class="p-3 text-slate-600">G-insertion</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Conocer</td><td class="p-3">Conozco</td><td class="p-3 text-slate-600">C → ZC</td></tr>
+                                    <tr><td class="p-3 font-bold">Conducir</td><td class="p-3">Conduzco</td><td class="p-3 text-slate-600">C → ZC</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 mt-6 animate-fade-in delay-4">
+                            <i class="fas fa-lightbulb text-indigo-600 text-2xl mt-0.5"></i>
+                            <p class="text-slate-700"><strong class="text-indigo-800">Tucaneo Tip:</strong> Use Conocer for people and places (I know Cartagena), and Saber for information or skills (I know how to dance Salsa).</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- EJERCICIO 1: E>IE -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-emerald-800 mb-6 font-playfair">1. Preferencias y deseos (E ➜ IE)</h2>
-                        <p class="text-slate-600 mb-6">Completa con la forma correcta del verbo.</p>
-                        <div id="irr-e1" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>1. (Querer) Mis amigos</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="quieren" placeholder="...">
-                                <span>ir al cine hoy.</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>2. (Preferir) Yo</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="prefiero" placeholder="...">
-                                <span>el café sin azúcar.</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>3. (Pensar) ¿Qué</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="piensas" placeholder="...">
-                                <span>tú de mi idea?</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>4. (Entender) Nosotros no</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="entendemos" placeholder="...">
-                                <span>la lección.</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e1','irr-e1-result')" class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e1-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- EJERCICIO 2: O>UE -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-amber-800 mb-6 font-playfair">2. Rutina diaria (O ➜ UE)</h2>
-                        <div id="irr-e2" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>1. (Dormir) Yo</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="duermo" placeholder="...">
-                                <span>8 horas cada noche.</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>2. (Volver) Mi padre</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="vuelve" placeholder="...">
-                                <span>del trabajo a las 6 PM.</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100 transition-all">
-                                <span>3. (Almorzar) ¿A qué hora</span>
-                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="almuerzan" placeholder="...">
-                                <span>ustedes?</span>
-                                <span class="result-icon ml-2"></span>
-                            </div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e2','irr-e2-result')" class="px-6 py-3 bg-amber-600 text-white font-bold rounded-xl hover:bg-amber-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e2-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- HISTORIA: El Viaje en Tren -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
-                        <h2 class="text-2xl font-black text-slate-800 mb-6 font-playfair"><i class="fas fa-train text-amber-600 mr-2"></i>3. El Viaje en Tren</h2>
-                        <p class="text-slate-600 mb-4">Lee y conjuga los verbos entre paréntesis.</p>
-                        <div id="irr-e3" class="space-y-4 bg-slate-50 p-6 rounded-xl">
-                            <p>El tren <strong>(llegar)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="llega" placeholder="..."> a tiempo. Yo <strong>(subir)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="subo" placeholder="..."> al tren. Cerca de mí, una mujer <strong>(dormir)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="duerme" placeholder="...">. Ella <strong>(tener)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="tiene" placeholder="..."> sueños dulces.</p>
-                            <p>Las personas <strong>(hablar)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="hablan" placeholder="..."> mucho por teléfono. Yo <strong>(querer)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="quiero" placeholder="..."> hablar, pero <strong>(preferir)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="prefiero" placeholder="..."> viajar en silencio. Finalmente, el tren <strong>(llegar)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="llega" placeholder="..."> a la ciudad. Yo <strong>(salir)</strong> <input type="text" class="clean-input text-input-inline !w-24" data-correct="salgo" placeholder="..."> de la estación.</p>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e3','irr-e3-result')" class="px-6 py-3 bg-amber-600 text-white font-bold rounded-xl hover:bg-amber-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e3-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- RESTAURANTE E>I -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-indigo-800 mb-6 font-playfair"><i class="fas fa-utensils text-indigo-500 mr-2"></i>4. En el Restaurante (E ➜ I)</h2>
-                        <div id="irr-e4" class="space-y-4">
-                            <div class="card bg-indigo-50 p-4 rounded-xl">
-                                <p><strong>Camarero:</strong> ¿Qué <input type="text" class="clean-input text-input-inline !w-24" data-correct="piden" placeholder="..."> (pedir) ustedes?</p>
-                            </div>
-                            <div class="card bg-indigo-50 p-4 rounded-xl">
-                                <p><strong>Cliente:</strong> Yo <input type="text" class="clean-input text-input-inline !w-24" data-correct="pido" placeholder="..."> (pedir) el pollo, pero mi amigo <input type="text" class="clean-input text-input-inline !w-24" data-correct="prefiere" placeholder="..."> (preferir) la pasta.</p>
-                            </div>
-                            <div class="card bg-indigo-50 p-4 rounded-xl">
-                                <p><strong>Camarero:</strong> Nosotros <input type="text" class="clean-input text-input-inline !w-24" data-correct="servimos" placeholder="..."> (servir) la comida en 10 minutos.</p>
-                            </div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e4','irr-e4-result')" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e4-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- RAPID FIRE YO -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-purple-800 mb-6 font-playfair">5. Rapid Fire: Forma YO</h2>
-                        <p class="text-slate-600 mb-6">Solo escribe la forma de <strong>YO</strong>.</p>
-                        <div id="irr-e5" class="grid md:grid-cols-2 gap-4">
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Hacer ➜</span><input type="text" class="clean-input flex-1" data-correct="hago"><span class="result-icon"></span></div>
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Poner ➜</span><input type="text" class="clean-input flex-1" data-correct="pongo"><span class="result-icon"></span></div>
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Salir ➜</span><input type="text" class="clean-input flex-1" data-correct="salgo"><span class="result-icon"></span></div>
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Traer ➜</span><input type="text" class="clean-input flex-1" data-correct="traigo"><span class="result-icon"></span></div>
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Ver ➜</span><input type="text" class="clean-input flex-1" data-correct="veo"><span class="result-icon"></span></div>
-                            <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-100"><span>Saber ➜</span><input type="text" class="clean-input flex-1" data-correct="sé"><span class="result-icon"></span></div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e5','irr-e5-result')" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e5-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ENERGY CORE GAME -->
+            <!-- BONUS: Energy Core Game (Yo forms) -->
             <section data-transition="zoom">
                 <div class="slide-container h-full flex flex-col items-center justify-center relative overflow-hidden" id="energy-core-game">
                     <div class="absolute inset-0 z-0">
@@ -1089,97 +991,292 @@
                 </div>
             </section>
 
-            <!-- SER VS ESTAR -->
+            <!-- SLIDE 5: Exercise 1 - Arrival in Bogotá -->
             <section>
                 <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-slate-800 mb-6 font-playfair">6. Ser vs Estar</h2>
-                        <p class="text-slate-600 mb-6">Conjuga correctamente según el contexto.</p>
-                        <div id="irr-e6" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100">
-                                <span>1. Yo</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="estoy" placeholder="..."><span>muy cansado hoy. (Estado)</span><span class="result-icon"></span>
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-emerald-500">
+                        <h2 class="text-2xl font-black text-emerald-800 mb-2 font-playfair animate-fade-in"><i class="fas fa-plane-arrival text-emerald-600 mr-2"></i> Exercise 1 — The Arrival in Bogotá</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Conjugate the verb according to the situation at the airport.</p>
+                        <div id="irr-e1" class="space-y-3">
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">1.</span>
+                                <span>Yo</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="traigo" placeholder="...">
+                                <span>(traer) mucho café en mi maleta.</span>
+                                <span class="result-icon ml-2"></span>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100">
-                                <span>2. Ella</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="es" placeholder="..."><span>doctora. (Profesión)</span><span class="result-icon"></span>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">2.</span>
+                                <span>Mi amigo</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="viene" placeholder="...">
+                                <span>(venir) de Cali hoy.</span>
+                                <span class="result-icon ml-2"></span>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100">
-                                <span>3. Nosotros</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="estamos" placeholder="..."><span>en el parque. (Ubicación)</span><span class="result-icon"></span>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">3.</span>
+                                <span>Nosotros</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="queremos" placeholder="...">
+                                <span>(querer) visitar el Museo del Oro.</span>
+                                <span class="result-icon ml-2"></span>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100">
-                                <span>4. Tú</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="eres" placeholder="..."><span>inteligente. (Característica)</span><span class="result-icon"></span>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">4.</span>
+                                <span>¿Ustedes</span>
+                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="conocen" placeholder="...">
+                                <span>(conocer) un buen hotel en el centro?</span>
+                                <span class="result-icon ml-2"></span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">5.</span>
+                                <span>El taxista</span>
+                                <input type="text" class="clean-input text-input-inline !w-28" data-correct="conduce" placeholder="...">
+                                <span>(conducir) por la Avenida El Dorado.</span>
+                                <span class="result-icon ml-2"></span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">6.</span>
+                                <span>Yo</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="hago" placeholder="...">
+                                <span>(hacer) el registro (check-in) rápido.</span>
+                                <span class="result-icon ml-2"></span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">7.</span>
+                                <span>Las maletas</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="cuestan" placeholder="...">
+                                <span>(costar) mucho dinero en el avión.</span>
+                                <span class="result-icon ml-2"></span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 p-3 rounded-xl border-2 border-slate-100 transition-all col-card">
+                                <span class="text-sm font-bold text-slate-500">8.</span>
+                                <span>Tú</span>
+                                <input type="text" class="clean-input text-input-inline !w-24" data-correct="pones" placeholder="...">
+                                <span>(poner) tu pasaporte en la mesa.</span>
+                                <span class="result-icon ml-2"></span>
                             </div>
                         </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e6','irr-e6-result')" class="px-6 py-3 bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-800 transition shadow-lg">Verificar</button>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkIrregularTaller('irr-e1','irr-e1-result')" class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
+                            <span id="irr-e1-result" class="text-lg font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Exercise 2 - Cultural Logic (Lógica/Ilógica) -->
+            <section>
+                <div class="slide-container">
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
+                        <h2 class="text-2xl font-black text-amber-800 mb-2 font-playfair animate-fade-in"><i class="fas fa-brain text-amber-600 mr-2"></i> Exercise 2 — Cultural Logic</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Analyze the Colombian context. Is the sentence <strong>Lógica</strong> or <strong>Ilógica</strong>?</p>
+                        <div id="irr-e2" class="space-y-3">
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">1.</span><span class="flex-1">Un colombiano almuerza chocolate con queso a las 2:00 de la mañana.</span><select class="clean-input w-32" data-correct="ilógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">2.</span><span class="flex-1">Los turistas quieren probar la Bandeja Paisa en Medellín.</span><select class="clean-input w-32" data-correct="lógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">3.</span><span class="flex-1">El clima en Cartagena pierde el calor en el mes de julio.</span><select class="clean-input w-32" data-correct="ilógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">4.</span><span class="flex-1">Nosotros preferimos beber agua de panela cuando hace frío.</span><select class="clean-input w-32" data-correct="lógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">5.</span><span class="flex-1">Los bailarines de Cali duermen mientras bailan salsa.</span><select class="clean-input w-32" data-correct="ilógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">6.</span><span class="flex-1">Tú conoces a la gente de Colombia porque es muy amable.</span><select class="clean-input w-32" data-correct="lógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">7.</span><span class="flex-1">Yo pongo sal y azúcar al café todas las mañanas.</span><select class="clean-input w-32" data-correct="lógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                            <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl border-2 border-slate-100 col-card"><span class="text-sm font-bold">8.</span><span class="flex-1">El carnaval de Barranquilla empieza en el mes de febrero.</span><select class="clean-input w-32" data-correct="lógica"><option value="">?</option><option value="lógica">Lógica</option><option value="ilógica">Ilógica</option></select></div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkColombiaEx('irr-e2','irr-e2-result')" class="px-6 py-3 bg-amber-600 text-white font-bold rounded-xl hover:bg-amber-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
+                            <span id="irr-e2-result" class="text-lg font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Exercise 3 - Syntax Architect (Gastronomy) -->
+            <section>
+                <div class="slide-container">
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-indigo-500">
+                        <h2 class="text-2xl font-black text-indigo-800 mb-2 font-playfair animate-fade-in"><i class="fas fa-utensils text-indigo-600 mr-2"></i> Exercise 3 — The Syntax Architect: Gastronomy</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Order the blocks to create a sentence about Colombian food. Write the complete sentence in the box.</p>
+                        <div id="irr-e3" class="space-y-4">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: nosotros / almorzar / siempre / restaurante / en / el</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="nosotros siempre almorzamos en el restaurante">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: ¿ / tú / querer / arepa / una / con / huevo / ?</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="¿tú quieres una arepa con huevo?">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: traer / el / mesero / la / caliente / sopa</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="el mesero trae la sopa caliente">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: yo / no / conocer / el / sabor / del / lulo</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="yo no conozco el sabor del lulo">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: preferir / mis / amigos / el / jugo / de / mora</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="mis amigos prefieren el jugo de mora">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: costar / el / corrientazo / diez / mil / pesos</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="el corrientazo cuesta diez mil pesos">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: ella / pedir / un / café / negro / (tinto)</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="ella pide un café negro (tinto)">
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 col-card">
+                                <p class="text-xs text-slate-500 mb-1">Blocks: ustedes / entender / la / carta / del / restaurante</p>
+                                <input type="text" class="clean-input w-full" placeholder="Write the sentence..." data-correct="ustedes entienden la carta del restaurante">
+                            </div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkIrregularTaller('irr-e3','irr-e3-result')" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
+                            <span id="irr-e3-result" class="text-lg font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Exercise 4 - Relationship Matching -->
+            <section>
+                <div class="slide-container">
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-teal-500">
+                        <h2 class="text-2xl font-black text-teal-800 mb-2 font-playfair animate-fade-in"><i class="fas fa-link text-teal-600 mr-2"></i> Exercise 4 — Relationship Matching</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Match the <strong>Situation (Feeling)</strong> with the <strong>Action (Irregular Verb)</strong>.</p>
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="space-y-2 animate-fade-in delay-2">
+                                <p class="font-bold text-teal-700 text-sm mb-3">The Feeling:</p>
+                                <p>1. Tengo mucho sueño.</p>
+                                <p>2. Tengo hambre.</p>
+                                <p>3. No me gusta el avión.</p>
+                                <p>4. Quiero bailar.</p>
+                                <p>5. Es mi cumpleaños.</p>
+                                <p>6. Voy a la playa.</p>
+                                <p>7. No comprendo el mapa.</p>
+                                <p>8. La tienda cierra.</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-slate-600 animate-fade-in delay-3">
+                                <p class="font-bold text-teal-700 mb-3">Actions (A–H):</p>
+                                <p><strong>(A)</strong> Yo pido una empanada. <strong>(B)</strong> Nosotros preferimos el bus.</p>
+                                <p><strong>(C)</strong> Él duerme en la hamaca. <strong>(D)</strong> Yo conozco un club de Salsa.</p>
+                                <p><strong>(E)</strong> Yo hago una fiesta con mis amigos. <strong>(F)</strong> Ella trae su bloqueador solar.</p>
+                                <p><strong>(G)</strong> Tú no entiendes la dirección. <strong>(H)</strong> Ustedes vuelven mañana.</p>
+                            </div>
+                        </div>
+                        <div id="irr-e4" class="space-y-2">
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">1.</span><span>Tengo mucho sueño →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="C"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">2.</span><span>Tengo hambre →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="A"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">3.</span><span>No me gusta el avión →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="B"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">4.</span><span>Quiero bailar →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="D"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">5.</span><span>Es mi cumpleaños →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="E"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">6.</span><span>Voy a la playa →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="F"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">7.</span><span>No comprendo el mapa →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="G"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                            <div class="flex items-center gap-3 p-2"><span class="w-6 font-bold">8.</span><span>La tienda cierra →</span><select class="clean-input flex-1 max-w-[200px]" data-correct="H"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select></div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkColombiaEx('irr-e4','irr-e4-result')" class="px-6 py-3 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
+                            <span id="irr-e4-result" class="text-lg font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Exercise 5 - Postcard from Guatapé -->
+            <section>
+                <div class="slide-container">
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-amber-500">
+                        <h2 class="text-2xl font-black text-amber-800 mb-2 font-playfair animate-fade-in"><i class="fas fa-postcard text-amber-600 mr-2"></i> Exercise 5 — Postcard from Guatapé</h2>
+                        <p class="text-slate-600 mb-4 animate-fade-in delay-1">Read the text and answer the 4 questions in full sentences.</p>
+                        <div class="card bg-amber-50 p-5 rounded-xl mb-6 border border-amber-200 animate-fade-in delay-2">
+                            <p class="text-slate-700 italic">&quot;Hola, Camilo. Estoy en Guatapé. Este pueblo es hermoso. Yo me despierto temprano y veo la represa desde mi ventana. Mi familia y yo queremos subir la Piedra del Peñol, pero la escalera cuesta mucho esfuerzo. Normalmente almorzamos trucha fresca. Yo conozco mucha gente amable aquí. ¡No quiero volver a casa!&quot;</p>
+                        </div>
+                        <div id="irr-e5" class="space-y-4">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 col-card"><p class="text-sm font-bold text-slate-600 mb-2">1. ¿Qué quiere hacer la familia en Guatapé?</p><input type="text" class="clean-input w-full" placeholder="Tu respuesta..." data-correct="la familia quiere subir la piedra del peñol"></div>
+                            <div class="p-3 rounded-xl border-2 border-slate-100 col-card"><p class="text-sm font-bold text-slate-600 mb-2">2. ¿A qué hora se despierta la persona y qué ve desde su ventana?</p><input type="text" class="clean-input w-full" placeholder="Tu respuesta..." data-correct="se despierta temprano y ve la represa desde su ventana"></div>
+                            <div class="p-3 rounded-xl border-2 border-slate-100 col-card"><p class="text-sm font-bold text-slate-600 mb-2">3. ¿Qué almuerzan normalmente en este pueblo?</p><input type="text" class="clean-input w-full" placeholder="Tu respuesta..." data-correct="almuerzan trucha fresca"></div>
+                            <div class="p-3 rounded-xl border-2 border-slate-100 col-card"><p class="text-sm font-bold text-slate-600 mb-2">4. ¿Por qué la persona no quiere volver a casa todavía?</p><input type="text" class="clean-input w-full" placeholder="Tu respuesta..." data-correct="porque conoce mucha gente amable y el pueblo es hermoso"></div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkIrregularTaller('irr-e5','irr-e5-result')" class="px-6 py-3 bg-amber-600 text-white font-bold rounded-xl hover:bg-amber-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
+                            <span id="irr-e5-result" class="text-lg font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Exercise 6 - WhatsApp Plans -->
+            <section>
+                <div class="slide-container">
+                    <div class="glass-card rounded-2xl p-8 border-l-4 border-green-500">
+                        <h2 class="text-2xl font-black text-green-800 mb-2 font-playfair animate-fade-in"><i class="fab fa-whatsapp text-green-600 mr-2"></i> Exercise 6 — WhatsApp Plans: The Finca Trip</h2>
+                        <p class="text-slate-600 mb-6 animate-fade-in delay-1">Complete the chat using: venir, poder, traer, salir, volver, preferir, saber, poner.</p>
+                        <div id="irr-e6" class="card bg-green-50 p-6 rounded-xl space-y-4 animate-fade-in delay-2">
+                            <p><strong>Juan:</strong> &quot;Hola, ¿ustedes <input type="text" class="clean-input text-input-inline !w-24" data-correct="vienen" placeholder="(1)"> a la finca el sábado?&quot;</p>
+                            <p><strong>María:</strong> &quot;Yo sí, pero <input type="text" class="clean-input text-input-inline !w-24" data-correct="salgo" placeholder="(2)"> tarde de trabajar.&quot;</p>
+                            <p><strong>Juan:</strong> &quot;¿Tú <input type="text" class="clean-input text-input-inline !w-24" data-correct="sabes" placeholder="(3)"> a qué hora <input type="text" class="clean-input text-input-inline !w-24" data-correct="sale" placeholder="(4)"> el bus?&quot;</p>
+                            <p><strong>María:</strong> &quot;No sé, pero yo <input type="text" class="clean-input text-input-inline !w-24" data-correct="traigo" placeholder="(5)"> la música y tú <input type="text" class="clean-input text-input-inline !w-24" data-correct="pones" placeholder="(6)"> la comida.&quot;</p>
+                            <p><strong>Juan:</strong> &quot;Vale, nosotros <input type="text" class="clean-input text-input-inline !w-24" data-correct="volvemos" placeholder="(7)"> el domingo por la tarde.&quot;</p>
+                            <p><strong>María:</strong> &quot;¿<input type="text" class="clean-input text-input-inline !w-24" data-correct="Prefieren" placeholder="(8)"> ustedes ir en carro o en bus?&quot;</p>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between flex-wrap gap-4">
+                            <button onclick="checkIrregularTaller('irr-e6','irr-e6-result')" class="px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-lg"><i class="fas fa-check mr-2"></i>Verificar</button>
                             <span id="irr-e6-result" class="text-lg font-bold"></span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- TENER Y VENIR -->
-            <section>
+            <!-- SLIDE 11: Task - The Cultural Guide -->
+            <section class="bg-gradient-to-br from-slate-50 via-teal-50/50 to-amber-50/50">
                 <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-slate-800 mb-6 font-playfair">7. Tener y Venir (e➜ie + GO)</h2>
-                        <div id="irr-e7" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>(Yo) Tener un problema:</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="tengo"><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>(Tú) Tener que estudiar:</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="tienes"><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>(Yo) Venir a la fiesta:</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="vengo"><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>(Ella) Venir mañana:</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="viene"><span class="result-icon"></span></div>
+                    <div class="glass-card rounded-2xl p-8 shadow-xl border border-slate-200/80 bg-white/90">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-black text-teal-800 mb-1 font-playfair animate-fade-in"><i class="fas fa-map-marked-alt text-teal-600 mr-2"></i> Task — My Colombian Experience</h2>
+                                <h3 class="text-lg font-bold text-slate-600 mb-4 animate-fade-in delay-1">The Cultural Guide</h3>
+                                <p class="text-slate-600 leading-relaxed animate-fade-in delay-2"><strong>Imagine</strong> you are a guide for a group of tourists in Bogotá. Write 10 sentences about what you do and what they do.</p>
+                            </div>
+                            <div class="flex-shrink-0 flex justify-center md:justify-end">
+                                <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo Academy" class="h-20 w-auto object-contain opacity-90">
+                            </div>
                         </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e7','irr-e7-result')" class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e7-result" class="text-lg font-bold"></span>
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="card bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-xl border-2 border-emerald-200 col-card">
+                                <div class="flex items-start gap-3">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">1</div>
+                                    <div>
+                                        <p class="font-bold text-emerald-800 mb-1">Stem-change verbs (5)</p>
+                                        <p class="text-sm text-slate-600">e→ie, o→ue</p>
+                                        <p class="text-xs text-emerald-600 mt-1">querer, almorzar, preferir, volver, dormir...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-gradient-to-br from-purple-50 to-indigo-50 p-5 rounded-xl border-2 border-purple-200 col-card">
+                                <div class="flex items-start gap-3">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">2</div>
+                                    <div>
+                                        <p class="font-bold text-purple-800 mb-1">Yo-GO / Yo-ZCO (5)</p>
+                                        <p class="text-sm text-slate-600">Special forms</p>
+                                        <p class="text-xs text-purple-600 mt-1">hacer, traer, conocer, conducir, poner...</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FINAL MIX -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-slate-800 mb-6 font-playfair">8. Mix Final</h2>
-                        <div id="irr-e8" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>1. (Oír) Yo no</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="oigo" placeholder="..."><span>nada.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>2. (Decir) Él</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="dice" placeholder="..."><span>la verdad.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>3. (Conocer) Yo</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="conozco" placeholder="..."><span>a tu hermano.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>4. (Jugar) Nosotros</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="jugamos" placeholder="..."><span>al fútbol.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>5. (Costar) ¿Cuánto</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="cuesta" placeholder="..."><span>la camiseta?</span><span class="result-icon"></span></div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e8','irr-e8-result')" class="px-6 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e8-result" class="text-lg font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- MINI TRADUCCIÓN -->
-            <section>
-                <div class="slide-container">
-                    <div class="glass-card rounded-2xl p-8">
-                        <h2 class="text-2xl font-black text-slate-800 mb-6 font-playfair">9. Mini Traducción</h2>
-                        <div id="irr-e9" class="space-y-4">
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>"I want to sleep." ➜ Yo</span><input type="text" class="clean-input text-input-inline !w-28" data-correct="quiero dormir"><span>.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>"He closes the door." ➜ Él</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="cierra"><span>la puerta.</span><span class="result-icon"></span></div>
-                            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border-2 border-slate-100"><span>"We play soccer." ➜ Nosotros</span><input type="text" class="clean-input text-input-inline !w-24" data-correct="jugamos"><span>al fútbol.</span><span class="result-icon"></span></div>
-                        </div>
-                        <div class="mt-6 flex items-center justify-between">
-                            <button onclick="checkIrregularTaller('irr-e9','irr-e9-result')" class="px-6 py-3 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition shadow-lg">Verificar</button>
-                            <span id="irr-e9-result" class="text-lg font-bold"></span>
+                        <div class="flex flex-wrap items-center gap-3 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                            <i class="fas fa-lightbulb text-amber-500 text-xl"></i>
+                            <div>
+                                <p class="font-bold text-amber-900 text-sm">Topic ideas</p>
+                                <p class="text-slate-600 text-sm">Food, museums, dancing, or the weather.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- CIERRE -->
-            <section data-background="linear-gradient(135deg, #059669 0%, #047857 100%)">
+            <section data-background="linear-gradient(135deg, #059669 0%, #047857 100%)" data-transition="zoom">
                 <div class="slide-container h-full flex flex-col items-center justify-center text-white text-center">
                     <div class="text-6xl mb-6">🎉</div>
                     <h2 class="text-4xl font-black font-playfair mb-4">¡Excelente trabajo!</h2>
-                    <p class="text-xl text-emerald-100 mb-6">Has completado el Taller de Irregulares en Presente Simple.</p>
+                    <p class="text-xl text-emerald-100 mb-6">Has completado Colombian Adventure: The &quot;Rebel&quot; Verbs.</p>
                     <p class="text-lg text-emerald-200">Descarga el PDF para guardar tus ejercicios.</p>
                 </div>
             </section>
@@ -1984,7 +2081,7 @@
             inputs.forEach((input) => {
                 const userAnswer = normalizeText(input.value);
                 const correctAnswer = normalizeText(input.getAttribute('data-correct'));
-                const parent = input.closest('.flex');
+                const parent = input.closest('.flex, .col-card, .p-3');
                 const iconEl = parent ? parent.querySelector('.result-icon') : input.parentElement.querySelector('.result-icon');
                 const isCorrect = userAnswer === correctAnswer;
 
@@ -2009,6 +2106,37 @@
                 if (typeof playSound === 'function') playSound('applause');
             } else {
                 resultDiv.innerHTML = '<span class="text-slate-600">📝 ' + correctCount + '/' + totalCount + ' (' + percentage + '%)</span>';
+            }
+        }
+
+        // Colombia exercises - supports both input and select (Lógica/Ilógica, Matching)
+        function checkColombiaEx(containerId, feedbackId) {
+            const container = document.getElementById(containerId);
+            const feedback = document.getElementById(feedbackId);
+            if (!container || !feedback) return;
+            const inputs = container.querySelectorAll('input[data-correct], select[data-correct]');
+            let correct = 0;
+            const norm = t => (t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+            inputs.forEach(el => {
+                const val = el.tagName === 'SELECT' ? el.value : el.value;
+                const ok = el.getAttribute('data-correct');
+                const card = el.closest('.col-card, .flex, .card') || el.parentElement;
+                el.classList.remove('correct', 'incorrect');
+                if (norm(val) === norm(ok)) {
+                    correct++;
+                    el.classList.add('correct');
+                    if (card) { card.classList.remove('border-red-300', 'bg-red-50'); card.classList.add('border-emerald-300', 'bg-emerald-50'); }
+                } else {
+                    el.classList.add('incorrect');
+                    if (card) { card.classList.remove('border-emerald-300', 'bg-emerald-50'); card.classList.add('border-red-300', 'bg-red-50'); }
+                }
+            });
+            const total = inputs.length;
+            if (correct === total) {
+                feedback.innerHTML = '<span class="text-emerald-600"><i class="fas fa-check-circle mr-1"></i> ¡Perfecto! ' + correct + '/' + total + '</span>';
+                if (typeof react === 'function') react('confetti');
+            } else {
+                feedback.innerHTML = '<span class="text-slate-600">' + correct + '/' + total + ' correctos. ¡Sigue intentando!</span>';
             }
         }
 

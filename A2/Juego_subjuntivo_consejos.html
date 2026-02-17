@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Expedición Colombia 🇨🇴 — Subjuntivo | Tucaneo Academy</title>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Zen+Maru+Gothic:wght@400;700&display=swap');
+
+        /* --- DISEÑO TROPICAL / EXPEDICIÓN COLOMBIA --- */
+        :root {
+            --color-gold: #f59e0b;
+            --color-jade: #059669;
+            --color-teal: #0d9488;
+            --color-red: #ef4444;
+            --color-palm: #15803d;
+            --bg-glass: rgba(5, 46, 22, 0.88);
+        }
+
+        html, body { min-height: 100%; }
+        body {
+            background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #0f172a 100%);
+            color: #f8fafc;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            user-select: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        #root { min-height: 100vh; }
+
+        .font-title { font-family: 'Cinzel', serif; }
+
+        /* FONDOS POR DESTINO COLOMBIA */
+        .bg-gradient-bogota { background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #475569 100%); }
+        .bg-gradient-cafetero { background: linear-gradient(135deg, #422006 0%, #78350f 50%, #92400e 100%); }
+        .bg-gradient-medellin { background: linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%); }
+        .bg-gradient-cartagena { background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0ea5e9 100%); }
+        .bg-gradient-amazonas { background: linear-gradient(135deg, #052e16 0%, #14532d 50%, #166534 100%); }
+        .bg-gradient-sangil { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); }
+        .bg-gradient-cali { background: linear-gradient(135deg, #7c2d12 0%, #c2410c 50%, #ea580c 100%); }
+        .bg-gradient-cocora { background: linear-gradient(135deg, #1e293b 0%, #475569 60%, #64748b 100%); }
+        .bg-gradient-sanandres { background: linear-gradient(135deg, #164e63 0%, #0e7490 50%, #06b6d4 100%); }
+        .bg-gradient-barranquilla { background: linear-gradient(135deg, #134e4a 0%, #0f766e 50%, #14b8a6 100%); }
+        .bg-gradient-tropical { background: linear-gradient(160deg, #022c22 0%, #064e3b 30%, #0d9488 70%, #f59e0b 100%); }
+        .bg-gradient-gold { background: linear-gradient(45deg, #b45309, #d97706, #f59e0b); }
+
+        /* ANIMACIONES TROPICALES */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.6); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-1deg); }
+            75% { transform: translateX(5px) rotate(1deg); }
+        }
+        @keyframes slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes palm-sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        @keyframes leaf-float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(3px, -5px) rotate(1deg); }
+            66% { transform: translate(-2px, -8px) rotate(-1deg); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes bird-fly {
+            0% { transform: translateX(-10vw) translateY(0) scale(0.8); opacity: 0.6; }
+            15% { opacity: 0.9; }
+            85% { opacity: 0.9; }
+            100% { transform: translateX(110vw) translateY(-5vh) scale(0.8); opacity: 0.6; }
+        }
+        @keyframes bird-fly-slow {
+            0% { transform: translateX(-80px) translateY(20px) scale(0.6); opacity: 0.5; }
+            100% { transform: translateX(calc(100vw + 80px)) translateY(-30px) scale(0.6); opacity: 0.5; }
+        }
+        @keyframes palm-sway-slow {
+            0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+            50% { transform: translateY(-3px) rotate(1.5deg); }
+        }
+        @keyframes leaf-drift {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-6px) rotate(2deg); opacity: 0.9; }
+        }
+
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+        .animate-enter { animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+        .animate-palm { animation: palm-sway 3s ease-in-out infinite; }
+        .animate-leaf { animation: leaf-float 5s ease-in-out infinite; }
+        .animate-bird { animation: bird-fly 25s linear infinite; }
+        .animate-bird-slow { animation: bird-fly-slow 35s linear infinite; }
+        .animate-palm-bg { animation: palm-sway-slow 4s ease-in-out infinite; }
+        .animate-leaf-bg { animation: leaf-drift 6s ease-in-out infinite; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
+
+        /* Decoración tropical: palmeras, plantas, pájaros */
+        .tropical-bg {
+            position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+        }
+        .palm-svg { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+        .coffee-plant { filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+        .bird-icon { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4)); }
+
+        /* COMPONENTES UI */
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.9);
+        }
+
+        .btn-option {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-option:hover:not(:disabled) {
+            transform: translateX(8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--color-jade);
+        }
+        .btn-option::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(180deg, var(--color-jade), var(--color-teal));
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+        .btn-option:hover::before { transform: scaleY(1); }
+
+        /* PARTÍCULAS DE FONDO */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 10s infinite linear;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="min-h-screen w-full"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- SISTEMA DE AUDIO (Web Audio API) ---
+        class AudioSys {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+            }
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+            
+            play(freqs, type='sine', duration=0.1, vol=0.1, stagger=0) {
+                if (this.muted) return;
+                this.init();
+                freqs.forEach((f, i) => {
+                    setTimeout(() => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = type;
+                        osc.frequency.setValueAtTime(f, this.ctx.currentTime);
+                        gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(this.ctx.currentTime + duration);
+                    }, i * stagger);
+                });
+            }
+        }
+        const sfx = new AudioSys();
+        const sounds = {
+            hover: () => sfx.play([300], 'triangle', 0.05, 0.05),
+            click: () => sfx.play([800], 'sine', 0.1, 0.05),
+            correct: () => sfx.play([523.25, 659.25, 783.99, 1046.50], 'sine', 0.4, 0.1, 80), // Pentatónica mayor
+            wrong: () => sfx.play([150, 100], 'sawtooth', 0.3, 0.1, 100),
+            win: () => sfx.play([440, 554, 659, 880, 554, 659, 880, 1108], 'square', 0.6, 0.1, 100)
+        };
+
+        // --- EXPEDICIÓN COLOMBIA 🇨🇴 — 10 NIVELES ---
+        const LEVELS = [
+            { id: 1, city: "Bogotá", bg: "bg-gradient-bogota", icon: "fa-cloud-rain",
+              story: "Acaban de aterrizar en Bogotá. Hace 10°C, está lloviendo y el cielo está gris. Tu amigo viene de Miami y solo trae una camiseta hawaiana y shorts.",
+              q: "¿Qué le recomiendas por pura lógica de supervivencia?",
+              opts: [
+                  { txt: "Te recomiendo que compres una chaqueta abrigada de lana.", correct: true, why: "¡Correcto! 'Recomendar que' pide subjuntivo (compres). Es la opción lógica para el frío bogotano." },
+                  { txt: "Te recomiendo que vayas a nadar a la piscina del hotel ahora mismo.", correct: false, why: "Lógica absurda con 10°C y lluvia. Además recuerda: recomendar que + subjuntivo." },
+                  { txt: "Te recomiendo que abras todas las ventanas para que entre el aire.", correct: false, why: "Empeoraría el frío. Y después de 'recomendar que' va subjuntivo." },
+                  { txt: "Te recomiendo que busques un helado de hielo muy grande.", correct: false, why: "Todo lo contrario a supervivencia en frío. Subjuntivo: que busques." }
+              ]
+            },
+            { id: 2, city: "Eje Cafetero", bg: "bg-gradient-cafetero", icon: "fa-mug-hot",
+              story: "Están en una finca cafetera hermosa. Tu amigo tiene problemas de insomnio y el médico le prohibió la cafeína por hoy, pero él quiere probar todo lo que vea.",
+              q: "Es vital para su salud...",
+              opts: [
+                  { txt: "Es importante que beba solo café descafeinado o agua.", correct: true, why: "¡Perfecto! Expresión impersonal (Es importante que) + subjuntivo (beba). Y es la opción sana." },
+                  { txt: "Es importante que tome diez tazas de café expreso cargado.", correct: false, why: "Peligroso para quien no puede cafeína. Además: 'que tome' sería subjuntivo pero la acción es incorrecta." },
+                  { txt: "Es importante que corra un maratón por los cafetales ahora.", correct: false, why: "No soluciona el tema de la cafeína. 'Que corra' es subjuntivo pero la lógica falla." },
+                  { txt: "Es importante que compre la finca completa con su tarjeta de crédito.", correct: false, why: "Irrelevante para su salud. Subjuntivo: que compre." }
+              ]
+            },
+            { id: 3, city: "Medellín", bg: "bg-gradient-medellin", icon: "fa-train",
+              story: "Tienen una reserva en un restaurante muy famoso en el centro. Son las 5:30 PM (hora pico) y el tráfico está totalmente detenido (un \"trancón\"). El Metro está a una cuadra.",
+              q: "¿Qué sugieres para no perder la reserva?",
+              opts: [
+                  { txt: "Sugiero que tomemos el Metro para evitar el tráfico.", correct: true, why: "¡Excelente! 'Sugerir que' + subjuntivo (tomemos). La opción lógica en hora pico." },
+                  { txt: "Sugiero que alquilemos un camión gigante para mover los otros carros.", correct: false, why: "Imposible y absurdo. Sugerir que + subjuntivo (alquilemos)." },
+                  { txt: "Sugiero que esperemos sentados en el andén hasta mañana.", correct: false, why: "Perderían la reserva. Sugerir que + subjuntivo." },
+                  { txt: "Sugiero que llamemos a un helicóptero privado por una app.", correct: false, why: "Poco realista. La forma correcta es sugerir que + subjuntivo." }
+              ]
+            },
+            { id: 4, city: "Cartagena", bg: "bg-gradient-cartagena", icon: "fa-sun",
+              story: "Son las 12:00 del mediodía en Playa Blanca. Tu amigo tiene la piel muy blanca y no se ha puesto bloqueador solar en todo el día.",
+              q: "¿Qué miedo tienes sobre su situación?",
+              opts: [
+                  { txt: "Temo que se queme la piel gravemente con este sol.", correct: true, why: "¡Muy bien! Emoción (miedo): Temo que + subjuntivo (se queme). Y es el riesgo real." },
+                  { txt: "Temo que se congele por la brisa marina.", correct: false, why: "A mediodía en el Caribe no te congelas. Temo que + subjuntivo (se congele)." },
+                  { txt: "Temo que el agua del mar se evapore por completo en un minuto.", correct: false, why: "Irreal. Temo que + subjuntivo." },
+                  { txt: "Temo que la arena se convierta en nieve de repente.", correct: false, why: "Absurdo en Playa Blanca. Temo que + subjuntivo (se convierta)." }
+              ]
+            },
+            { id: 5, city: "Selva del Amazonas", bg: "bg-gradient-amazonas", icon: "fa-bug",
+              story: "Van a entrar a caminar por la selva profunda. Tu amigo quiere ir en pantalones cortos y sin camisa porque \"quiere broncearse\", pero hay nubes de mosquitos hambrientos.",
+              q: "¿De qué dudas tú seriamente?",
+              opts: [
+                  { txt: "Dudo que salga de la selva sin mil picaduras de insecto.", correct: true, why: "¡Correcto! Duda + subjuntivo (salga). Es la consecuencia lógica de ir así vestido." },
+                  { txt: "Dudo que haya árboles verdes en la selva amazónica.", correct: false, why: "La selva está llena de árboles. Dudo que + subjuntivo (haya)." },
+                  { txt: "Dudo que los mosquitos tengan hambre hoy.", correct: false, why: "Todo indica lo contrario. Dudo que + subjuntivo (tengan)." },
+                  { txt: "Dudo que el sol brille en el cielo durante el día.", correct: false, why: "Hecho muy probable. Dudo que + subjuntivo (brille)." }
+              ]
+            },
+            { id: 6, city: "San Gil", bg: "bg-gradient-sangil", icon: "fa-mountain",
+              story: "Tu amigo está a punto de saltar en Bungee Jumping. Él está muy nervioso y se está soltando el arnés de seguridad por accidente porque le sudan las manos.",
+              q: "¿Qué le pides desesperadamente al guía?",
+              opts: [
+                  { txt: "Le pido que revise el equipo de seguridad antes del salto.", correct: true, why: "¡Perfecto! Pedir que + subjuntivo (revise). Es lo único sensato antes de saltar." },
+                  { txt: "Le pido que empuje a mi amigo al vacío inmediatamente.", correct: false, why: "Peligroso y sin sentido. Pedir que + subjuntivo (empuje)." },
+                  { txt: "Le pido que corte la cuerda con unas tijeras.", correct: false, why: "Sería un desastre. Pedir que + subjuntivo (corte)." },
+                  { txt: "Le pido que traiga una pizza familiar para comer mientras salta.", correct: false, why: "No soluciona el arnés. Pedir que + subjuntivo (traiga)." }
+              ]
+            },
+            { id: 7, city: "Cali", bg: "bg-gradient-cali", icon: "fa-music",
+              story: "Están en una discoteca de salsa. Tu amigo no sabe bailar nada, pero está intentando dar vueltas rápidas y le está pegando a todas las personas de la mesa de al lado.",
+              q: "¿Qué le ruegas a tu amigo para evitar una pelea?",
+              opts: [
+                  { txt: "Te ruego que bailes con más cuidado y menos velocidad.", correct: true, why: "¡Muy bien! Rogar que + subjuntivo (bailes). La única opción que evita el conflicto." },
+                  { txt: "Te ruego que golpees también a los meseros.", correct: false, why: "Empeoraría todo. Rogar que + subjuntivo (golpees)." },
+                  { txt: "Te ruego que saltes sobre las mesas de los desconocidos.", correct: false, why: "Provocaría más problemas. Rogar que + subjuntivo (saltes)." },
+                  { txt: "Te ruego que cantes ópera a todo pulmón en la pista.", correct: false, why: "No evita los golpes. Rogar que + subjuntivo (cantes)." }
+              ]
+            },
+            { id: 8, city: "Valle del Cocora", bg: "bg-gradient-cocora", icon: "fa-cloud",
+              story: "Están subiendo a ver las palmas de cera. De repente, baja una niebla (neblina) muy espesa y no pueden ver ni sus propias manos. No saben dónde está el camino de regreso.",
+              q: "¿Cuál es tu deseo más lógico en este momento? (Uso de Ojalá)",
+              opts: [
+                  { txt: "¡Ojalá que encontremos el sendero principal pronto!", correct: true, why: "¡Excelente! Ojalá (que) + subjuntivo (encontremos). Es el deseo lógico en la niebla." },
+                  { txt: "¡Ojalá que la niebla se vuelva chocolate líquido!", correct: false, why: "Imposible. Ojalá que + subjuntivo (se vuelva)." },
+                  { txt: "¡Ojalá que aparezca un dragón para llevarnos a casa!", correct: false, why: "Fantástico pero no real. Ojalá que + subjuntivo (aparezca)." },
+                  { txt: "¡Ojalá que empecemos a correr sin dirección por el bosque!", correct: false, why: "Peligroso. Ojalá que + subjuntivo (empecemos)." }
+              ]
+            },
+            { id: 9, city: "San Andrés", bg: "bg-gradient-sanandres", icon: "fa-water",
+              story: "Tu amigo está bajando a 10 metros de profundidad buceando. Le duelen los oídos por la presión del agua, pero él quiere seguir bajando más y más rápido sin equilibrar la presión.",
+              q: "No es bueno que él...",
+              opts: [
+                  { txt: "No es bueno que baje más profundo sin proteger sus oídos.", correct: true, why: "¡Correcto! No es bueno que + subjuntivo (baje). Es el consejo de seguridad que necesita." },
+                  { txt: "No es bueno que respire oxígeno bajo el agua.", correct: false, why: "Tiene que respirar. No es bueno que + subjuntivo (respire)." },
+                  { txt: "No es bueno que mire los peces de colores.", correct: false, why: "Eso no es el problema. No es bueno que + subjuntivo (mire)." },
+                  { txt: "No es bueno que el agua del mar esté mojada.", correct: false, why: "Hecho obvio. No es bueno que + subjuntivo." }
+              ]
+            },
+            { id: 10, city: "Barranquilla", bg: "bg-gradient-barranquilla", icon: "fa-briefcase",
+              story: "Tienes una cita muy importante con un socio colombiano a las 8:00 AM. Tu amigo dice que en Colombia \"nadie llega a tiempo\" y quiere salir del hotel a las 8:15 AM porque \"es lo normal\". Tú sabes que este socio es extremadamente puntual y serio.",
+              q: "¿Qué le exiges a tu amigo por lógica profesional?",
+              opts: [
+                  { txt: "Te exijo que salgamos ahora mismo para llegar antes de las 8:00.", correct: true, why: "¡Victoria! Exigir que + subjuntivo (salgamos). La única opción profesional y correcta." },
+                  { txt: "Te exijo que lleguemos a la reunión mañana por la tarde.", correct: false, why: "Perderían la cita de hoy. Exigir que + subjuntivo (lleguemos)." },
+                  { txt: "Te exijo que le digas al socio que el tiempo no existe.", correct: false, why: "Poco profesional. Exigir que + subjuntivo (digas)." },
+                  { txt: "Te exijo que duermas dos horas más antes de ir.", correct: false, why: "Llegarían tarde. Exigir que + subjuntivo (duermas)." }
+              ]
+            }
+        ];
+
+        // --- COMPONENTES VISUALES ---
+        
+        const Particles = () => {
+            return (
+                <div className="particles">
+                    {[...Array(20)].map((_, i) => (
+                        <div key={i} className="particle" style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            width: `${Math.random() * 4 + 2}px`,
+                            height: `${Math.random() * 4 + 2}px`,
+                            animationDuration: `${Math.random() * 10 + 10}s`,
+                            animationDelay: `${Math.random() * 5}s`
+                        }}></div>
+                    ))}
+                </div>
+            );
+        };
+
+        // Palmera SVG simplificada (tronco + hojas)
+        const PalmSVG = ({ className = '', style = {} }) => (
+            <svg className={className} viewBox="0 0 80 120" style={{ width: 'min(18vw, 90px)', height: 'auto', ...style }} fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M38 95 L42 95 L42 25 Q40 20 38 25 Z" fill="rgba(92, 64, 51, 0.9)" />
+                <path d="M40 25 Q10 30 15 55 Q18 45 40 35 Q62 45 65 55 Q70 30 40 25 Z" fill="rgba(34, 139, 34, 0.85)" />
+                <path d="M40 28 Q5 40 25 70 Q35 55 40 45 Q45 55 55 70 Q75 40 40 28 Z" fill="rgba(0, 100, 0, 0.8)" />
+                <path d="M40 30 Q65 38 55 65 Q48 52 40 42 Q32 52 25 65 Q15 38 40 30 Z" fill="rgba(60, 120, 60, 0.85)" />
+            </svg>
+        );
+
+        // Planta de café (hojas redondeadas)
+        const CoffeePlantSVG = ({ className = '', style = {} }) => (
+            <svg className={className} viewBox="0 0 60 70" style={{ width: 'min(14vw, 70px)', height: 'auto', ...style }} fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="30" cy="55" rx="8" ry="4" fill="rgba(92, 64, 51, 0.8)" />
+                <ellipse cx="30" cy="35" rx="22" ry="18" fill="rgba(34, 100, 34, 0.75)" />
+                <ellipse cx="20" cy="28" rx="12" ry="10" fill="rgba(0, 80, 0, 0.85)" />
+                <ellipse cx="40" cy="32" rx="11" ry="9" fill="rgba(30, 90, 30, 0.8)" />
+                <ellipse cx="30" cy="22" rx="10" ry="8" fill="rgba(50, 110, 50, 0.8)" />
+            </svg>
+        );
+
+        const TropicalDecor = () => (
+            <div className="tropical-bg">
+                {/* Palmeras laterales */}
+                <div className="absolute bottom-0 left-0 opacity-40 animate-palm-bg" style={{ transformOrigin: 'bottom center' }}>
+                    <PalmSVG style={{ transform: 'scaleX(-1)' }} className="palm-svg" />
+                </div>
+                <div className="absolute bottom-0 right-0 opacity-40 animate-palm-bg" style={{ transformOrigin: 'bottom center' }}>
+                    <PalmSVG className="palm-svg" />
+                </div>
+                <div className="absolute bottom-0 left-[15%] opacity-25 animate-palm-bg delay-2" style={{ transformOrigin: 'bottom center', transform: 'scale(0.7)' }}>
+                    <PalmSVG className="palm-svg" />
+                </div>
+                <div className="absolute bottom-0 right-[12%] opacity-25 animate-palm-bg delay-3" style={{ transformOrigin: 'bottom center', transform: 'scale(0.75) scaleX(-1)' }}>
+                    <PalmSVG className="palm-svg" />
+                </div>
+                {/* Plantas de café / follaje */}
+                <div className="absolute bottom-0 left-[5%] opacity-30 animate-leaf-bg" style={{ animationDelay: '0.5s' }}>
+                    <CoffeePlantSVG className="coffee-plant" />
+                </div>
+                <div className="absolute bottom-0 right-[6%] opacity-30 animate-leaf-bg delay-1" style={{ animationDelay: '1.5s' }}>
+                    <CoffeePlantSVG className="coffee-plant" style={{ transform: 'scaleX(-1)' }} />
+                </div>
+                <div className="absolute bottom-0 left-[32%] opacity-20 animate-leaf-bg" style={{ transform: 'scale(0.6)', animationDelay: '2s' }}>
+                    <CoffeePlantSVG className="coffee-plant" />
+                </div>
+                <div className="absolute bottom-0 right-[28%] opacity-20 animate-leaf-bg" style={{ transform: 'scale(0.6) scaleX(-1)', animationDelay: '2.5s' }}>
+                    <CoffeePlantSVG className="coffee-plant" />
+                </div>
+                {/* Pájaros volando (cruzan la pantalla) */}
+                <div className="absolute left-0 bird-icon text-white/60" style={{ top: '12%', animationDelay: '0s', animationDuration: '28s' }}>
+                    <i className="fas fa-dove text-2xl animate-bird"></i>
+                </div>
+                <div className="absolute left-0 bird-icon text-white/50" style={{ top: '22%', animationDelay: '8s', animationDuration: '32s' }}>
+                    <i className="fas fa-dove text-xl animate-bird" style={{ transform: 'scaleX(-1)' }}></i>
+                </div>
+                <div className="absolute left-0 bird-icon text-white/40" style={{ top: '8%', animationDelay: '15s', animationDuration: '30s' }}>
+                    <i className="fas fa-dove text-lg animate-bird"></i>
+                </div>
+                <div className="absolute left-0 bird-icon text-white/35" style={{ top: '75%', animationDelay: '5s', animationDuration: '38s' }}>
+                    <i className="fas fa-dove text-xl animate-bird-slow"></i>
+                </div>
+                <div className="absolute left-0 bird-icon text-white/30" style={{ top: '85%', animationDelay: '20s', animationDuration: '40s' }}>
+                    <i className="fas fa-dove text-sm animate-bird-slow" style={{ transform: 'scaleX(-1)' }}></i>
+                </div>
+            </div>
+        );
+
+        const Typewriter = ({ text }) => {
+            const [display, setDisplay] = useState('');
+            useEffect(() => {
+                if (!text) { setDisplay(''); return; }
+                setDisplay(text.charAt(0));
+                let i = 1;
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        setDisplay(text.slice(0, i + 1));
+                        i++;
+                    } else clearInterval(timer);
+                }, 20);
+                return () => clearInterval(timer);
+            }, [text]);
+            return <p className="text-lg text-slate-200 leading-relaxed font-light">{display}</p>;
+        };
+
+        // --- JUEGO PRINCIPAL ---
+
+        const TUCANEO_LOGO = 'https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png';
+        const AMBIENT_MUSIC_URL = 'https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3';
+
+        const shuffleArray = (arr) => {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        };
+
+        const Game = () => {
+            const [scene, setScene] = useState('INTRO'); // INTRO, PLAY, WIN, LOSE
+            const [lvlIdx, setLvlIdx] = useState(0);
+            const [hearts, setHearts] = useState(3);
+            const [feedback, setFeedback] = useState(null); // { type: 'ok'|'bad', msg: '' }
+            const [shake, setShake] = useState(false);
+            const [playerName, setPlayerName] = useState('');
+            const [musicMuted, setMusicMuted] = useState(false);
+            const audioRef = useRef(null);
+
+            const level = LEVELS[lvlIdx];
+            const shuffledOpts = React.useMemo(() => level && level.opts ? shuffleArray(level.opts) : [], [lvlIdx]);
+
+            const toggleMusic = () => {
+                setMusicMuted(prev => {
+                    const next = !prev;
+                    if (audioRef.current) {
+                        audioRef.current.muted = next;
+                        if (!next) audioRef.current.play().catch(() => {});
+                    }
+                    return next;
+                });
+            };
+
+            const tryPlayMusic = () => {
+                if (audioRef.current && !musicMuted) {
+                    audioRef.current.volume = 0.25;
+                    audioRef.current.play().catch(() => {});
+                }
+            };
+
+            useEffect(() => {
+                const el = audioRef.current;
+                if (!el) return;
+                el.volume = 0.25;
+                if (!musicMuted) el.play().catch(() => {});
+            }, [musicMuted]);
+
+            const handleStart = () => {
+                if (!playerName.trim()) return;
+                tryPlayMusic();
+                sounds.win();
+                setLvlIdx(0);
+                setHearts(3);
+                setFeedback(null);
+                setScene('PLAY');
+            };
+
+            const handleOption = (opt) => {
+                if (feedback) return;
+                
+                if (opt.correct) {
+                    sounds.correct();
+                    setFeedback({ type: 'ok', msg: opt.why });
+                } else {
+                    sounds.wrong();
+                    setShake(true);
+                    setTimeout(() => setShake(false), 500);
+                    const nextHearts = hearts - 1;
+                    setHearts(nextHearts);
+                    setFeedback({ type: 'bad', msg: opt.why });
+                    
+                    if (nextHearts <= 0) {
+                        setTimeout(() => setScene('LOSE'), 1500);
+                    }
+                }
+            };
+
+            const handleNext = () => {
+                setFeedback(null);
+                sounds.hover();
+                if (lvlIdx + 1 < LEVELS.length) {
+                    setLvlIdx(prev => prev + 1);
+                } else {
+                    sounds.win();
+                    setScene('WIN');
+                }
+            };
+
+            // Audio ambiente y botón de música (común a todas las pantallas)
+            const MusicControl = () => (
+                <>
+                    <audio ref={audioRef} src={AMBIENT_MUSIC_URL} loop preload="auto" muted={musicMuted} playsInline style={{ display: 'none' }} />
+                    <button
+                        type="button"
+                        onClick={toggleMusic}
+                        className="fixed bottom-4 right-4 z-[100] w-12 h-12 rounded-full bg-black/50 hover:bg-emerald-600/90 border border-white/20 text-white flex items-center justify-center shadow-lg transition-all hover:scale-110"
+                        title={musicMuted ? 'Activar música de fondo' : 'Silenciar música'}
+                        aria-label={musicMuted ? 'Activar música' : 'Silenciar música'}
+                    >
+                        <i className={`fas text-xl ${musicMuted ? 'fa-volume-mute' : 'fa-volume-up'}`}></i>
+                    </button>
+                </>
+            );
+
+            // PANTALLA INTRO — Expedición Colombia, logo, nombre, diseño tropical
+            if (scene === 'INTRO') return (
+                <div className="relative min-h-screen w-full flex flex-col items-center justify-center bg-gradient-tropical text-center p-6 overflow-x-hidden">
+                    <MusicControl />
+                    <Particles />
+                    <TropicalDecor />
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Cpath fill=%27%23059669%27 opacity=%27.06%27 d=%27M50 0L100 50 50 100 0 50z%27/%3E%3C/svg%3E')] opacity-30 pointer-events-none" style={{ backgroundSize: '120px' }}></div>
+                    <div className="z-10 flex flex-col items-center animate-enter max-w-lg">
+                        <img src={TUCANEO_LOGO} alt="Tucaneo Academy" className="h-20 md:h-24 w-auto object-contain mb-6 drop-shadow-lg animate-fade-in" />
+                        <span className="text-emerald-300 tracking-[0.2em] text-xs font-bold mb-2 uppercase animate-fade-in delay-1">Tucaneo Academy · A2</span>
+                        <h1 className="text-4xl md:text-6xl font-title text-white mb-1 drop-shadow-lg animate-fade-in delay-2">
+                            Expedición Colombia
+                        </h1>
+                        <span className="text-3xl mb-4 animate-fade-in delay-2">🇨🇴</span>
+                        <h2 className="text-xl md:text-2xl text-amber-200 font-title mb-6 animate-fade-in delay-3">Consejos y subjuntivo</h2>
+                        <div className="glass-card p-5 w-full max-w-sm mb-6 rounded-2xl border border-emerald-500/30 animate-fade-in delay-3">
+                            <label className="block text-left text-emerald-200 text-sm font-bold mb-2">Tu nombre</label>
+                            <input
+                                type="text"
+                                value={playerName}
+                                onChange={(e) => setPlayerName(e.target.value)}
+                                placeholder="Escribe tu nombre..."
+                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all"
+                                maxLength={40}
+                            />
+                        </div>
+                        <p className="text-slate-300 text-sm mb-6 animate-fade-in delay-4">Recorre Colombia y elige la opción correcta con subjuntivo.</p>
+                        <button
+                            onClick={handleStart}
+                            disabled={!playerName.trim()}
+                            className="group relative px-8 py-4 bg-emerald-600 hover:bg-emerald-500 border-2 border-emerald-400 text-white font-bold rounded-full overflow-hidden transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-emerald-500/30 animate-fade-in delay-4"
+                        >
+                            <span className="relative z-10 flex items-center gap-2">Comenzar expedición <i className="fas fa-leaf"></i></span>
+                        </button>
+                    </div>
+                </div>
+            );
+
+            // PANTALLA VICTORIA — Tropical
+            if (scene === 'WIN') return (
+                <div className="min-h-screen w-full bg-gradient-gold flex flex-col items-center justify-center text-center p-6 relative overflow-x-hidden py-12">
+                    <MusicControl />
+                    <Particles />
+                    <TropicalDecor />
+                    <img src={TUCANEO_LOGO} alt="Tucaneo" className="h-16 w-auto object-contain mb-4 opacity-95 animate-fade-in" />
+                    <i className="fas fa-trophy text-7xl text-white mb-4 animate-float drop-shadow-lg"></i>
+                    <h1 className="text-4xl md:text-5xl font-title text-white mb-2 animate-fade-in delay-1">¡Expedición completada!</h1>
+                    <p className="text-xl text-amber-100 mb-2 animate-fade-in delay-2">{playerName}, dominas el subjuntivo en Colombia 🇨🇴</p>
+                    <p className="text-amber-200/90 text-sm mb-8 max-w-md animate-fade-in delay-3">Tucaneo Academy te felicita.</p>
+                    <button onClick={() => { setScene('INTRO'); setFeedback(null); }} className="px-8 py-3 bg-white text-amber-800 font-bold rounded-full shadow-lg hover:scale-105 transition-transform animate-fade-in delay-4">JUGAR DE NUEVO</button>
+                </div>
+            );
+
+            if (scene === 'LOSE') return (
+                <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center text-center p-6 relative overflow-x-hidden py-12">
+                    <MusicControl />
+                    <TropicalDecor />
+                    <div className="absolute inset-0 bg-red-900/15 animate-pulse"></div>
+                    <i className="fas fa-heart-crack text-8xl text-red-500 mb-6 animate-shake z-10"></i>
+                    <h1 className="text-4xl font-title text-white mb-2 z-10">Game over</h1>
+                    <p className="text-slate-400 mb-8 z-10">{playerName}, el subjuntivo te ha derrotado... por ahora.</p>
+                    <button onClick={() => { setScene('INTRO'); setFeedback(null); }} className="px-8 py-3 border-2 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-colors rounded-full z-10 font-bold">REINTENTAR</button>
+                </div>
+            );
+
+            // JUEGO
+            return (
+                <div className={`relative min-h-screen w-full flex flex-col transition-all duration-1000 overflow-x-hidden ${level.bg} ${shake ? 'animate-shake' : ''} py-6`}>
+                    <MusicControl />
+                    <Particles />
+                    <TropicalDecor />
+                    
+                    {/* HUD */}
+                    <div className="relative z-20 flex justify-between items-center p-4 md:p-6">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <div className="bg-black/40 px-3 py-1 rounded-lg border border-emerald-500/30 text-xs font-bold tracking-widest text-amber-400">
+                                NIVEL {level.id}/10
+                            </div>
+                            <span className="text-white/90 font-title text-lg drop-shadow-md">{level.city}</span>
+                            {playerName && <span className="text-emerald-200/90 text-sm font-medium">· {playerName}</span>}
+                        </div>
+                        <div className="flex gap-1">
+                            {[...Array(3)].map((_, i) => (
+                                <i key={i} className={`fas fa-heart text-2xl transition-all ${i < hearts ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'text-slate-700'}`}></i>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* MAIN CONTENT */}
+                    <div className="flex-1 flex flex-col items-center justify-center p-4 relative z-10 max-w-3xl mx-auto w-full">
+                        
+                        {/* ICON */}
+                        <div className="mb-6 w-20 h-20 rounded-full bg-white/10 backdrop-blur border border-emerald-400/30 flex items-center justify-center animate-float shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                            <i className={`fas ${level.icon} text-3xl text-amber-300`}></i>
+                        </div>
+
+                        {/* CARD */}
+                        <div className="glass-card w-full rounded-2xl p-6 md:p-10 animate-enter relative overflow-hidden border border-white/10">
+                            {/* Feedback Overlay */}
+                            {feedback && (
+                                <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-8 backdrop-blur-md transition-all animate-fade-in ${feedback.type === 'ok' ? 'bg-emerald-900/85' : 'bg-red-900/85'}`}>
+                                    <i className={`fas ${feedback.type === 'ok' ? 'fa-check-circle text-emerald-400' : 'fa-times-circle text-red-400'} text-5xl mb-4`}></i>
+                                    <h3 className="text-2xl font-bold text-white mb-2">{feedback.type === 'ok' ? '¡Excelente!' : '¡Cuidado!'}</h3>
+                                    <p className="text-white/90 mb-6">{feedback.msg}</p>
+                                    
+                                    {feedback.type === 'ok' ? (
+                                        <button onClick={handleNext} className="px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-full hover:scale-105 transition-transform">
+                                            Siguiente <i className="fas fa-arrow-right ml-2"></i>
+                                        </button>
+                                    ) : (
+                                        hearts > 0 ? 
+                                        <button onClick={() => setFeedback(null)} className="text-white underline hover:text-white/80">Intentar de nuevo</button>
+                                        : <span className="text-white font-bold">Sin vidas...</span>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="mb-8 min-h-[100px]">
+                                <Typewriter text={`${level.story} ${level.q}`} />
+                            </div>
+
+                            <div className="grid gap-3">
+                                {shuffledOpts.map((opt, i) => (
+                                    <button 
+                                        key={i} 
+                                        onClick={() => handleOption(opt)}
+                                        onMouseEnter={sounds.hover}
+                                        className="btn-option w-full p-4 rounded-xl bg-white/5 border border-white/10 text-left text-lg hover:bg-white/10 flex justify-between group animate-fade-in"
+                                        style={{ animationDelay: `${0.1 * (i + 1)}s` }}
+                                    >
+                                        <span className="group-hover:text-emerald-200 transition-colors">{opt.txt}</span>
+                                        <i className="fas fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400"></i>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Game />);
+    </script>
+</body>
+</html>

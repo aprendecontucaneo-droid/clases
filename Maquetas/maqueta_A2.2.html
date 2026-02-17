@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Español A2.2: Pasado Simple, Pretérito Imperfecto y Combinación | Tucaneo</title>
+  <meta name="description" content="Curso de español nivel A2.2. Aprende el pretérito indefinido (pasado simple), el pretérito imperfecto y cómo combinarlos para narrar en español. Lecciones, ejercicios y recursos para dominar los tiempos del pasado.">
+  <meta name="keywords" content="español A2.2, pasado simple español, pretérito indefinido, pretérito imperfecto, combinación indefinido imperfecto, narrar en español, curso español nivel intermedio">
+</head>
+<body>
+
+<style>
+  /* =========================================
+      MASTER CSS TUCANEO V2 - ACCORDION SYSTEM
+      ========================================= */
+
+  /* HEADER TRANSPARENTE & GENERAL */
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0; width: 100%; z-index: 999;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important; 
+  }
+  .main-header-menu .menu-item > .menu-link, .site-title a, .site-header a {
+      color: #ffffff !important; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+      font-weight: 700 !important; font-size: 1.1rem !important;
+  }
+  .main-header-menu .menu-item > .menu-link:hover { color: #f59e0b !important; }
+   
+  .tucaneo-container {
+    max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding-bottom: 100px;
+  }
+
+  /* PORTADA HERO */
+  .tucaneo-hero {
+    position: relative; width: 100vw; left: 50%; right: 50%;
+    margin-left: -50vw; margin-right: -50vw;
+    height: 100vh; min-height: 700px;
+    background-image: url('../img/Portada%20maqueta_a2.2.png');
+    background-size: cover; background-position: center center; background-repeat: no-repeat;
+    border-radius: 0 0 50px 50px; margin-bottom: 60px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
+  }
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, rgba(9, 23, 18, 0.6) 0%, rgba(9, 23, 18, 0.3) 40%, rgba(9, 23, 18, 0.8) 100%);
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+  .tucaneo-hero-content {
+    position: relative; z-index: 10; padding: 20px; max-width: 850px;
+    text-align: center; color: white; margin-top: 150px; 
+  }
+  .tucaneo-tagline { 
+    display: inline-block; background-color: #f59e0b; color: #000; 
+    font-weight: 800; font-size: 0.9rem; padding: 8px 16px; 
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; 
+    margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); 
+  }
+  .tucaneo-hero h1 { font-size: 4.5rem; line-height: 1.05; font-weight: 900; margin-bottom: 25px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  .tucaneo-hero p { font-size: 1.5rem; line-height: 1.6; color: #f3f4f6; margin-bottom: 45px; max-width: 80%; margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+   
+  .tucaneo-cta { 
+    background-color: #10b981; color: white !important; padding: 18px 45px; 
+    border-radius: 50px; font-weight: 800; text-decoration: none; 
+    display: inline-block; transition: all 0.3s ease; border: none; 
+    font-size: 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5); 
+  }
+  .tucaneo-cta:hover { background-color: #059669; transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); }
+
+  /* ACORDEÓN (MÓDULOS) */
+  .tucaneo-module {
+    background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+    margin-bottom: 25px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+  }
+  details.tucaneo-module[open] { box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: #06b6d4; }
+
+  .tucaneo-summary {
+    background-color: #f9fafb; padding: 20px 30px; cursor: pointer;
+    font-size: 1.1rem; font-weight: 800; color: #111827; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.3s; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tucaneo-summary:hover { background-color: #f3f4f6; }
+  .tucaneo-summary::after { content: '+'; font-size: 1.5rem; font-weight: 300; color: #6b7280; transition: transform 0.3s; }
+  details[open] .tucaneo-summary::after { content: '+'; transform: rotate(45deg); color: #0891b2; }
+  details[open] .tucaneo-summary { background-color: #ecfeff; color: #0e7490; border-bottom: 1px solid #e5e7eb; }
+  .tucaneo-summary::-webkit-details-marker { display: none; }
+   
+  .tucaneo-module-content { padding: 20px; background: #fff; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GRID Y TARJETAS */
+  .tucaneo-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px; padding-top: 10px;
+  }
+  .tucaneo-card {
+    background: #fff; border-radius: 16px; border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; display: flex;
+    flex-direction: column; height: 100%; transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .tucaneo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+   
+  .contenedor-imagen { position: relative; height: 180px; overflow: hidden; background: #e5e7eb; }
+  .tucaneo-cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .tucaneo-cover-img[src=""], .tucaneo-cover-img:not([src]) { min-height: 180px; background: linear-gradient(135deg, #d1d5db 0%, #e5e7eb 100%); }
+  .tucaneo-card:hover .tucaneo-cover-img { transform: scale(1.05); }
+   
+  .tucaneo-badge {
+    position: absolute; top: 15px; left: 15px; color: white !important; padding: 6px 12px;
+    border-radius: 8px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+    z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .tucaneo-body { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+  .tucaneo-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px; font-weight: 700; text-transform: uppercase; }
+  .tucaneo-title { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 800; color: #1f2937; line-height: 1.2; }
+  .tucaneo-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+   
+  /* BOTONES */
+  .tucaneo-btn {
+    display: flex; justify-content: center; align-items: center; width: 100%; padding: 14px;
+    font-weight: 800; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase;
+    font-size: 0.9rem; color: white !important; text-decoration: none !important; transition: 0.2s; 
+    box-sizing: border-box;
+  }
+  .tucaneo-btn:active { transform: scale(0.98); }
+
+  /* ZONA DE JUEGOS — Título de sección */
+  .tucaneo-juegos-header {
+    margin: 50px 0 28px 0; padding-bottom: 12px; border-bottom: 3px solid #e5e7eb;
+    font-size: 1.6rem; font-weight: 900; color: #111827; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tucaneo-juegos-header span { color: #059669; }
+
+  /* Game cards distintivas (estilo tipo Maqueta_A1.2) */
+  .tucaneo-game-card {
+    display: flex; flex-wrap: wrap; border-radius: 20px; overflow: hidden; margin-bottom: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12); transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .tucaneo-game-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.18); }
+  .tucaneo-game-card .game-img-col { flex: 1 1 320px; min-height: 260px; background: #e5e7eb; }
+  .tucaneo-game-card .game-img-col img { width: 100%; height: 100%; object-fit: cover; }
+  .tucaneo-game-card .game-content-col { flex: 1 1 380px; padding: 28px 36px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
+  .tucaneo-game-card .game-tag { padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; align-self: flex-start; margin-bottom: 12px; }
+  .tucaneo-game-card .game-content-col h3 { margin: 0 0 12px 0; font-size: 1.5rem; font-weight: 800; color: #1f2937; line-height: 1.25; }
+  .tucaneo-game-card .game-content-col p { margin: 0 0 20px 0; font-size: 0.98rem; color: #4b5563; line-height: 1.6; }
+  .tucaneo-game-card .tucaneo-btn { max-width: 260px; }
+
+  /* Variante azul — Reto Gramatical */
+  .tucaneo-game-card.game-blue { border: 3px solid #3b82f6; padding: 6px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .tucaneo-game-card.game-blue .game-content-col { background: #f0f9ff; border-radius: 0 14px 14px 0; }
+  .tucaneo-game-card.game-blue .game-tag { background: #dbeafe; color: #1e40af; }
+  .tucaneo-game-card.game-blue .tucaneo-btn { background-color: #2563eb !important; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
+  .tucaneo-game-card.game-blue .tucaneo-btn:hover { background-color: #1d4ed8 !important; }
+
+  /* Variante aventura — Escapa de la Cueva */
+  .tucaneo-game-card.game-adventure { border: 3px solid #7c3aed; padding: 6px; background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); }
+  .tucaneo-game-card.game-adventure .game-content-col { background: #faf5ff; border-radius: 0 14px 14px 0; }
+  .tucaneo-game-card.game-adventure .game-tag { background: #ede9fe; color: #5b21b6; }
+  .tucaneo-game-card.game-adventure .tucaneo-btn { background-color: #7c3aed !important; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4); }
+  .tucaneo-game-card.game-adventure .tucaneo-btn:hover { background-color: #6d28d9 !important; }
+
+  /* Variante verde/tropical — Expedición Colombia */
+  .tucaneo-game-card.game-tropical { border: 3px solid #059669; padding: 6px; background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+  .tucaneo-game-card.game-tropical .game-content-col { background: #f0fdf4; border-radius: 0 14px 14px 0; }
+  .tucaneo-game-card.game-tropical .game-tag { background: #d1fae5; color: #047857; }
+  .tucaneo-game-card.game-tropical .tucaneo-btn { background-color: #059669 !important; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); }
+  .tucaneo-game-card.game-tropical .tucaneo-btn:hover { background-color: #047857 !important; }
+
+  /* Responsive: imagen arriba en móvil */
+  @media (max-width: 768px) {
+    .tucaneo-game-card .game-img-col { min-height: 200px; }
+    .tucaneo-game-card.game-blue .game-content-col,
+    .tucaneo-game-card.game-adventure .game-content-col,
+    .tucaneo-game-card.game-tropical .game-content-col { border-radius: 0 0 14px 14px; }
+  }
+
+  /* EXAMEN SEPARATOR (LOGRO) */
+  .tucaneo-exam-separator {
+      background: #fdf2f8; border: 2px dashed #db2777; border-radius: 16px;
+      padding: 40px; text-align: center; margin: 40px 0;
+  }
+  .tucaneo-exam-separator h3 { color: #be185d; font-size: 1.8rem; margin-bottom: 10px; font-weight: 800; text-transform: uppercase; }
+  .tucaneo-exam-separator p { color: #86198f; margin-bottom: 25px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+  .btn-exam { background-color: #db2777 !important; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.4); }
+
+  /* COLORES */
+  .tema-a1 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+  .btn-a1 { background-color: #2563eb !important; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+  .btn-a1:hover { background-color: #1d4ed8 !important; }
+
+  @media (max-width: 921px) {
+    .tucaneo-hero { width: 92%; margin-left: auto; margin-right: auto; left: auto; right: auto; height: auto !important; min-height: 550px; margin-top: 130px; border-radius: 25px !important; }
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+    .tucaneo-game-card { flex-direction: column; }
+  }
+</style>
+
+<div class="tucaneo-container">
+
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div> 
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Nivel A2.2</span>
+      <h1>Curso de Español Nivel A2.2</h1>
+      <p>En esta sección aprenderás el <strong>pretérito indefinido</strong> (pasado simple), el <strong>pretérito imperfecto</strong> y cómo combinarlos para narrar en español con naturalidad. Lecciones, ejercicios y recursos para dominar los tiempos del pasado.</p>
+      <a href="#modulo-1-a2-2" class="tucaneo-cta">Ver contenido</a>
+    </div>
+  </div>
+
+  <details class="tucaneo-module" id="modulo-1-a2-2" open>
+    <summary class="tucaneo-summary"><span>Módulo 1: Pasado simple e imperfecto</span></summary>
+    <div class="tucaneo-module-content">
+      <div class="tucaneo-grid">
+        <!-- Aquí se añadirá el material más adelante -->
+      </div>
+    </div>
+  </details>
+
+</div>
+</body>
+</html>
