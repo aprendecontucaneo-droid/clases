@@ -828,43 +828,61 @@
 
 
            <section>
-    <div class="slide-container h-full flex flex-col justify-start items-center text-left">
-        <div class="glass-card relative overflow-hidden p-10 md:p-12 bg-gradient-to-br from-slate-800 via-slate-900 to-indigo-950 text-white border border-slate-600/50 shadow-2xl rounded-2xl w-full max-w-4xl" style="box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);">
+    <div class="slide-container h-full flex flex-col justify-center items-center text-center">
+        <div class="glass-card relative overflow-hidden p-14 md:p-16 bg-gradient-to-br from-slate-800 via-slate-900 to-indigo-950 text-white border border-slate-600/50 shadow-2xl rounded-2xl" style="box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);">
+            <!-- Línea decorativa superior -->
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-2 tracking-tight text-white drop-shadow-sm" style="font-family: 'Playfair Display', serif;">
-                Pasado Pluscuamperfecto · Ejercicios
-            </h1>
-            <p class="text-slate-300 text-lg mb-8">Nivel Avanzado · Tiempos del Pasado</p>
-
-            <p class="text-slate-200 font-semibold mb-4 text-lg">Orden de lectura:</p>
-            <ol class="space-y-3 text-slate-200 list-decimal list-inside max-w-md">
-                <li class="flex items-center gap-3"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 font-bold text-sm shrink-0">1</span> Informe policial — Lee el contexto</li>
-                <li class="flex items-center gap-3"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 font-bold text-sm shrink-0">2</span> Reconstruye el testimonio de Bob</li>
-                <li class="flex items-center gap-3"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 font-bold text-sm shrink-0">3</span> El error del inspector</li>
-                <li class="flex items-center gap-3"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 font-bold text-sm shrink-0">4</span> La verdad sale a la luz</li>
-                <li class="flex items-center gap-3"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/30 text-amber-300 font-bold text-sm shrink-0">5</span> La confesión final · Misión para casa</li>
-            </ol>
-
-            <div class="mt-8 flex flex-wrap justify-center gap-6 text-slate-400 text-sm">
-                <span class="flex items-center gap-2"><i class="fas fa-clock-rotate-left text-amber-400/90"></i> Pasado</span>
-                <span class="flex items-center gap-2"><i class="fas fa-pen-to-square text-amber-300/90"></i> Práctica</span>
+            <!-- Badge del tema -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-700/80 border border-slate-500/50 text-slate-200 text-sm font-semibold tracking-wide mb-6">
+                <i class="fas fa-pen-fancy text-amber-400"></i>
+                Gramática · Ejercicios
             </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-white drop-shadow-sm" style="font-family: 'Playfair Display', serif; letter-spacing: -0.02em;">
+                Pasado Pluscuamperfecto
+            </h1>
+            <p class="text-2xl md:text-3xl text-slate-300 font-light mb-10">
+                Ejercicios
+            </p>
+            <!-- Iconos profesionales (Font Awesome) -->
+            <div class="flex justify-center gap-8 md:gap-10 text-slate-300">
+                <span class="flex flex-col items-center gap-2" title="Tiempo verbal">
+                    <i class="fas fa-clock-rotate-left text-3xl md:text-4xl text-amber-400/90"></i>
+                    <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Pasado</span>
+                </span>
+                <span class="flex flex-col items-center gap-2" title="Pluscuamperfecto">
+                    <i class="fas fa-layer-group text-3xl md:text-4xl text-sky-400/90"></i>
+                    <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Pluscuamperfecto</span>
+                </span>
+                <span class="flex flex-col items-center gap-2" title="Práctica">
+                    <i class="fas fa-pen-to-square text-3xl md:text-4xl text-amber-300/90"></i>
+                    <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Práctica</span>
+                </span>
+                <span class="flex flex-col items-center gap-2" title="Gramática">
+                    <i class="fas fa-book-open text-3xl md:text-4xl text-emerald-400/90"></i>
+                    <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Gramática</span>
+                </span>
+            </div>
+            <p class="mt-10 px-6 py-3 rounded-lg bg-slate-800/60 border border-slate-600/50 text-sm text-slate-300 font-semibold uppercase tracking-widest">
+                Nivel Avanzado · Tiempos del Pasado
+            </p>
         </div>
     </div>
 </section>
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl md:text-4xl text-indigo-900 font-bold mb-4 flex items-center gap-3">
-            <span class="bg-indigo-100 p-2 rounded-lg"><i class="fas fa-folder-open text-indigo-600 text-2xl"></i></span>
-            Informe Policial
-        </h2>
-        <div class="mb-6 p-4 rounded-xl bg-indigo-50/90 border border-indigo-200">
-            <p class="text-base md:text-lg text-indigo-900 leading-relaxed">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-8 p-5 md:p-6 rounded-xl bg-indigo-50/90 border border-indigo-200">
+            <p class="text-lg md:text-xl text-indigo-900 leading-relaxed">
                 <i class="fas fa-info-circle text-indigo-500 mr-2"></i>
-                <strong>Instrucciones:</strong> Lee el informe. Las acciones que ocurrieron <em>antes</em> de otras en el pasado usan <strong>pluscuamperfecto</strong>.
+                <strong>Antes de empezar:</strong> Lee el informe policial siguiente. Fíjate en las acciones que ocurrieron <em>antes</em> de otras en el pasado; ahí aparece el <strong>pluscuamperfecto</strong>. Te ayudará a resolver los ejercicios.
             </p>
         </div>
+
+        <h2 class="text-5xl md:text-6xl text-indigo-900 font-bold mb-8 flex items-center gap-4">
+            <span class="bg-indigo-100 p-3 rounded-xl"><i class="fas fa-folder-open text-indigo-600 text-4xl"></i></span>
+            Informe Policial
+        </h2>
         
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Columna: Personajes -->
@@ -921,15 +939,18 @@
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl md:text-4xl text-slate-800 font-bold mb-3 flex items-center gap-3">
-            <i class="fas fa-puzzle-piece text-indigo-500"></i> Reconstruye la Escena
-        </h2>
-        <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200">
-            <p class="text-base md:text-lg text-amber-900 leading-relaxed">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-6 p-5 rounded-xl bg-amber-50 border border-amber-200">
+            <p class="text-xl text-amber-900 leading-relaxed">
                 <i class="fas fa-lightbulb text-amber-500 mr-2"></i>
-                <strong>Instrucciones:</strong> Completa el testimonio con el <strong>pluscuamperfecto</strong> de cada verbo (había + participio).
+                <strong>Tu tarea:</strong> Completa el testimonio de Bob con el <strong>pluscuamperfecto</strong> de cada verbo entre paréntesis. Recuerda: el pluscuamperfecto describe una acción que <em>ya había ocurrido</em> antes de otra en el pasado (había + participio).
             </p>
         </div>
+
+        <h2 class="text-4xl md:text-5xl text-slate-800 font-bold mb-6 flex items-center gap-3">
+            <i class="fas fa-puzzle-piece text-indigo-500"></i> Reconstruye la Escena
+        </h2>
+        <p class="text-xl text-slate-600 mb-8">Completa el testimonio de Bob usando el <strong>Pluscuamperfecto</strong> (lo que pasó antes).</p>
 
         <div id="testimony-reconstruye" class="glass-card bg-white p-8 md:p-10 leading-relaxed shadow-xl rounded-2xl relative border border-slate-100">
             <span class="text-8xl text-slate-100 absolute top-6 right-6 -z-10 font-serif">"</span>
@@ -1003,46 +1024,66 @@
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl md:text-4xl text-slate-800 font-bold mb-3 flex items-center gap-3">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-6 p-5 rounded-xl bg-slate-100 border border-slate-200">
+            <p class="text-xl text-slate-800 leading-relaxed">
+                <i class="fas fa-search text-indigo-500 mr-2"></i>
+                <strong>Objetivo:</strong> Lee el informe del inspector y localiza la frase que es <em>lógicamente imposible</em>. Una de las tres opciones contradice el sentido del tiempo (pasado vs. futuro). Piénsalo con calma antes de elegir.
+            </p>
+        </div>
+
+        <h2 class="text-4xl md:text-5xl text-slate-800 font-bold mb-3 flex items-center gap-3">
             <i class="fas fa-user-secret text-indigo-500"></i> El Error del Inspector
         </h2>
-        <div class="mb-4 p-4 rounded-xl bg-slate-100 border border-slate-200">
-            <p class="text-base text-slate-800 leading-relaxed">
-                <i class="fas fa-search text-indigo-500 mr-2"></i>
-                <strong>Objetivo:</strong> Lee el informe. Una frase es <em>lógicamente imposible</em>. Elige cuál.
-            </p>
-        </div>
+        <p class="text-xl text-slate-600 mb-8">El inspector cometió un error lógico en su informe. Encuéntralo.</p>
 
-        <!-- Texto como protagonista (arriba, ancho completo) -->
-        <div class="glass-card bg-amber-50/90 p-6 md:p-8 rounded-2xl border-2 border-amber-200 shadow-inner relative mb-8">
-            <div class="absolute top-4 right-4 flex items-center gap-2 text-amber-800/70 text-sm font-semibold">
-                <i class="fas fa-file-lines"></i> CONFIDENCIAL
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Informe -->
+            <div class="lg:col-span-6 glass-card bg-amber-50/90 p-6 md:p-8 rounded-2xl border-2 border-amber-200 shadow-inner relative">
+                <div class="absolute top-4 right-4 flex items-center gap-2 text-amber-800/70 text-base font-semibold">
+                    <i class="fas fa-file-lines"></i> CONFIDENCIAL
+                </div>
+                <p class="mb-3 text-lg text-slate-700"><strong>HORA:</strong> 10:00 PM</p>
+                <p class="mb-4 text-lg text-slate-700"><strong>REPORTE:</strong></p>
+                <p class="text-xl text-slate-700 leading-relaxed">
+                    "Llegamos a la escena del crimen. El sospechoso 
+                    <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">ya había escapado</span>.
+                    Encontramos un guante de lana en el suelo.
+                    Interrogamos a la testigo Ana. 
+                    Ana dijo que ella 
+                    <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">nunca había visto</span> 
+                    ese guante antes.
+                    Pero luego descubrimos que el guante era de Ana 
+                    y que ella lo 
+                    <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">había comprado</span>
+                    la semana siguiente."
+                </p>
             </div>
-            <p class="mb-2 text-slate-700"><strong>HORA:</strong> 10:00 PM · <strong>REPORTE:</strong></p>
-            <p class="text-lg md:text-xl text-slate-700 leading-relaxed">
-                "Llegamos a la escena del crimen. El sospechoso <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">ya había escapado</span>. Encontramos un guante de lana en el suelo. Interrogamos a la testigo Ana. Ana dijo que ella <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">nunca había visto</span> ese guante antes. Pero luego descubrimos que el guante era de Ana y que ella lo <span class="bg-amber-200/90 px-2 py-0.5 rounded font-medium">había comprado</span> la semana siguiente."
-            </p>
-        </div>
 
-        <!-- Preguntas debajo del texto -->
-        <p class="font-bold text-slate-800 text-xl mb-4">¿Qué frase es IMPOSIBLE?</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="inspector-options">
-            <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-4 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
-                <span class="block text-indigo-600 text-sm font-bold mb-1 group-hover:text-indigo-700">A</span>
-                <span class="text-lg text-slate-700">"El sospechoso ya había escapado"</span>
-            </button>
-            <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-4 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
-                <span class="block text-indigo-600 text-sm font-bold mb-1 group-hover:text-indigo-700">B</span>
-                <span class="text-lg text-slate-700">"Nunca había visto ese guante"</span>
-            </button>
-            <button type="button" data-correct="true" onclick="checkInspectorOption(this, true)" class="inspector-option w-full text-left p-4 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
-                <span class="block text-indigo-600 text-sm font-bold mb-1 group-hover:text-indigo-700">C</span>
-                <span class="text-lg text-slate-700">"Lo había comprado la semana siguiente"</span>
-            </button>
-            <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-4 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
-                <span class="block text-indigo-600 text-sm font-bold mb-1 group-hover:text-indigo-700">D</span>
-                <span class="text-lg text-slate-700">"Ana había estado en la oficina esa noche"</span>
-            </button>
+            <!-- Pregunta y opciones -->
+            <div class="lg:col-span-6 flex flex-col justify-center gap-5" id="inspector-options">
+                <p class="font-bold text-slate-800 text-2xl mb-2">¿Qué frase es IMPOSIBLE?</p>
+                
+                <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-5 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
+                    <span class="block text-indigo-600 text-base font-bold mb-2 group-hover:text-indigo-700">OPCIÓN A</span>
+                    <span class="text-xl text-slate-700">"El sospechoso ya había escapado"</span>
+                </button>
+
+                <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-5 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
+                    <span class="block text-indigo-600 text-base font-bold mb-2 group-hover:text-indigo-700">OPCIÓN B</span>
+                    <span class="text-xl text-slate-700">"Nunca había visto ese guante"</span>
+                </button>
+
+                <button type="button" data-correct="true" onclick="checkInspectorOption(this, true)" class="inspector-option w-full text-left p-5 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
+                    <span class="block text-indigo-600 text-base font-bold mb-2 group-hover:text-indigo-700">OPCIÓN C</span>
+                    <span class="text-xl text-slate-700">"Lo había comprado la semana siguiente"</span>
+                </button>
+
+                <button type="button" data-correct="false" onclick="checkInspectorOption(this, false)" class="inspector-option w-full text-left p-5 rounded-xl bg-white border-2 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 transition shadow-md group">
+                    <span class="block text-indigo-600 text-base font-bold mb-2 group-hover:text-indigo-700">OPCIÓN D</span>
+                    <span class="text-xl text-slate-700">"Ana había estado en la oficina esa noche"</span>
+                </button>
+            </div>
         </div>
         <script>
             function checkInspectorOption(btn, isCorrect) {
@@ -1070,45 +1111,65 @@
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl md:text-4xl text-indigo-900 font-bold mb-3 flex items-center justify-center gap-3">
-            <i class="fas fa-lightbulb text-amber-500"></i> La Verdad Sale a la Luz
-        </h2>
-        <div class="mb-6 p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-center max-w-2xl mx-auto">
-            <p class="text-base text-indigo-900 leading-relaxed">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-6 p-5 rounded-xl bg-indigo-50 border border-indigo-200">
+            <p class="text-xl text-indigo-900 leading-relaxed">
                 <i class="fas fa-video text-indigo-500 mr-2"></i>
-                <strong>Instrucciones:</strong> Compara lo que Bob dijo con la realidad. Clic en cada tarjeta verde para revelar la verdad (pluscuamperfecto).
+                <strong>Actividad:</strong> El inspector revisó las cámaras de seguridad y descubrió que la realidad no coincidía con lo que Bob había contado. A la izquierda verás la <strong>versión de Bob</strong>; a la derecha, haz clic en cada tarjeta para descubrir <strong>la verdad</strong>. Presta atención al <strong>pluscuamperfecto</strong> en las explicaciones (acciones que ya habían ocurrido antes).
             </p>
         </div>
 
+        <h2 class="text-4xl md:text-5xl text-indigo-900 font-bold mb-3 text-center flex items-center justify-center gap-3">
+            <i class="fas fa-lightbulb text-amber-500"></i> La Verdad Sale a la Luz
+        </h2>
+        <p class="text-center text-xl text-slate-600 mb-8">Compara lo que Bob dijo con lo que muestran las cámaras. Haz clic para revelar cada realidad.</p>
+
+        <!-- Encabezados de columnas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div class="text-center">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-800 font-bold text-lg">
+                    <i class="fas fa-user"></i> Versión de Bob
+                </span>
+            </div>
+            <div class="text-center">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-800 font-bold text-lg">
+                    <i class="fas fa-check-circle"></i> La Realidad (clic para ver)
+                </span>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-4">
-                <p class="text-center text-sm font-bold text-red-700 uppercase tracking-wider"><i class="fas fa-user mr-1"></i> Bob dijo</p>
-                <div class="glass-card bg-red-50/90 p-4 border-l-4 border-red-500 rounded-r-xl shadow-sm">
-                    <p class="text-sm font-bold text-red-700 mb-1">1</p>
-                    <p class="text-base text-slate-800">"Un ladrón <strong>me golpeó</strong> en la cabeza."</p>
+            <!-- Columna: Versión de Bob -->
+            <div class="space-y-5">
+                <div class="glass-card bg-red-50/90 p-5 md:p-6 border-l-4 border-red-500 rounded-r-xl shadow-sm">
+                    <p class="text-sm font-bold text-red-700 uppercase tracking-wider mb-2">Pista 1</p>
+                    <p class="text-lg text-slate-800">"Un ladrón entró y <strong>me golpeó</strong> en la cabeza. Yo no pude hacer nada."</p>
                 </div>
-                <div class="glass-card bg-red-50/90 p-4 border-l-4 border-red-500 rounded-r-xl shadow-sm">
-                    <p class="text-sm font-bold text-red-700 mb-1">2</p>
-                    <p class="text-base text-slate-800">"Alguien <strong>robó el USB</strong>; faltaba del escritorio."</p>
+                <div class="glass-card bg-red-50/90 p-5 md:p-6 border-l-4 border-red-500 rounded-r-xl shadow-sm">
+                    <p class="text-sm font-bold text-red-700 uppercase tracking-wider mb-2">Pista 2</p>
+                    <p class="text-lg text-slate-800">"Alguien había entrado en la sala de sistemas y <strong>robó el USB</strong> con la contabilidad. Faltaba del escritorio."</p>
                 </div>
-                <div class="glass-card bg-red-50/90 p-4 border-l-4 border-red-500 rounded-r-xl shadow-sm">
-                    <p class="text-sm font-bold text-red-700 mb-1">3</p>
-                    <p class="text-base text-slate-800">"El que me atacó <strong>era un gigante</strong>."</p>
+                <div class="glass-card bg-red-50/90 p-5 md:p-6 border-l-4 border-red-500 rounded-r-xl shadow-sm">
+                    <p class="text-sm font-bold text-red-700 uppercase tracking-wider mb-2">Pista 3</p>
+                    <p class="text-lg text-slate-800">"El que me atacó <strong>era un gigante</strong>, por eso no pude defenderme. Lo vi claramente."</p>
                 </div>
             </div>
-            <div class="space-y-4">
-                <p class="text-center text-sm font-bold text-green-700 uppercase tracking-wider"><i class="fas fa-check-circle mr-1"></i> La realidad (clic)</p>
-                <button onclick="revealTruth(this, 'Bob <strong>se había resbalado</strong> con una cáscara de banano. No hubo ladrón.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-4 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
-                    <p class="text-sm font-bold text-green-700 mb-1">1 · Clic</p>
-                    <p class="text-sm text-slate-500 italic group-hover:text-slate-600">¿El golpe?</p>
+
+            <!-- Columna: La Realidad (interactivo) -->
+            <div class="space-y-5">
+                <button onclick="revealTruth(this, 'Las cámaras mostraron que Bob <strong>se había resbalado</strong> con una cáscara de banano que alguien había dejado en el suelo. El golpe fue contra el suelo; no hubo ningún ladrón.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-5 md:p-6 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
+                    <p class="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Pista 1 · Clic para revelar</p>
+                    <p class="text-base text-slate-500 italic group-hover:text-slate-600">¿Qué había pasado realmente con el golpe en la cabeza?</p>
                 </button>
-                <button onclick="revealTruth(this, 'La señora de limpieza <strong>había guardado</strong> el USB en un cajón. Nadie lo robó.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-4 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
-                    <p class="text-sm font-bold text-green-700 mb-1">2 · Clic</p>
-                    <p class="text-sm text-slate-500 italic group-hover:text-slate-600">¿El USB?</p>
+
+                <button onclick="revealTruth(this, 'La señora de la limpieza <strong>había guardado</strong> el USB en un cajón para que no estuviera encima del escritorio. Nadie lo había robado; Bob no lo había buscado bien.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-5 md:p-6 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
+                    <p class="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Pista 2 · Clic para revelar</p>
+                    <p class="text-base text-slate-500 italic group-hover:text-slate-600">¿Qué había pasado con el USB?</p>
                 </button>
-                <button onclick="revealTruth(this, 'Bob <strong>había visto</strong> su sombra en la pared. No había gigante.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-4 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
-                    <p class="text-sm font-bold text-green-700 mb-1">3 · Clic</p>
-                    <p class="text-sm text-slate-500 italic group-hover:text-slate-600">¿El gigante?</p>
+
+                <button onclick="revealTruth(this, 'Bob <strong>había visto</strong> su propia sombra proyectada en la pared y se asustó. No había ningún gigante ni ningún atacante; era solo la luz y su imaginación.')" class="w-full glass-card bg-white hover:bg-green-50/80 p-5 md:p-6 text-left border-l-4 border-green-500 rounded-r-xl shadow-sm transition-all group">
+                    <p class="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Pista 3 · Clic para revelar</p>
+                    <p class="text-base text-slate-500 italic group-hover:text-slate-600">¿Quién era el gigante?</p>
                 </button>
             </div>
         </div>
@@ -1128,15 +1189,18 @@
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl md:text-4xl text-slate-800 font-bold mb-3 flex items-center justify-center gap-3">
-            <i class="fas fa-comment-dots text-indigo-500"></i> La Confesión Final
-        </h2>
-        <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-center max-w-2xl mx-auto">
-            <p class="text-base text-amber-900 leading-relaxed">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-6 p-5 rounded-xl bg-amber-50 border border-amber-200">
+            <p class="text-xl text-amber-900 leading-relaxed">
                 <i class="fas fa-sort-alpha-down text-amber-600 mr-2"></i>
-                <strong>Instrucciones:</strong> Clic en las palabras en el orden correcto para formar cada frase (pluscuamperfecto). Si te equivocas, usa «Reiniciar».
+                <strong>Actividad:</strong> Bob intenta disculparse después del lío del caso. En cada bloque, haz <strong>clic sobre las palabras en el orden correcto</strong> para formar una frase. Todas usan el <strong>pluscuamperfecto</strong>. Si te equivocas, usa «Reiniciar» y vuelve a intentarlo.
             </p>
         </div>
+
+        <h2 class="text-4xl md:text-5xl text-slate-800 font-bold mb-3 text-center flex items-center justify-center gap-3">
+            <i class="fas fa-comment-dots text-indigo-500"></i> La Confesión Final
+        </h2>
+        <p class="text-center text-xl text-slate-600 mb-8">Ordena las palabras para leer los mensajes de Bob. Tres frases, tres ejercicios.</p>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Ejercicio 1 -->
@@ -1153,7 +1217,6 @@
                 </div>
                 <div id="solution-area-1" class="border-b-2 border-slate-500 pb-3 mb-3 min-h-[52px] flex flex-wrap items-center justify-center gap-2 text-lg text-amber-300 font-mono">
                 </div>
-                <div id="confession-feedback-1" class="hidden mt-2 text-sm font-semibold"></div>
                 <button type="button" onclick="resetScramble(1)" class="text-slate-400 hover:text-white text-sm font-medium underline">Reiniciar</button>
             </div>
 
@@ -1171,7 +1234,6 @@
                 </div>
                 <div id="solution-area-2" class="border-b-2 border-slate-500 pb-3 mb-3 min-h-[52px] flex flex-wrap items-center justify-center gap-2 text-lg text-amber-300 font-mono">
                 </div>
-                <div id="confession-feedback-2" class="hidden mt-2 text-sm font-semibold"></div>
                 <button type="button" onclick="resetScramble(2)" class="text-slate-400 hover:text-white text-sm font-medium underline">Reiniciar</button>
             </div>
 
@@ -1189,7 +1251,6 @@
                 </div>
                 <div id="solution-area-3" class="border-b-2 border-slate-500 pb-3 mb-3 min-h-[52px] flex flex-wrap items-center justify-center gap-2 text-lg text-amber-300 font-mono">
                 </div>
-                <div id="confession-feedback-3" class="hidden mt-2 text-sm font-semibold"></div>
                 <button type="button" onclick="resetScramble(3)" class="text-slate-400 hover:text-white text-sm font-medium underline">Reiniciar</button>
             </div>
         </div>
@@ -1208,20 +1269,11 @@
                 var total = 6;
                 if (solution.children.length >= total) {
                     window.confessionCompleted[num] = true;
-                    if (typeof confetti === 'function') {
-                        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 }, colors: ['#22c55e', '#16a34a', '#facc15'], zIndex: 9999 });
-                        setTimeout(function() {
-                            confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0.3 }, colors: ['#22c55e', '#facc15'], zIndex: 9999 });
-                            confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 0.7 }, colors: ['#22c55e', '#facc15'], zIndex: 9999 });
-                        }, 120);
-                    }
-                    var msg = num === 1 ? '¡Correcto! «Mentí porque me había dado vergüenza».' : (num === 2 ? '¡Correcto! «Bob había cerrado la puerta antes».' : '¡Correcto! «La señora había guardado el USB».');
-                    var feedbackBox = document.getElementById('confession-feedback-' + num);
-                    if (feedbackBox) {
-                        feedbackBox.textContent = msg;
-                        feedbackBox.classList.remove('hidden');
-                        feedbackBox.classList.add('text-green-700');
-                    }
+                    setTimeout(function() {
+                        if (num === 1) alert('¡Correcto! «Mentí porque me había dado vergüenza».');
+                        else if (num === 2) alert('¡Correcto! «Bob había cerrado la puerta antes».');
+                        else alert('¡Correcto! «La señora había guardado el USB».');
+                    }, 200);
                     var block = document.getElementById('confession-solution-block');
                     if (block && window.confessionCompleted[1] && window.confessionCompleted[2] && window.confessionCompleted[3]) {
                         block.classList.remove('hidden');
@@ -1234,8 +1286,6 @@
                 var area = document.getElementById('scramble-area-' + num);
                 var words = solution.querySelectorAll('.scramble-word');
                 words.forEach(function(w) { area.appendChild(w); });
-                var fb = document.getElementById('confession-feedback-' + num);
-                if (fb) { fb.classList.add('hidden'); fb.textContent = ''; }
             }
         </script>
     </div>
@@ -1243,36 +1293,57 @@
 
 <section>
     <div class="slide-container">
-        <h2 class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 font-black mb-2 flex items-center justify-center gap-3">
-            <i class="fas fa-briefcase text-amber-600"></i> Misión Top Secret
-        </h2>
-        <p class="text-center text-slate-600 mb-4 font-bold text-lg">TAREA PARA LA CASA</p>
-        <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 max-w-2xl mx-auto">
-            <p class="text-base text-amber-900 leading-relaxed">
+        <!-- Introducción para el estudiante -->
+        <div class="mb-6 p-5 rounded-xl bg-amber-50 border border-amber-200">
+            <p class="text-xl text-amber-900 leading-relaxed">
                 <i class="fas fa-briefcase text-amber-600 mr-2"></i>
-                <strong>Consigna:</strong> Escribe un email defendiéndote con <strong>pluscuamperfecto</strong>. Mín. 3 frases; usa <em>cuando, ya, todavía no</em>.
+                <strong>Última misión:</strong> Esta es tu tarea para casa. Tendrás que escribir un email usando el <strong>pluscuamperfecto</strong> para defenderte de una acusación divertida. Lee bien la consigna y los requisitos; el ejemplo te da una idea de cómo empezar.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <div class="glass-card bg-slate-900 text-white p-6 rounded-xl shadow-2xl">
-                <h3 class="text-xl font-bold text-yellow-400 mb-3 flex items-center gap-2">
+        <h2 class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 font-black mb-2 text-center flex items-center justify-center gap-3">
+            <i class="fas fa-briefcase text-amber-600"></i> Misión Top Secret
+        </h2>
+        <p class="text-center text-slate-600 mb-8 font-bold text-xl">TAREA PARA LA CASA</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <div class="glass-card bg-slate-900 text-white p-8 rounded-xl shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
                     <span>📂</span> Operación: Coartada
                 </h3>
-                <p class="text-slate-300 text-base mb-4">
-                    Te acusan de comerte el almuerzo del profesor. Escribe un <strong>email</strong> explicando qué <strong>ya habías hecho</strong> antes de las 12:00 para probar tu inocencia.
+                <p class="leading-relaxed text-slate-300 mb-6">
+                    Alguien se comió el almuerzo de tu profesor. ¡Tú eres el principal sospechoso! 😱
+                    <br><br>
+                    Debes escribir un <strong>email</strong> defendiéndote. Explica qué <strong>ya habías hecho</strong> antes de la hora del crimen (12:00 PM) para probar tu inocencia.
                 </p>
-                <ul class="text-sm text-green-400 space-y-1">
-                    <li>· Mín. 3 frases con pluscuamperfecto</li>
-                    <li>· Conectores: <em>cuando, ya, todavía no</em></li>
-                </ul>
+                <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                    <p class="text-sm text-slate-400 font-mono">REQUISITOS:</p>
+                    <ul class="list-disc list-inside text-sm text-green-400 mt-2 space-y-1">
+                        <li>Mínimo 3 frases con <u>Pluscuamperfecto</u>.</li>
+                        <li>Usa conectores: <em>Cuando, ya, todavía no</em>.</li>
+                        <li>¡Sé creativo y divertido!</li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="glass-card bg-white p-5 rounded-xl border border-slate-200">
-                <p class="text-xs font-bold text-slate-500 mb-2">Ejemplo (De: Estudiante → Para: Inspector)</p>
+            <div class="glass-card bg-white p-6 rotate-[-1deg] hover:rotate-0 transition-transform duration-500">
+                <div class="flex items-center gap-3 mb-4 border-b pb-2">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center">👤</div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500">De: Estudiante Inocente</p>
+                        <p class="text-xs text-slate-400">Para: El Inspector</p>
+                    </div>
+                </div>
                 <p class="text-slate-600 text-sm italic leading-relaxed">
-                    "A las 12:00 yo ya <strong>había salido</strong> de la escuela. Mi mamá ya me <strong>había preparado</strong> la comida, así que no tenía hambre."
+                    "Señor Inspector, es imposible que yo comiera ese sándwich. 
+                    A las 12:00, yo ya <strong>había salido</strong> de la escuela. 
+                    Además, mi mamá ya me <strong>había preparado</strong> una pasta deliciosa, 
+                    así que no tenía hambre..."
                 </p>
+                <div class="mt-4 text-center">
+                    <span class="text-4xl">🍝😋🏃‍♂️</span>
+                </div>
             </div>
 
         </div>

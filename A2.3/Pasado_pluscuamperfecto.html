@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Tucaneo A2.3: Pluscuamperfecto (Past Perfect)</title>
+    <title>Tucaneo A2: Fundamentos Numéricos (Tropical)</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
@@ -27,14 +27,11 @@
             --primary: #004d40;
             --accent: #ff6f00;
             --text-main: #0f172a;
+            /* Texto casi negro para máximo contraste */
             --text-secondary: #334155;
-            --bg-light: #f8fafc;
+            /* Gris oscuro (antes era muy claro) */
+            --bg-light: #fefce8;
             --danger: #ef4444;
-            /* Paleta expandida para variedad visual */
-            --gold: #f59e0b;
-            --purple: #7c3aed;
-            --cyan: #06b6d4;
-            --rose: #e11d48;
         }
 
         /* Mantenemos la magia del Zoom Nativo */
@@ -795,36 +792,54 @@
             color: #dc2626;
         }
 
-        /* Select elements - touch-friendly, always usable */
-        .gran-desastre-select, select.clean-input {
-            pointer-events: auto !important;
-            touch-action: manipulation;
-            min-height: 44px;
-            font-size: 1.1rem !important;
-            cursor: pointer;
+        /* Coartada: caja de respuesta amplia para escribir (había + participio) */
+        .coartada-answer-box {
+            display: block;
+            width: 100%;
+            min-width: 200px;
+            min-height: 48px;
+            padding: 10px 14px;
+            margin-top: 8px;
+            font-size: 1.1rem;
+            border: 2px dashed #10b981;
+            border-radius: 10px;
+            background: #f0fdf4;
+            color: #065f46;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .coartada-answer-box::placeholder {
+            color: #6ee7b7;
+            font-weight: 500;
+        }
+        .coartada-answer-box:focus {
+            border-style: solid;
+            border-color: #059669;
+            background: #d1fae5;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+        }
+        .coartada-answer-box.correct {
+            border: 2px solid #10b981;
+            background: #d1fae5;
+            color: #047857;
+        }
+        .coartada-answer-box.incorrect {
+            border: 2px solid #ef4444;
+            background: #fee2e2;
+            color: #dc2626;
         }
 
-        /* ===== PALETA DE SECCIONES - Colores variados ===== */
-        .section-timeline { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #fef3c7 100%); }
-        .section-formula { background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%); }
-        .section-irregulares { background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%); }
-        .section-game { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); }
-        .section-millionaire { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%); min-height: 100vh; }
-        .section-millionaire .text-slate-600 { color: #e2e8f0 !important; }
-        .section-millionaire .text-slate-700 { color: #f1f5f9 !important; }
-        .millionaire-card { background: linear-gradient(145deg, #4f46e5 0%, #6366f1 100%); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4); }
-        .millionaire-option { transition: all 0.3s ease; border: 3px solid transparent; }
-        .millionaire-option:hover { transform: scale(1.02); border-color: #fbbf24; box-shadow: 0 10px 25px -5px rgba(251,191,36,0.3); }
-        .millionaire-option.correct { background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important; border-color: #34d399 !important; color: white !important; }
-        .millionaire-option.wrong { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important; border-color: #f87171 !important; color: white !important; animation: shake 0.5s; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
-        .trophy-win { animation: trophy-bounce 0.6s ease; }
-        @keyframes trophy-bounce { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
-        .section-timeline .slide-container, .section-formula .slide-container { padding: 2rem; }
-        .card-gradient-1 { background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%); border: 2px solid #86efac; box-shadow: 0 10px 40px -10px rgba(34,197,94,0.3); }
-        .card-gradient-2 { background: linear-gradient(145deg, #ffffff 0%, #fff7ed 100%); border: 2px solid #fdba74; box-shadow: 0 10px 40px -10px rgba(249,115,22,0.3); }
-        .card-gradient-3 { background: linear-gradient(145deg, #ffffff 0%, #faf5ff 100%); border: 2px solid #c4b5fd; box-shadow: 0 10px 40px -10px rgba(139,92,246,0.3); }
-        .bg-clip-text { -webkit-background-clip: text; background-clip: text; }
+        /* Trivia Millonario */
+        .millonario-pantalla { display: none; min-height: 320px; }
+        .millonario-pantalla.activa { display: block; }
+        .millonario-opcion { transition: transform 0.2s, box-shadow 0.2s; }
+        .millonario-opcion:hover:not(.disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .millonario-opcion.disabled { pointer-events: none; opacity: 0.85; }
+        .millonario-opcion.correcta { background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important; border-color: #059669 !important; color: #065f46 !important; }
+        .millonario-opcion.incorrecta { background: linear-gradient(135deg, #fee2e2, #fecaca) !important; border-color: #dc2626 !important; color: #991b1b !important; }
+        #millonario-trofeo { animation: trofeo-float 0.6s ease-out; }
+        @keyframes trofeo-float { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 
 
@@ -904,284 +919,395 @@
 
 
            <section class="portada-pluscuamperfecto">
-    <div class="slide-container h-full flex flex-col justify-center items-center text-center relative overflow-hidden rounded-3xl">
-        <div class="absolute inset-0 z-0">
+    <div class="slide-container h-full flex flex-col justify-center items-center text-center relative">
+        <!-- Imagen de fondo con overlay para dinamismo -->
+        <div class="absolute inset-0 z-0 overflow-hidden rounded-2xl">
             <img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?w=1200" alt="Tiempo" 
-                 class="w-full h-full object-cover opacity-20 scale-110 portada-bg-img">
-            <div class="absolute inset-0 bg-gradient-to-br from-teal-900 via-emerald-800 to-amber-900"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.3)_0%,_transparent_50%)]"></div>
+                 class="w-full h-full object-cover opacity-25 scale-105 portada-bg-img">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-teal-800/85 to-orange-900/80"></div>
         </div>
+        <!-- Imagen destacada central (reloj/pasado) -->
         <div class="relative z-10 flex flex-col items-center w-full max-w-4xl">
-            <div class="w-24 h-24 rounded-2xl bg-amber-400/20 border-2 border-amber-400 flex items-center justify-center mb-6">
-                <i class="fas fa-clock text-5xl text-amber-300" aria-hidden="true"></i>
-            </div>
-            <div class="glass-card p-10 bg-white/95 backdrop-blur-xl shadow-2xl border-2 border-amber-200/50 rounded-3xl">
-                <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-r from-emerald-800 to-teal-700 bg-clip-text text-transparent mb-4 tracking-tight">
+            <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400" alt="El pasado del pasado" 
+                 class="w-48 h-48 md:w-56 md:h-56 object-cover rounded-full border-4 border-white shadow-2xl mb-6 portada-hero-img">
+            <div class="glass-card p-10 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-white/50">
+                <h1 class="text-5xl md:text-7xl font-black text-emerald-900 mb-6 tracking-tight" style="min-height: 1.2em;">
+                    <span class="block text-3xl md:text-4xl text-orange-500 font-handlee mb-2">Misión Secreta:</span>
                     El Pluscuamperfecto
                 </h1>
-                <p class="text-2xl md:text-3xl text-slate-700 font-semibold">
-                    <span class="text-amber-600 font-bold">Past Perfect</span> = An action <em>before</em> another past action
+                <p class="text-2xl md:text-3xl text-slate-700 mb-8 font-semibold">
+                    O... "El Pasado del Pasado" <i class="fas fa-search text-emerald-600" aria-hidden="true"></i> <i class="fas fa-clock text-slate-500" aria-hidden="true"></i>
+                </p>
+                <div class="flex justify-center gap-6 text-5xl md:text-6xl animate-bounce">
+                    <i class="fas fa-hourglass text-amber-500" aria-hidden="true"></i>
+                    <i class="fas fa-arrow-left text-slate-500" aria-hidden="true"></i>
+                    <i class="fas fa-clock text-emerald-600" aria-hidden="true"></i>
+                </div>
+                <p class="mt-8 text-xl md:text-2xl text-slate-600 font-bold uppercase tracking-widest">
+                    Nivel B1 - Módulo de Tiempo
                 </p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- SLIDE 1: Timeline -->
-<section class="escena-crimen section-timeline rounded-2xl overflow-hidden">
+<section class="escena-crimen">
     <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-            <i class="fas fa-clock text-teal-600 mr-2" aria-hidden="true"></i> Timeline: Two Past Events
+        <h2 class="text-4xl text-emerald-800 font-bold mb-4 text-center">
+            <i class="fas fa-search text-emerald-600 mr-2" aria-hidden="true"></i> La Escena del Crimen
         </h2>
-        <p class="text-xl text-slate-600 mb-6 text-center">Which happened <strong>first</strong>? / ¿Cuál pasó primero?</p>
-        
-        <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-8">
-            <div class="card-gradient-2 p-6 flex-1 max-w-sm text-center rounded-2xl">
-                <div class="w-16 h-16 rounded-full bg-orange-400/30 flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-pizza-slice text-3xl text-orange-600" aria-hidden="true"></i>
-                </div>
-                <h3 class="text-2xl font-black text-orange-700">20:00</h3>
-                <p class="text-xl text-slate-700 font-medium">La pizza llegó. / Pizza arrived.</p>
-            </div>
-            <div class="flex items-center gap-1">
-                <span class="w-8 h-1 bg-teal-400 rounded"></span>
-                <i class="fas fa-arrow-right text-2xl text-teal-500" aria-hidden="true"></i>
-                <span class="w-8 h-1 bg-teal-400 rounded"></span>
-            </div>
-            <div class="card-gradient-1 p-6 flex-1 max-w-sm text-center rounded-2xl">
-                <div class="w-16 h-16 rounded-full bg-emerald-400/30 flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-person-running text-3xl text-emerald-700" aria-hidden="true"></i>
-                </div>
-                <h3 class="text-2xl font-black text-emerald-700">20:30</h3>
-                <p class="text-xl text-slate-700 font-medium">Yo llegué. / I arrived.</p>
-            </div>
-        </div>
 
-        <div class="bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-2xl text-center border border-slate-200">
-            <p class="text-xl text-slate-700 font-semibold"><strong>Order:</strong> 1º Pizza (20:00) → 2º Tú (20:30)</p>
-        </div>
-    </div>
-</section>
-
-<!-- SLIDE 2: How to say it -->
-<section class="escena-crimen-2 section-timeline rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
-            How to say it / Cómo decirlo
-        </h2>
-        <div class="card-gradient-2 p-8 rounded-2xl max-w-2xl mx-auto border-l-[6px] border-orange-500 shadow-xl">
-            <p class="text-2xl md:text-3xl text-slate-800 text-center font-bold mb-4 leading-relaxed">
-                "Cuando yo llegué (20:30), la pizza <strong class="text-orange-600">ya había llegado</strong> (20:00)."
-            </p>
-            <p class="text-xl text-slate-700 text-center font-medium">
-                <span class="text-emerald-600 font-bold">Past Perfect</span> = The pizza arrived <em>before</em> I arrived.
+        <div class="glass-card bg-slate-50/90 p-6 mb-6 border-l-4 border-emerald-500">
+            <p class="text-xl md:text-2xl text-slate-700 leading-relaxed">
+                <strong>Introducción:</strong> Para entender el pluscuamperfecto necesitamos ver <em>dos momentos en el pasado</em> y saber cuál ocurrió antes. En esta escena verás dos eventos con sus horas; tu misión es descubrir qué pasó primero y cómo se relacionan.
             </p>
         </div>
-    </div>
-</section>
-
-<!-- SLIDE 1: Formula only -->
-<section class="formula-magica section-formula rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-center font-bold mb-2 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent"><i class="fas fa-flask text-cyan-500 mr-2" aria-hidden="true"></i> The Formula</h2>
-        <p class="text-center text-lg text-slate-600 mb-6">haber (imperfect) + past participle</p>
         
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-xl md:text-2xl font-bold mb-8">
-            <div class="px-8 py-5 bg-gradient-to-br from-emerald-400 to-emerald-600 text-white rounded-2xl shadow-xl border-2 border-emerald-300">
-                había / habías / había / habíamos / habíais / habían
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            <div class="glass-card bg-white p-6 flex flex-col">
+                <div class="text-center mb-4">
+                    <i class="fas fa-pizza-slice text-5xl text-orange-500" aria-hidden="true"></i>
+                </div>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-slate-700 mb-3">20:00</h3>
+                    <p class="text-xl text-slate-600">Llegó la pizza.</p>
+                    <p class="text-xl text-slate-500 mt-2 italic">Primer evento en la línea de tiempo.</p>
+                </div>
             </div>
-            <span class="text-4xl font-black text-cyan-500" aria-hidden="true">+</span>
-            <div class="px-8 py-5 bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-2xl shadow-xl border-2 border-blue-300">
-                comido · llegado · hecho · visto...
+
+            <div class="glass-card bg-white p-6 flex flex-col fragment">
+                <div class="text-center mb-4">
+                    <i class="fas fa-person-running text-5xl text-emerald-600" aria-hidden="true"></i>
+                </div>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-slate-700 mb-3">20:30</h3>
+                    <p class="text-xl text-slate-600">Yo llegué a la fiesta.</p>
+                    <p class="text-xl text-slate-500 mt-2 italic">Segundo evento: tu llegada.</p>
+                </div>
             </div>
         </div>
 
-        <p class="text-center text-xl text-slate-700 font-semibold"><strong>Examples:</strong> Yo había comido. / Ellos habían llegado.</p>
-    </div>
-</section>
-
-<!-- SLIDE 2: Full conjugation -->
-<section class="formula-magica-2 section-formula rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-center font-bold mb-4 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Conjugation: <em>haber</em> (imperfect)</h2>
-        <div class="overflow-x-auto rounded-2xl border-2 border-cyan-200 shadow-xl max-w-xl mx-auto overflow-hidden">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
-                        <th class="px-4 py-3 text-xl font-bold">Subject</th>
-                        <th class="px-4 py-3 text-xl font-bold">Form</th>
-                    </tr>
-                </thead>
-                <tbody class="text-xl text-slate-700">
-                    <tr class="bg-slate-50/80 border-b border-slate-200 hover:bg-emerald-50"><td class="px-4 py-3">Yo</td><td class="px-4 py-3 font-bold text-emerald-700">había</td></tr>
-                    <tr class="bg-white border-b border-slate-200 hover:bg-emerald-50"><td class="px-4 py-3">Tú</td><td class="px-4 py-3 font-bold text-emerald-700">habías</td></tr>
-                    <tr class="bg-slate-50/80 border-b border-slate-200 hover:bg-emerald-50"><td class="px-4 py-3">Él / Ella</td><td class="px-4 py-3 font-bold text-emerald-700">había</td></tr>
-                    <tr class="bg-white border-b border-slate-200 hover:bg-emerald-50"><td class="px-4 py-3">Nosotros</td><td class="px-4 py-3 font-bold text-emerald-700">habíamos</td></tr>
-                    <tr class="bg-slate-50/80 border-b border-slate-200 hover:bg-emerald-50"><td class="px-4 py-3">Vosotros</td><td class="px-4 py-3 font-bold text-emerald-700">habíais</td></tr>
-                    <tr class="bg-white hover:bg-emerald-50"><td class="px-4 py-3">Ellos</td><td class="px-4 py-3 font-bold text-emerald-700">habían</td></tr>
-                </tbody>
-            </table>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                <p class="text-xl text-emerald-800 font-semibold mb-2"><i class="fas fa-clock mr-2 text-emerald-600" aria-hidden="true"></i> Orden real:</p>
+                <p class="text-xl text-slate-700">1. Pizza (20:00) → 2. Tú llegas (20:30)</p>
+            </div>
+            <div class="bg-orange-50 p-4 rounded-xl border border-orange-200">
+                <p class="text-xl text-orange-800 font-semibold mb-2"><i class="fas fa-quote-left mr-2 text-orange-600" aria-hidden="true"></i> Cómo decirlo:</p>
+                <p class="text-xl text-slate-700">"La pizza <strong>ya había llegado</strong> cuando yo llegué."</p>
+            </div>
         </div>
-        <p class="text-center text-lg text-amber-700 font-semibold mt-4 bg-amber-50 px-4 py-2 rounded-xl inline-block">Participio never changes: comido, jugado, hecho, visto, escrito...</p>
+
+        <div class="mt-8 p-6 bg-orange-100 rounded-xl border-l-8 border-orange-500 shadow-lg fragment">
+            <p class="text-2xl text-orange-900 font-handlee text-center mb-4">
+                "Cuando yo llegué (20:30), la pizza <strong>ya había llegado</strong> (20:00)."
+            </p>
+            <p class="text-center text-xl text-orange-800 mt-2 font-bold uppercase">
+                ¡Esto es el Pluscuamperfecto! Una acción antes de otra acción pasada.
+            </p>
+            <p class="text-center text-xl text-orange-700 mt-3 font-medium">
+                La acción de la pizza (llegar) ocurrió <em>antes</em> del momento en que tú llegaste; por eso usamos <strong>había llegado</strong>.
+            </p>
+        </div>
     </div>
 </section>
 
-<section class="sospechosos-irregulares section-irregulares rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-rose-600 to-red-600 bg-clip-text text-transparent"><i class="fas fa-triangle-exclamation text-rose-500 mr-2" aria-hidden="true"></i> Irregular Participles</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Memorize these — they don't follow -ado/-ido</p>
+<section class="formula-magica">
+    <div class="slide-container flex flex-col justify-center">
+        <h2 class="text-center text-emerald-800 mb-6"><i class="fas fa-flask text-emerald-600 mr-2" aria-hidden="true"></i> La Fórmula Mágica</h2>
 
-        <div class="glass-card bg-white/95 p-4 md:p-6 overflow-x-auto rounded-2xl shadow-xl border-2 border-rose-100">
-            <p class="text-xl font-semibold text-slate-700 mb-3"><i class="fas fa-table text-red-500 mr-2" aria-hidden="true"></i> Verbos con participio irregular (frecuentes)</p>
-            <div class="rounded-xl border-2 border-slate-200 shadow-sm overflow-hidden">
-                <table class="w-full text-left border-collapse min-w-[640px]">
+        <div class="glass-card bg-emerald-50/80 p-5 mb-8 border-l-4 border-emerald-500 rounded-r-xl max-w-4xl mx-auto">
+            <p class="text-xl md:text-2xl text-slate-700 leading-relaxed">
+                <strong>Introducción:</strong> El pluscuamperfecto se forma siempre con <strong>dos piezas</strong>: el verbo <em>haber</em> en imperfecto y el participio del verbo que quieras usar.
+            </p>
+        </div>
+
+        <p class="text-center text-xl md:text-2xl text-slate-600 mb-6 font-medium">La estructura en una sola frase:</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-8">
+            <div class="px-8 py-5 bg-emerald-100 rounded-2xl text-emerald-800 border-2 border-emerald-300 shadow-md text-2xl md:text-3xl font-bold text-center min-w-[200px]">
+                HABER<br><span class="text-lg font-semibold text-emerald-600">(Imperfecto)</span>
+            </div>
+            <span class="text-4xl text-slate-400 font-light" aria-hidden="true">+</span>
+            <div class="px-8 py-5 bg-sky-100 rounded-2xl text-sky-800 border-2 border-sky-300 shadow-md text-2xl md:text-3xl font-bold text-center min-w-[200px]">
+                PARTICIPIO
+            </div>
+        </div>
+        <p class="text-center text-lg text-slate-500 mt-6 max-w-xl mx-auto">Ejemplo: <em>había</em> + <em>comido</em> → <strong>había comido</strong></p>
+    </div>
+</section>
+
+<section class="conjugacion-haber">
+    <div class="slide-container">
+        <h2 class="text-center text-emerald-800 mb-4"><i class="fas fa-table-cells text-emerald-600 mr-2" aria-hidden="true"></i> Conjugación de <em>haber</em> en imperfecto</h2>
+
+        <div class="glass-card bg-white p-6 md:p-8 max-w-3xl mx-auto">
+            <p class="text-xl text-slate-600 mb-6 text-center">Para formar el pluscuamperfecto, primero conjugamos <strong>haber</strong> en imperfecto según la persona:</p>
+            <div class="overflow-x-auto rounded-xl border-2 border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gradient-to-r from-rose-600 to-red-600 text-white">
-                            <th class="px-4 py-3 text-xl font-bold text-center w-20">Icono</th>
-                            <th class="px-4 py-3 text-xl font-bold">Verbo (infinitivo)</th>
-                            <th class="px-4 py-3 text-xl font-bold">Participio</th>
-                            <th class="px-4 py-3 text-xl font-bold">Ejemplo con pluscuamperfecto</th>
+                        <tr class="bg-emerald-700 text-white">
+                            <th class="px-5 py-4 text-xl font-bold">Persona</th>
+                            <th class="px-5 py-4 text-xl font-bold">Haber (Imperfecto)</th>
                         </tr>
                     </thead>
                     <tbody class="text-xl text-slate-700">
+                        <tr class="bg-slate-50 border-b border-slate-200"><td class="px-5 py-3 font-medium">Yo</td><td class="px-5 py-3"><strong>había</strong></td></tr>
+                        <tr class="bg-white border-b border-slate-200"><td class="px-5 py-3 font-medium">Tú</td><td class="px-5 py-3"><strong>habías</strong></td></tr>
+                        <tr class="bg-slate-50 border-b border-slate-200"><td class="px-5 py-3 font-medium">Él / Ella / Usted</td><td class="px-5 py-3"><strong>había</strong></td></tr>
+                        <tr class="bg-white border-b border-slate-200"><td class="px-5 py-3 font-medium">Nosotros/as</td><td class="px-5 py-3"><strong>habíamos</strong></td></tr>
+                        <tr class="bg-slate-50 border-b border-slate-200"><td class="px-5 py-3 font-medium">Vosotros/as</td><td class="px-5 py-3"><strong>habíais</strong></td></tr>
+                        <tr class="bg-white border-b border-slate-200"><td class="px-5 py-3 font-medium">Ellos / Ellas / Ustedes</td><td class="px-5 py-3"><strong>habían</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-5 p-4 bg-amber-50 rounded-xl border-l-4 border-amber-400">
+                <p class="text-xl text-amber-800 font-bold"><i class="fas fa-spell-check text-amber-600 mr-2" aria-hidden="true"></i> ¡Siempre lleva tilde en la <strong>-í-</strong>! (había, habías, habíamos, habíais, habían)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="participios-ejemplos">
+    <div class="slide-container">
+        <h2 class="text-center text-emerald-800 mb-6"><i class="fas fa-puzzle-piece text-emerald-600 mr-2" aria-hidden="true"></i> Participios y ejemplos</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <div class="glass-card bg-sky-50/90 p-6 rounded-2xl border-2 border-sky-200">
+                <h3 class="text-xl font-bold text-sky-900 mb-3"><i class="fas fa-list text-sky-600 mr-2" aria-hidden="true"></i> Participios (invariables)</h3>
+                <p class="text-xl text-slate-700 mb-4">Comido, jugado, vivido, estado, hecho, visto, dicho, abierto, puesto…</p>
+                <p class="text-lg text-slate-600">El participio <strong>no cambia</strong> por persona ni número. Siempre va igual después de haber: <em>había comido</em>, <em>habían comido</em>.</p>
+            </div>
+            <div class="glass-card bg-slate-50/90 p-6 rounded-2xl border-2 border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-3"><i class="fas fa-quote-right text-slate-600 mr-2" aria-hidden="true"></i> Ejemplos en oraciones</h3>
+                <ul class="text-xl text-slate-700 space-y-3">
+                    <li>Yo <strong>había comido</strong> antes de salir.</li>
+                    <li>Ellos <strong>habían llegado</strong> cuando empezó la lluvia.</li>
+                    <li>Ella <strong>había visto</strong> esa película dos veces.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sospechosos-irregulares">
+    <div class="slide-container">
+        <h2 class="text-2xl md:text-3xl text-red-700 font-bold mb-1 text-center"><i class="fas fa-triangle-exclamation text-red-500 mr-2" aria-hidden="true"></i> Los sospechosos (irregulares)</h2>
+        <p class="text-center text-lg text-slate-500 mb-6 font-medium">The suspects: irregular past participles</p>
+
+        <div class="mb-6">
+            <div class="glass-card bg-amber-50/90 p-4 border-l-4 border-amber-500 rounded-r-xl max-w-3xl mx-auto">
+                <p class="text-lg text-slate-700 leading-relaxed">
+                    La mayoría de los participios usan <em>-ado</em> o <em>-ido</em>. Estos seis verbos no: tienen participio <strong>irregular</strong> y hay que memorizarlos.
+                </p>
+            </div>
+        </div>
+
+        <div class="glass-card bg-white p-4 md:p-6 overflow-x-auto">
+            <p class="text-lg font-semibold text-slate-700 mb-3"><i class="fas fa-table text-red-500 mr-2" aria-hidden="true"></i> Verbos con participio irregular (frecuentes) — Irregular participles (common)</p>
+            <div class="rounded-xl border-2 border-slate-200 shadow-sm overflow-hidden">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                        <tr class="bg-red-600 text-white">
+                            <th class="px-3 py-2.5 text-base font-bold text-center w-14">Icon</th>
+                            <th class="px-3 py-2.5 text-base font-bold">Verbo / Verb</th>
+                            <th class="px-3 py-2.5 text-base font-bold">Participio / Participle</th>
+                            <th class="px-3 py-2.5 text-base font-bold">Ejemplo + English</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-base md:text-lg text-slate-700">
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-pen text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Escribir</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Escrito</td>
-                            <td class="px-4 py-3 text-slate-600">Ya había <strong>escrito</strong> la carta.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-pen text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Escribir <span class="text-slate-500 font-normal">(to write)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">escrito</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">Ya había <strong>escrito</strong> la carta.</span><br><span class="text-slate-500 text-sm">He had already written the letter.</span></td>
                         </tr>
                         <tr class="bg-white border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-eye text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Ver</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Visto</td>
-                            <td class="px-4 py-3 text-slate-600">Nunca había <strong>visto</strong> el mar.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-eye text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Ver <span class="text-slate-500 font-normal">(to see)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">visto</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">Nunca había <strong>visto</strong> el mar.</span><br><span class="text-slate-500 text-sm">I had never seen the sea.</span></td>
                         </tr>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-comment-dots text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Decir</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Dicho</td>
-                            <td class="px-4 py-3 text-slate-600">Él ya me lo había <strong>dicho</strong>.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-comment-dots text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Decir <span class="text-slate-500 font-normal">(to say/tell)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">dicho</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">Él ya me lo había <strong>dicho</strong>.</span><br><span class="text-slate-500 text-sm">He had already told me.</span></td>
                         </tr>
                         <tr class="bg-white border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-hammer text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Hacer</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Hecho</td>
-                            <td class="px-4 py-3 text-slate-600">Habían <strong>hecho</strong> los deberes.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-hammer text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Hacer <span class="text-slate-500 font-normal">(to do/make)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">hecho</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">Habían <strong>hecho</strong> los deberes.</span><br><span class="text-slate-500 text-sm">They had done the homework.</span></td>
                         </tr>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-skull text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Morir</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Muerto</td>
-                            <td class="px-4 py-3 text-slate-600">El abuelo ya había <strong>muerto</strong>.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-skull text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Morir <span class="text-slate-500 font-normal">(to die)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">muerto</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">El abuelo ya había <strong>muerto</strong>.</span><br><span class="text-slate-500 text-sm">Grandfather had already died.</span></td>
                         </tr>
                         <tr class="bg-white border-b border-slate-200">
-                            <td class="px-4 py-3 text-center"><i class="fas fa-heart-crack text-slate-500 text-2xl" aria-hidden="true"></i></td>
-                            <td class="px-4 py-3 font-medium">Romper</td>
-                            <td class="px-4 py-3 font-bold text-emerald-700">Roto</td>
-                            <td class="px-4 py-3 text-slate-600">Se había <strong>roto</strong> el vaso.</td>
+                            <td class="px-3 py-2.5 text-center"><i class="fas fa-heart-crack text-slate-500 text-xl" aria-hidden="true"></i></td>
+                            <td class="px-3 py-2.5 font-medium">Romper <span class="text-slate-500 font-normal">(to break)</span></td>
+                            <td class="px-3 py-2.5 font-bold text-emerald-700">roto</td>
+                            <td class="px-3 py-2.5"><span class="text-slate-700">Se había <strong>roto</strong> el vaso.</span><br><span class="text-slate-500 text-sm">The glass had broken.</span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="mt-6 p-4 bg-red-50 rounded-xl border-l-4 border-red-500">
-                <p class="text-xl text-red-800 font-bold">
-                    <i class="fas fa-ban text-red-600 mr-2" aria-hidden="true"></i> Errores frecuentes: no digas <em>Escribido</em> ni <em>Rompido</em>. Son <strong>Escrito</strong> y <strong>Roto</strong>.
+            <div class="mt-5 p-4 bg-red-50 rounded-xl border-l-4 border-red-500 flex flex-col sm:flex-row sm:items-center gap-2">
+                <p class="text-base md:text-lg text-red-800 font-bold flex-1">
+                    <i class="fas fa-ban text-red-600 mr-2" aria-hidden="true"></i> Errores frecuentes / Common mistakes:
                 </p>
+                <p class="text-base md:text-lg text-red-800">No digas <em>escribido</em> ni <em>rompido</em>. Correcto: <strong>escrito</strong>, <strong>roto</strong>. — Don’t say escribido or rompido; use <strong>escrito</strong> and <strong>roto</strong>.</p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="coartada-perfecta section-game rounded-2xl overflow-hidden">
+<section class="coartada-perfecta">
     <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent"><i class="fas fa-user-secret text-violet-500 mr-2" aria-hidden="true"></i> Game: The Perfect Alibi</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Choose the correct past perfect form. Click one option.</p>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">1. "Cuando llegué, mi perro ya se lo ___."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="había comido">había comido</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">comió</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">habría comido</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">2. "Mi alarma no ___."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">sonó</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="había sonado">había sonado</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">sonaba</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">3. "Cuando llegaste, yo ya lo ___."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="había terminado">había terminado</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">terminé</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">terminaba</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">4. "Cuando entraste, ella ya ___ a casa."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">fue</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="había ido">había ido</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">iba</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">5. "Cuando preguntaste, él ya lo ___."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">escribió</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="había escrito">había escrito</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">escribía</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border-2 border-slate-200 coartada-item">
-                <p class="text-lg text-slate-800 mb-2 font-semibold">6. "Cuando pasé, ya ___."</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">cerraron</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="habían cerrado">habían cerrado</button>
-                    <button type="button" class="coartada-btn px-3 py-2 rounded-lg border-2 border-slate-300 hover:bg-slate-100 text-lg" data-ok="">cerraban</button>
-                </div>
-                <div class="coartada-fb mt-2 hidden"></div>
+        <h2 class="text-2xl md:text-3xl text-emerald-800 font-bold mb-1 text-center"><i class="fas fa-user-secret text-emerald-600 mr-2" aria-hidden="true"></i> Ejercicio 1: La Coartada Perfecta</h2>
+        <p class="text-center text-lg text-slate-500 mb-5 font-medium">Exercise 1: The perfect alibi — fill in the past perfect</p>
+
+        <div class="mb-5">
+            <div class="glass-card bg-sky-50/90 p-4 border-l-4 border-sky-500 rounded-r-xl max-w-3xl mx-auto">
+                <p class="text-lg text-slate-800 font-semibold mb-1">Instructions (EN):</p>
+                <p class="text-lg text-slate-700">A suspect gives excuses in the past. Each sentence is missing the <strong>past perfect</strong> (had + past participle). Use the verb indicated to complete with the correct form (había + participle). Write your answer in the green box; the correct answer will appear after you answer.</p>
             </div>
         </div>
 
-        <script>
-        (function(){
-            document.querySelectorAll('.coartada-perfecta .coartada-btn').forEach(function(btn){
-                btn.addEventListener('click', function(){
-                    var item = this.closest('.coartada-item');
-                    if(item.dataset.done) return;
-                    var ok = this.dataset.ok;
-                    var fb = item.querySelector('.coartada-fb');
-                    item.querySelectorAll('.coartada-btn').forEach(function(b){
-                        b.classList.remove('border-emerald-500','bg-emerald-50','border-red-500','bg-red-50');
-                        if(b === btn) b.classList.add(ok ? 'border-emerald-500 bg-emerald-50' : 'border-red-500 bg-red-50');
-                    });
-                    fb.classList.remove('hidden');
-                    fb.textContent = ok ? 'Correct!' : 'Wrong. Try another.';
-                    fb.className = 'coartada-fb mt-2 p-2 rounded ' + (ok ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800');
-                    if(ok) item.dataset.done = '1';
-                });
-            });
-        })();
-        </script>
+        <div class="glass-card bg-white p-4 md:p-6 rounded-2xl shadow-lg border border-slate-100">
+            <p class="text-lg text-slate-600 mb-5 text-center"><i class="fas fa-pen-fancy text-emerald-600 mr-2" aria-hidden="true"></i> Completa la frase / Complete the sentence</p>
+
+            <div class="space-y-6">
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">1</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"Señor policía, yo no comí el pastel porque..."</p>
+                            <p class="text-sm text-slate-500 mb-2">(Officer, I didn’t eat the cake because…)</p>
+                            <p class="text-lg text-slate-700 mb-1">"...cuando llegué a la cocina, mi perro ya se lo ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>comer</strong> (to eat) → use <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había comido" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('había comido'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había comido</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">2</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Por qué llegó tarde al trabajo?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Why did s/he arrive late to work?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"¡Porque mi alarma no ________ !"</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>sonar</strong> (to ring) → <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había sonado" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('había sonado'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había sonado</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">3</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Por qué no estaba el informe?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Why wasn’t the report there?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Cuando llegaste, yo ya lo ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>terminar</strong> (to finish) → <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había terminado" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('había terminado'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había terminado</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">4</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Dónde estaba María?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Where was María?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Cuando tú entraste, ella ya ________ a casa."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>ir</strong> (to go) → <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había ido" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('había ido'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había ido</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">5</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Quién escribió el mensaje?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Who wrote the message?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Cuando preguntaste, él ya lo ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>escribir</strong> (to write) → <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había escrito" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('había escrito'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había escrito</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">6</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Por qué no entraste al banco?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Why didn’t you go into the bank?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Cuando pasé, ya ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>cerrar</strong> (they) → <em>habían</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="habían cerrado" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('habían cerrado'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>habían cerrado</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">7</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Por qué no había café?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Why was there no coffee?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Cuando llegaste, nosotros ya lo ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>beber</strong> (we) → <em>habíamos</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="habíamos bebido" onchange="var el=this; var ok=el.value.toLowerCase().trim().includes('habíamos bebido'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>habíamos bebido</strong></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="coartada-card p-4 md:p-5 rounded-xl bg-slate-50/80 border border-slate-200 hover:border-emerald-300 transition-colors">
+                    <div class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-lg">8</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-lg font-semibold text-slate-800 mb-0.5">"¿Por qué lloraba el niño?"</p>
+                            <p class="text-sm text-slate-500 mb-2">(Why was the child crying?)</p>
+                            <p class="text-lg text-slate-700 mb-1">"Porque cuando llegué, su juguete ya se ________ ."</p>
+                            <p class="text-sm text-slate-500 mb-1">Verb: <strong>romper</strong> (to break) → <em>había</em> + participle</p>
+                            <input type="text" class="coartada-answer-box" placeholder="Escribe aquí / Write here" data-correct="había roto" onchange="var el=this; var v=el.value.toLowerCase().trim(); var ok=v.includes('había roto')||v.includes('se había roto'); el.classList.add(ok?'correct':'incorrect'); el.nextElementSibling.classList.remove('hidden');">
+                            <p class="coartada-correct-answer hidden mt-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="text-slate-600">Respuesta correcta / Correct answer:</span> <strong>había roto</strong> / <strong>se había roto</strong></p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="que-paso-primero section-game rounded-2xl overflow-hidden">
+<section class="que-paso-primero">
     <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent"><i class="fas fa-calendar-day text-teal-500 mr-2" aria-hidden="true"></i> What happened first?</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Click the action that happened <strong>first</strong>.</p>
+        <h2 class="text-3xl text-emerald-800 font-bold mb-4"><i class="fas fa-calendar-day text-emerald-600 mr-2" aria-hidden="true"></i> ¿Qué pasó primero?</h2>
+
+        <div class="glass-card bg-emerald-50/90 p-5 mb-6 border-l-4 border-emerald-500 rounded-r-xl">
+            <p class="text-xl md:text-2xl text-slate-700 leading-relaxed">
+                <strong>Introducción:</strong> En cada frase hay dos acciones en pasado. Una ocurrió <strong>antes</strong> (pluscuamperfecto: <em>ya había…</em>) y otra <strong>después</strong>. Elige cuál crees que pasó primero. La respuesta aparecerá debajo de los botones.
+            </p>
+        </div>
+
+        <p class="text-xl text-slate-600 mb-4">Haz clic en la acción que ocurrió <strong>primero</strong> en el tiempo.</p>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="glass-card bg-white p-5 relative overflow-hidden rounded-xl border border-slate-200">
@@ -1276,14 +1402,14 @@
         <script>
         (function() {
             var messages = {
-                fb1: { ok: 'Correct! The match ended first.', err: 'No. The match ended first, then you turned on the TV.' },
-                fb2: { ok: 'Correct! She had never seen snow before the trip.', err: 'No. The trip happened later.' },
-                fb3: { ok: 'Correct! The movie started first.', err: 'No. The movie started first, then you arrived.' },
-                fb4: { ok: 'Correct! Ana had dinner first.', err: 'No. Ana ate first, then you invited her.' },
-                fb5: { ok: 'Correct! Your brother finished the milk first.', err: 'No. He finished the milk first, then you opened the fridge.' },
-                fb6: { ok: 'Correct! The kids fell asleep first.', err: 'No. The kids slept first, then the grandparents arrived.' },
-                fb7: { ok: 'Correct! The bakery closed first.', err: 'No. The bakery closed first, then you went.' },
-                fb8: { ok: 'Correct! Your mother left first.', err: 'No. She left first, then you woke up.' }
+                fb1: { ok: '¡Correcto! El partido terminó antes (pluscuamperfecto).', err: 'Incorrecto. Primero terminó el partido, luego encendiste la TV.' },
+                fb2: { ok: '¡Correcto! La acción de no ver nieve ocurrió durante toda su vida antes del viaje.', err: 'Incorrecto. El viaje ocurrió después.' },
+                fb3: { ok: '¡Correcto! La película empezó antes de que llegaras al cine.', err: 'Incorrecto. Primero empezó la película, luego llegaste.' },
+                fb4: { ok: '¡Correcto! Ana cenó antes de que la invitaras.', err: 'Incorrecto. Primero cenó Ana, luego la invitaste.' },
+                fb5: { ok: '¡Correcto! Tu hermano terminó la leche antes de que abrieras la nevera.', err: 'Incorrecto. Primero terminó la leche, luego abriste la nevera.' },
+                fb6: { ok: '¡Correcto! Los niños se durmieron antes de que llegaran los abuelos.', err: 'Incorrecto. Primero se durmieron, luego llegaron los abuelos.' },
+                fb7: { ok: '¡Correcto! La panadería cerró antes de que fueras a comprar.', err: 'Incorrecto. Primero cerró la panadería, luego fuiste.' },
+                fb8: { ok: '¡Correcto! Tu madre salió antes de que te despertaras.', err: 'Incorrecto. Primero salió ella, luego te despertaste.' }
             };
             document.querySelectorAll('.que-paso-primero .que-paso-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
@@ -1301,182 +1427,146 @@
     </div>
 </section>
 
-<section class="gran-desastre section-game rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-black mb-2 text-center bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"><i class="fas fa-bolt text-amber-500 mr-2" aria-hidden="true"></i> The Terrible Day</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Choose the correct past perfect form for each blank.</p>
+<section class="gran-desastre">
+    <div class="slide-container max-w-4xl mx-auto">
+        <h2 class="text-2xl md:text-3xl text-emerald-900 font-black mb-2 text-center"><i class="fas fa-trophy text-amber-500 mr-2" aria-hidden="true"></i> El Gran Desastre</h2>
+        <p class="text-center text-slate-600 text-lg mb-5">Conjuga cada verbo en <strong>pluscuamperfecto</strong> (había + participio). Escribe en los recuadros.</p>
 
-        <div class="glass-card bg-white/95 p-6 md:p-8 text-left shadow-2xl rounded-2xl border-2 border-slate-100 max-w-4xl mx-auto">
-            <div class="leading-relaxed text-xl text-slate-700 space-y-4">
+        <div class="glass-card bg-white p-6 md:p-8 shadow-xl rounded-2xl border-2 border-slate-100">
+            <div class="leading-relaxed text-lg md:text-xl text-slate-700 space-y-4">
                 <p>
                     Ayer fue un día terrible. Cuando salí de casa, me di cuenta de que 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="había olvidado">
-                        <option value="">(elegir)</option>
-                        <option value="había olvidado">había olvidado</option>
-                        <option value="olvidé">olvidé</option>
-                        <option value="olvidaba">olvidaba</option>
-                    </select>
-                    mis llaves. El autobús ya 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="había pasado">
-                        <option value="">(elegir)</option>
-                        <option value="había pasado">había pasado</option>
-                        <option value="pasó">pasó</option>
-                        <option value="pasaba">pasaba</option>
-                    </select>, 
-                    así que tuve que correr.
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="olvidar" data-answer="había olvidado" aria-label="Conjuga: olvidar"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    mis llaves y tuve que volver a subir. El autobús ya 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="pasar" data-answer="había pasado" aria-label="Conjuga: pasar"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>, 
+                    así que tuve que correr bajo la lluvia hasta la parada siguiente.
                 </p>
                 <p>
-                    En la oficina, mi jefe ya 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="había empezado">
-                        <option value="">(elegir)</option>
-                        <option value="había empezado">había empezado</option>
-                        <option value="empezó">empezó</option>
-                        <option value="empezaba">empezaba</option>
-                    </select>
-                    la reunión. Me di cuenta de que 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="había dejado">
-                        <option value="">(elegir)</option>
-                        <option value="había dejado">había dejado</option>
-                        <option value="dejé">dejé</option>
-                        <option value="dejaba">dejaba</option>
-                    </select>
-                    los documentos en casa.
+                    Cuando llegué a la oficina, mi jefe ya 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="empezar" data-answer="había empezado" aria-label="Conjuga: empezar"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    la reunión y todos me miraron al entrar. En medio de la presentación me di cuenta de que 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="dejar" data-answer="había dejado" aria-label="Conjuga: dejar"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    los documentos importantes en la mesa de casa.
                 </p>
                 <p>
-                    Al mirar mis pies vi que me 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="había puesto">
-                        <option value="">(elegir)</option>
-                        <option value="había puesto">había puesto</option>
-                        <option value="puse">puse</option>
-                        <option value="ponía">ponía</option>
-                    </select>
-                    zapatos diferentes. El móvil ya 
-                    <select class="gran-desastre-select clean-input inline-block min-w-[180px] text-lg py-2 mx-1" data-ans="se había quedado">
-                        <option value="">(elegir)</option>
-                        <option value="se había quedado">se había quedado</option>
-                        <option value="se quedó">se quedó</option>
-                        <option value="se quedaba">se quedaba</option>
-                    </select>
-                    sin batería.
+                    ¡Y lo peor! Al mirar mis pies vi que me 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="poner" data-answer="había puesto" aria-label="Conjuga: poner"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    zapatos diferentes: uno negro y uno marrón. Por la tarde, cuando quise llamar a mi madre, el móvil ya 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="quedarse" data-answer="se había quedado" aria-label="Conjuga: quedarse"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    sin batería. Ese día todo 
+                    <span class="inline-block align-middle"><input type="text" class="gran-desastre-input clean-input inline-block border-b-2 border-emerald-500 min-w-[120px] max-w-[200px] text-center text-emerald-800 font-semibold bg-emerald-50/80 px-2 py-1 rounded text-base md:text-lg" placeholder="salir" data-answer="había salido" aria-label="Conjuga: salir"><span class="gran-desastre-feedback hidden text-sm font-semibold ml-1 whitespace-nowrap" aria-live="polite"></span></span>
+                    mal desde el desayuno.
                 </p>
             </div>
+            <div class="mt-6 pt-4 border-t border-slate-200 text-center">
+                <button type="button" id="gran-desastre-ver-soluciones" class="bg-orange-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-orange-600 transition text-lg">
+                    <i class="fas fa-eye mr-2" aria-hidden="true"></i> Ver soluciones
+                </button>
+            </div>
         </div>
-
-        <div class="mt-6 text-center flex flex-wrap justify-center gap-4">
-            <button type="button" id="btn-check-desastre" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-500 transition-all text-xl">
-                Check <i class="fas fa-check ml-1" aria-hidden="true"></i>
-            </button>
-            <button type="button" id="btn-show-desastre" class="bg-orange-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-orange-600 transition-all text-xl">
-                Show answers <i class="fas fa-eye ml-1" aria-hidden="true"></i>
-            </button>
-        </div>
-
         <script>
-        (function(){
-            var selects = document.querySelectorAll('.gran-desastre-select');
-            document.getElementById('btn-check-desastre').onclick = function(){
-                selects.forEach(function(s){
-                    var ans = s.dataset.ans;
-                    var val = s.value;
-                    s.classList.remove('border-emerald-500','bg-emerald-50','border-red-500','bg-red-50');
-                    if(val === ans){ s.classList.add('border-emerald-500','bg-emerald-50'); }
-                    else if(val){ s.classList.add('border-red-500','bg-red-50'); }
+        (function() {
+            function sinTilde(s) {
+                return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+            }
+            var btn = document.getElementById('gran-desastre-ver-soluciones');
+            if (btn) btn.addEventListener('click', function() {
+                var inputs = document.querySelectorAll('.gran-desastre .gran-desastre-input');
+                inputs.forEach(function(inp) {
+                    var correct = (inp.getAttribute('data-answer') || '').trim();
+                    var answer = (inp.value || '').trim();
+                    var isCorrect = sinTilde(answer) === sinTilde(correct);
+                    inp.value = correct;
+                    inp.readOnly = true;
+                    inp.classList.remove('border-emerald-500', 'bg-emerald-50/80');
+                    if (isCorrect) {
+                        inp.classList.add('border-emerald-600', 'bg-emerald-100');
+                    } else {
+                        inp.classList.add('border-red-500', 'bg-red-50');
+                    }
+                    var fb = inp.parentElement && inp.parentElement.querySelector('.gran-desastre-feedback');
+                    if (fb) {
+                        fb.classList.remove('hidden');
+                        if (isCorrect) {
+                            fb.textContent = '✓ Correcto';
+                            fb.className = 'gran-desastre-feedback text-sm font-semibold ml-1 whitespace-nowrap text-emerald-600';
+                        } else {
+                            fb.textContent = '✗ Incorrecto. Correcto: ' + correct;
+                            fb.className = 'gran-desastre-feedback text-sm font-semibold ml-1 whitespace-nowrap text-red-600';
+                        }
+                    }
                 });
-            };
-            document.getElementById('btn-show-desastre').onclick = function(){
-                selects.forEach(function(s){
-                    s.value = s.dataset.ans;
-                    s.classList.remove('border-red-500','bg-red-50');
-                    s.classList.add('border-emerald-500','bg-emerald-50');
-                });
-            };
+            });
         })();
         </script>
     </div>
 </section>
 
-<section class="detector-mentiras section-game rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"><i class="fas fa-user-secret text-indigo-500 mr-2" aria-hidden="true"></i> Game: Truth or Lie?</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Use the timeline. Is each sentence True or False?</p>
+<section class="detector-mentiras">
+    <div class="slide-container max-w-5xl mx-auto">
+        <h2 class="text-2xl md:text-3xl text-emerald-800 font-bold mb-2 text-center"><i class="fas fa-fingerprint text-emerald-600 mr-2" aria-hidden="true"></i> Ejercicio 3: El Detector de Mentiras</h2>
+        <p class="text-center text-slate-600 text-lg mb-5">Compara cada frase con la agenda. ¿Coincide con el orden real? <strong>Verdad</strong> o <strong>Mentira</strong>.</p>
 
-        <div class="glass-card bg-white p-5 mb-6 rounded-xl border-2 border-slate-200">
-            <p class="text-xl font-semibold text-slate-700 mb-3 text-center"><i class="fas fa-clock text-emerald-600 mr-2" aria-hidden="true"></i> Agenda del sospechoso (orden real)</p>
-            <div class="relative">
-                <div class="absolute left-0 right-0 top-1/2 h-1 bg-gradient-to-r from-emerald-200 via-emerald-400 to-emerald-200 rounded-full -translate-y-1/2 z-0" aria-hidden="true"></div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
-                    <div class="bg-white p-4 rounded-xl border-2 border-emerald-200 shadow-sm text-center">
-                        <span class="block text-3xl mb-2"><i class="fas fa-sun text-amber-500" aria-hidden="true"></i></span>
-                        <strong class="text-xl text-emerald-700">07:00</strong>
-                        <p class="text-xl text-slate-600 mt-1">Levantarse</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-2 border-emerald-200 shadow-sm text-center">
-                        <span class="block text-3xl mb-2"><i class="fas fa-mug-hot text-amber-700" aria-hidden="true"></i></span>
-                        <strong class="text-xl text-emerald-700">07:30</strong>
-                        <p class="text-xl text-slate-600 mt-1">Beber café</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-2 border-emerald-200 shadow-sm text-center">
-                        <span class="block text-3xl mb-2"><i class="fas fa-shower text-blue-500" aria-hidden="true"></i></span>
-                        <strong class="text-xl text-emerald-700">08:00</strong>
-                        <p class="text-xl text-slate-600 mt-1">Ducharse</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-2 border-emerald-200 shadow-sm text-center">
-                        <span class="block text-3xl mb-2"><i class="fas fa-bus text-slate-600" aria-hidden="true"></i></span>
-                        <strong class="text-xl text-emerald-700">08:30</strong>
-                        <p class="text-xl text-slate-600 mt-1">Salir de casa</p>
-                    </div>
-                </div>
+        <!-- Agenda compacta tipo "prueba" -->
+        <div class="bg-slate-800 text-white rounded-2xl p-4 mb-6 border-2 border-slate-600">
+            <p class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-3 flex items-center gap-2"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Agenda del sospechoso (orden real)</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                <span class="inline-flex items-center gap-2 bg-slate-700 px-3 py-2 rounded-lg text-sm font-medium"><i class="fas fa-sun text-amber-400" aria-hidden="true"></i> 07:00 Levantarse</span>
+                <span class="text-slate-500">→</span>
+                <span class="inline-flex items-center gap-2 bg-slate-700 px-3 py-2 rounded-lg text-sm font-medium"><i class="fas fa-mug-hot text-amber-200" aria-hidden="true"></i> 07:30 Café</span>
+                <span class="text-slate-500">→</span>
+                <span class="inline-flex items-center gap-2 bg-slate-700 px-3 py-2 rounded-lg text-sm font-medium"><i class="fas fa-shower text-blue-300" aria-hidden="true"></i> 08:00 Ducharse</span>
+                <span class="text-slate-500">→</span>
+                <span class="inline-flex items-center gap-2 bg-slate-700 px-3 py-2 rounded-lg text-sm font-medium"><i class="fas fa-bus text-slate-300" aria-hidden="true"></i> 08:30 Salir</span>
             </div>
-            <p class="text-xl text-slate-500 text-center mt-3">Orden: 07:00 → 07:30 → 08:00 → 08:30</p>
         </div>
 
-        <p class="text-xl text-slate-600 mb-4">¿La frase es <strong>Verdad</strong> o <strong>Mentira</strong> según la agenda?</p>
-
-        <div class="space-y-4">
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p class="text-xl text-slate-800 mb-3">1. "A las 07:45, él ya <strong>había bebido</strong> café."</p>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" class="detector-btn px-5 py-2 border border-emerald-500 text-emerald-600 rounded-xl hover:bg-emerald-50 transition text-xl font-semibold" data-fb="dm1" data-correct="1">Verdad</button>
-                    <button type="button" class="detector-btn px-5 py-2 border border-red-500 text-red-600 rounded-xl hover:bg-red-50 transition text-xl font-semibold" data-fb="dm1" data-correct="0">Mentira</button>
+        <!-- Frases en grid 2x2, estilo "tarjetas de declaración" -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="detector-card bg-white rounded-xl border-2 border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition">
+                <p class="text-slate-800 text-base md:text-lg mb-3 leading-snug">"A las 07:45, él ya <strong>había bebido</strong> café."</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition" data-fb="dm1" data-correct="1">Verdad</button>
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-red-500 text-red-600 hover:bg-red-50 transition" data-fb="dm1" data-correct="0">Mentira</button>
                 </div>
-                <div id="dm1" class="detector-feedback hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
+                <div id="dm1" class="detector-feedback hidden mt-3 p-2 rounded-lg text-sm font-semibold" aria-live="polite"></div>
             </div>
 
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p class="text-xl text-slate-800 mb-3">2. "Cuando se duchó (08:00), ya <strong>había salido</strong> de casa."</p>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" class="detector-btn px-5 py-2 border border-emerald-500 text-emerald-600 rounded-xl hover:bg-emerald-50 transition text-xl font-semibold" data-fb="dm2" data-correct="0">Verdad</button>
-                    <button type="button" class="detector-btn px-5 py-2 border border-red-500 text-red-600 rounded-xl hover:bg-red-50 transition text-xl font-semibold" data-fb="dm2" data-correct="1">Mentira</button>
+            <div class="detector-card bg-white rounded-xl border-2 border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition">
+                <p class="text-slate-800 text-base md:text-lg mb-3 leading-snug">"Cuando se duchó (08:00), ya <strong>había salido</strong> de casa."</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition" data-fb="dm2" data-correct="0">Verdad</button>
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-red-500 text-red-600 hover:bg-red-50 transition" data-fb="dm2" data-correct="1">Mentira</button>
                 </div>
-                <div id="dm2" class="detector-feedback hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
+                <div id="dm2" class="detector-feedback hidden mt-3 p-2 rounded-lg text-sm font-semibold" aria-live="polite"></div>
             </div>
 
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p class="text-xl text-slate-800 mb-3">3. "A las 07:15, él ya se <strong>había duchado</strong>."</p>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" class="detector-btn px-5 py-2 border border-emerald-500 text-emerald-600 rounded-xl hover:bg-emerald-50 transition text-xl font-semibold" data-fb="dm3" data-correct="0">Verdad</button>
-                    <button type="button" class="detector-btn px-5 py-2 border border-red-500 text-red-600 rounded-xl hover:bg-red-50 transition text-xl font-semibold" data-fb="dm3" data-correct="1">Mentira</button>
+            <div class="detector-card bg-white rounded-xl border-2 border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition">
+                <p class="text-slate-800 text-base md:text-lg mb-3 leading-snug">"A las 07:15, él ya se <strong>había duchado</strong>."</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition" data-fb="dm3" data-correct="0">Verdad</button>
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-red-500 text-red-600 hover:bg-red-50 transition" data-fb="dm3" data-correct="1">Mentira</button>
                 </div>
-                <div id="dm3" class="detector-feedback hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
+                <div id="dm3" class="detector-feedback hidden mt-3 p-2 rounded-lg text-sm font-semibold" aria-live="polite"></div>
             </div>
 
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p class="text-xl text-slate-800 mb-3">4. "Cuando salió de casa (08:30), ya se <strong>había levantado</strong>, <strong>había bebido</strong> café y <strong>había duchado</strong>."</p>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" class="detector-btn px-5 py-2 border border-emerald-500 text-emerald-600 rounded-xl hover:bg-emerald-50 transition text-xl font-semibold" data-fb="dm4" data-correct="1">Verdad</button>
-                    <button type="button" class="detector-btn px-5 py-2 border border-red-500 text-red-600 rounded-xl hover:bg-red-50 transition text-xl font-semibold" data-fb="dm4" data-correct="0">Mentira</button>
+            <div class="detector-card bg-white rounded-xl border-2 border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition">
+                <p class="text-slate-800 text-base md:text-lg mb-3 leading-snug">"Cuando salió (08:30), ya se <strong>había levantado</strong>, <strong>había bebido</strong> café y <strong>había duchado</strong>."</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition" data-fb="dm4" data-correct="1">Verdad</button>
+                    <button type="button" class="detector-btn px-4 py-2 rounded-lg font-semibold text-sm border-2 border-red-500 text-red-600 hover:bg-red-50 transition" data-fb="dm4" data-correct="0">Mentira</button>
                 </div>
-                <div id="dm4" class="detector-feedback hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
+                <div id="dm4" class="detector-feedback hidden mt-3 p-2 rounded-lg text-sm font-semibold" aria-live="polite"></div>
             </div>
         </div>
 
         <script>
         (function() {
             var msg = {
-                dm1: { ok: '¡Verdad! A las 07:45 ya había pasado las 07:30, momento en que bebió café.', err: 'Mentira. A las 07:30 bebió café; 07:45 es después, así que sí había bebido café.' },
-                dm2: { ok: '¡Mentira! Se ducha a las 08:00 y sale a las 08:30. No pudo haber salido antes de ducharse.', err: 'Incorrecto. Sale a las 08:30; se ducha a las 08:00. No había salido cuando se duchó.' },
-                dm3: { ok: '¡Mentira! Se ducha a las 08:00. A las 07:15 todavía no se había duchado.', err: 'Incorrecto. La ducha es a las 08:00; a las 07:15 no se había duchado.' },
-                dm4: { ok: '¡Verdad! A las 08:30 ya había hecho todo: levantarse (07:00), café (07:30), ducha (08:00).', err: 'Mentira. Según la agenda, a las 08:30 ya se había levantado, bebido café y duchado.' }
+                dm1: { ok: '¡Verdad! A las 07:45 ya había pasado las 07:30 (café).', err: 'Mentira. Bebió café a las 07:30; 07:45 es después.' },
+                dm2: { ok: '¡Mentira! Se ducha a las 08:00 y sale a las 08:30.', err: 'Incorrecto. Sale a las 08:30; no había salido cuando se duchó.' },
+                dm3: { ok: '¡Mentira! Se ducha a las 08:00. A las 07:15 no se había duchado.', err: 'Incorrecto. La ducha es a las 08:00.' },
+                dm4: { ok: '¡Verdad! A las 08:30 ya había hecho todo (07:00, 07:30, 08:00).', err: 'Mentira. Según la agenda, a las 08:30 ya se había levantado, bebido café y duchado.' }
             };
             document.querySelectorAll('.detector-mentiras .detector-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
@@ -1486,7 +1576,7 @@
                     if (!box) return;
                     box.classList.remove('hidden');
                     box.textContent = correct ? msg[fb].ok : msg[fb].err;
-                    box.className = 'detector-feedback mt-3 p-3 rounded-xl text-xl font-semibold ' + (correct ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800');
+                    box.className = 'detector-feedback mt-3 p-2 rounded-lg text-sm font-semibold ' + (correct ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800');
                 });
             });
         })();
@@ -1494,389 +1584,374 @@
     </div>
 </section>
 
-<!-- JUEGO: ¿Quién quiere ser millonario? -->
-<section class="section-millionaire ejercicio-millionaire">
-    <div class="slide-container py-8">
-        <div class="text-center mb-6">
-            <h2 class="text-3xl md:text-4xl font-black text-amber-300 mb-1 drop-shadow-lg">
-                <i class="fas fa-coins mr-2" aria-hidden="true"></i> ¿Quién quiere ser millonario?
-            </h2>
-            <p class="text-lg text-indigo-200">Pluscuamperfecto Edition — 4 opciones. ¡Un error y pierdes!</p>
+<section class="ejercicio-ruleta">
+    <div class="slide-container max-w-5xl mx-auto">
+        <h2 class="text-2xl md:text-3xl text-emerald-900 font-black mb-2 text-center"><i class="fas fa-comment-dots text-emerald-600 mr-2" aria-hidden="true"></i> Ejercicio 5: "Yo nunca..."</h2>
+        <p class="text-center text-slate-600 text-lg mb-6">Gira la ruleta y completa la frase en voz alta o por escrito con <em>nunca había + participio</em>.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+            <div class="lg:col-span-2 flex flex-col items-center gap-4">
+                <div class="ruleta-wrapper relative flex-shrink-0">
+                    <div class="ruleta-pointer absolute -top-2 left-1/2 -translate-x-1/2 z-10 w-0 h-0 border-l-[20px] border-r-[20px] border-t-[28px] border-l-transparent border-r-transparent border-t-emerald-600 drop-shadow-md" aria-hidden="true"></div>
+                    <div id="ruleta-wheel" class="ruleta-wheel w-[220px] h-[220px] rounded-full shadow-xl border-4 border-white" style="background: conic-gradient(from 0deg, #fef3c7 0deg 36deg, #d1fae5 36deg 72deg, #dbeafe 72deg 108deg, #e9d5ff 108deg 144deg, #fed7aa 144deg 180deg, #fecaca 180deg 216deg, #bfdbfe 216deg 252deg, #a7f3d0 252deg 288deg, #fde68a 288deg 324deg, #c4b5fd 324deg 360deg);"></div>
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span class="bg-white/95 text-slate-600 font-bold text-base rounded-full w-14 h-14 flex items-center justify-center shadow-inner">1-10</span>
+                    </div>
+                </div>
+                <button type="button" id="btn-girar-ruleta" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-500 transform hover:scale-105 transition-all text-lg w-full max-w-[220px]">
+                    <i class="fas fa-rotate-right mr-2" aria-hidden="true"></i> Girar ruleta
+                </button>
+            </div>
+            <div class="lg:col-span-3 glass-card bg-amber-50/90 p-6 border-l-4 border-amber-500 rounded-2xl border border-amber-100 min-h-[200px] flex flex-col justify-center">
+                <p class="text-sm font-bold text-amber-800 uppercase tracking-wide mb-3">Tu frase</p>
+                <div id="prompts-container" class="text-xl md:text-2xl font-handlee text-slate-800 leading-relaxed transition-opacity duration-300">
+                    "Haz girar la ruleta para obtener una pregunta."
+                </div>
+            </div>
         </div>
 
-        <div id="millionaire-game" class="millionaire-card p-6 md:p-8 text-white max-w-3xl mx-auto">
-            <div id="millionaire-question" class="text-center mb-6">
-                <p id="millionaire-level" class="text-amber-300 font-bold text-lg mb-2">Pregunta 1 de 5</p>
-                <p id="millionaire-text" class="text-2xl md:text-3xl font-bold leading-relaxed">¿Cómo se forma el pluscuamperfecto?</p>
-            </div>
-            <div id="millionaire-options" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <button type="button" class="millionaire-option bg-indigo-500/80 hover:bg-indigo-400 py-4 px-5 rounded-xl text-left font-semibold text-lg" data-idx="0">A. Haber (imperfecto) + participio</button>
-                <button type="button" class="millionaire-option bg-indigo-500/80 hover:bg-indigo-400 py-4 px-5 rounded-xl text-left font-semibold text-lg" data-idx="1">B. Haber (presente) + participio</button>
-                <button type="button" class="millionaire-option bg-indigo-500/80 hover:bg-indigo-400 py-4 px-5 rounded-xl text-left font-semibold text-lg" data-idx="2">C. Estar + gerundio</button>
-                <button type="button" class="millionaire-option bg-indigo-500/80 hover:bg-indigo-400 py-4 px-5 rounded-xl text-left font-semibold text-lg" data-idx="3">D. Ir a + infinitivo</button>
+        <style>
+            .ruleta-wheel { transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+            .ruleta-wheel.spinning { pointer-events: none; }
+        </style>
+        <script>
+        (function() {
+            var prompts = [
+                'Antes de cumplir 18 años, yo nunca había...',
+                'Antes de viajar a otro país, yo nunca había...',
+                'Hasta ayer, yo nunca había...',
+                'Antes de conocer a mi mejor amigo, yo nunca había...',
+                'Antes de tener Internet, la gente nunca había...',
+                'Antes de aprender español, yo nunca había...',
+                'Hasta el año pasado, en mi familia nunca habíamos...',
+                'Antes de mudarme a esta ciudad, yo nunca había...',
+                'Antes de tener mi primer móvil, yo nunca había...',
+                'Hasta la pandemia, en mi trabajo nunca habíamos...'
+            ];
+            var wheel = document.getElementById('ruleta-wheel');
+            var container = document.getElementById('prompts-container');
+            var btn = document.getElementById('btn-girar-ruleta');
+            var currentRotation = 0;
+            var segmentDeg = 36;
+            function getSegmentFromRotation(rot) {
+                var normalized = ((rot % 360) + 360) % 360;
+                return Math.floor(normalized / segmentDeg) % 10;
+            }
+            function spinRoulette() {
+                if (wheel.classList.contains('spinning')) return;
+                btn.disabled = true;
+                wheel.classList.add('spinning');
+                var randomSegment = Math.floor(Math.random() * 10);
+                var extraTurns = 5 + Math.floor(Math.random() * 3);
+                var targetAngle = (360 - randomSegment * segmentDeg - segmentDeg / 2 - (currentRotation % 360) + 360) % 360 + 360 * extraTurns;
+                currentRotation += targetAngle;
+                wheel.style.transform = 'rotate(' + currentRotation + 'deg)';
+                container.style.opacity = '0.4';
+                setTimeout(function() {
+                    wheel.classList.remove('spinning');
+                    var index = getSegmentFromRotation(currentRotation);
+                    container.textContent = '"' + prompts[index] + '"';
+                    container.style.opacity = '1';
+                    btn.disabled = false;
+                }, 4100);
+            }
+            if (btn) btn.addEventListener('click', spinRoulette);
+        })();
+        </script>
+    </div>
+</section>
+
+
+<section class="trivia-tiempo">
+    <div class="slide-container">
+        <h2 class="text-3xl text-emerald-800 font-bold mb-4 text-center"><i class="fas fa-earth-americas text-emerald-600 mr-2" aria-hidden="true"></i> Trivia del Tiempo</h2>
+        <p class="text-center text-slate-600 mb-2"><strong>¿Quién quiere ser millonario?</strong> — 6 preguntas, 4 opciones. Si fallas, pierdes.</p>
+
+        <!-- Pantalla inicio -->
+        <div id="millonario-inicio" class="millonario-pantalla activa">
+            <div class="glass-card bg-gradient-to-br from-slate-800 to-slate-900 text-white p-8 rounded-2xl border-l-4 border-amber-400 max-w-2xl mx-auto text-center">
+                <p class="text-xl md:text-2xl leading-relaxed mb-6">
+                    Viaja por <strong>seis momentos de la historia</strong>. En cada uno, decide si algo <em>ya había pasado</em> para entonces (pluscuamperfecto). Responde con lógica según las fechas.
+                </p>
+                <p class="text-amber-300 text-lg mb-6">Una respuesta incorrecta y el juego termina. ¡Llega al final para ganar el trofeo!</p>
+                <button type="button" id="millonario-comenzar" class="px-8 py-4 rounded-2xl font-bold text-xl bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-xl transition">
+                    <i class="fas fa-play mr-2" aria-hidden="true"></i> Comenzar
+                </button>
             </div>
         </div>
 
-        <div id="millionaire-result" class="hidden text-center mt-6">
-            <div id="millionaire-win" class="hidden">
-                <div class="trophy-win inline-block text-8xl mb-4">🏆</div>
-                <p class="text-3xl font-black text-amber-300 mb-2">¡¡¡GANASTE!!!</p>
-                <p class="text-xl text-indigo-200">Eres un experto en pluscuamperfecto</p>
+        <!-- Pantalla juego (pregunta actual) -->
+        <div id="millonario-juego" class="millonario-pantalla">
+            <div class="flex justify-between items-center mb-4 max-w-3xl mx-auto">
+                <span id="millonario-nivel" class="text-lg font-bold text-emerald-700 bg-emerald-100 px-4 py-2 rounded-xl">Pregunta 1 de 6</span>
+                <span id="millonario-progreso" class="flex gap-1"></span>
             </div>
-            <div id="millionaire-lose" class="hidden">
-                <div class="inline-block text-6xl mb-4">💔</div>
-                <p class="text-2xl font-bold text-red-400 mb-2">Game Over</p>
-                <p class="text-lg text-indigo-200">La respuesta correcta era: <span id="correct-answer" class="text-amber-300 font-bold"></span></p>
+            <div class="glass-card bg-white rounded-2xl p-6 shadow-xl border-2 border-slate-200 max-w-3xl mx-auto mb-6">
+                <p id="millonario-evento" class="inline-block text-lg font-bold px-4 py-2 rounded-xl mb-3 text-white bg-blue-600"></p>
+                <p id="millonario-pregunta" class="text-xl md:text-2xl text-slate-800 leading-snug"></p>
             </div>
-            <button type="button" id="millionaire-restart" class="mt-4 bg-amber-500 hover:bg-amber-400 text-indigo-900 font-bold py-3 px-8 rounded-full transition-all">
-                <i class="fas fa-redo mr-2" aria-hidden="true"></i> Jugar de nuevo
-            </button>
+            <div id="millonario-opciones" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl mx-auto">
+                <!-- Opciones A B C D se generan por JS -->
+            </div>
+            <div id="millonario-feedback" class="hidden mt-4 p-4 rounded-xl text-lg font-semibold max-w-3xl mx-auto" aria-live="polite"></div>
+        </div>
+
+        <!-- Pantalla game over -->
+        <div id="millonario-perdiste" class="millonario-pantalla">
+            <div class="glass-card bg-gradient-to-br from-red-800 to-red-900 text-white p-8 rounded-2xl max-w-xl mx-auto text-center border-2 border-red-400">
+                <p class="text-6xl mb-4" aria-hidden="true">😢</p>
+                <h3 class="text-2xl font-black mb-2">¡Incorrecto!</h3>
+                <p class="text-xl mb-4">Has perdido. La respuesta correcta era la que marcaba el pluscuamperfecto según las fechas.</p>
+                <p id="millonario-perdiste-mensaje" class="text-amber-200 mb-6"></p>
+                <button type="button" id="millonario-reintentar" class="px-6 py-3 rounded-xl font-bold bg-white text-red-800 hover:bg-slate-100 transition">Jugar de nuevo</button>
+            </div>
+        </div>
+
+        <!-- Pantalla victoria (trofeo) -->
+        <div id="millonario-ganaste" class="millonario-pantalla">
+            <div class="glass-card bg-gradient-to-br from-amber-500 to-amber-700 text-white p-8 rounded-2xl max-w-xl mx-auto text-center border-2 border-amber-300 shadow-2xl">
+                <div id="millonario-trofeo" class="text-8xl mb-4" aria-hidden="true">🏆</div>
+                <h3 class="text-3xl font-black mb-2">¡Felicidades!</h3>
+                <p class="text-xl mb-4">Has respondido bien las 6 preguntas. Dominas el pluscuamperfecto en la historia.</p>
+                <button type="button" id="millonario-otra-vez" class="px-6 py-3 rounded-xl font-bold bg-white text-amber-800 hover:bg-amber-50 transition">Jugar de nuevo</button>
+            </div>
         </div>
 
         <script>
-        (function(){
-            var questions = [
-                { q: "¿Cómo se forma el pluscuamperfecto?", opts: ["Haber (imperfecto) + participio","Haber (presente) + participio","Estar + gerundio","Ir a + infinitivo"], correct: 0 },
-                { q: '"Cuando llegué, la pizza ya ___." ¿Qué va en el espacio?', opts: ["había llegado","llegó","llegaba","ha llegado"], correct: 0 },
-                { q: "¿Cuál es el participio correcto de ESCRIBIR?", opts: ["escrito","escribido","escribo","escibido"], correct: 0 },
-                { q: "Conjuga: Yo ___ (comer) antes de salir.", opts: ["había comido","he comido","comí","comía"], correct: 0 },
-                { q: "¿Qué significa el pluscuamperfecto?", opts: ["Una acción antes de otra acción en el pasado","Una acción futura","Una acción en este momento","Una acción habitual"], correct: 0 }
+        (function() {
+            var QUESTIONS = [
+                { event: '1492 – Llegada de Colón a América', question: 'Cuando Colón llegó a América en 1492, ¿los vikingos ya habían llegado al continente?', options: [
+                    { letter: 'A', text: 'Sí, ya habían llegado', correct: true },
+                    { letter: 'B', text: 'No, todavía no', correct: false },
+                    { letter: 'C', text: 'No, llegaron después de Colón', correct: false },
+                    { letter: 'D', text: 'Sí, llegaron el mismo año', correct: false }
+                ], okMsg: '¡Correcto! Leif Erikson y los vikingos habían llegado unos 500 años antes (c. 1000).', errMsg: 'Los vikingos sí habían llegado antes; Colón no fue el primero.' },
+                { event: '1969 – Primera llegada del hombre a la Luna', question: 'Cuando el Apolo 11 llegó a la Luna en 1969, ¿el Muro de Berlín ya había caído?', options: [
+                    { letter: 'A', text: 'Sí, ya había caído', correct: false },
+                    { letter: 'B', text: 'No, todavía no', correct: true },
+                    { letter: 'C', text: 'Sí, cayó ese mismo año', correct: false },
+                    { letter: 'D', text: 'No, cayó antes de 1969', correct: false }
+                ], okMsg: '¡Correcto! El Muro cayó en 1989; en 1969 todavía no había caído.', errMsg: 'El Muro cayó en 1989; en 1969 aún estaba en pie.' },
+                { event: '1912 – Hundimiento del Titanic', question: 'Cuando el Titanic se hundió en 1912, ¿la Primera Guerra Mundial ya había empezado?', options: [
+                    { letter: 'A', text: 'Sí, ya había empezado', correct: false },
+                    { letter: 'B', text: 'No, todavía no', correct: true },
+                    { letter: 'C', text: 'Sí, empezó en 1912', correct: false },
+                    { letter: 'D', text: 'No, empezó después del Titanic', correct: false }
+                ], okMsg: '¡Correcto! La Primera Guerra Mundial empezó en 1914; el Titanic se hundió en 1912.', errMsg: 'La Gran Guerra empezó en 1914; el Titanic se hundió antes.' },
+                { event: '1939 – Inicio de la Segunda Guerra Mundial', question: 'Cuando empezó la Segunda Guerra Mundial en 1939, ¿la Primera Guerra Mundial ya había terminado?', options: [
+                    { letter: 'A', text: 'Sí, ya había terminado', correct: true },
+                    { letter: 'B', text: 'No, todavía no', correct: false },
+                    { letter: 'C', text: 'No, terminó después', correct: false },
+                    { letter: 'D', text: 'Sí, terminó en 1939', correct: false }
+                ], okMsg: '¡Correcto! La Primera Guerra había terminado en 1918; la Segunda empezó en 1939.', errMsg: 'La Primera Guerra terminó en 1918, mucho antes de 1939.' },
+                { event: '2007 – Lanzamiento del primer iPhone', question: 'Cuando Apple lanzó el primer iPhone en 2007, ¿Instagram ya se había creado?', options: [
+                    { letter: 'A', text: 'Sí, ya existía', correct: false },
+                    { letter: 'B', text: 'No, todavía no', correct: true },
+                    { letter: 'C', text: 'Sí, se creó en 2007', correct: false },
+                    { letter: 'D', text: 'No, se creó antes del iPhone', correct: false }
+                ], okMsg: '¡Correcto! Instagram se creó en 2010; el iPhone salió en 2007.', errMsg: 'Instagram nació en 2010; en 2007 todavía no existía.' },
+                { event: '2004 – Creación de Facebook', question: 'Cuando Mark Zuckerberg creó Facebook en 2004, ¿YouTube ya se había fundado?', options: [
+                    { letter: 'A', text: 'Sí, ya existía', correct: false },
+                    { letter: 'B', text: 'No, todavía no', correct: true },
+                    { letter: 'C', text: 'Sí, se fundó en 2004', correct: false },
+                    { letter: 'D', text: 'No, se fundó antes que Facebook', correct: false }
+                ], okMsg: '¡Correcto! YouTube se fundó en 2005; Facebook en 2004.', errMsg: 'YouTube es de 2005; Facebook es de 2004.' }
             ];
-            var ctx, currentQ = 0, gameOver = false;
-            function playSound(type){
-                try {
-                    var C = window.AudioContext || window.webkitAudioContext;
-                    if(!C) return;
-                    var ac = new C();
-                    var osc = ac.createOscillator();
-                    var gain = ac.createGain();
-                    osc.connect(gain); gain.connect(ac.destination);
-                    if(type==='correct'){
-                        osc.frequency.setValueAtTime(523, ac.currentTime);
-                        osc.frequency.setValueAtTime(659, ac.currentTime+0.15);
-                        osc.frequency.setValueAtTime(784, ac.currentTime+0.3);
-                        gain.gain.setValueAtTime(0.3, ac.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime+0.5);
-                    } else {
-                        osc.frequency.setValueAtTime(150, ac.currentTime);
-                        osc.frequency.setValueAtTime(80, ac.currentTime+0.1);
-                        gain.gain.setValueAtTime(0.2, ac.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime+0.4);
-                    }
-                    osc.start(ac.currentTime); osc.stop(ac.currentTime+0.5);
-                } catch(e){}
+
+            var ctx = null;
+            function getAudioContext() {
+                if (ctx) return ctx;
+                try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+                return ctx;
             }
-            function showQuestion(){
-                var d = questions[currentQ];
-                document.getElementById('millionaire-text').textContent = d.q;
-                document.getElementById('millionaire-level').textContent = "Pregunta " + (currentQ+1) + " de " + questions.length;
-                var opts = document.querySelectorAll('.millionaire-option');
-                opts.forEach(function(btn, i){
-                    btn.textContent = String.fromCharCode(65+i) + ". " + d.opts[i];
-                    btn.dataset.idx = i;
-                    btn.classList.remove('correct','wrong');
-                    btn.disabled = false;
-                });
-                document.getElementById('millionaire-result').classList.add('hidden');
-                document.getElementById('millionaire-game').classList.remove('hidden');
+            function playTone(freq, startTime, duration, type) {
+                var ac = getAudioContext();
+                if (!ac) return;
+                var o = ac.createOscillator();
+                var g = ac.createGain();
+                o.connect(g); g.connect(ac.destination);
+                o.frequency.value = freq;
+                o.type = type || 'sine';
+                g.gain.setValueAtTime(0.15, startTime);
+                g.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                o.start(startTime);
+                o.stop(startTime + duration);
             }
-            function checkAnswer(idx){
-                if(gameOver) return;
-                var opts = document.querySelectorAll('.millionaire-option');
-                opts.forEach(function(b){ b.disabled = true; });
-                var correct = questions[currentQ].correct;
-                opts[idx].classList.add(idx===correct ? 'correct' : 'wrong');
-                if(idx !== correct) opts[correct].classList.add('correct');
-                if(idx === correct){
-                    playSound('correct');
-                    if(currentQ + 1 >= questions.length){
-                        gameOver = true;
-                        setTimeout(function(){
-                            document.getElementById('millionaire-game').classList.add('hidden');
-                            document.getElementById('millionaire-result').classList.remove('hidden');
-                            document.getElementById('millionaire-win').classList.remove('hidden');
-                            document.getElementById('millionaire-lose').classList.add('hidden');
-                            if(typeof confetti==='function') confetti({ particleCount: 150, spread: 100 });
-                        }, 800);
-                    } else {
-                        currentQ++;
-                        setTimeout(showQuestion, 1200);
-                    }
-                } else {
-                    playSound('wrong');
-                    gameOver = true;
-                    document.getElementById('correct-answer').textContent = questions[currentQ].opts[correct];
-                    setTimeout(function(){
-                        document.getElementById('millionaire-game').classList.add('hidden');
-                        document.getElementById('millionaire-result').classList.remove('hidden');
-                        document.getElementById('millionaire-win').classList.add('hidden');
-                        document.getElementById('millionaire-lose').classList.remove('hidden');
-                    }, 1000);
+            function playCorrect() {
+                var ac = getAudioContext();
+                if (!ac) return;
+                var t = ac.currentTime;
+                playTone(523.25, t, 0.15);
+                playTone(659.25, t + 0.15, 0.15);
+                playTone(783.99, t + 0.3, 0.25);
+            }
+            function playWrong() {
+                var ac = getAudioContext();
+                if (!ac) return;
+                var t = ac.currentTime;
+                playTone(200, t, 0.4, 'sawtooth');
+                playTone(150, t + 0.4, 0.5, 'sawtooth');
+            }
+            function playWin() {
+                var ac = getAudioContext();
+                if (!ac) return;
+                var t = ac.currentTime;
+                var notes = [523.25, 659.25, 783.99, 1046.50];
+                for (var i = 0; i < notes.length; i++) {
+                    playTone(notes[i], t + i * 0.2, 0.25);
                 }
             }
-            document.querySelectorAll('.millionaire-option').forEach(function(btn){
-                btn.addEventListener('click', function(){ checkAnswer(parseInt(this.dataset.idx)); });
-            });
-            document.getElementById('millionaire-restart').onclick = function(){
-                currentQ = 0; gameOver = false;
-                document.getElementById('millionaire-win').classList.add('hidden');
-                document.getElementById('millionaire-lose').classList.add('hidden');
-                showQuestion();
-            };
-        })();
-        </script>
-    </div>
-</section>
 
-<section class="juego-impostor section-game rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-fuchsia-600 to-pink-600 bg-clip-text text-transparent"><i class="fas fa-user-secret text-fuchsia-500 mr-2" aria-hidden="true"></i> Game: Catch the Impostor!</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">One person used a wrong participle. Who said "escribido" instead of "escrito"? Click to find out.</p>
+            var level = 0;
+            var locked = false;
 
-        <div id="impostor-resultado" class="text-center mb-6 min-h-[56px]">
-            <p class="text-xl text-slate-500">Haz clic en un sospechoso para investigar.</p>
-        </div>
+            function showScreen(id) {
+                document.querySelectorAll('.millonario-pantalla').forEach(function(el) { el.classList.remove('activa'); });
+                var el = document.getElementById(id);
+                if (el) el.classList.add('activa');
+            }
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <button type="button" class="impostor-card bg-white border-2 border-slate-200 rounded-2xl p-5 text-left shadow-lg hover:shadow-xl hover:border-emerald-300 transition-all cursor-pointer group focus:ring-4 focus:ring-emerald-200" data-impostor="0">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="w-14 h-14 rounded-full bg-violet-100 flex items-center justify-center text-2xl"><i class="fas fa-palette text-violet-600" aria-hidden="true"></i></span>
-                    <span class="text-lg font-bold text-slate-700">Sospechoso 1</span>
-                </div>
-                <p class="text-xl italic text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-100">"Yo ya había <strong>visto</strong> esa película."</p>
-                <p class="impostor-badge hidden mt-3 text-center text-sm font-bold uppercase tracking-wide"></p>
-            </button>
+            function renderProgress() {
+                var cont = document.getElementById('millonario-progreso');
+                if (!cont) return;
+                cont.innerHTML = '';
+                for (var i = 0; i < 6; i++) {
+                    var dot = document.createElement('div');
+                    dot.className = 'w-3 h-3 rounded-full ' + (i < level ? 'bg-emerald-500' : (i === level ? 'bg-amber-500' : 'bg-slate-300'));
+                    cont.appendChild(dot);
+                }
+            }
 
-            <button type="button" class="impostor-card bg-white border-2 border-slate-200 rounded-2xl p-5 text-left shadow-lg hover:shadow-xl hover:border-red-300 transition-all cursor-pointer group focus:ring-4 focus:ring-red-200" data-impostor="1">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-2xl"><i class="fas fa-user-secret text-amber-700" aria-hidden="true"></i></span>
-                    <span class="text-lg font-bold text-slate-700">Sospechoso 2</span>
-                </div>
-                <p class="text-xl italic text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-100">"Yo no lo había <strong>escribido</strong>."</p>
-                <p class="impostor-badge hidden mt-3 text-center text-sm font-bold uppercase tracking-wide"></p>
-            </button>
-
-            <button type="button" class="impostor-card bg-white border-2 border-slate-200 rounded-2xl p-5 text-left shadow-lg hover:shadow-xl hover:border-emerald-300 transition-all cursor-pointer group focus:ring-4 focus:ring-emerald-200" data-impostor="0">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center text-2xl"><i class="fas fa-utensils text-orange-600" aria-hidden="true"></i></span>
-                    <span class="text-lg font-bold text-slate-700">Sospechoso 3</span>
-                </div>
-                <p class="text-xl italic text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-100">"Nosotros ya habíamos <strong>hecho</strong> la cena."</p>
-                <p class="impostor-badge hidden mt-3 text-center text-sm font-bold uppercase tracking-wide"></p>
-            </button>
-
-            <button type="button" class="impostor-card bg-white border-2 border-slate-200 rounded-2xl p-5 text-left shadow-lg hover:shadow-xl hover:border-emerald-300 transition-all cursor-pointer group focus:ring-4 focus:ring-emerald-200" data-impostor="0">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="w-14 h-14 rounded-full bg-cyan-100 flex items-center justify-center text-2xl"><i class="fas fa-user-astronaut text-cyan-600" aria-hidden="true"></i></span>
-                    <span class="text-lg font-bold text-slate-700">Sospechoso 4</span>
-                </div>
-                <p class="text-xl italic text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-100">"Ella ya había <strong>vuelto</strong>."</p>
-                <p class="impostor-badge hidden mt-3 text-center text-sm font-bold uppercase tracking-wide"></p>
-            </button>
-        </div>
-
-        <script>
-        (function() {
-            var resultado = document.getElementById('impostor-resultado');
-            var cards = document.querySelectorAll('.juego-impostor .impostor-card');
-            var imposterFound = false;
-            cards.forEach(function(card) {
-                card.addEventListener('click', function() {
-                    if (imposterFound) return;
-                    var isImpostor = this.getAttribute('data-impostor') === '1';
-                    var badge = this.querySelector('.impostor-badge');
-                    if (isImpostor) {
-                        imposterFound = true;
-                        this.classList.add('border-red-500', 'bg-red-50', 'ring-4', 'ring-red-200');
-                        this.classList.remove('border-slate-200');
-                        badge.classList.remove('hidden');
-                        badge.textContent = '¡IMPOSTOR!';
-                        badge.classList.add('text-red-600');
-                        resultado.innerHTML = '<div class="inline-block bg-red-100 border-2 border-red-400 text-red-800 px-6 py-4 rounded-2xl text-xl font-bold shadow-lg"><i class="fas fa-handcuffs mr-2" aria-hidden="true"></i> ¡Atrapado! El participio correcto de <em>escribir</em> es <strong>ESCRITO</strong>, no "escribido".</div>';
-                    } else {
-                        badge.classList.remove('hidden');
-                        badge.textContent = 'Inocente ✓';
-                        badge.classList.add('text-emerald-600');
-                        this.classList.add('border-emerald-400', 'bg-emerald-50');
-                        this.classList.remove('border-slate-200');
-                        resultado.innerHTML = '<p class="text-xl text-emerald-700 font-semibold"><i class="fas fa-check-circle mr-2" aria-hidden="true"></i> Inocente. Este participio es correcto. Sigue buscando.</p>';
-                    }
+            function renderQuestion() {
+                var q = QUESTIONS[level];
+                if (!q) return;
+                document.getElementById('millonario-nivel').textContent = 'Pregunta ' + (level + 1) + ' de 6';
+                document.getElementById('millonario-evento').textContent = q.event;
+                document.getElementById('millonario-pregunta').textContent = q.question;
+                var cont = document.getElementById('millonario-opciones');
+                cont.innerHTML = '';
+                q.options.forEach(function(opt) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'millonario-opcion flex items-center gap-4 p-4 rounded-xl font-bold text-lg text-left bg-slate-50 border-2 border-slate-200 text-slate-800';
+                    btn.dataset.correct = opt.correct ? '1' : '0';
+                    btn.innerHTML = '<span class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center">' + opt.letter + '</span>' + opt.text;
+                    btn.addEventListener('click', function() { onAnswer(btn, opt.correct, q); });
+                    cont.appendChild(btn);
                 });
-            });
-        })();
-        </script>
-    </div>
-</section>
+                var fb = document.getElementById('millonario-feedback');
+                fb.classList.add('hidden');
+                fb.textContent = '';
+                renderProgress();
+                locked = false;
+            }
 
-<section class="trivia-tiempo section-game rounded-2xl overflow-hidden">
-    <div class="slide-container">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent"><i class="fas fa-earth-americas text-sky-500 mr-2" aria-hidden="true"></i> Game: History Trivia</h2>
-        <p class="text-center text-lg text-slate-600 mb-4">Did it already happen by that date? Yes or No.</p>
+            function onAnswer(btn, correct, q) {
+                if (locked) return;
+                locked = true;
+                var opts = document.querySelectorAll('#millonario-opciones .millonario-opcion');
+                opts.forEach(function(b) {
+                    b.classList.add('disabled');
+                    if (b.dataset.correct === '1') b.classList.add('correcta');
+                    if (b === btn && !correct) b.classList.add('incorrecta');
+                });
 
-        <div class="space-y-5">
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">1492 – Llegada de Colón a América</span>
-                        <p class="text-xl text-slate-800">Cuando Colón llegó a América en 1492...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...los vikingos <strong>ya habían llegado</strong> al continente?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t1" data-correct="1">Sí, ya habían llegado</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t1" data-correct="0">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t1" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
+                var feedback = document.getElementById('millonario-feedback');
+                feedback.classList.remove('hidden');
 
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-indigo-100 text-indigo-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">1969 – Primera llegada del hombre a la Luna</span>
-                        <p class="text-xl text-slate-800">Cuando el Apolo 11 llegó a la Luna en 1969...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...el Muro de Berlín <strong>ya había caído</strong>?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t2" data-correct="0">Sí, ya había caído</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t2" data-correct="1">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t2" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
-
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-rose-100 text-rose-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">1912 – Hundimiento del Titanic</span>
-                        <p class="text-xl text-slate-800">Cuando el Titanic se hundió en 1912...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...la Primera Guerra Mundial <strong>ya había empezado</strong>?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t3" data-correct="0">Sí, ya había empezado</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t3" data-correct="1">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t3" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
-
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-amber-100 text-amber-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">1939 – Inicio de la Segunda Guerra Mundial</span>
-                        <p class="text-xl text-slate-800">Cuando empezó la Segunda Guerra Mundial en 1939...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...la Primera Guerra Mundial <strong>ya había terminado</strong>?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t4" data-correct="1">Sí, ya había terminado</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t4" data-correct="0">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t4" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
-
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-sky-100 text-sky-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">2007 – Lanzamiento del primer iPhone</span>
-                        <p class="text-xl text-slate-800">Cuando Apple lanzó el primer iPhone en 2007...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...Instagram <strong>ya se había creado</strong>?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t5" data-correct="0">Sí, ya existía</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t5" data-correct="1">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t5" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
-
-            <div class="trivia-card glass-card bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-100 overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex-1">
-                        <span class="inline-block bg-violet-100 text-violet-800 text-xl px-4 py-2 rounded-xl font-bold mb-2">2004 – Creación de Facebook</span>
-                        <p class="text-xl text-slate-800">Cuando Mark Zuckerberg creó Facebook en 2004...</p>
-                        <p class="text-xl text-slate-600 italic mt-1">¿...YouTube <strong>ya se había fundado</strong>?</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 md:flex-shrink-0">
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t6" data-correct="0">Sí, ya existía</button>
-                        <button type="button" class="trivia-btn px-5 py-3 rounded-xl font-bold text-xl shadow transition border-2 border-slate-300 text-slate-600 hover:bg-slate-100" data-trivia="t6" data-correct="1">No, todavía no</button>
-                    </div>
-                </div>
-                <div id="t6" class="trivia-fb hidden mt-3 p-3 rounded-xl text-xl font-semibold" aria-live="polite"></div>
-            </div>
-        </div>
-
-        <script>
-        (function() {
-            var messages = {
-                t1: { ok: '¡Correcto! Leif Erikson y los vikingos habían llegado a América unos 500 años antes (c. 1000).', err: 'Incorrecto. Los vikingos sí habían llegado antes; Colón no fue el primero.' },
-                t2: { ok: '¡Correcto! El Muro de Berlín cayó en 1989; en 1969 todavía no había caído.', err: 'Incorrecto. El Muro cayó en 1989; en 1969 aún estaba en pie.' },
-                t3: { ok: '¡Correcto! La Primera Guerra Mundial empezó en 1914; el Titanic se hundió en 1912.', err: 'Incorrecto. La Gran Guerra empezó en 1914; el Titanic se hundió antes.' },
-                t4: { ok: '¡Correcto! La Primera Guerra Mundial había terminado en 1918; la Segunda empezó en 1939.', err: 'Incorrecto. La Primera Guerra terminó en 1918, mucho antes de 1939.' },
-                t5: { ok: '¡Correcto! Instagram se creó en 2010; el iPhone salió en 2007.', err: 'Incorrecto. Instagram nació en 2010; en 2007 todavía no existía.' },
-                t6: { ok: '¡Correcto! YouTube se fundó en 2005; Facebook en 2004.', err: 'Incorrecto. YouTube es de 2005; Facebook es de 2004.' }
-            };
-            document.querySelectorAll('.trivia-tiempo .trivia-btn').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var tid = this.getAttribute('data-trivia');
-                    var correct = this.getAttribute('data-correct') === '1';
-                    var box = document.getElementById(tid);
-                    if (!box) return;
-                    box.classList.remove('hidden');
-                    box.textContent = correct ? messages[tid].ok : messages[tid].err;
-                    box.className = 'trivia-fb mt-3 p-3 rounded-xl text-xl font-semibold ' + (correct ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800');
-                    if (correct && typeof confetti === 'function') {
-                        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-                    }
-                    var card = this.closest('.trivia-card');
-                    if (card) {
-                        card.querySelectorAll('.trivia-btn').forEach(function(b) {
-                            b.classList.remove('border-emerald-500', 'text-emerald-700', 'bg-emerald-50', 'border-red-400', 'text-red-700', 'bg-red-50');
-                            b.classList.add('border-slate-300', 'text-slate-600');
-                            if (b === btn) {
-                                if (correct) {
-                                    b.classList.remove('border-slate-300', 'text-slate-600');
-                                    b.classList.add('border-emerald-500', 'text-emerald-700', 'bg-emerald-50');
-                                } else {
-                                    b.classList.remove('border-slate-300', 'text-slate-600');
-                                    b.classList.add('border-red-400', 'text-red-700', 'bg-red-50');
-                                    var correctBtn = card.querySelector('.trivia-btn[data-correct="1"]');
-                                    if (correctBtn && correctBtn !== btn) {
-                                        correctBtn.classList.remove('border-slate-300', 'text-slate-600');
-                                        correctBtn.classList.add('border-emerald-500', 'text-emerald-700', 'bg-emerald-50');
-                                    }
-                                }
+                if (correct) {
+                    playCorrect();
+                    feedback.textContent = q.okMsg;
+                    feedback.className = 'mt-4 p-4 rounded-xl text-lg font-semibold max-w-3xl mx-auto bg-emerald-100 text-emerald-800';
+                    setTimeout(function() {
+                        level++;
+                        if (level >= 6) {
+                            playWin();
+                            if (typeof confetti === 'function') {
+                                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
                             }
-                        });
-                    }
-                });
+                            showScreen('millonario-ganaste');
+                        } else {
+                            renderQuestion();
+                        }
+                    }, 1800);
+                } else {
+                    playWrong();
+                    feedback.textContent = q.errMsg;
+                    feedback.className = 'mt-4 p-4 rounded-xl text-lg font-semibold max-w-3xl mx-auto bg-red-100 text-red-800';
+                    document.getElementById('millonario-perdiste-mensaje').textContent = q.errMsg;
+                    setTimeout(function() { showScreen('millonario-perdiste'); }, 1500);
+                }
+            }
+
+            document.getElementById('millonario-comenzar').addEventListener('click', function() {
+                level = 0;
+                showScreen('millonario-juego');
+                renderQuestion();
+            });
+            document.getElementById('millonario-reintentar').addEventListener('click', function() {
+                level = 0;
+                showScreen('millonario-juego');
+                renderQuestion();
+            });
+            document.getElementById('millonario-otra-vez').addEventListener('click', function() {
+                level = 0;
+                showScreen('millonario-juego');
+                renderQuestion();
             });
         })();
         </script>
     </div>
 </section>
 
-<section class="actividad-final-pandemia rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0f9ff 100%);">
-    <div class="slide-container">
-        <div class="grid md:grid-cols-2 gap-8 items-start max-w-5xl mx-auto">
-            <div>
-                <h2 class="text-2xl font-black mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"><i class="fas fa-flag-checkered text-emerald-500 mr-2" aria-hidden="true"></i> Final activity</h2>
-                <p class="text-lg text-slate-600 mb-4">Write 10 sentences:</p>
-                <ul class="space-y-2 text-slate-700 font-medium mb-6">
-                    <li class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-amber-400/50 flex items-center justify-center text-sm font-bold">1</span> "Antes de la pandemia yo nunca había..."</li>
-                    <li class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-emerald-400/50 flex items-center justify-center text-sm font-bold">2</span> "Después de la pandemia ya había..."</li>
-                </ul>
-                <div class="rounded-2xl border-2 border-emerald-200 bg-white p-4 shadow-lg">
-                    <textarea id="respuesta-actividad-final" class="clean-input w-full rounded-xl border-2 border-emerald-100 p-4 text-lg resize-y min-h-[7em]" rows="5" placeholder="e.g. Antes nunca había trabajado desde casa. Después ya había aprendido Zoom." aria-label="Escribe tu respuesta"></textarea>
+<section class="actividad-final-pandemia">
+    <div class="slide-container space-y-8 max-w-4xl mx-auto">
+        <!-- 1. Título e instrucción -->
+        <div class="text-center">
+            <h2 class="text-2xl md:text-3xl text-emerald-800 font-black mb-3"><i class="fas fa-flag-checkered text-emerald-600 mr-2" aria-hidden="true"></i> Actividad final</h2>
+            <p class="text-lg text-slate-700">
+                La pandemia marcó un antes y un después. Escribe tu experiencia usando el pluscuamperfecto.
+            </p>
+        </div>
+
+        <!-- 2. Frases de apoyo (una sola caja, fácil de escanear) -->
+        <div class="bg-emerald-50/80 rounded-2xl p-5 border-2 border-emerald-200">
+            <p class="text-sm font-bold text-emerald-800 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <i class="fas fa-quote-left text-emerald-500" aria-hidden="true"></i> Puedes usar frases como:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex gap-3 items-start bg-white rounded-xl p-4 shadow-sm border border-emerald-100">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-bold">1</span>
+                    <p class="text-slate-700 text-base pt-0.5">«Antes de la pandemia yo nunca había…»</p>
+                </div>
+                <div class="flex gap-3 items-start bg-white rounded-xl p-4 shadow-sm border border-emerald-100">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-bold">2</span>
+                    <p class="text-slate-700 text-base pt-0.5">«Después de la pandemia yo ya había…»</p>
+                </div>
+                <div class="flex gap-3 items-start bg-white rounded-xl p-4 shadow-sm border border-emerald-100">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-bold">3</span>
+                    <p class="text-slate-700 text-base pt-0.5">«Quería hacer… cuando acabara»</p>
                 </div>
             </div>
-            <div class="bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 text-white p-8 rounded-3xl shadow-2xl border-2 border-emerald-400/30">
-                <div class="flex justify-center mb-4">
-                    <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png" alt="Tucaneo" class="h-14 w-auto object-contain" loading="lazy">
-                </div>
-                <p class="text-2xl font-bold mb-2 text-center">¡Gracias!</p>
-                <p class="text-lg text-emerald-100 text-center mb-4">Sigue practicando en <a href="https://tucaneo.com" class="underline font-bold text-amber-200 hover:text-amber-100">Tucaneo.com</a></p>
-                <p class="text-center text-amber-200"><i class="fas fa-heart" aria-hidden="true"></i></p>
+        </div>
+
+        <!-- 3. Zona de escritura (destacada) -->
+        <div class="bg-white rounded-2xl p-6 border-2 border-emerald-300 shadow-lg ring-2 ring-emerald-100">
+            <p class="text-lg font-bold text-emerald-800 mb-1 flex items-center gap-2">
+                <i class="fas fa-pen-fancy text-emerald-600" aria-hidden="true"></i> Tu respuesta (por escrito)
+            </p>
+            <p class="text-sm text-slate-500 mb-4">Escribe aquí tu experiencia:</p>
+            <textarea id="respuesta-actividad-final" class="clean-input w-full rounded-xl border-2 border-emerald-200 p-4 text-lg text-slate-800 font-normal resize-y min-h-[8em]" rows="6" placeholder="Ejemplo: Antes de la pandemia yo nunca había trabajado desde casa. Después, cuando volví a la oficina, ya había aprendido a usar Zoom. Quería viajar cuando acabara la pandemia." aria-label="Escribe tu respuesta sobre antes y después de la pandemia"></textarea>
+        </div>
+
+        <!-- 4. Cierre -->
+        <div class="glass-card bg-gradient-to-br from-emerald-700 to-teal-800 text-white p-6 rounded-2xl text-center shadow-xl">
+            <p class="text-xl md:text-2xl font-handlee mb-2">¡Gracias por completar esta misión!</p>
+            <p class="text-base md:text-lg font-light mb-4">Sigue practicando en <a href="https://tucaneo.com" class="underline font-bold hover:text-amber-200">Tucaneo.com</a>.</p>
+            <div class="flex justify-center">
+                <img src="https://tucaneo.com/wp-content/uploads/2025/09/cropped-Diseno-sin-titulo-9.png" alt="Tucaneo" class="h-12 w-auto object-contain opacity-95" loading="lazy">
             </div>
+            <p class="text-base mt-2 text-emerald-100">Hasta la próxima. <i class="fas fa-heart text-rose-300" aria-hidden="true"></i></p>
         </div>
     </div>
 </section>

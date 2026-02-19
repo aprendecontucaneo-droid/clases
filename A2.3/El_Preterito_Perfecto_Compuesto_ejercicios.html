@@ -228,6 +228,60 @@
             font-weight: 500;
         }
 
+        /* Desafío Detective / Interrogatorio: máximo contraste para que todo el texto resalte */
+        .slide-detective .detective-label {
+            color: #0f172a !important;
+            font-weight: 800 !important;
+        }
+        .slide-detective .detective-label span {
+            color: #0f172a !important;
+        }
+        .slide-detective .detective-evidence-text {
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            opacity: 1 !important;
+        }
+        .slide-detective .detective-situation-text {
+            color: #0f172a !important;
+            font-weight: 600 !important;
+        }
+        .slide-detective .detective-case-card .clean-input {
+            color: #0f172a !important;
+        }
+        .slide-detective .detective-case-card .clean-input::placeholder {
+            color: #334155 !important;
+            font-weight: 600 !important;
+        }
+        /* Interrogatorio: contraste alto en diálogos Detective, Sospechoso y Prueba */
+        .slide-detective .interrog-detect p,
+        .slide-detective .interrog-suspect p,
+        .slide-detective .interrog-evidence p,
+        .slide-detective .interrog-evidence .text-sm {
+            color: #0f172a !important;
+            font-weight: 600 !important;
+            opacity: 1 !important;
+        }
+        .slide-detective .interrog-detect .interrog-label,
+        .slide-detective .interrog-suspect .interrog-label,
+        .slide-detective .interrog-evidence .interrog-label {
+            color: #0c4a6e !important;
+            font-weight: 800 !important;
+        }
+        .slide-detective .interrog-suspect .interrog-label {
+            color: #991b1b !important;
+        }
+        .slide-detective .interrog-evidence .interrog-label {
+            color: #78350f !important;
+        }
+        .slide-detective .interrog-conclusion-label,
+        .slide-detective .answer-reveal {
+            color: #0f172a !important;
+            font-weight: 700 !important;
+        }
+        .slide-detective .answer-reveal {
+            color: #166534 !important;
+        }
+
         /* =========================================
        6. UI Y UTILIDADES
        ========================================= */
@@ -922,148 +976,186 @@
                 </div>
             </section>
 
-            <!-- SLIDE 1: CALENTAMIENTO MENTAL -->
+            <!-- SLIDE 1: ¿QUÉ HA PASADO AQUÍ? - Ejercicio dinámico e interactivo -->
             <section data-limit-scroll="false" class="bg-gradient-to-br from-amber-50 to-orange-100">
                 <div class="slide-container flex flex-col items-center h-full max-w-7xl">
-                    <!-- Title -->
-                    <h2
-                        class="text-4xl font-black text-orange-800 mb-4 bg-white/60 px-8 py-3 rounded-full shadow-md text-center font-playfair w-full max-w-4xl border-2 border-orange-200">
-                        <i class="fas fa-fire-burner mr-4 text-orange-600"></i>¿QUÉ HA PASADO AQUÍ?
-                    </h2>
-
-                    <!-- Introduction - Added as requested -->
-                    <div
-                        class="bg-white/80 backdrop-blur-sm p-4 rounded-xl border-l-8 border-orange-500 shadow-sm w-full max-w-5xl mb-6">
-                        <p class="text-2xl text-slate-700 font-medium leading-relaxed">
-                            <i class="fas fa-info-circle text-orange-500 mr-2"></i>
-                            Entras en la cocina y ves un caos total.
-                            <span class="font-bold text-orange-700">Observa la imagen y deduce qué ha ocurrido
-                                recientemente.</span>
-                            Usa el <span class="italic underline decoration-orange-400 decoration-4">Pretérito
-                                Perfecto</span>.
-                        </p>
+                    <!-- Title + Timer -->
+                    <div class="w-full flex flex-wrap justify-between items-center gap-4 mb-4">
+                        <h2
+                            class="text-3xl md:text-4xl font-black text-orange-800 bg-white/60 px-6 py-2 rounded-full shadow-md font-playfair border-2 border-orange-200 flex items-center gap-3">
+                            <span class="bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-lg">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            ¿QUÉ HA PASADO AQUÍ?
+                        </h2>
+                        <div class="bg-white/90 border-2 border-orange-200 rounded-xl px-4 py-2 flex items-center gap-3 shadow-md">
+                            <span class="text-orange-700 text-sm font-bold uppercase">Tiempo:</span>
+                            <span id="kitchen-timer" class="text-2xl font-mono text-orange-600 font-black">03:00</span>
+                            <button onclick="startKitchenTimer()" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition">
+                                <i class="fas fa-play mr-1"></i>Iniciar
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 w-full flex-grow items-start">
+                    <!-- Instrucciones claras y visibles -->
+                    <div class="w-full mb-4">
+                        <div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl border-l-4 border-orange-500 shadow-sm">
+                            <p class="text-lg md:text-xl text-slate-700 font-medium leading-relaxed m-0">
+                                <i class="fas fa-lightbulb text-orange-500 mr-2"></i>
+                                <strong class="text-orange-700">Tu misión:</strong> Observa la imagen del desastre. En cada <strong>caso</strong>, lee la pista, usa el <span class="font-bold text-orange-600">Pretérito Perfecto</span> (ha + participio) y escribe tu conclusión.
+                            </p>
+                        </div>
+                    </div>
 
-                        <!-- Left: Visual Context (Existing Image + Improved Style) -->
-                        <div class="xl:col-span-4 flex flex-col h-full max-h-[600px]">
-                            <div
-                                class="bg-white p-3 rounded-2xl shadow-xl border-2 border-orange-200 relative overflow-hidden group hover:scale-[1.02] transition-transform h-full">
-                                <div
-                                    class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605522283494-4901a98d458e?w=1200')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110">
-                                </div>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent">
-                                </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 w-full flex-grow items-stretch min-h-0">
 
+                        <!-- Left: Imagen del desastre -->
+                        <div class="xl:col-span-4 flex flex-col min-h-[280px]">
+                            <div class="bg-white p-2 rounded-2xl shadow-xl border-2 border-orange-200 relative overflow-hidden group h-full min-h-[280px]">
+                                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605522283494-4901a98d458e?w=1200')] bg-cover bg-center transition-transform duration-500 group-hover:scale-105"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
                                 <div class="relative z-10 h-full flex flex-col justify-end text-white p-4">
-                                    <span
-                                        class="bg-red-600 text-white text-xl font-black px-4 py-2 rounded-lg mb-4 w-max animate-pulse shadow-lg transform -rotate-2">
-                                        ¡DESASTRE TOTAL!
-                                    </span>
-                                    <p class="text-2xl italic text-gray-100 font-handlee drop-shadow-md">
-                                        "Madre mía... ¿pero qué (hacer) aquí?"
-                                    </p>
+                                    <span class="bg-red-600 text-white text-lg font-black px-3 py-1 rounded-lg mb-2 w-max animate-pulse shadow-lg">¡DESASTRE!</span>
+                                    <p class="text-xl italic text-gray-100 font-handlee m-0">«¿Qué (hacer) aquí?»</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Right: Exercises (Now 6 items, 2 columns) -->
-                        <div
-                            class="xl:col-span-8 bg-white/60 backdrop-blur-xl p-6 rounded-3xl shadow-2xl border border-orange-100 h-full flex flex-col justify-center">
+                        <!-- Right: Carrusel interactivo de casos -->
+                        <div class="xl:col-span-8 bg-white/80 backdrop-blur-xl p-5 rounded-2xl shadow-xl border-2 border-orange-100 flex flex-col min-h-0">
+                            <!-- Indicador de progreso -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex gap-1">
+                                    <span id="kitchen-progress" class="text-orange-700 font-bold">Caso 1 de 6</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-400 transition-all" data-case="0"></span>
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-200 transition-all" data-case="1"></span>
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-200 transition-all" data-case="2"></span>
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-200 transition-all" data-case="3"></span>
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-200 transition-all" data-case="4"></span>
+                                    <span class="kitchen-dot w-3 h-3 rounded-full bg-orange-200 transition-all" data-case="5"></span>
+                                </div>
+                            </div>
 
-                            <h3
-                                class="text-3xl font-bold text-orange-900 mb-6 flex items-center gap-3 border-b-2 border-orange-200 pb-2">
-                                <i class="fas fa-pencil-alt text-orange-600"></i>
-                                Completa las frases:
-                            </h3>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto pr-2"
-                                style="max-height: 550px;">
-
-                                <!-- Ex 1 -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">1. Alguien (cocinar) un pastel.</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="ha cocinado">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                            <!-- Contenedor del carrusel -->
+                            <div class="relative flex-1 min-h-0 flex flex-col">
+                                <!-- Caso 1 -->
+                                <div class="kitchen-case flex flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="0">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-cookie-bite text-2xl"></i>
+                                        <span class="font-bold text-lg">Hay un pastel en la mesa, pero hay migas por todas partes...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: Alguien <strong>(cocinar)</strong> un pastel. →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: ha cocinado" data-correct="ha cocinado">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
-
-                                <!-- Ex 2 -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">2. El perro (comer) harina.</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="ha comido">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                                <!-- Caso 2 -->
+                                <div class="kitchen-case hidden flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="1">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-paw text-2xl"></i>
+                                        <span class="font-bold text-lg">El perro tiene harina en el hocico y en las patas...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: El perro <strong>(comer)</strong> harina. →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: ha comido" data-correct="ha comido">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
-
-                                <!-- Ex 3 -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">3. Nosotros (limpiar) nada.</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="hemos limpiado">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                                <!-- Caso 3 -->
+                                <div class="kitchen-case hidden flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="2">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-broom text-2xl"></i>
+                                        <span class="font-bold text-lg">El suelo está sucio, los platos amontonados...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: Nosotros <strong>(limpiar)</strong> nada. →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: hemos limpiado" data-correct="hemos limpiado">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
-
-                                <!-- Ex 4 (NEW) -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">4. Los niños (romper) el plato.</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="han roto">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                                <!-- Caso 4 -->
+                                <div class="kitchen-case hidden flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="3">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-plate-wheat text-2xl"></i>
+                                        <span class="font-bold text-lg">Hay trozos de plato rotos en el suelo...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: Los niños <strong>(romper)</strong> el plato. →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: han roto" data-correct="han roto">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
-
-                                <!-- Ex 5 (NEW) -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">5. ¿Tú (ver) las tijeras?</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="has visto">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                                <!-- Caso 5 -->
+                                <div class="kitchen-case hidden flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="4">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-cut text-2xl"></i>
+                                        <span class="font-bold text-lg">Las tijeras están encima de la mesa, usadas...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: ¿Tú <strong>(ver)</strong> las tijeras? →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: has visto" data-correct="has visto">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
-
-                                <!-- Ex 6 (NEW) -->
-                                <div
-                                    class="bg-white p-4 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition card-hover-effect">
-                                    <p class="text-xl text-slate-700 font-bold mb-2">6. Yo (escribir) un mensaje.</p>
-                                    <div class="flex items-center gap-3">
-                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 h-12"
-                                            placeholder="..." data-correct="he escrito">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full hover:bg-green-500 hover:text-white transition text-xl flex items-center justify-center shadow-sm"><i
-                                                class="fas fa-check"></i></button>
+                                <!-- Caso 6 -->
+                                <div class="kitchen-case hidden flex-col gap-3 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-200" data-index="5">
+                                    <div class="flex items-center gap-2 text-orange-800">
+                                        <i class="fas fa-pen-fancy text-2xl"></i>
+                                        <span class="font-bold text-lg">Hay un papel con notas y un bolígrafo...</span>
+                                    </div>
+                                    <p class="text-slate-700 font-medium">Conclusión: Yo <strong>(escribir)</strong> un mensaje. →</p>
+                                    <div class="flex gap-2 mt-auto">
+                                        <input type="text" class="clean-input flex-1 text-xl py-2 px-3 rounded-lg" placeholder="ej: he escrito" data-correct="he escrito">
+                                        <button onclick="checkSlideInput(this)" class="w-12 h-12 bg-orange-500 text-white rounded-full hover:bg-green-500 transition flex items-center justify-center shrink-0"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
+                            </div>
 
+                            <!-- Navegación del carrusel -->
+                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-orange-200">
+                                <button onclick="prevKitchenCase()" class="bg-orange-200 hover:bg-orange-300 text-orange-800 px-4 py-2 rounded-xl font-bold transition flex items-center gap-2">
+                                    <i class="fas fa-chevron-left"></i> Anterior
+                                </button>
+                                <button onclick="nextKitchenCase()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl font-bold transition flex items-center gap-2">
+                                    Siguiente <i class="fas fa-chevron-right"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    let kitchenCaseIndex = 0;
+                    let kitchenTimerInterval;
+                    function showKitchenCase(idx) {
+                        kitchenCaseIndex = Math.max(0, Math.min(5, idx));
+                        document.querySelectorAll('.kitchen-case').forEach((el, i) => {
+                            el.classList.toggle('hidden', i !== kitchenCaseIndex);
+                            el.classList.toggle('flex', i === kitchenCaseIndex);
+                        });
+                        document.querySelectorAll('.kitchen-dot').forEach((dot, i) => {
+                            dot.classList.toggle('bg-orange-400', i === kitchenCaseIndex);
+                            dot.classList.toggle('bg-orange-200', i !== kitchenCaseIndex);
+                        });
+                        document.getElementById('kitchen-progress').textContent = 'Caso ' + (kitchenCaseIndex + 1) + ' de 6';
+                    }
+                    function nextKitchenCase() { showKitchenCase(kitchenCaseIndex + 1); }
+                    function prevKitchenCase() { showKitchenCase(kitchenCaseIndex - 1); }
+                    function startKitchenTimer() {
+                        let timeLeft = 180;
+                        const display = document.getElementById('kitchen-timer');
+                        clearInterval(kitchenTimerInterval);
+                        kitchenTimerInterval = setInterval(() => {
+                            let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+                            display.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                            if (timeLeft <= 0) { clearInterval(kitchenTimerInterval); display.textContent = '00:00'; }
+                            timeLeft--;
+                        }, 1000);
+                    }
+                </script>
             </section>
 
 
@@ -1390,265 +1482,118 @@
                 </div>
             </section>
 
-            <!-- SLIDE 4: DETECTIVES PRIVADOS (TIMED CHALLENGE) -->
-            <section data-limit-scroll="false" class="bg-slate-800 text-white">
-                <div class="slide-container flex flex-col items-center h-full max-w-7xl">
+            <!-- SLIDE 4: ¿CORRECTO O INCORRECTO? - Verdadero/Falso (formato único en la presentación) -->
+            <section data-limit-scroll="false" class="bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50 min-h-screen">
+                <style>
+                    .vf-btn { transition: all 0.3s ease; cursor: pointer; }
+                    .vf-btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+                    .vf-btn.chosen-correct { opacity: 1; box-shadow: 0 0 0 4px #10b981; }
+                    .vf-btn.chosen-wrong { opacity: 0.5; box-shadow: 0 0 0 4px #ef4444; }
+                    .vf-statement { transition: all 0.4s ease; }
+                    .vf-statement.revealed-correct { border-color: #10b981 !important; background: #d1fae5 !important; }
+                    .vf-statement.revealed-incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; }
+                </style>
 
-                    <!-- Header with Timer -->
-                    <div class="w-full flex justify-between items-center mb-6 border-b border-slate-600 pb-4">
-                        <h2 class="text-4xl font-bold font-playfair flex items-center gap-4 !text-yellow-400">
-                            <span
-                                class="bg-slate-700 !text-yellow-400 w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-lg border border-slate-500">
-                                <i class="fas fa-user-secret"></i>
-                            </span>
-                            DESAFÍO DETECTIVE
-                        </h2>
-
-                        <div
-                            class="bg-slate-900 border-2 border-slate-600 rounded-lg px-6 py-2 flex items-center gap-4 shadow-inner">
-                            <span class="text-slate-400 text-sm font-bold uppercase tracking-wider">Tiempo
-                                Restante:</span>
-                            <span id="detective-timer"
-                                class="text-4xl font-mono text-red-500 font-black animate-pulse">03:00</span>
-                            <button onclick="startDetectiveTimer()"
-                                class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded text-sm transition font-bold uppercase"><i
-                                    class="fas fa-play mr-2"></i>Iniciar</button>
+                <div class="slide-container flex flex-col items-center h-full max-w-3xl relative z-10">
+                    <!-- Header -->
+                    <div class="w-full flex flex-wrap justify-between items-center gap-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-rose-600 flex items-center justify-center text-2xl text-white shadow-lg shadow-fuchsia-500/30">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-3xl md:text-4xl font-black text-fuchsia-800 m-0">
+                                    ¿CORRECTO O INCORRECTO?
+                                </h2>
+                                <p class="text-fuchsia-600 text-sm font-bold uppercase tracking-wider m-0">¿La conjugación es correcta?</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl border-2 border-fuchsia-200 shadow-sm">
+                            <i class="fas fa-check-circle text-emerald-500"></i>
+                            <span id="vf-score" class="text-fuchsia-700 font-bold">0/6</span>
                         </div>
                     </div>
 
-                    <!-- Introducción -->
-                    <div class="w-full mb-6 space-y-3">
-                        <div class="bg-slate-900/80 p-5 rounded-xl border-2 border-yellow-600/50">
-                            <p class="text-lg !text-slate-200 leading-relaxed mb-3">
-                                <i class="fas fa-book-open text-yellow-500 mr-2"></i>
-                                <strong class="text-yellow-400">Eres un detective privado.</strong> Te han llamado para investigar varios casos misteriosos. 
-                                En cada escena encontrarás <em>evidencias</em>: observa con atención, imagina qué ha ocurrido 
-                                recientemente y escribe tu deducción usando el <strong class="text-yellow-300">Pretérito Perfecto</strong>.
-                            </p>
-                            <p class="text-base !text-yellow-200 font-bold">
-                                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                                Analiza cada caso y completa tu deducción. ¡Tienes 3 minutos!
-                            </p>
-                        </div>
+                    <!-- Instrucción -->
+                    <div class="w-full mb-6 p-4 rounded-2xl bg-white/90 border-2 border-fuchsia-200 shadow-sm">
+                        <p class="text-lg text-slate-700 m-0 text-center">
+                            <i class="fas fa-question-circle text-fuchsia-500 mr-2"></i>
+                            Lee cada frase. ¿El <strong class="text-fuchsia-600">Pretérito Perfecto</strong> está bien conjugado? Haz clic en <strong>Correcto</strong> o <strong>Incorrecto</strong>.
+                        </p>
                     </div>
 
-                    <!-- Grid of 6 Cases -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full overflow-y-auto pr-2"
-                        style="max-height: 550px;">
-
-                        <!-- Case 1 -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #001</span>
-                                <i class="fas fa-baseball-bat-ball text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> Llegas a una casa. Los dueños te muestran el salón muy preocupados.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"Hay
-                                    cristales rotos en el suelo y una pelota."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="Alguien (romper)..." data-correct="ha roto">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución:
-                                        Alguien ha roto la ventana.</p>
-                                </div>
+                    <!-- Lista de afirmaciones (todas visibles, no carrusel) -->
+                    <div class="w-full flex-1 overflow-y-auto space-y-4 pr-2" style="max-height: 450px;">
+                        <!-- Afirmación 1: Correcta -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="0" data-answer="true">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">1. El niño <strong class="text-fuchsia-600">ha comido</strong> el pastel.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 0, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 0, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
-                        <!-- Case 2 -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #002</span>
-                                <i class="fas fa-pen-fancy text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> Entras en un aula de instituto. El profesor está muy enfadado y los alumnos no pueden dejar de reír.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"El
-                                    profesor tiene tinta azul en toda la cara."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="El boli (explotar)..." data-correct="ha explotado">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución: El
-                                        bolígrafo ha explotado.</p>
-                                </div>
+                        <!-- Afirmación 2: Incorrecta (debería ser "ha roto") -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="1" data-answer="false">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">2. Un adolescente <strong class="text-fuchsia-600">han roto</strong> la ventana del salón.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 1, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 1, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
-                        <!-- Case 3 -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #003</span>
-                                <i class="fas fa-umbrella-beach text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> Estás en la playa. Una chica se acerca a ti con cara de preocupación.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"La chica
-                                    está roja como un tomate."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="Ella (tomar)..." data-correct="ha tomado">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución: Ella
-                                        ha tomado el sol.</p>
-                                </div>
+                        <!-- Afirmación 3: Correcta -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="2" data-answer="true">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">3. El empleado <strong class="text-fuchsia-600">ha tirado</strong> el informe a la papelera.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 2, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 2, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
-                        <!-- Case 4 (NEW) -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #004</span>
-                                <i class="fas fa-cookie-bite text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> La señora Martínez te llama enfadada. Ha dejado un pastel en la mesa y algo ha pasado.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"Hay migas
-                                    en el sofá y falta el pastel."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="Alguien (comer)..." data-correct="ha comido">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución:
-                                        Alguien se ha comido el pastel.</p>
-                                </div>
+                        <!-- Afirmación 4: Incorrecta (debería ser "ha explotado") -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="3" data-answer="false">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">4. El bolígrafo <strong class="text-fuchsia-600">he explotado</strong> en la mano del profesor.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 3, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 3, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
-                        <!-- Case 5 (NEW) -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #005</span>
-                                <i class="fas fa-paw text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> Una vecina te llama asustada. Su gato maúlla sin parar en el jardín.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"El gato
-                                    está mojado y tiembla."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="El gato (caer)..." data-correct="ha caído">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución: El
-                                        gato se ha caído al agua.</p>
-                                </div>
+                        <!-- Afirmación 5: Correcta -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="4" data-answer="true">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">5. El gato <strong class="text-fuchsia-600">ha caído</strong> a la fuente del jardín.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 4, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 4, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
-                        <!-- Case 6 (NEW) -->
-                        <div
-                            class="bg-slate-100 rounded-xl overflow-hidden shadow-lg border-2 border-slate-300 flex flex-col group hover:border-slate-500 transition-colors">
-                            <div class="bg-slate-700 p-3 flex justify-between items-center text-white">
-                                <span class="font-bold uppercase tracking-widest text-xs"><i
-                                        class="fas fa-folder-open mr-2"></i>Caso #006</span>
-                                <i class="fas fa-key text-white/30"></i>
-                            </div>
-                            <div class="p-5 flex-1 flex flex-col gap-3">
-                                <p class="mb-1 text-sm font-semibold" style="color: #000 !important;"><span class="font-bold">Situación:</span> Llegas a tu propia casa después del trabajo. Algo no va bien en la puerta.</p>
-                                <p class="!text-green-900 text-sm font-black uppercase mb-1"><span class="text-[#03045e]">Evidencia:</p>
-                                <p class="!text-black italic bg-white p-3 rounded border border-slate-200"
-                                    style="color: black !important;">"Estás
-                                    fuera de casa y no puedes entrar."</p>
-
-                                <div class="mt-auto pt-2">
-                                    <p class="!text-green-900 text-xs font-black uppercase mb-1"><span class="text-[#03045e]">Tu Deducción:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" style="color: black !important;"
-                                            class="clean-input !text-black text-lg py-1 px-2 h-10 w-full bg-white border-slate-300 font-bold"
-                                            placeholder="Yo (perder)..." data-correct="he perdido">
-                                        <button onclick="checkSlideInput(this)"
-                                            class="bg-slate-200 text-slate-600 w-10 h-10 rounded hover:bg-slate-300 transition"><i
-                                                class="fas fa-check"></i></button>
-                                    </div>
-                                    <p class="hidden text-green-600 font-bold text-sm mt-1 answer-reveal">Solución: He
-                                        perdido las llaves.</p>
-                                </div>
+                        <!-- Afirmación 6: Correcta -->
+                        <div class="vf-statement p-5 rounded-2xl bg-white border-2 border-fuchsia-200 shadow-sm" data-vf="5" data-answer="true">
+                            <p class="text-xl font-medium text-slate-800 m-0 mb-4">6. Yo <strong class="text-fuchsia-600">he perdido</strong> las llaves de casa.</p>
+                            <div class="flex gap-4">
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-lg border-2 border-emerald-300" onclick="vfAnswer(this, 5, true)"><i class="fas fa-check mr-2"></i>Correcto</button>
+                                <button class="vf-btn flex-1 py-3 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg border-2 border-rose-300" onclick="vfAnswer(this, 5, false)"><i class="fas fa-times mr-2"></i>Incorrecto</button>
                             </div>
                         </div>
-
                     </div>
-
-                    <script>
-                        // Simple timer script specifically for this slide
-                        let detectiveInterval;
-                        function startDetectiveTimer() {
-                            let timeLeft = 180; // 3 minutes
-                            const display = document.getElementById('detective-timer');
-                            clearInterval(detectiveInterval);
-
-                            detectiveInterval = setInterval(() => {
-                                let minutes = Math.floor(timeLeft / 60);
-                                let seconds = timeLeft % 60;
-                                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                                if (timeLeft <= 0) {
-                                    clearInterval(detectiveInterval);
-                                    display.textContent = "00:00";
-                                    display.classList.add('text-red-600');
-                                    alert('¡Tiempo agotado! Entreguen sus placas.');
-                                }
-                                timeLeft--;
-                            }, 1000);
-                        }
-                    </script>
-
                 </div>
+
+                <script>
+                    let vfCorrect = 0;
+                    const vfAnswers = [true, false, true, false, true, true];
+
+                    function vfAnswer(btn, idx, userAnswer) {
+                        const card = document.querySelector('.vf-statement[data-vf="'+idx+'"]');
+                        if (card.classList.contains('vf-answered')) return;
+                        const isCorrect = userAnswer === vfAnswers[idx];
+                        card.classList.add('vf-answered');
+                        card.classList.add(isCorrect ? 'revealed-correct' : 'revealed-incorrect');
+                        btn.classList.add(isCorrect ? 'chosen-correct' : 'chosen-wrong');
+                        card.querySelectorAll('.vf-btn').forEach(b => {
+                            if (b !== btn) b.style.opacity = '0.5';
+                            b.style.pointerEvents = 'none';
+                        });
+                        if (isCorrect) { vfCorrect++; if (typeof react === 'function') react('confetti'); }
+                        document.getElementById('vf-score').textContent = vfCorrect + '/6';
+                    }
+                </script>
             </section>
 
             <!-- SLIDE 5: EXCUSAS ABSURDAS -->
