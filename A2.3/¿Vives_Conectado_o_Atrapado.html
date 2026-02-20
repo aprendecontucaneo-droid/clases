@@ -75,6 +75,16 @@
             color: var(--text-main);
         }
 
+        /* Centrar todos los subtítulos y párrafos descriptivos bajo títulos en slides */
+        .reveal .slide-container p.max-w-4xl {
+            text-align: center !important;
+        }
+        .reveal .slide-container > div.flex-shrink-0[class*="text-center"] p,
+        .reveal .slide-container > div[class*="text-center"][class*="mb-6"] p,
+        .reveal .slide-container > div[class*="text-center"][class*="mb-4"] p {
+            text-align: center !important;
+        }
+
         /* SOLUCIÓN AL TEXTO GRIS INVISIBLE */
         /* Forzamos un color mucho más oscuro y un peso semi-negrita */
         .reveal .text-sm,
@@ -95,6 +105,23 @@
 
         .reveal .text-xs {
             font-size: 0.75em !important;
+        }
+
+        /* Panel oscuro Neurociencia: forzar texto claro (la regla .reveal .text-sm lo pisaba) */
+        .reveal .bg-slate-800 p,
+        .reveal .bg-slate-800 .text-sm,
+        .reveal .bg-slate-800 h4 {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        .reveal .bg-slate-800 input {
+            color: #ffffff !important;
+            opacity: 1 !important;
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            border: 2px solid rgba(255, 255, 255, 0.5) !important;
+        }
+        .reveal .bg-slate-800 input::placeholder {
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
         /* =========================================
@@ -585,7 +612,7 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full">
 
-                        <div class="lg:col-span-7 flex flex-col justify-center text-left z-10">
+                        <div class="lg:col-span-7 flex flex-col justify-center items-center text-center z-10">
                             <div class="mb-6">
                                 <span
                                     class="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-bold tracking-widest uppercase border border-orange-200 shadow-sm">
@@ -593,7 +620,7 @@
                                 </span>
                             </div>
 
-                            <h1 class="text-5xl md:text-6xl font-black text-emerald-900 leading-tight mb-4">
+                            <h1 class="text-5xl md:text-6xl font-black text-emerald-900 leading-tight mb-4 text-center">
                                 ¿Vives <span
                                     class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">Conectado</span>
                                 <br>
@@ -607,8 +634,7 @@
                                 </span>
                             </h1>
 
-                            <h3
-                                class="text-2x1 text-slate-600 font-serif italic mb-10 border-l-4 border-orange-400 pl-4">
+                            <h3 class="text-2x1 text-slate-600 font-serif italic mb-10 text-center">
                                 Una mirada profunda a la adicción al celular y nuestra realidad digital.
                             </h3>
 
@@ -770,7 +796,7 @@
                         <h2 class="text-5xl text-emerald-900 mb-6 font-black tracking-tight">Síntomas de la Adicción
                         </h2>
                         <p
-                            class="text-xl md:text-2xl text-slate-700 max-w-4xl mx-auto border-b-2 border-emerald-100 pb-6 leading-relaxed font-medium">
+                            class="text-xl md:text-2xl text-slate-700 max-w-4xl mx-auto border-b-2 border-emerald-100 pb-6 leading-relaxed font-medium text-center">
                             Muchas veces actuamos en "piloto automático". Reconocer estas señales es el primer paso para
                             retomar el control.
                             <br>
@@ -867,7 +893,7 @@
                         <h2 class="text-5xl font-black text-indigo-900 mb-4 tracking-tight">El "Ningufoneo" (Phubbing)
                         </h2>
                         <p
-                            class="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-indigo-100 pb-6">
+                            class="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-indigo-100 pb-6 text-center">
                             Es esa barrera invisible que levantas cuando priorizas un mensaje de texto sobre la persona
                             que tienes enfrente.
                             <span class="text-indigo-600 font-bold block mt-1">Un fenómeno que está reescribiendo las
@@ -912,56 +938,66 @@
                             </h4>
                         </div>
 
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pr-2 custom-scrollbar">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto pr-2 custom-scrollbar">
 
                             <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">1.</span> Amigo saca el celular mientras hablas.
+                                class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
+                                <div
+                                    class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-3 text-xl">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <p class="text-base font-bold text-slate-700 mb-2">
+                                    1. Cena Sin Pantallas
                                 </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="Tu reacción...">
+                                <p class="text-xs text-slate-500 mb-4">"El primero que toque el celular paga la cuenta
+                                    de todos."</p>
+                                <input type="text" class="clean-input text-sm py-2 text-center"
+                                    placeholder="¿Aceptas o te pones nervioso?">
                             </div>
 
                             <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">2.</span> Aburrido en cena, quieres ver
-                                    Instagram.
+                                class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-3 text-xl">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <p class="text-base font-bold text-slate-700 mb-2">
+                                    2. El "Visto" Táctico
                                 </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="¿Lo haces o esperas?">
+                                <p class="text-xs text-slate-500 mb-4">Tu 'crush' ve tu historia pero no contesta tu
+                                    mensaje de hace 3 horas.</p>
+                                <input type="text" class="clean-input text-sm py-2 text-center"
+                                    placeholder="¿Escribes de nuevo o sufres?">
                             </div>
 
                             <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">3.</span> Cita romántica y tu pareja textea.
+                                class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
+                                <div
+                                    class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-3 text-xl">
+                                    <i class="fas fa-battery-quarter"></i>
+                                </div>
+                                <p class="text-base font-bold text-slate-700 mb-2">
+                                    3. 5% de Batería
                                 </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="¿Te enojas o ignoras?">
+                                <p class="text-xs text-slate-500 mb-4">Estás perdido y solo tienes 5%. ¿Maps o llamar a
+                                    un amigo?</p>
+                                <input type="text" class="clean-input text-sm py-2 text-center"
+                                    placeholder="¿Cuál es tu estrategia?">
                             </div>
 
                             <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">4.</span> Reunión familiar, todos en pantallas.
+                                class="bg-white p-6 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
+                                <div
+                                    class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-3 text-xl">
+                                    <i class="fas fa-microphone-alt"></i>
+                                </div>
+                                <p class="text-base font-bold text-slate-700 mb-2">
+                                    4. El Audio Infinito
                                 </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="¿Propones algo?">
-                            </div>
-
-                            <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">5.</span> Jefe habla y tu celular vibra mucho.
-                                </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="¿Miras rápido?">
-                            </div>
-
-                            <div
-                                class="bg-white p-4 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                                <p class="text-sm font-bold text-slate-700 mb-2">
-                                    <span class="text-orange-500 mr-1">6.</span> Caminando y te llega un audio largo.
-                                </p>
-                                <input type="text" class="clean-input text-sm py-2" placeholder="¿Te detienes a oírlo?">
+                                <p class="text-xs text-slate-500 mb-4">Te envían un audio de 5 minutos. ¿Lo escuchas en
+                                    x2, ignoras o llamas?</p>
+                                <input type="text" class="clean-input text-sm py-2 text-center"
+                                    placeholder="Tu decisión...">
                             </div>
 
                         </div>
@@ -985,7 +1021,7 @@
                             <span>(Miedo a perderse algo)</span>
                         </div>
 
-                        <p class="text-2xl text-slate-600 max-w-4xl mx-auto border-b border-purple-100 pb-4">
+                        <p class="text-2xl text-slate-600 max-w-4xl mx-auto border-b border-purple-100 pb-4 text-center">
                             Es esa ansiedad incómoda que sientes cuando crees que <strong>todos se divierten menos
                                 tú</strong>.
                             Mientras estás en pijama, el mundo digital parece una fiesta interminable a la que no fuiste
@@ -1048,58 +1084,58 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                                     <!-- Q1 -->
                                     <div
-                                        class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                                        class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow text-center">
                                         <div class="mb-2">
                                             <span
-                                                class="bg-purple-200 text-purple-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider">01.
+                                                class="bg-purple-200 text-purple-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider inline-block">01.
                                                 El Stalker</span>
                                             <p class="text-slate-700 font-bold mt-2 text-sm">Tu ex sube una foto con
                                                 alguien nuevo. ¿Haces zoom hasta ver los píxeles o sigues bajando?</p>
                                         </div>
                                         <input type="text"
-                                            class="clean-input text-sm border-purple-200 focus:border-purple-400"
+                                            class="clean-input text-sm border-purple-200 focus:border-purple-400 text-center"
                                             placeholder="Confiesa...">
                                     </div>
                                     <!-- Q2 -->
                                     <div
-                                        class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl border border-pink-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                                        class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl border border-pink-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow text-center">
                                         <div class="mb-2">
                                             <span
-                                                class="bg-pink-200 text-pink-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider">02.
+                                                class="bg-pink-200 text-pink-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider inline-block">02.
                                                 Pánico al 1%</span>
                                             <p class="text-slate-700 font-bold mt-2 text-sm">Te queda 1% de batería y el
                                                 chisme está buenísimo. ¿Qué haces?</p>
                                         </div>
                                         <input type="text"
-                                            class="clean-input text-sm border-pink-200 focus:border-pink-400"
+                                            class="clean-input text-sm border-pink-200 focus:border-pink-400 text-center"
                                             placeholder="Tu estrategia...">
                                     </div>
                                     <!-- Q3 -->
                                     <div
-                                        class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                                        class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow text-center">
                                         <div class="mb-2">
                                             <span
-                                                class="bg-blue-200 text-blue-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider">03.
+                                                class="bg-blue-200 text-blue-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider inline-block">03.
                                                 Paparazzi</span>
                                             <p class="text-slate-700 font-bold mt-2 text-sm">Estás en un concierto. ¿Lo
                                                 grabas todo para fans imaginarios o lo vives?</p>
                                         </div>
                                         <input type="text"
-                                            class="clean-input text-sm border-blue-200 focus:border-blue-400"
+                                            class="clean-input text-sm border-blue-200 focus:border-blue-400 text-center"
                                             placeholder="Verdad o mentira...">
                                     </div>
                                     <!-- Q4 -->
                                     <div
-                                        class="bg-gradient-to-br from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                                        class="bg-gradient-to-br from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-100 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow text-center">
                                         <div class="mb-2">
                                             <span
-                                                class="bg-orange-200 text-orange-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider">04.
+                                                class="bg-orange-200 text-orange-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider inline-block">04.
                                                 La Mentira</span>
                                             <p class="text-slate-700 font-bold mt-2 text-sm">¿Has dicho "ya voy
                                                 llegando" cuando apenas estabas saliendo de TikTok?</p>
                                         </div>
                                         <input type="text"
-                                            class="clean-input text-sm border-orange-200 focus:border-orange-400"
+                                            class="clean-input text-sm border-orange-200 focus:border-orange-400 text-center"
                                             placeholder="Sí/No...">
                                     </div>
                                 </div>
@@ -1123,7 +1159,7 @@
                             El Cerebro y los <span class="text-pink-600">"Likes"</span>
                         </h2>
                         <p
-                            class="text-2x1 text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-pink-100 pb-4">
+                            class="text-2x1 text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-pink-100 pb-4 text-center">
                             Tu cerebro interpreta las notificaciones como recompensas. Es una trampa química diseñada
                             para mantenerte enganchado.
                             <span class="font-bold text-pink-700">Entendamos cómo funciona el ciclo de la felicidad
@@ -1150,40 +1186,36 @@
                             </div>
 
                             <div
-                                class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex-1 flex flex-col justify-center">
-                                <h4 class="font-bold text-slate-700 mb-4 text-center border-b border-slate-200 pb-2">El
-                                    Bucle del Hábito</h4>
-                                <div class="space-y-3">
-                                    <div class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm">
+                                class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 flex-1 flex flex-col justify-center">
+                                <h4 class="font-bold text-slate-800 mb-4 text-center border-b-2 border-slate-300 pb-2 text-base">El Bucle del Hábito</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-md border border-slate-100">
                                         <span
-                                            class="bg-slate-200 text-slate-600 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">1</span>
-                                        <span class="text-sm font-bold text-slate-700">Publico Foto</span>
+                                            class="bg-slate-700 text-white w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0">1</span>
+                                        <span class="text-sm font-bold text-slate-800">Publico Foto</span>
                                     </div>
-                                    <div class="flex justify-center"><i class="fas fa-arrow-down text-slate-300"></i>
-                                    </div>
-                                    <div class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm">
+                                    <div class="flex justify-center py-0.5"><i class="fas fa-arrow-down text-slate-500 text-sm"></i></div>
+                                    <div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-md border border-slate-100">
                                         <span
-                                            class="bg-pink-100 text-pink-600 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">2</span>
-                                        <span class="text-sm font-bold text-slate-700">Recibo Validación (Like)</span>
+                                            class="bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0">2</span>
+                                        <span class="text-sm font-bold text-slate-800">Recibo Validación (Like)</span>
                                     </div>
-                                    <div class="flex justify-center"><i class="fas fa-arrow-down text-slate-300"></i>
-                                    </div>
+                                    <div class="flex justify-center py-0.5"><i class="fas fa-arrow-down text-slate-500 text-sm"></i></div>
                                     <div
-                                        class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border-l-4 border-pink-500">
+                                        class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-md border-l-4 border-pink-500 border border-slate-100">
                                         <span
-                                            class="bg-pink-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">3</span>
-                                        <span class="text-sm font-bold text-slate-700">Placer (Dopamina)</span>
+                                            class="bg-pink-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0">3</span>
+                                        <span class="text-sm font-bold text-slate-800">Placer (Dopamina)</span>
                                     </div>
-                                    <div class="flex justify-center"><i class="fas fa-sync text-slate-300 text-sm"></i>
-                                    </div>
-                                    <p class="text-center text-xs text-slate-400 font-bold uppercase tracking-wider">
+                                    <div class="flex justify-center py-1"><i class="fas fa-sync text-pink-500 text-sm"></i></div>
+                                    <p class="text-center text-xs text-slate-600 font-bold uppercase tracking-wider mt-1">
                                         Repetir</p>
                                 </div>
                             </div>
                         </div>
 
                         <div
-                            class="p-6 flex-1 flex flex-col justify-center gap-6 bg-slate-800 relative overflow-hidden">
+                            class="lg:col-span-7 bg-slate-800 rounded-2xl p-6 flex flex-col justify-center gap-6 relative overflow-hidden shadow-2xl">
                             <!-- Decoration -->
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-pink-500 rounded-full blur-[60px] opacity-20 pointer-events-none">
@@ -1192,49 +1224,46 @@
                                 class="absolute bottom-0 left-0 w-32 h-32 bg-purple-500 rounded-full blur-[60px] opacity-20 pointer-events-none">
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 z-10">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 z-10">
                                 <!-- Card 1 -->
                                 <div
-                                    class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 hover:bg-white/20 transition-all group">
+                                    class="bg-slate-800/90 backdrop-blur-md p-5 rounded-xl border border-white/20 hover:bg-slate-700/90 transition-all group shadow-lg flex flex-col items-center text-center">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center text-white mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-sun"></i>
+                                        class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-sun text-lg"></i>
                                     </div>
-                                    <h4 class="text-white font-bold text-base mb-2">Despertar Digital</h4>
-                                    <p class="text-slate-300 text-xs mb-3">¿Lo primero que tocas al abrir los ojos es tu
-                                        pareja o tu celular?</p>
+                                    <h4 class="!text-white font-bold text-lg mb-3 uppercase tracking-wide">Despertar Digital</h4>
+                                    <p class="!text-white text-sm mb-4 leading-relaxed font-medium min-h-[2.5rem]">¿Lo primero que tocas al abrir los ojos es tu pareja o tu celular?</p>
                                     <input type="text"
-                                        class="w-full bg-black/20 border border-white/10 rounded px-2 py-1 text-white text-sm focus:outline-none focus:border-pink-500 transition-colors"
+                                        class="w-full bg-white/15 border-2 border-white/30 rounded-lg px-3 py-2 !text-white text-sm focus:outline-none focus:border-pink-400 focus:bg-white/20 transition-colors placeholder:text-slate-300"
                                         placeholder="Se honesto...">
                                 </div>
 
                                 <!-- Card 2 -->
                                 <div
-                                    class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 hover:bg-white/20 transition-all group">
+                                    class="bg-slate-800/90 backdrop-blur-md p-5 rounded-xl border border-white/20 hover:bg-slate-700/90 transition-all group shadow-lg flex flex-col items-center text-center">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center text-white mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-ghost"></i>
+                                        class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-ghost text-lg"></i>
                                     </div>
-                                    <h4 class="text-white font-bold text-base mb-2">Fantasmas</h4>
-                                    <p class="text-slate-300 text-xs mb-3">¿Has sentido que tu celular vibra en tu
-                                        bolsillo cuando no lo tienes?</p>
+                                    <h4 class="!text-white font-bold text-lg mb-3 uppercase tracking-wide">Fantasmas</h4>
+                                    <p class="!text-white text-sm mb-4 leading-relaxed font-medium min-h-[2.5rem]">¿Has sentido que tu celular vibra en tu bolsillo cuando no lo tienes?</p>
                                     <input type="text"
-                                        class="w-full bg-black/20 border border-white/10 rounded px-2 py-1 text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
+                                        class="w-full bg-white/15 border-2 border-white/30 rounded-lg px-3 py-2 !text-white text-sm focus:outline-none focus:border-purple-400 focus:bg-white/20 transition-colors placeholder:text-slate-300"
                                         placeholder="Frecuencia...">
                                 </div>
 
                                 <!-- Card 3 -->
                                 <div
-                                    class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 hover:bg-white/20 transition-all group">
+                                    class="bg-slate-800/90 backdrop-blur-md p-5 rounded-xl border border-white/20 hover:bg-slate-700/90 transition-all group shadow-lg flex flex-col items-center text-center">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-toilet"></i>
+                                        class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-toilet text-lg"></i>
                                     </div>
-                                    <h4 class="text-white font-bold text-base mb-2">El Trono</h4>
-                                    <p class="text-slate-300 text-xs mb-3">¿Eres capaz de ir al baño sin llevar el
-                                        dispositivo contigo?</p>
+                                    <h4 class="!text-white font-bold text-lg mb-3 uppercase tracking-wide">El Trono</h4>
+                                    <p class="!text-white text-sm mb-4 leading-relaxed font-medium min-h-[2.5rem]">¿Eres capaz de ir al baño sin llevar el dispositivo contigo?</p>
                                     <input type="text"
-                                        class="w-full bg-black/20 border border-white/10 rounded px-2 py-1 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                                        class="w-full bg-white/15 border-2 border-white/30 rounded-lg px-3 py-2 !text-white text-sm focus:outline-none focus:border-blue-400 focus:bg-white/20 transition-colors placeholder:text-slate-300"
                                         placeholder="Sí/No...">
                                 </div>
                             </div>
@@ -1254,7 +1283,7 @@
                         </span>
                         <h2 class="text-5xl font-black text-emerald-900 mb-4 tracking-tight">Efectos en la Salud</h2>
                         <p
-                            class="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-emerald-100 pb-4">
+                            class="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-emerald-100 pb-4 text-center">
                             No es solo cansancio. El uso desmedido está cambiando tu biología, tu postura y tu química
                             cerebral.
                             <span class="font-bold text-emerald-700">Tu cuerpo lleva la cuenta de cada hora frente a la
@@ -1304,95 +1333,8 @@
                         </div>
                     </div>
 
-                    <div
-                        class="bg-slate-900 rounded-3xl p-6 border-4 border-slate-800 shadow-2xl flex-1 flex flex-col relative overflow-hidden">
-                        <!-- Screen Glare -->
-                        <div
-                            class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/5 to-transparent pointer-events-none">
-                        </div>
-
-                        <div class="flex items-center justify-between mb-6 z-10">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)]">
-                                </div>
-                                <h4 class="font-mono text-emerald-400 text-xl tracking-widest uppercase text-shadow">
-                                    System_Scan v2.0</h4>
-                            </div>
-                            <i class="fas fa-microchip text-slate-700 text-2xl"></i>
-                        </div>
-
-                        <!-- Diagnostic Grid - Styled as buttons -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 z-10" id="diagnosis-grid">
-                            <!-- Items generated with onclick toggle -->
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-bed text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Uso en cama</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-wifi text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Pánico Wifi</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-ghost text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Vibración</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-eye text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Vista Cansada</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-angry text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Mal Humor</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i
-                                    class="fas fa-hourglass-half text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Pierdo Tiempo</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-toilet text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Baño Social</span>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('bg-red-500/20'); this.classList.toggle('border-red-500'); this.classList.toggle('text-red-400')"
-                                class="diagnosis-btn p-3 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-700 transition-all flex flex-col items-center gap-2 group text-center">
-                                <i class="fas fa-battery-empty text-2xl group-hover:text-red-400 transition-colors"></i>
-                                <span class="text-xs font-mono font-bold uppercase">Batería Baja</span>
-                            </button>
-                        </div>
-
-                        <div
-                            class="bg-black/40 rounded-xl p-4 border border-slate-700 flex items-center justify-between z-10">
-                            <div class="text-slate-400 text-xs font-mono">STATUS: <span
-                                    class="text-emerald-400 animate-pulse">ANALYZING...</span></div>
-                            <button onclick="alert('DIAGNÓSTICO: ¡Eres un CIBORG! Necesitas desintoxicación urgente.')"
-                                class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold font-mono px-6 py-2 rounded shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all transform active:scale-95">
-                                GENERAR REPORTE
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </section>
-
-
-
-
 
             <section>
                 <div class="slide-container h-full flex flex-col justify-between py-6">
@@ -1405,7 +1347,7 @@
                         <h2 class="text-5xl font-black text-slate-800 mb-4 tracking-tight">Soluciones: <span
                                 class="text-emerald-600">Detox Digital</span></h2>
                         <p
-                            class="text-2x1 text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-emerald-100 pb-4">
+                            class="text-2x1 text-slate-600 max-w-4xl mx-auto leading-relaxed border-b border-emerald-100 pb-4 text-center">
                             No se trata de tirar el celular a la basura, sino de recordar quién manda.
                             <span class="font-bold text-emerald-800">Desconectar para volver a conectar con lo que
                                 realmente importa.</span>
@@ -1519,7 +1461,7 @@
                                 "La tecnología debe servirnos a nosotros, no nosotros a la tecnología."
                             </p>
                             <div class="w-12 h-1 bg-emerald-500 rounded-full mb-6"></div>
-                            <p class="text-sm text-slate-400 font-bold uppercase tracking-wider">
+                            <p class="text-sm text-white font-bold uppercase tracking-wider">
                                 Conclusión del Curso
                             </p>
                         </div>
