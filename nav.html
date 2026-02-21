@@ -59,10 +59,73 @@
     background: #fbbf24;
     color: #000;
   }
+  .tucaneo-nav-bar .nav-toggle {
+    display: none;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+  }
+  .tucaneo-nav-bar .nav-toggle:hover { background: rgba(255,255,255,0.2); }
+  .tucaneo-nav-bar .nav-toggle-icon {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+    border-radius: 1px;
+    transition: background 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .tucaneo-nav-bar.nav-open .nav-toggle-icon {
+    background: transparent;
+    box-shadow: none;
+  }
+  .tucaneo-nav-bar.nav-open .nav-toggle-icon::before,
+  .tucaneo-nav-bar.nav-open .nav-toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    margin-top: -1px;
+  }
+  .tucaneo-nav-bar.nav-open .nav-toggle-icon::before { transform: rotate(45deg); }
+  .tucaneo-nav-bar.nav-open .nav-toggle-icon::after { transform: rotate(-45deg); }
+  @media (max-width: 1024px) {
+    .tucaneo-nav-bar { flex-wrap: wrap; padding: 0 12px; }
+    .tucaneo-nav-bar .nav-toggle { display: flex; }
+    .tucaneo-nav-bar .nav-links {
+      display: none;
+      flex-basis: 100%;
+      flex-direction: column;
+      gap: 0;
+      padding: 8px 0 12px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin-top: 4px;
+    }
+    .tucaneo-nav-bar.nav-open .nav-links { display: flex; }
+    .tucaneo-nav-bar .nav-links a {
+      display: block;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border-radius: 6px;
+      margin: 2px 0;
+    }
+    .tucaneo-nav-bar .nav-links a.nav-cta { margin: 8px 0 0; margin-left: 0; }
+  }
   @media (max-width: 768px) {
-    .tucaneo-nav-bar { padding: 0 10px; }
     .tucaneo-nav-bar .nav-brand-name { display: none; }
-    .tucaneo-nav-bar .nav-links a { font-size: 0.8rem; padding: 5px 8px; }
   }
 </style>
 <nav class="tucaneo-nav-bar" id="tucaneo-site-nav">
@@ -70,6 +133,7 @@
     <img class="nav-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo">
     <span class="nav-brand-name">Tucaneo</span>
   </a>
+  <button type="button" class="nav-toggle" id="tucaneo-nav-toggle" aria-label="Abrir menú"><span class="nav-toggle-icon"></span></button>
   <div class="nav-links">
     <a href="/">Inicio</a>
     <a href="/Maquetas/Maqueta_a1.html">A1</a>
@@ -103,6 +167,17 @@
 
   var printBtn = document.getElementById('tucaneo-nav-print');
   if (printBtn) printBtn.addEventListener('click', function(e) { e.preventDefault(); window.print(); });
+
+  var toggle = document.getElementById('tucaneo-nav-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('nav-open');
+      toggle.setAttribute('aria-label', nav.classList.contains('nav-open') ? 'Cerrar menú' : 'Abrir menú');
+    });
+  }
+  nav.querySelectorAll('.nav-links a').forEach(function(a) {
+    a.addEventListener('click', function() { nav.classList.remove('nav-open'); });
+  });
 
   var origin = window.location.origin;
   var links = nav.querySelectorAll('.nav-links a[href^="/"]');
