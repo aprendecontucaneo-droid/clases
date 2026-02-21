@@ -90,11 +90,16 @@
   var h = 52;
   var style = document.createElement('style');
   style.id = 'tucaneo-nav-offset';
+  var offset = h + 8;
   style.textContent = [
     'body.tucaneo-has-nav { padding-top: ' + h + 'px !important; }',
     '.reveal { top: ' + h + 'px !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: calc(100vh - ' + h + 'px) !important; min-height: calc(100vh - ' + h + 'px) !important; }',
     '.reveal .slides { top: 0 !important; height: 100% !important; }',
-    '.reveal .slides section { min-height: calc(100vh - ' + h + 'px) !important; }'
+    '.reveal .slides section { min-height: calc(100vh - ' + h + 'px) !important; }',
+    'body.tucaneo-has-nav #top-nav { top: ' + offset + 'px !important; }',
+    'body.tucaneo-has-nav #fixed-logo { top: ' + offset + 'px !important; }',
+    'body.tucaneo-has-nav #floating-cta { bottom: 20px !important; }',
+    '@media (max-width: 1024px) { body.tucaneo-has-nav #top-nav { top: ' + offset + 'px !important; } body.tucaneo-has-nav #fixed-logo { top: ' + offset + 'px !important; } }'
   ].join('\n');
   (document.head || document.documentElement).appendChild(style);
 
