@@ -1,14 +1,4 @@
 <style>
-  body.tucaneo-has-nav { padding-top: 52px !important; }
-  body.tucaneo-has-nav .reveal {
-    top: 52px !important;
-    height: calc(100vh - 52px) !important;
-    min-height: calc(100vh - 52px) !important;
-  }
-  body.tucaneo-has-nav .reveal .slides {
-    height: calc(100vh - 52px) !important;
-    min-height: calc(100vh - 52px) !important;
-  }
   .tucaneo-nav-bar {
     position: fixed;
     top: 0;
@@ -96,6 +86,18 @@
   var nav = document.getElementById('tucaneo-site-nav');
   if (!nav) return;
   document.body.classList.add('tucaneo-has-nav');
+
+  var h = 52;
+  var style = document.createElement('style');
+  style.id = 'tucaneo-nav-offset';
+  style.textContent = [
+    'body.tucaneo-has-nav { padding-top: ' + h + 'px !important; }',
+    '.reveal { top: ' + h + 'px !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: calc(100vh - ' + h + 'px) !important; min-height: calc(100vh - ' + h + 'px) !important; }',
+    '.reveal .slides { top: 0 !important; height: 100% !important; }',
+    '.reveal .slides section { min-height: calc(100vh - ' + h + 'px) !important; }'
+  ].join('\n');
+  (document.head || document.documentElement).appendChild(style);
+
   var origin = window.location.origin;
   var links = nav.querySelectorAll('.nav-links a[href^="/"]');
   for (var i = 0; i < links.length; i++) {
