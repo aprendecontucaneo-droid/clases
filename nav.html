@@ -5,56 +5,98 @@
     left: 0;
     right: 0;
     z-index: 9999;
-    background: rgba(14, 35, 27, 0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding: 12px 24px;
+    background: rgba(14, 35, 27, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: none;
+    padding: 16px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .tucaneo-site-nav .nav-brand {
+    display: flex;
+    align-items: center;
     gap: 12px;
-  }
-  .tucaneo-site-nav a {
+    text-decoration: none;
     color: #fff !important;
-    text-decoration: none !important;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: background 0.2s, color 0.2s;
-  }
-  .tucaneo-site-nav a:hover {
-    background: rgba(245, 158, 11, 0.3);
-    color: #f59e0b !important;
   }
   .tucaneo-site-nav .nav-logo {
-    height: 40px;
+    height: 44px;
     width: auto;
     display: block;
+  }
+  .tucaneo-site-nav .nav-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .tucaneo-site-nav .nav-brand-name {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .tucaneo-site-nav .nav-brand-tagline {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.02em;
   }
   .tucaneo-site-nav .nav-links {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex-wrap: wrap;
   }
+  .tucaneo-site-nav .nav-links a {
+    color: rgba(255,255,255,0.95) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .tucaneo-site-nav .nav-links a:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff !important;
+  }
+  .tucaneo-site-nav .nav-links a.nav-cta {
+    background: #f59e0b;
+    color: #000 !important;
+    padding: 8px 18px;
+  }
+  .tucaneo-site-nav .nav-links a.nav-cta:hover {
+    background: #fbbf24;
+    color: #000 !important;
+  }
   @media (max-width: 768px) {
-    .tucaneo-site-nav { padding: 10px 12px; }
-    .tucaneo-site-nav .nav-links a { font-size: 0.85rem; padding: 5px 8px; }
+    .tucaneo-site-nav { padding: 12px 16px; gap: 12px; }
+    .tucaneo-site-nav .nav-brand-tagline { display: none; }
+    .tucaneo-site-nav .nav-logo { height: 36px; }
+    .tucaneo-site-nav .nav-links a { font-size: 0.8rem; padding: 6px 10px; }
   }
 </style>
 <nav class="tucaneo-site-nav" id="tucaneo-site-nav">
-  <a href="/" class="nav-logo-wrap">
+  <a href="/" class="nav-brand">
     <img class="nav-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo">
+    <div class="nav-brand-text">
+      <span class="nav-brand-name">Tucaneo</span>
+      <span class="nav-brand-tagline">Español con alas propias</span>
+    </div>
   </a>
   <div class="nav-links">
     <a href="/">Inicio</a>
-    <a href="/A1/">A1</a>
-    <a href="/A1.2/">A1.2</a>
-    <a href="/A2/">A2</a>
-    <a href="/A2.2/">A2.2</a>
-    <a href="/A2.3/">A2.3</a>
-    <a href="https://tucaneo.com" target="_blank" rel="noopener">Tucaneo.com</a>
+    <a href="/Maquetas/Maqueta_a1.html">A1</a>
+    <a href="/Maquetas/Maqueta_A1.2.html">A1.2</a>
+    <a href="/Maquetas/maqueta_a2.html">A2</a>
+    <a href="/Maquetas/maqueta_A2.2.html">A2.2</a>
+    <a href="/Maquetas/Maqueta_A2.3.html">A2.3</a>
+    <a href="https://tucaneo.com/reserva-tu-clase/" class="nav-cta" target="_blank" rel="noopener">Reserva tu clase</a>
   </div>
 </nav>

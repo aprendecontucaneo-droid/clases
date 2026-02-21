@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2 — Clases Tucaneo</title>
+</head>
+<body style="margin:0; padding-top:72px;">
+<div id="header-container"></div>
 <style>
   /* =========================================
       MASTER CSS TUCANEO V2 - ACCORDION SYSTEM
@@ -509,3 +518,11 @@
   </div>
 
 </div>
+<script>
+  fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+    var el = document.getElementById('header-container');
+    if (el) el.innerHTML = data;
+  });
+</script>
+</body>
+</html>

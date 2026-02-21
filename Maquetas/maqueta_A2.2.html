@@ -7,7 +7,8 @@
   <meta name="description" content="Curso de español nivel A2.2. Aprende el pretérito indefinido (pasado simple), el pretérito imperfecto y cómo combinarlos para narrar en español. Lecciones, ejercicios y recursos para dominar los tiempos del pasado.">
   <meta name="keywords" content="español A2.2, pasado simple español, pretérito indefinido, pretérito imperfecto, combinación indefinido imperfecto, narrar en español, curso español nivel intermedio">
 </head>
-<body>
+<body style="padding-top:72px;">
+<div id="header-container"></div>
 
 <style>
   /* =========================================
@@ -300,5 +301,11 @@
   </details>
 
 </div>
+<script>
+  fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+    var el = document.getElementById('header-container');
+    if (el) el.innerHTML = data;
+  });
+</script>
 </body>
 </html>
