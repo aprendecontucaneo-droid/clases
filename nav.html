@@ -78,6 +78,7 @@
     <a href="/Maquetas/maqueta_A2.2.html">A2.2</a>
     <a href="/Maquetas/Maqueta_A2.3.html">A2.3</a>
     <a href="/Maquetas/Conversemos.html">Conversemos</a>
+    <a href="#" id="tucaneo-nav-print" role="button">Imprimir</a>
     <a href="/Maquetas/reserva_de_clases.html" class="nav-cta">Reserva tu clase</a>
   </div>
 </nav>
@@ -90,18 +91,18 @@
   var h = 52;
   var style = document.createElement('style');
   style.id = 'tucaneo-nav-offset';
-  var offset = h + 8;
   style.textContent = [
     'body.tucaneo-has-nav { padding-top: ' + h + 'px !important; }',
     '.reveal { top: ' + h + 'px !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: calc(100vh - ' + h + 'px) !important; min-height: calc(100vh - ' + h + 'px) !important; }',
     '.reveal .slides { top: 0 !important; height: 100% !important; }',
     '.reveal .slides section { min-height: calc(100vh - ' + h + 'px) !important; }',
-    'body.tucaneo-has-nav #top-nav { top: ' + offset + 'px !important; }',
-    'body.tucaneo-has-nav #fixed-logo { top: ' + offset + 'px !important; }',
-    'body.tucaneo-has-nav #floating-cta { bottom: 20px !important; }',
-    '@media (max-width: 1024px) { body.tucaneo-has-nav #top-nav { top: ' + offset + 'px !important; } body.tucaneo-has-nav #fixed-logo { top: ' + offset + 'px !important; } }'
+    '@media (min-width: 1025px) { body.tucaneo-has-nav #top-nav, body.tucaneo-has-nav #fixed-logo { display: none !important; } }',
+    '@media (max-width: 1024px) { body.tucaneo-has-nav #top-nav { top: 60px !important; } body.tucaneo-has-nav #fixed-logo { top: 60px !important; } }'
   ].join('\n');
   (document.head || document.documentElement).appendChild(style);
+
+  var printBtn = document.getElementById('tucaneo-nav-print');
+  if (printBtn) printBtn.addEventListener('click', function(e) { e.preventDefault(); window.print(); });
 
   var origin = window.location.origin;
   var links = nav.querySelectorAll('.nav-links a[href^="/"]');
