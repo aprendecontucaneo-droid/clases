@@ -87,6 +87,8 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 text-white">
 
+    <div id="header-container"></div>
+
     <canvas id="confetti-canvas"></canvas>
 
     <!-- Game Container -->
@@ -734,5 +736,13 @@
 
         window.onload = () => game.init();
     </script>
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+
 </body>
 </html>

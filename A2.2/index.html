@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nivel A2.2 — Clases Tucaneo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fefce8; color: #0f172a; }
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 90px 24px 40px; }
+    h1 { color: #004d40; font-size: 2rem; margin-bottom: 0.5rem; }
+    .sub { color: #64748b; margin-bottom: 2rem; }
+    .lesson-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .lesson-list a {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+      background: #fff; border-radius: 12px; text-decoration: none; color: #0f172a;
+      border: 1px solid #e2e8f0; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lesson-list a:hover { border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+    .lesson-list i { color: #10b981; width: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="page-wrap">
+    <h1>Nivel A2.2</h1>
+    <p class="sub">Pasado simple. Narrar en pasado.</p>
+    <ul class="lesson-list">
+      <li><a href="Pasado_simple.html"><i class="fas fa-history"></i> Pasado simple</a></li>
+      <li><a href="Pasado_simple_ejercicios.html"><i class="fas fa-tasks"></i> Pasado simple ejercicios</a></li>
+    </ul>
+  </div>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+</body>
+</html>

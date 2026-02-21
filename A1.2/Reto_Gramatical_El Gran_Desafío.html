@@ -202,6 +202,8 @@
 </head>
 <body id="main-body" class="min-h-screen flex items-center justify-center p-4 relative">
 
+    <div id="header-container"></div>
+
     <!-- Sound Toggle Button -->
     <div id="sound-toggle" onclick="toggleSound()">
         <i id="sound-icon" class="fas fa-volume-up"></i>
@@ -718,5 +720,13 @@
         }
 
     </script>
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+
 </body>
 </html>

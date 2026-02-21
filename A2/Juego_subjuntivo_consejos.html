@@ -175,6 +175,9 @@
     </style>
 </head>
 <body>
+
+    <div id="header-container"></div>
+
     <div id="root" class="min-h-screen w-full"></div>
 
     <script type="text/babel">
@@ -677,5 +680,13 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<Game />);
     </script>
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+
 </body>
 </html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nivel A1.2 — Clases Tucaneo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fefce8; color: #0f172a; }
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 90px 24px 40px; }
+    h1 { color: #004d40; font-size: 2rem; margin-bottom: 0.5rem; }
+    .sub { color: #64748b; margin-bottom: 2rem; }
+    .lesson-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .lesson-list a {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+      background: #fff; border-radius: 12px; text-decoration: none; color: #0f172a;
+      border: 1px solid #e2e8f0; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lesson-list a:hover { border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+    .lesson-list i { color: #10b981; width: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="page-wrap">
+    <h1>Nivel A1.2</h1>
+    <p class="sub">Consolidación. Futuro, comparativos, por y para.</p>
+    <ul class="lesson-list">
+      <li><a href="Futuro_con_ir.html"><i class="fas fa-forward"></i> Futuro con ir</a></li>
+      <li><a href="Futuro_con_ir_ejercicios.html"><i class="fas fa-tasks"></i> Futuro con ir ejercicios</a></li>
+      <li><a href="Ejercicios_de_futuro_con_video.html"><i class="fas fa-video"></i> Ejercicios de futuro con video</a></li>
+      <li><a href="El_Arte_de_Comparar.html"><i class="fas fa-balance-scale"></i> El arte de comparar</a></li>
+      <li><a href="Ejercicios_Comparativos.html"><i class="fas fa-tasks"></i> Ejercicios comparativos</a></li>
+      <li><a href="Por_vs_Para.html"><i class="fas fa-exchange-alt"></i> Por vs Para</a></li>
+      <li><a href="Repaso_Irregulares_en_Presente.html"><i class="fas fa-redo"></i> Repaso irregulares en presente</a></li>
+      <li><a href="Tablas_Maestras_Verbos_Irregulares.html"><i class="fas fa-table"></i> Tablas maestras verbos irregulares</a></li>
+      <li><a href="Direcciones_y_Ubicación.html"><i class="fas fa-map-signs"></i> Direcciones y ubicación</a></li>
+      <li><a href="Expresiones_Negativas.html"><i class="fas fa-times-circle"></i> Expresiones negativas</a></li>
+      <li><a href="Practica con video de gustar.html"><i class="fas fa-video"></i> Práctica con video de gustar</a></li>
+      <li><a href="Texto_de_Practica_Integral.html"><i class="fas fa-file-alt"></i> Texto de práctica integral</a></li>
+      <li><a href="Español_en_el_Trabajo.html"><i class="fas fa-briefcase"></i> Español en el trabajo</a></li>
+      <li><a href="Supervivencia_Gramatical.html"><i class="fas fa-dragon"></i> Supervivencia gramatical</a></li>
+      <li><a href="Reto_Gramatical_El Gran_Desafío.html"><i class="fas fa-trophy"></i> Reto gramatical — El gran desafío</a></li>
+      <li><a href="Examen_6.html"><i class="fas fa-file-alt"></i> Examen 6</a></li>
+      <li><a href="Examen_7.html"><i class="fas fa-file-alt"></i> Examen 7</a></li>
+      <li><a href="Examen_8_Prueba_Final.html"><i class="fas fa-file-alt"></i> Examen 8 — Prueba final</a></li>
+    </ul>
+  </div>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+</body>
+</html>

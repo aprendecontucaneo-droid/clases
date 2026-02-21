@@ -190,6 +190,8 @@
 </head>
 <body>
 
+    <div id="header-container"></div>
+
     <!-- UI FIJA -->
     <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Logo Tucaneo">
     <a href="https://tucaneo.com" id="floating-cta">Más ejercicios en tucaneo.com</a>
@@ -802,5 +804,11 @@
             else d.classList.add('is-open');
         }
     </script>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
 </body>
 </html>

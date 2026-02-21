@@ -809,6 +809,8 @@
 
 <body>
 
+    <div id="header-container"></div>
+
     <div id="scroll-progress"></div>
 
     <div id="fixed-logo" class="logo-text">TUCANEO</div>
@@ -2253,6 +2255,14 @@
         // Expose to global
         window.CoreGame = CoreGame;
     </script>
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+
 </body>
 
 </html>

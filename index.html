@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clases Tucaneo — Aprende español</title>
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <style>
+    /* =========================================
+       1. MASTER CSS TUCANEO (ESTILO UNIFICADO)
+       ========================================= */
+    html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+    .tucaneo-wrapper {
+      font-family: 'Segoe UI', 'Nunito', sans-serif;
+      width: 100%;
+      background-color: #ffffff;
+      padding-top: 70px; /* espacio para la barra de navegación fija */
+    }
+
+    /* --- HERO SECTION --- */
+    .tucaneo-hero {
+      position: relative; width: 100vw; left: 50%; right: 50%;
+      margin-left: -50vw; margin-right: -50vw;
+      height: 100vh; min-height: 700px;
+      background-image: url('https://tucaneo.com/wp-content/uploads/2025/05/93c1bf89-ccbd-42a4-80b3-e9cfba8c2d0a.png');
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      border-radius: 0 0 50px 50px; margin-bottom: 80px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
+    }
+    .tucaneo-overlay {
+      background: linear-gradient(180deg, rgba(14,35,27,0.4) 0%, rgba(14,35,27,0.2) 50%, rgba(14,35,27,0.8) 100%);
+      width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+    }
+    .tucaneo-hero-content {
+      position: relative; z-index: 10; padding: 20px; max-width: 900px;
+      text-align: center; color: white;
+    }
+    .tucaneo-tagline {
+      display: inline-block; background-color: #f59e0b; color: #000;
+      font-weight: 800; font-size: 0.9rem; padding: 8px 25px; border-radius: 50px;
+      text-transform: uppercase; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(245, 158, 11, 0.5);
+    }
+    .tucaneo-hero h1 {
+      font-size: 4.5rem; line-height: 1.1; font-weight: 900; margin-bottom: 20px; color: white;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    .tucaneo-hero p {
+      font-size: 1.4rem; color: #f3f4f6; margin-bottom: 40px; max-width: 750px;
+      margin-left: auto; margin-right: auto; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .hero-btns { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .btn-hero {
+      padding: 18px 45px; border-radius: 50px; font-weight: 800; text-decoration: none !important;
+      font-size: 1.2rem; text-transform: uppercase; transition: all 0.3s ease; display: inline-block;
+    }
+    .btn-hero-primary { background: #f59e0b; color: #000 !important; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4); }
+    .btn-hero-primary:hover { transform: translateY(-5px); background: #FFC107; box-shadow: 0 15px 40px rgba(245, 158, 11, 0.6); }
+    .btn-hero-secondary { background: rgba(255,255,255,0.1); color: white !important; border: 2px solid white; backdrop-filter: blur(5px); }
+    .btn-hero-secondary:hover { background: white; color: #0e231b !important; transform: translateY(-5px); }
+
+    /* --- FEATURES --- */
+    .features-section { max-width: 1200px; margin: 0 auto 100px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+    .feature-card {
+      background: white; padding: 30px; border-radius: 20px; text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+    .feature-card i { font-size: 3.5rem; margin-bottom: 20px; display: block; font-style: normal; }
+    .feature-card h3 { font-size: 1.5rem; font-weight: 800; color: #0e231b; margin-bottom: 15px; }
+    .feature-card p { color: #666; font-size: 1rem; line-height: 1.6; }
+
+    /* --- ROADMAP / NIVELES --- */
+    .section-container { max-width: 1200px; margin: 0 auto 100px auto; padding: 0 20px; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-header h2 { font-size: 3rem; font-weight: 900; color: #0e231b; margin-bottom: 10px; }
+    .section-header p { color: #666; font-size: 1.2rem; }
+    .levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+    .level-card {
+      background: white; border-radius: 20px; padding: 30px; position: relative;
+      border: 1px solid #e5e7eb; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .level-active { border-color: #10b981; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
+    .level-active:hover { transform: translateY(-10px); }
+    .level-locked { opacity: 0.7; background: #f9fafb; border-style: dashed; }
+    .level-badge {
+      width: 70px; height: 70px; border-radius: 50%; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.8rem;
+      background: #e5e7eb; color: #9ca3af;
+    }
+    .level-active .level-badge { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
+    .level-card h3 { font-size: 1.5rem; font-weight: 800; color: #1f2937; margin-bottom: 10px; }
+    .level-card p { color: #6b7280; font-size: 1rem; margin-bottom: 20px; flex-grow: 1; }
+    .btn-level {
+      padding: 10px 25px; border-radius: 50px; font-weight: 700; text-decoration: none;
+      background: #10b981; color: white !important; transition: 0.3s;
+    }
+    .btn-level:hover { background: #059669; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
+
+    /* --- PRECIOS --- */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; justify-content: center; max-width: 900px; margin: 0 auto; }
+    .pricing-card {
+      background: white; border-radius: 25px; padding: 40px; border: 1px solid #eee;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .card-featured { border: 3px solid #f59e0b; box-shadow: 0 20px 50px rgba(245, 158, 11, 0.15); transform: scale(1.05); z-index: 5; }
+    .best-value {
+      position: absolute; top: 20px; right: -35px; background: #f59e0b; color: #000;
+      padding: 5px 40px; transform: rotate(45deg); font-weight: 800; font-size: 0.8rem; text-transform: uppercase;
+    }
+    .price-amount { font-size: 3.5rem; font-weight: 900; color: #2E7D32; margin: 15px 0; }
+    .price-sub { font-size: 1rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; }
+    .price-features { list-style: none; padding: 0; margin: 30px 0; text-align: left; }
+    .price-features li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #4b5563; font-size: 1.05rem; }
+    .check { color: #10b981; font-weight: bold; font-size: 1.3rem; }
+    .btn-price {
+      display: block; width: 100%; padding: 18px; border-radius: 15px; text-align: center;
+      font-weight: 800; text-decoration: none; text-transform: uppercase; transition: 0.3s;
+    }
+    .btn-outline { border: 2px solid #0e231b; color: #0e231b; background: transparent; }
+    .btn-outline:hover { background: #0e231b; color: white; }
+    .btn-primary-plan { background: #0e231b; color: white !important; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .btn-primary-plan:hover { background: #2E7D32; box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3); }
+
+    @media (max-width: 921px) {
+      .tucaneo-hero { width: 92%; margin-left: auto; margin-right: auto; left: auto; right: auto; height: auto !important; min-height: 600px; border-radius: 30px !important; }
+      .tucaneo-hero h1 { font-size: 2.5rem; }
+      .tucaneo-hero-content { padding: 30px 20px; }
+      .card-featured { transform: scale(1); border-width: 2px; }
+    }
+  </style>
+
+  <div class="tucaneo-wrapper">
+    <div class="tucaneo-hero">
+      <div class="tucaneo-overlay"></div>
+      <div class="tucaneo-hero-content">
+        <span class="tucaneo-tagline">Tu camino hacia la fluidez comienza aquí</span>
+        <h1>Aprende español<br>sin perder el tiempo</h1>
+        <p>Material interactivo por niveles. Clases en vivo con un profesor nativo.</p>
+        <div class="hero-btns">
+          <a href="#niveles" class="btn-hero btn-hero-primary">Ver niveles</a>
+          <a href="https://tucaneo.com/reserva-tu-clase/" class="btn-hero btn-hero-secondary" target="_blank" rel="noopener">Reservar clase</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="features-section">
+      <div class="feature-card">
+        <i>🦜</i>
+        <h3>Método natural</h3>
+        <p>Material diseñado para practicar y vivir el idioma.</p>
+      </div>
+      <div class="feature-card">
+        <i>⚖️</i>
+        <h3>Estructura clara</h3>
+        <p>Ruta por niveles: A1, A1.2, A2, A2.2, A2.3.</p>
+      </div>
+      <div class="feature-card">
+        <i>💬</i>
+        <h3>Practica desde el día 1</h3>
+        <p>Ejercicios interactivos y diapositivas listas para clase.</p>
+      </div>
+    </section>
+
+    <section id="niveles" class="section-container">
+      <div class="section-header">
+        <h2>Tu ruta de aprendizaje</h2>
+        <p>Un sistema paso a paso. Elige tu nivel.</p>
+      </div>
+      <div class="levels-grid">
+        <div class="level-card level-active">
+          <div class="level-badge">A1</div>
+          <h3>Fundamentos</h3>
+          <p>Base sólida. Lo esencial desde cero.</p>
+          <a href="/A1/" class="btn-level">Ver curso</a>
+        </div>
+        <div class="level-card level-active">
+          <div class="level-badge">A1.2</div>
+          <h3>Consolidación</h3>
+          <p>Futuro, comparativos, por y para.</p>
+          <a href="/A1.2/" class="btn-level">Ver curso</a>
+        </div>
+        <div class="level-card level-active">
+          <div class="level-badge">A2</div>
+          <h3>Interacción</h3>
+          <p>Objeto directo, subjuntivo, reflexivos.</p>
+          <a href="/A2/" class="btn-level">Ver curso</a>
+        </div>
+        <div class="level-card level-active">
+          <div class="level-badge">A2.2</div>
+          <h3>Pasado simple</h3>
+          <p>Narrar en pasado.</p>
+          <a href="/A2.2/" class="btn-level">Ver curso</a>
+        </div>
+        <div class="level-card level-active">
+          <div class="level-badge">A2.3</div>
+          <h3>Avanzado A2</h3>
+          <p>Perfecto compuesto, pluscuamperfecto, voz pasiva.</p>
+          <a href="/A2.3/" class="btn-level">Ver curso</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-container">
+      <div class="section-header">
+        <h2>Elige cómo quieres aprender</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="price-sub">Cursos online</div>
+          <div class="price-amount">Gratis</div>
+          <ul class="price-features">
+            <li><span class="check">✓</span> Acceso a niveles A1 y A2</li>
+            <li><span class="check">✓</span> Material interactivo</li>
+            <li><span class="check">✓</span> Estudia a tu ritmo</li>
+          </ul>
+          <a href="/A1/" class="btn-price btn-outline">Ver cursos</a>
+        </div>
+        <div class="pricing-card card-featured">
+          <div class="best-value">MEJOR OPCIÓN</div>
+          <div class="price-sub">Clases privadas</div>
+          <div class="price-amount">$15 <span style="font-size:1rem; color:#666;">/ hora</span></div>
+          <ul class="price-features">
+            <li><span class="check">✓</span> Todo lo incluido en Gratis</li>
+            <li><span class="check">✓</span> Clases por Zoom/Meet</li>
+            <li><span class="check">✓</span> Plan personalizado</li>
+          </ul>
+          <a href="https://tucaneo.com/reserva-tu-clase/" class="btn-price btn-primary-plan" target="_blank" rel="noopener">Reservar clase</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    fetch('/nav.html')
+      .then(function(r) { return r.text(); })
+      .then(function(data) {
+        var el = document.getElementById('header-container');
+        if (el) el.innerHTML = data;
+      });
+  </script>
+</body>
+</html>

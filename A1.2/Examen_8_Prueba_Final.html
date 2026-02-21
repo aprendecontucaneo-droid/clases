@@ -113,6 +113,8 @@
 </head>
 <body>
 
+    <div id="header-container"></div>
+
     <div class="btn-container">
         <a href="https://tucaneo.com/" class="ui-btn exit-btn">Salir ✕</a>
         <button class="ui-btn print-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
@@ -305,6 +307,14 @@
 
         <img src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-7.png" class="footer-img">
     </div>
+
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
 
 </body>
 </html>

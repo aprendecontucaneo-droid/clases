@@ -1,0 +1,60 @@
+<style>
+  .tucaneo-site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(14, 35, 27, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .tucaneo-site-nav a {
+    color: #fff !important;
+    text-decoration: none !important;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .tucaneo-site-nav a:hover {
+    background: rgba(245, 158, 11, 0.3);
+    color: #f59e0b !important;
+  }
+  .tucaneo-site-nav .nav-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  .tucaneo-site-nav .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 768px) {
+    .tucaneo-site-nav { padding: 10px 12px; }
+    .tucaneo-site-nav .nav-links a { font-size: 0.85rem; padding: 5px 8px; }
+  }
+</style>
+<nav class="tucaneo-site-nav" id="tucaneo-site-nav">
+  <a href="/" class="nav-logo-wrap">
+    <img class="nav-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo">
+  </a>
+  <div class="nav-links">
+    <a href="/">Inicio</a>
+    <a href="/A1/">A1</a>
+    <a href="/A1.2/">A1.2</a>
+    <a href="/A2/">A2</a>
+    <a href="/A2.2/">A2.2</a>
+    <a href="/A2.3/">A2.3</a>
+    <a href="https://tucaneo.com" target="_blank" rel="noopener">Tucaneo.com</a>
+  </div>
+</nav>

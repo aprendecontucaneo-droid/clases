@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nivel A1 — Clases Tucaneo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fefce8; color: #0f172a; }
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 90px 24px 40px; }
+    h1 { color: #004d40; font-size: 2rem; margin-bottom: 0.5rem; }
+    .sub { color: #64748b; margin-bottom: 2rem; }
+    .lesson-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .lesson-list a {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+      background: #fff; border-radius: 12px; text-decoration: none; color: #0f172a;
+      border: 1px solid #e2e8f0; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lesson-list a:hover { border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+    .lesson-list i { color: #10b981; width: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="page-wrap">
+    <h1>Nivel A1</h1>
+    <p class="sub">Fundamentos. Elige una clase.</p>
+    <ul class="lesson-list">
+      <li><a href="alfabeto.html"><i class="fas fa-book-open"></i> Alfabeto</a></li>
+      <li><a href="saludos.html"><i class="fas fa-hand-paper"></i> Saludos</a></li>
+      <li><a href="Presente_simple.html"><i class="fas fa-language"></i> Presente simple</a></li>
+      <li><a href="presente_simple_irregulares.html"><i class="fas fa-language"></i> Presente simple irregulares</a></li>
+      <li><a href="Taller_irregulares_presente_simple.html"><i class="fas fa-pencil-alt"></i> Taller irregulares presente simple</a></li>
+      <li><a href="Presente_simple_repaso.html"><i class="fas fa-redo"></i> Presente simple repaso</a></li>
+      <li><a href="Presente_Simple_Ejercicios.html"><i class="fas fa-tasks"></i> Presente simple ejercicios</a></li>
+      <li><a href="Ser_y_Estar.html"><i class="fas fa-balance-scale"></i> Ser y Estar</a></li>
+      <li><a href="Ser_y_Estar_ejercicios.html"><i class="fas fa-tasks"></i> Ser y Estar ejercicios</a></li>
+      <li><a href="Hay.html"><i class="fas fa-home"></i> Hay</a></li>
+      <li><a href="Hay_ejercicios.html"><i class="fas fa-tasks"></i> Hay ejercicios</a></li>
+      <li><a href="La_familia.html"><i class="fas fa-users"></i> La familia</a></li>
+      <li><a href="La_Casa.html"><i class="fas fa-house-user"></i> La casa</a></li>
+      <li><a href="Adjetivos.html"><i class="fas fa-palette"></i> Adjetivos</a></li>
+      <li><a href="Genero.html"><i class="fas fa-venus-mars"></i> Género</a></li>
+      <li><a href="Demostrativos.html"><i class="fas fa-hand-point-right"></i> Demostrativos</a></li>
+      <li><a href="Demostrativos_2.html"><i class="fas fa-hand-point-right"></i> Demostrativos 2</a></li>
+      <li><a href="Numeros.html"><i class="fas fa-sort-numeric-down"></i> Números</a></li>
+      <li><a href="Ejercicio_de_numeros.html"><i class="fas fa-tasks"></i> Ejercicio de números</a></li>
+      <li><a href="Dar_la_hora.html"><i class="fas fa-clock"></i> Dar la hora</a></li>
+      <li><a href="Dias_de_la_semana.html"><i class="fas fa-calendar-week"></i> Días de la semana</a></li>
+      <li><a href="Me_gusta.html"><i class="fas fa-heart"></i> Me gusta</a></li>
+      <li><a href="Me_gusta_verbos_similares.html"><i class="fas fa-heart"></i> Me gusta verbos similares</a></li>
+      <li><a href="Frecuencia.html"><i class="fas fa-redo"></i> Frecuencia</a></li>
+      <li><a href="Preguntas.html"><i class="fas fa-question-circle"></i> Preguntas</a></li>
+      <li><a href="bienvenido_al_pueblo.html"><i class="fas fa-map-marked-alt"></i> Bienvenido al pueblo</a></li>
+      <li><a href="En_el_mercado.html"><i class="fas fa-shopping-cart"></i> En el mercado</a></li>
+      <li><a href="Examen_1.html"><i class="fas fa-file-alt"></i> Examen 1</a></li>
+      <li><a href="Examen_2.html"><i class="fas fa-file-alt"></i> Examen 2</a></li>
+      <li><a href="Examen_3.html"><i class="fas fa-file-alt"></i> Examen 3</a></li>
+      <li><a href="Examen_4.html"><i class="fas fa-file-alt"></i> Examen 4</a></li>
+      <li><a href="Examen_5.html"><i class="fas fa-file-alt"></i> Examen 5</a></li>
+    </ul>
+  </div>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+</body>
+</html>

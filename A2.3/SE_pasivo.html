@@ -758,6 +758,8 @@
 
 <body>
 
+    <div id="header-container"></div>
+
     <div id="scroll-progress"></div>
 
     <img id="fixed-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png"
@@ -3225,6 +3227,14 @@
         // Expose to global
         window.CoreGame = CoreGame;
     </script>
+
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+
 </body>
 
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nivel A2.3 — Clases Tucaneo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fefce8; color: #0f172a; }
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 90px 24px 40px; }
+    h1 { color: #004d40; font-size: 2rem; margin-bottom: 0.5rem; }
+    .sub { color: #64748b; margin-bottom: 2rem; }
+    .lesson-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .lesson-list a {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+      background: #fff; border-radius: 12px; text-decoration: none; color: #0f172a;
+      border: 1px solid #e2e8f0; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lesson-list a:hover { border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+    .lesson-list i { color: #10b981; width: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="page-wrap">
+    <h1>Nivel A2.3</h1>
+    <p class="sub">Pretérito perfecto, pluscuamperfecto, voz pasiva, imperativo.</p>
+    <ul class="lesson-list">
+      <li><a href="El_Pretérito_Perfecto_Compuesto.html"><i class="fas fa-check-double"></i> El pretérito perfecto compuesto</a></li>
+      <li><a href="El_Preterito_Perfecto_Compuesto_ejercicios.html"><i class="fas fa-tasks"></i> El pretérito perfecto compuesto — ejercicios</a></li>
+      <li><a href="Preterito_perfecto_repaso.html"><i class="fas fa-redo"></i> Pretérito perfecto repaso</a></li>
+      <li><a href="¿Qué_han_hecho.html"><i class="fas fa-question-circle"></i> ¿Qué han hecho?</a></li>
+      <li><a href="Pasado_pluscuamperfecto.html"><i class="fas fa-history"></i> Pasado pluscuamperfecto</a></li>
+      <li><a href="Pasado_pluscuamperfecto_ejercicios.html"><i class="fas fa-tasks"></i> Pasado pluscuamperfecto ejercicios</a></li>
+      <li><a href="Crónicas_del_Tiempo_El_Duelo_de los_Pasados.html"><i class="fas fa-book"></i> Crónicas del tiempo — El duelo de los pasados</a></li>
+      <li><a href="La_voz_pasiva.html"><i class="fas fa-volume-up"></i> La voz pasiva</a></li>
+      <li><a href="SE_pasivo.html"><i class="fas fa-language"></i> SE pasivo</a></li>
+      <li><a href="Se_pasivo_impersonal.html"><i class="fas fa-language"></i> Se pasivo impersonal</a></li>
+      <li><a href="Claususlas_del_subjuntivo.html"><i class="fas fa-quote-right"></i> Cláusulas del subjuntivo</a></li>
+      <li><a href="El_imperativo.html"><i class="fas fa-exclamation-circle"></i> El imperativo</a></li>
+      <li><a href="El_imperativo ejercicios.html"><i class="fas fa-tasks"></i> El imperativo ejercicios</a></li>
+      <li><a href="Presente_progresivo.html"><i class="fas fa-spinner"></i> Presente progresivo</a></li>
+      <li><a href="Presente_progresivo_ejercicios.html.html"><i class="fas fa-tasks"></i> Presente progresivo ejercicios</a></li>
+      <li><a href="Vamos_a_escuchar.html"><i class="fas fa-headphones"></i> Vamos a escuchar</a></li>
+      <li><a href="El_biblioburro.html"><i class="fas fa-book-reader"></i> El biblioburro</a></li>
+      <li><a href="La_depresion.html"><i class="fas fa-heart"></i> La depresión</a></li>
+      <li><a href="En_la_busqueda_del trabajo.html"><i class="fas fa-briefcase"></i> En la búsqueda del trabajo</a></li>
+      <li><a href="El_mundo_del_trabajo.html"><i class="fas fa-briefcase"></i> El mundo del trabajo</a></li>
+      <li><a href="¿Vives_Conectado_o_Atrapado.html"><i class="fas fa-mobile-alt"></i> ¿Vives conectado o atrapado?</a></li>
+      <li><a href="dia_de_la_semana.html"><i class="fas fa-calendar-day"></i> Día de la semana</a></li>
+      <li><a href="lugare_distintos.html"><i class="fas fa-map-marked-alt"></i> Lugares distintos</a></li>
+      <li><a href="Examen_1_A2.2.html"><i class="fas fa-file-alt"></i> Examen 1 A2.2</a></li>
+      <li><a href="Examen_1_A2.3.html"><i class="fas fa-file-alt"></i> Examen 1 A2.3</a></li>
+      <li><a href="Examen_2_A2.3.html"><i class="fas fa-file-alt"></i> Examen 2 A2.3</a></li>
+    </ul>
+  </div>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) el.innerHTML = data;
+    });
+  </script>
+</body>
+</html>
