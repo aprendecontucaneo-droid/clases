@@ -1,4 +1,14 @@
 <style>
+  body.tucaneo-has-nav { padding-top: 52px !important; }
+  body.tucaneo-has-nav .reveal {
+    top: 52px !important;
+    height: calc(100vh - 52px) !important;
+    min-height: calc(100vh - 52px) !important;
+  }
+  body.tucaneo-has-nav .reveal .slides {
+    height: calc(100vh - 52px) !important;
+    min-height: calc(100vh - 52px) !important;
+  }
   .tucaneo-nav-bar {
     position: fixed;
     top: 0;
@@ -85,10 +95,7 @@
 (function() {
   var nav = document.getElementById('tucaneo-site-nav');
   if (!nav) return;
-  var h = 52;
-  if (document.body) {
-    document.body.style.paddingTop = h + 'px';
-  }
+  document.body.classList.add('tucaneo-has-nav');
   var origin = window.location.origin;
   var links = nav.querySelectorAll('.nav-links a[href^="/"]');
   for (var i = 0; i < links.length; i++) {
