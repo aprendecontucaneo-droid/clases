@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserva tu clase — Tucaneo</title>
+</head>
+<body style="margin:0; padding-top:0;">
+<div id="header-container"></div>
+<style>
+  /* =========================================
+     ESTILO BASADO EN CURSO A1 (ADAPTADO A RESERVAS)
+     ========================================= */
+
+  /* HEADER TRANSPARENTE */
+  header#masthead, .site-header {
+      background-color: transparent !important;
+      position: absolute !important;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding-top: 20px !important; 
+  }
+
+  /* TEXTOS HEADER */
+  .main-header-menu .menu-item > .menu-link,
+  .site-title a, 
+  .site-header a {
+      color: #ffffff !important; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+      font-weight: 700 !important;
+      font-size: 1.1rem !important;
+  }
+    
+  .main-header-menu .menu-item > .menu-link:hover {
+      color: #f59e0b !important; 
+  }
+
+  /* PORTADA HERO */
+  .tucaneo-hero {
+    position: relative;
+    width: 100vw; 
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw; 
+    margin-right: -50vw;
+    height: 90vh; 
+    min-height: 750px; 
+    background-image: url('https://tucaneo.com/wp-content/uploads/2025/12/Captura-de-pantalla-2025-12-01-123236.png');
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat;
+    border-radius: 0 0 0 0; 
+    margin-bottom: 0px; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    box-shadow: none; 
+    overflow: visible; 
+  }
+
+  .tucaneo-overlay {
+    background: linear-gradient(180deg, 
+        rgba(9, 23, 18, 0.6) 0%,       
+        rgba(9, 23, 18, 0.5) 40%,
+        rgba(255, 255, 255, 0) 100% 
+    );
+    background-color: rgba(0,0,0,0.4); 
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
+  }
+
+  .tucaneo-hero-content {
+    position: relative;
+    z-index: 10;
+    padding: 20px;
+    max-width: 850px;
+    text-align: center;
+    color: white;
+    margin-top: 0px; 
+    margin-bottom: 100px; 
+  }
+
+  .tucaneo-tagline { 
+    display: inline-block; 
+    background-color: #f59e0b; 
+    color: #000; 
+    font-weight: 800; 
+    font-size: 0.9rem; 
+    padding: 8px 16px; 
+    border-radius: 50px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    margin-bottom: 25px; 
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); 
+  }
+  
+  .tucaneo-hero h1 { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 4.5rem; 
+    line-height: 1.05; 
+    font-weight: 900; 
+    margin-bottom: 25px; 
+    color: white; 
+    text-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+  }
+  
+  .tucaneo-hero p { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.5rem; 
+    line-height: 1.6; 
+    color: #f3f4f6; 
+    margin-bottom: 45px; 
+    max-width: 80%; 
+    margin-left: auto; 
+    margin-right: auto; 
+    font-weight: 500; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+  }
+  
+  .tucaneo-cta { 
+    background-color: #10b981; 
+    color: white !important; 
+    padding: 18px 45px; 
+    border-radius: 50px; 
+    font-weight: 800; 
+    text-decoration: none; 
+    display: inline-block; 
+    transition: all 0.3s ease; 
+    border: none; 
+    font-size: 1.3rem; 
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5); 
+    cursor: pointer; 
+    animation: bounceButton 2s infinite;
+  }
+  
+  @keyframes bounceButton {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-5px);}
+      60% {transform: translateY(-3px);}
+  }
+  
+  .tucaneo-cta:hover { 
+    background-color: #059669; 
+    animation: none;
+    transform: translateY(-5px) scale(1.02); 
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.7); 
+  }
+
+  /* BARRA DE PASOS (TRUST BAR) */
+  .booking-steps-bar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #f3f4f6;
+      text-align: center;
+  }
+  
+  .step-item {
+      flex: 1;
+      padding: 0 10px;
+  }
+  
+  .step-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+  }
+  
+  .step-title {
+      font-weight: 800;
+      color: #111827;
+      font-size: 1rem;
+      display: block;
+      margin-bottom: 5px;
+  }
+  
+  .step-desc {
+      font-size: 0.85rem;
+      color: #6b7280;
+  }
+
+  /* CONTENEDOR DEL CALENDARIO (ESTILO FLOTANTE/OVERLAP) */
+  .tucaneo-calendar-container {
+      max-width: 1000px; 
+      margin: 0 auto 60px auto; 
+      padding: 50px;
+      background: #ffffff;
+      border-radius: 25px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+      border: 1px solid rgba(255,255,255,0.5);
+      position: relative;
+      z-index: 20;
+      margin-top: -120px; 
+  }
+
+  /* --- NUEVO: SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) --- */
+  .booking-faq-section {
+      max-width: 850px;
+      margin: 0 auto 40px auto;
+      padding: 0 20px;
+  }
+  
+  .faq-heading {
+      text-align: center;
+      margin-bottom: 40px;
+  }
+  
+  .faq-heading h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 10px;
+  }
+  
+  .faq-heading p {
+      color: #6b7280;
+      font-size: 1.1rem;
+  }
+
+  .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Dos columnas */
+      gap: 30px;
+  }
+
+  .faq-item {
+      background: #f9fafb; /* Gris muy suave */
+      padding: 25px;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+  }
+
+  .faq-item:hover {
+      background: #ffffff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border-color: #e5e7eb;
+      transform: translateY(-2px);
+  }
+
+  .faq-question {
+      font-weight: 800;
+      color: #064e3b; /* Verde oscuro */
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      display: block;
+  }
+
+  .faq-answer {
+      font-size: 0.95rem;
+      color: #4b5563;
+      line-height: 1.6;
+  }
+
+  /* --- NUEVO: FOOTER MINIMALISTA --- */
+  .booking-footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 60px;
+      color: #9ca3af;
+      font-size: 0.9rem;
+  }
+  
+  .booking-footer a {
+      color: #10b981;
+      text-decoration: none;
+      font-weight: 600;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 921px) {
+    header#masthead, .site-header {
+       background-color: #ffffff !important; 
+       padding-top: 0px !important; 
+       box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+       position: fixed !important; 
+    }
+    
+    .site-title a, .site-header .ast-button-wrap .menu-toggle-icon {
+        color: #0e231b !important;
+        text-shadow: none !important;
+    }
+
+    .tucaneo-hero {
+      width: 92%; 
+      left: auto; right: auto; 
+      margin-left: auto; margin-right: auto;
+      height: auto !important; 
+      min-height: 600px; 
+      margin-top: 130px; 
+      border-radius: 25px !important; 
+      background-position: center center;
+      margin-bottom: -50px; 
+    }
+
+    .tucaneo-hero-content {
+      padding: 30px 20px !important; 
+      margin-top: 0px !important; 
+      margin-bottom: 50px;
+    }
+
+    .tucaneo-hero h1 { font-size: 2.2rem; }
+    .tucaneo-hero p { font-size: 1.1rem; max-width: 100%; }
+    .tucaneo-cta { padding: 15px 30px; font-size: 1rem; width: 80%; text-align: center;}
+    
+    .tucaneo-calendar-container {
+        width: 92%;
+        padding: 25px;
+        margin-top: -40px; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .booking-steps-bar {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    /* FAQ en una columna en móvil */
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<!-- CONTENEDOR PRINCIPAL GLOBAL -->
+<div class="tucaneo-container" style="max-width: 100% !important; padding: 0 !important; margin: 0 !important;">
+  
+  <!-- 1. PORTADA HERO -->
+  <div class="tucaneo-hero">
+    <div class="tucaneo-overlay"></div> 
+    
+    <div class="tucaneo-hero-content">
+      <span class="tucaneo-tagline">Clases 1 a 1</span>
+      <h1>Agenda tu Clase Privada</h1>
+      <p>Supera tus barreras y habla con fluidez. Sin presiones, a tu ritmo y enfocado en tus objetivos.</p>
+      
+      <a href="#calendario-reserva" class="tucaneo-cta">
+         Reservar Ahora 👇
+      </a>
+    </div>
+  </div>
+  
+  <!-- 2. CALENDARIO CON ESTILO FLOTANTE -->
+  <div id="calendario-reserva" class="tucaneo-calendar-container">
+      
+      <!-- BARRA DE CONFIANZA / PASOS -->
+      <div class="booking-steps-bar">
+          <div class="step-item">
+              <span class="step-icon">🕒</span>
+              <span class="step-title">1. Elige tu hora</span>
+              <span class="step-desc">Selecciona el horario que mejor te convenga.</span>
+          </div>
+          <div class="step-item">
+              <span class="step-icon">📝</span>
+              <span class="step-title">2. Tus datos</span>
+              <span class="step-desc">Introduce tu nombre y correo electrónico.</span>
+          </div>
+          <div class="step-item">
+              <span class="step-icon">✅</span>
+              <span class="step-title">3. ¡Confirmado!</span>
+              <span class="step-desc">Recibe tu enlace de Zoom al instante.</span>
+          </div>
+      </div>
+      
+      <!-- Calendario: Amelia corre en WordPress. En esta maqueta enlazamos a la página de reservas. -->
+      <div style="text-align:center; padding:40px 20px;">
+        <p style="margin-bottom:20px; color:#6b7280;">El calendario de reservas está en la web principal.</p>
+        <a href="https://tucaneo.com/reserva-tu-clase/" class="tucaneo-cta" target="_blank" rel="noopener">Abrir calendario en Tucaneo.com →</a>
+      </div>
+  </div>
+
+  <!-- 3. PREGUNTAS FRECUENTES (NUEVO) -->
+  <div class="booking-faq-section">
+      <div class="faq-heading">
+          <h2>¿Tienes dudas?</h2>
+          <p>Aquí resuelvo las preguntas más comunes antes de reservar.</p>
+      </div>
+      
+      <div class="faq-grid">
+          <div class="faq-item">
+              <span class="faq-question">¿Dónde son las clases?</span>
+              <span class="faq-answer">Todas las sesiones son online a través de Google Meet o Zoom. Recibirás el enlace automáticamente al confirmar tu reserva.</span>
+          </div>
+          <div class="faq-item">
+              <span class="faq-question">¿Qué pasa si tengo que cancelar?</span>
+              <span class="faq-answer">Puedes reprogramar tu clase sin costo hasta 24 horas antes de la sesión desde el enlace en tu correo de confirmación.</span>
+          </div>
+          <div class="faq-item">
+              <span class="faq-question">¿Son clases para principiantes?</span>
+              <span class="faq-answer">¡Sí! Adapto cada sesión a tu nivel, desde A1 (principiante absoluto) hasta niveles avanzados de conversación.</span>
+          </div>
+          <div class="faq-item">
+              <span class="faq-question">¿Necesito descargar algo?</span>
+              <span class="faq-answer">No es obligatorio. Puedes unirte desde tu navegador, aunque recomiendo tener Zoom instalado para mejor calidad.</span>
+          </div>
+      </div>
+  </div>
+
+  <!-- 4. FOOTER SIMPLE -->
+  <div class="booking-footer">
+      <p>¿Necesitas ayuda adicional? Escríbeme a <a href="mailto:hola@tucaneo.com">hola@tucaneo.com</a></p>
+      <p style="margin-top: 10px; font-size: 0.8rem;">© 2025 Tucaneo. Todos los derechos reservados.</p>
+  </div>
+
+</div>
+<script>
+  fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+    var el = document.getElementById('header-container');
+    if (el) {
+      el.innerHTML = data;
+      var scripts = el.querySelectorAll('script');
+      for (var i = 0; i < scripts.length; i++) {
+        var sc = scripts[i];
+        var ns = document.createElement('script');
+        if (sc.src) ns.src = sc.src; else ns.textContent = sc.textContent;
+        document.body.appendChild(ns);
+      }
+    }
+  });
+</script>
+</body>
+</html>

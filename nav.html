@@ -1,94 +1,74 @@
 <style>
-  .tucaneo-site-nav {
+  .tucaneo-nav-bar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 9999;
-    background: rgba(14, 35, 27, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: none;
-    padding: 16px 32px;
+    z-index: 99999;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+    padding: 0 20px;
+    background: rgba(14, 35, 27, 0.97);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
   }
-  .tucaneo-site-nav .nav-brand {
+  .tucaneo-nav-bar .nav-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-decoration: none;
-    color: #fff !important;
-  }
-  .tucaneo-site-nav .nav-logo {
-    height: 44px;
-    width: auto;
-    display: block;
-  }
-  .tucaneo-site-nav .nav-brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-  .tucaneo-site-nav .nav-brand-name {
-    font-size: 1.35rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
     color: #fff;
   }
-  .tucaneo-site-nav .nav-brand-tagline {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    letter-spacing: 0.02em;
+  .tucaneo-nav-bar .nav-logo {
+    height: 36px;
+    width: auto;
   }
-  .tucaneo-site-nav .nav-links {
+  .tucaneo-nav-bar .nav-brand-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .tucaneo-nav-bar .nav-links {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 2px;
     flex-wrap: wrap;
   }
-  .tucaneo-site-nav .nav-links a {
-    color: rgba(255,255,255,0.95) !important;
-    text-decoration: none !important;
-    font-weight: 600;
+  .tucaneo-nav-bar .nav-links a {
+    padding: 6px 12px;
+    color: rgba(255,255,255,0.95);
+    text-decoration: none;
     font-size: 0.9rem;
-    padding: 8px 14px;
+    font-weight: 600;
     border-radius: 6px;
-    transition: color 0.2s, background 0.2s;
-    letter-spacing: 0.01em;
+    transition: background 0.2s, color 0.2s;
   }
-  .tucaneo-site-nav .nav-links a:hover {
+  .tucaneo-nav-bar .nav-links a:hover {
     background: rgba(255,255,255,0.12);
-    color: #fff !important;
+    color: #fff;
   }
-  .tucaneo-site-nav .nav-links a.nav-cta {
+  .tucaneo-nav-bar .nav-links a.nav-cta {
     background: #f59e0b;
-    color: #000 !important;
-    padding: 8px 18px;
+    color: #000;
+    margin-left: 4px;
   }
-  .tucaneo-site-nav .nav-links a.nav-cta:hover {
+  .tucaneo-nav-bar .nav-links a.nav-cta:hover {
     background: #fbbf24;
-    color: #000 !important;
+    color: #000;
   }
   @media (max-width: 768px) {
-    .tucaneo-site-nav { padding: 12px 16px; gap: 12px; }
-    .tucaneo-site-nav .nav-brand-tagline { display: none; }
-    .tucaneo-site-nav .nav-logo { height: 36px; }
-    .tucaneo-site-nav .nav-links a { font-size: 0.8rem; padding: 6px 10px; }
+    .tucaneo-nav-bar { padding: 0 10px; }
+    .tucaneo-nav-bar .nav-brand-name { display: none; }
+    .tucaneo-nav-bar .nav-links a { font-size: 0.8rem; padding: 5px 8px; }
   }
 </style>
-<nav class="tucaneo-site-nav" id="tucaneo-site-nav">
+<nav class="tucaneo-nav-bar" id="tucaneo-site-nav">
   <a href="/" class="nav-brand">
     <img class="nav-logo" src="https://tucaneo.com/wp-content/uploads/2025/11/Plantilla-2-e1764351536337.png" alt="Tucaneo">
-    <div class="nav-brand-text">
-      <span class="nav-brand-name">Tucaneo</span>
-      <span class="nav-brand-tagline">Español con alas propias</span>
-    </div>
+    <span class="nav-brand-name">Tucaneo</span>
   </a>
   <div class="nav-links">
     <a href="/">Inicio</a>
@@ -97,6 +77,23 @@
     <a href="/Maquetas/maqueta_a2.html">A2</a>
     <a href="/Maquetas/maqueta_A2.2.html">A2.2</a>
     <a href="/Maquetas/Maqueta_A2.3.html">A2.3</a>
-    <a href="https://tucaneo.com/reserva-tu-clase/" class="nav-cta" target="_blank" rel="noopener">Reserva tu clase</a>
+    <a href="/Maquetas/Conversemos.html">Conversemos</a>
+    <a href="/Maquetas/reserva_de_clases.html" class="nav-cta">Reserva tu clase</a>
   </div>
 </nav>
+<script>
+(function() {
+  var nav = document.getElementById('tucaneo-site-nav');
+  if (!nav) return;
+  var h = 52;
+  if (document.body) {
+    document.body.style.paddingTop = h + 'px';
+  }
+  var origin = window.location.origin;
+  var links = nav.querySelectorAll('.nav-links a[href^="/"]');
+  for (var i = 0; i < links.length; i++) {
+    var href = links[i].getAttribute('href');
+    if (href) links[i].href = origin + href;
+  }
+})();
+</script>
