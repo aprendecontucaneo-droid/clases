@@ -1604,7 +1604,7 @@
                                         style="text-shadow: 0 0 5px rgba(16, 185, 129, 0.3);">
                                         El año pasado, yo <span
                                             class="inline-block border-b-2 border-emerald-500 min-w-[100px] text-center text-emerald-300">__________</span>
-                                        (viajar) a España.
+                                        a España.
                                     </p>
                                     <div id="tm-hint"
                                         class="text-slate-400 text-sm mt-4 font-mono italic opacity-0 transition-opacity duration-300">
@@ -3418,14 +3418,14 @@
             },
 
             data: [
-                { verb: "VIAJAR", subject: "yo", answer: "viajé", sentence: "El año pasado, yo __________ (viajar) a España.", hint: "Regular -AR ending for 'Yo': -é" },
-                { verb: "COMER", subject: "nosotros", answer: "comimos", sentence: "Ayer, nosotros __________ (comer) una pizza gigante.", hint: "Regular -ER ending for 'Nosotros': -imos" },
-                { verb: "ESCRIBIR", subject: "tú", answer: "escribiste", sentence: "¿Tú __________ (escribir) el correo electrónico?", hint: "Regular -IR ending for 'Tú': -iste" },
-                { verb: "IR", subject: "ella", answer: "fue", sentence: "Ella __________ (ir) al cine el sábado.", hint: "Irregular verb (starts with f...)" },
-                { verb: "TENER", subject: "ellos", answer: "tuvieron", sentence: "Ellos __________ (tener) un examen difícil.", hint: "Irregular stem 'tuv-' + ending" },
-                { verb: "HABLAR", subject: "usted", answer: "habló", sentence: "Usted __________ (hablar) con el profesor.", hint: "Regular -AR ending for 'Usted': -ó" },
-                { verb: "VIVIR", subject: "él", answer: "vivió", sentence: "Él __________ (vivir) en Madrid dos años.", hint: "Regular -IR ending for 'Él': -ió" },
-                { verb: "ESTAR", subject: "yo", answer: "estuve", sentence: "Yo __________ (estar) enfermo ayer.", hint: "Irregular stem 'estuv-' + ending" }
+                { verb: "VIAJAR", subject: "yo", answer: "viajé", sentence: "El año pasado, yo __________ a España.", hint: "Regular -AR ending for 'Yo': -é" },
+                { verb: "COMER", subject: "nosotros", answer: "comimos", sentence: "Ayer, nosotros __________ una pizza gigante.", hint: "Regular -ER ending for 'Nosotros': -imos" },
+                { verb: "ESCRIBIR", subject: "tú", answer: "escribiste", sentence: "¿Tú __________ el correo electrónico?", hint: "Regular -IR ending for 'Tú': -iste" },
+                { verb: "CENAR", subject: "ella", answer: "cenó", sentence: "Ella __________ en el restaurante anoche.", hint: "Regular -AR ending for 'Ella': -ó" },
+                { verb: "COMPRAR", subject: "ellos", answer: "compraron", sentence: "Ellos __________ los boletos ayer.", hint: "Regular -AR ending for 'Ellos': -aron" },
+                { verb: "HABLAR", subject: "usted", answer: "habló", sentence: "Usted __________ con el profesor.", hint: "Regular -AR ending for 'Usted': -ó" },
+                { verb: "VIVIR", subject: "él", answer: "vivió", sentence: "Él __________ en Madrid dos años.", hint: "Regular -IR ending for 'Él': -ió" },
+                { verb: "TRABAJAR", subject: "yo", answer: "trabajé", sentence: "Yo __________ mucho la semana pasada.", hint: "Regular -AR ending for 'Yo': -é" }
             ],
 
             init: function () {
@@ -3466,6 +3466,7 @@
 
                 const input = document.getElementById('tm-input');
                 input.value = '';
+                input.placeholder = (current.verb.toLowerCase() + ' (' + current.subject + ')');
                 input.focus();
 
                 document.getElementById('tm-feedback').innerText = '';

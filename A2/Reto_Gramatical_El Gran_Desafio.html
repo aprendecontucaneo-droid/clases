@@ -108,6 +108,7 @@
             { name: "Gerencia", icon: "ph-briefcase", desc: "La decisión final." }
         ];
 
+        // --- DATOS DEL JUEGO (Corregidos y sin ambigüedades: sin displayOptions, reglas claras) ---
         const questions = [
             // FASE 1: RECEPCIÓN
             {
@@ -117,9 +118,9 @@
                 speaker: "Recepcionista",
                 text: "Buenos días. Para entrar, necesito su identificación. ¿Tiene su documento?",
                 options: [
-                    { text: "Sí, la tengo aquí.", correct: false, error: "'El documento' es masculino (lo)." },
-                    { text: "Sí, lo tengo aquí.", correct: true }, // Correcta en posición 2
-                    { text: "Sí, le tengo aquí.", correct: false, error: "Para objetos usamos 'lo', no 'le'." }
+                    { text: "Sí, la tengo aquí.", correct: false, error: "'El documento' es masculino, por lo que 'la' es incorrecto." },
+                    { text: "Sí, lo tengo aquí.", correct: true, explanation: "¡Perfecto! 'Documento' es masculino singular." },
+                    { text: "Sí, le tengo aquí.", correct: false, error: "Aunque en algunas zonas hay leísmo, al referirnos a un objeto inanimado (el documento), la norma general exige 'lo'." }
                 ]
             },
             {
@@ -130,7 +131,7 @@
                 context: "La recepcionista te pide llenar un formulario.",
                 sentence: "Por favor, completa este formulario y ______ a mí cuando termines.",
                 options: ["me lo entrega", "entrégamelo", "entregamelo", "entrégaselo"],
-                correct: "entrégamelo", // Correcta en posición 2
+                correct: "entrégamelo",
                 explanation: "Imperativo (entrega) + a mí (me) + el formulario (lo) -> Entrégamelo."
             },
             {
@@ -138,13 +139,12 @@
                 stage: 0,
                 type: "dialogue",
                 speaker: "Recepcionista",
-                text: "Muy bien. ¿Vas a esperar al gerente en la sala?",
+                text: "Muy bien. ¿Vas a tomar el ascensor principal?",
                 options: [
-                    { text: "Sí, le voy a esperar.", correct: false, error: "Incorrecto en este contexto." },
-                    { text: "Sí, voy a esperarla allá.", correct: false, error: "Es 'el gerente' (masculino)." },
-                    { text: "Sí, voy a esperarlo allá.", correct: true } // Correcta en posición 3
-                ],
-                displayOptions: ["Sí, le voy a esperar.", "Sí, voy a esperarla allá.", "Sí, voy a esperarlo allá."]
+                    { text: "Sí, le voy a tomar.", correct: false, error: "'El ascensor' es una cosa, usar 'le' aquí es un leísmo incorrecto." },
+                    { text: "Sí, voy a tomarla allá.", correct: false, error: "El ascensor es masculino (lo), no femenino (la)." },
+                    { text: "Sí, voy a tomarlo.", correct: true, explanation: "¡Excelente! 'Lo' reemplaza correctamente al ascensor." }
+                ]
             },
 
             // FASE 2: RRHH
@@ -155,9 +155,9 @@
                 speaker: "Director de RRHH",
                 text: "Hablemos de motivación. ¿Te interesa este puesto de trabajo?",
                 options: [
-                    { text: "Sí, lo interesa mucho.", correct: false, error: "El verbo interesar funciona como gustar: 'A mí ME interesa'." },
-                    { text: "Sí, te interesa mucho.", correct: false, error: "'Te' es para 'a ti'. Debes decir 'a mí me'." },
-                    { text: "Sí, me interesa mucho.", correct: true } // Correcta en posición 3
+                    { text: "Sí, lo interesa mucho.", correct: false, error: "El verbo interesar funciona como gustar: la acción recae sobre ti -> 'A mí ME interesa'." },
+                    { text: "Sí, te interesa mucho.", correct: false, error: "'Te' es para 'a ti'. Debes hablar de ti mismo ('me')." },
+                    { text: "Sí, me interesa mucho.", correct: true, explanation: "Correcto. El puesto (sujeto) me interesa a mí (objeto indirecto)." }
                 ]
             },
             {
@@ -168,7 +168,7 @@
                 context: "Te preguntan por tu Currículum Vitae impreso.",
                 sentence: "¿Tienes el currículum? Por favor, ______ ahora.",
                 options: ["dámelo", "datelo", "dáselo", "melo das"],
-                correct: "dámelo", // Correcta en posición 1
+                correct: "dámelo",
                 explanation: "Imperativo (da) + a mí (me) + el currículum (lo) -> Dámelo."
             },
             {
@@ -178,11 +178,10 @@
                 speaker: "Director de RRHH",
                 text: "Nosotros buscamos gente honesta. ¿Siempre dices la verdad a tus jefes?",
                 options: [
-                    { text: "Sí, siempre les la digo.", correct: false, error: "No se puede decir 'les la'. 'Les' cambia a 'se'." },
-                    { text: "Sí, siempre se la digo.", correct: true }, // Correcta en posición 2
-                    { text: "Sí, siempre la les digo.", correct: false, error: "El orden es Indirecto (se) + Directo (la)." }
-                ],
-                displayOptions: ["Sí, siempre les la digo.", "Sí, siempre se la digo.", "Sí, siempre te la digo."]
+                    { text: "Sí, siempre les la digo.", correct: false, error: "Por cacofonía, no se dice 'les la'. 'Les' se transforma en 'se'." },
+                    { text: "Sí, siempre se la digo.", correct: true, explanation: "¡Exacto! Indirecto (se) + Directo (la)." },
+                    { text: "Sí, siempre te la digo.", correct: false, error: "El 'te' indica que me la dices a mí. Debes referirte a tus jefes (se)." }
+                ]
             },
             {
                 id: 7,
@@ -192,7 +191,7 @@
                 context: "Hablando de objetivos futuros.",
                 sentence: "Este puesto es exigente. ¿Tienes ganas de aprender?",
                 options: ["Sí, los tengo.", "Sí, las tengo.", "Sí, lo tengo.", "Sí, la tengo."],
-                correct: "Sí, las tengo.", // Correcta en posición 2
+                correct: "Sí, las tengo.",
                 explanation: "'Ganas' es femenino plural -> Las tengo."
             },
 
@@ -204,11 +203,10 @@
                 speaker: "Supervisor",
                 text: "Mira estos correos urgentes. ¿Los estás respondiendo?",
                 options: [
-                    { text: "Sí, estoy respondiéndoles.", correct: false, error: "'Correos' es Objeto Directo -> Los." },
-                    { text: "Sí, estoy respondiéndolos.", correct: true }, // Correcta en posición 2
-                    { text: "Sí, estoy los respondiendo.", correct: false, error: "El pronombre va antes del verbo conjugado o pegado al gerundio, no en el medio." }
-                ],
-                displayOptions: ["Sí, estoy respondiéndoles.", "Sí, estoy respondiéndolos.", "Sí, respondiéndolos estoy."]
+                    { text: "Sí, estoy respondiéndoles.", correct: false, error: "'Correos' es el objeto que recibe la acción directa -> Los." },
+                    { text: "Sí, estoy respondiéndolos.", correct: true, explanation: "Correcto. El pronombre 'los' se une al gerundio." },
+                    { text: "Sí, respondiéndolos estoy.", correct: false, error: "El orden sintáctico es antinatural en español estándar." }
+                ]
             },
             {
                 id: 9,
@@ -218,7 +216,7 @@
                 context: "Te piden enviar un archivo al cliente.",
                 sentence: "El cliente necesita el informe. ¿Vas a enviar el informe al cliente?",
                 options: ["Sí, voy a enviarlole.", "Sí, voy a enviartelo.", "Sí, voy a enviárselo.", "Sí, se voy a enviarlo."],
-                correct: "Sí, voy a enviárselo.", // Correcta en posición 3
+                correct: "Sí, voy a enviárselo.",
                 explanation: "Enviar + a él (se) + el informe (lo) -> Enviárselo."
             },
             {
@@ -228,11 +226,10 @@
                 speaker: "Supervisor",
                 text: "¿Conoces esta herramienta de software?",
                 options: [
-                    { text: "Sí, la conozco.", correct: true }, // Correcta en posición 1
-                    { text: "Sí, lo conozco.", correct: false, error: "'Esta herramienta' es femenino (la)." },
-                    { text: "Sí, le conozco.", correct: false, error: "Leísmo incorrecto aquí. Herramienta es cosa -> La." }
-                ],
-                displayOptions: ["Sí, la conozco.", "Sí, lo conozco.", "Sí, las conozco."]
+                    { text: "Sí, la conozco.", correct: true, explanation: "'Herramienta' es femenino singular -> La." },
+                    { text: "Sí, lo conozco.", correct: false, error: "'Esta herramienta' es femenino, no masculino." },
+                    { text: "Sí, las conozco.", correct: false, error: "Es una sola herramienta, debe ser singular." }
+                ]
             },
             {
                 id: 11,
@@ -242,7 +239,7 @@
                 context: "Instrucciones sobre una reunión.",
                 sentence: "Tienes que explicar el problema a los compañeros. Tienes que ______.",
                 options: ["explicarleslo", "explicárselo", "explicarlos", "se lo explicar"],
-                correct: "explicárselo", // Correcta en posición 2
+                correct: "explicárselo",
                 explanation: "Explicar + a ellos (les->se) + el problema (lo)."
             },
 
@@ -252,13 +249,12 @@
                 stage: 3,
                 type: "dialogue",
                 speaker: "CEO de Tucaneo",
-                text: "Veo que tienes mucho talento. ¿Quieres trabajar con nosotros?",
+                text: "Veo que tienes mucho talento. ¿Quieres hacer el proyecto con nosotros?",
                 options: [
-                    { text: "Sí, quiero hacerla.", correct: false, error: "Hacer + el trabajo (lo, neutro)." },
-                    { text: "Sí, quiero hacerlo.", correct: true }, // Correcta en posición 2
-                    { text: "Sí, lo quiero hacer.", correct: true } 
-                ],
-                displayOptions: ["Sí, quiero hacerla.", "Sí, quiero hacerlo.", "Sí, quiero hacerlos."]
+                    { text: "Sí, quiero hacerla.", correct: false, error: "'El proyecto' es masculino -> lo." },
+                    { text: "Sí, quiero hacerlo.", correct: true, explanation: "Perfecto. Hacer + el proyecto (lo)." },
+                    { text: "Sí, quiero hacerlos.", correct: false, error: "Es solo un proyecto (singular), no plural." }
+                ]
             },
             {
                 id: 13,
@@ -268,7 +264,7 @@
                 context: "El CEO te ofrece un café.",
                 sentence: "CEO: Yo preparo muy buen café. ¿Te sirvo uno?\nTú: Sí, por favor, ______.",
                 options: ["sírveme", "sírvemelo", "sírvitelo", "sírvelo"],
-                correct: "sírvemelo", // Correcta en posición 2
+                correct: "sírvemelo",
                 explanation: "Servir + a mí (me) + uno (lo) -> Sírvemelo."
             },
             {
@@ -278,11 +274,10 @@
                 speaker: "CEO de Tucaneo",
                 text: "Si te damos el empleo, ¿vas a ponerte la camiseta de la empresa?",
                 options: [
-                    { text: "Sí, voy a ponérsela.", correct: false, error: "Es tu propia camiseta -> ponerme." },
-                    { text: "Sí, voy a ponértela.", correct: false, error: "Te = a ti. Debes usar 'me'." },
-                    { text: "Sí, voy a ponérmela.", correct: true } // Correcta en posición 3
-                ],
-                displayOptions: ["Sí, voy a ponérsela.", "Sí, voy a ponértela.", "Sí, voy a ponérmela."]
+                    { text: "Sí, voy a ponérsela.", correct: false, error: "Eso significa ponérsela a otra persona. Es tu propia camiseta -> ponerme." },
+                    { text: "Sí, voy a ponértela.", correct: false, error: "Significa ponértela a ti (al CEO). ¡Debes usar 'me'!" },
+                    { text: "Sí, voy a ponérmela.", correct: true, explanation: "¡Esa es la actitud! Poner + a mí (me) + la camiseta (la)." }
+                ]
             },
             {
                 id: 15,
@@ -291,11 +286,10 @@
                 speaker: "CEO de Tucaneo",
                 text: "Última pregunta. ¿Me prometes lealtad a la empresa?",
                 options: [
-                    { text: "Sí, se la prometo.", correct: true }, // Correcta en posición 1
-                    { text: "Sí, te la prometo.", correct: false, error: "Trata al CEO de usted -> Se la." },
-                    { text: "Sí, me la prometo.", correct: false, error: "No te la prometes a ti mismo." }
-                ],
-                displayOptions: ["Sí, se la prometo.", "Sí, te la prometo.", "Sí, me la prometo."]
+                    { text: "Sí, se la prometo.", correct: true, explanation: "Tratando de 'usted' al CEO: a usted (se) + lealtad (la)." },
+                    { text: "Sí, te la prometo.", correct: false, error: "Si lo tratas de 'usted', debe ser 'se la', no 'te la'." },
+                    { text: "Sí, me la prometo.", correct: false, error: "No te prometes lealtad a ti mismo, se la prometes a él." }
+                ]
             }
         ];
 
@@ -403,7 +397,7 @@
                                 </div>
 
                                 <div className="grid gap-3">
-                                    {(question.displayOptions || question.options).map((opt, idx) => {
+                                    {question.options.map((opt, idx) => {
                                         const text = typeof opt === 'string' ? opt : opt.text;
                                         return (
                                             <button
@@ -551,20 +545,27 @@
                 const currentQ = questions[qIndex];
                 let isCorrect = false;
                 let errorMsg = null;
+                let successMsg = null;
 
                 if (typeof currentQ.options[0] === 'string') {
                      isCorrect = selectedText === currentQ.correct;
                      errorMsg = isCorrect ? null : `Respuesta correcta: ${currentQ.correct}`;
                 } else {
                     const optObj = currentQ.options.find(o => o.text === selectedText);
+                    // Salvavidas por si la opción no se encuentra (evita que el juego se rompa)
+                    if (!optObj) {
+                        console.error("Error: Opción no encontrada", selectedText);
+                        return;
+                    }
                     isCorrect = optObj.correct;
                     errorMsg = optObj.error;
+                    successMsg = optObj.explanation;
                 }
 
                 // REPRODUCIR SONIDO
                 if (isCorrect) {
                     playSound('correct');
-                    triggerConfetti(); // Confeti en cada acierto
+                    triggerConfetti();
                 } else {
                     playSound('wrong');
                 }
@@ -572,7 +573,7 @@
                 setFeedback({
                     isCorrect,
                     selected: selectedText,
-                    explanation: isCorrect ? (currentQ.explanation || "¡Bien dicho!") : (errorMsg || "Respuesta incorrecta."),
+                    explanation: isCorrect ? (successMsg || currentQ.explanation || "¡Bien dicho!") : (errorMsg || "Respuesta incorrecta."),
                     nextFn: () => {
                         setFeedback(null);
                         if (!isCorrect) {

@@ -74,6 +74,8 @@
 </head>
 <body class="flex items-center justify-center p-4">
 
+    <div id="header-container"></div>
+
     <div class="glass-panel w-full max-w-3xl p-6 md:p-10 relative overflow-hidden">
         
         <!-- PANTALLA DE INICIO -->
@@ -406,5 +408,20 @@
             startGame();
         }
     </script>
+  <script>
+    fetch('/nav.html').then(function(r){ return r.text(); }).then(function(data){
+      var el = document.getElementById('header-container');
+      if (el) {
+        el.innerHTML = data;
+        var scripts = el.querySelectorAll('script');
+        for (var i = 0; i < scripts.length; i++) {
+          var sc = scripts[i];
+          var ns = document.createElement('script');
+          if (sc.src) ns.src = sc.src; else ns.textContent = sc.textContent;
+          document.body.appendChild(ns);
+        }
+      }
+    });
+  </script>
 </body>
 </html>

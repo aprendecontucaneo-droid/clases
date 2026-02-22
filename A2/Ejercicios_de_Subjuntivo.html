@@ -264,8 +264,8 @@
         .reveal h1 { font-size: 2.2em !important; margin-top: 20px !important; }
         .reveal img { max-height: 250px !important; width: auto !important; margin: 0 auto !important; }
         
-        /* Ocultar controles de PC */
-        #btn-zoom, .nav-btn.zoom, #premium-dock, .reveal .controls, .reveal .progress { 
+        /* Ocultar controles de PC en móvil */
+        #btn-zoom, .nav-btn.zoom, .reveal .controls, .reveal .progress { 
             display: none !important; 
         }
         
@@ -329,42 +329,10 @@
     </div>
 
     <div id="top-nav">
+        <button type="button" onclick="toggleDrawer()" class="nav-btn" title="Pizarra y Glosario"><i class="fas fa-tools"></i> <span>Herramientas</span></button>
         <button id="btn-zoom" onclick="forceZoom()" class="nav-btn zoom" title="Modo Lectura"><i class="fas fa-search-plus"></i> <span>Zoom</span></button>
         <a href="#" class="nav-btn download" onclick="window.print()"><i class="fas fa-file-pdf"></i> <span>PDF</span></a>
         <a href="https://tucaneo.com/" class="nav-btn exit"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-    </div>
-
-    <div id="premium-dock" class="fixed left-6 top-1/2 -translate-y-1/2 z-[6000] flex flex-col items-center gap-3 p-2 bg-white/80 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 transition-all hover:scale-[1.02]">
-        
-        <div class="flex flex-col gap-2 bg-gray-100/50 p-1 rounded-full">
-            <button onclick="openTool('board')" title="Abrir Pizarra" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-orange-600 transition-all hover:translate-x-1 active:scale-95">
-                <i class="fas fa-pen-nib text-xl"></i>
-                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Pizarra</span>
-            </button>
-            <button onclick="openTool('vocab')" title="Glosario" class="group relative w-12 h-12 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-emerald-700 transition-all hover:translate-x-1 active:scale-95">
-                <i class="fas fa-book text-xl"></i>
-                <span class="absolute left-full ml-3 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">Glosario</span>
-            </button>
-        </div>
-
-        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
-
-        <div class="flex flex-col gap-2">
-            <button onclick="react('confetti')" title="Fiesta" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:rotate-12 active:scale-95">
-                <i class="fas fa-party-popper text-xl"></i>
-            </button>
-            <button onclick="react('applause')" title="Aplausos" class="group relative w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 shadow-lg hover:shadow-xl flex items-center justify-center text-white transition-all hover:translate-x-1 hover:-rotate-12 active:scale-95">
-                <i class="fas fa-hands-clapping text-xl"></i>
-            </button>
-        </div>
-
-        <div class="h-px w-6 bg-gray-300/50 my-1"></div>
-
-        <div class="flex flex-col gap-1 bg-gray-100/50 p-1 rounded-full">
-            <button onclick="react('error')" class="w-10 h-10 rounded-full bg-white hover:bg-red-50 text-red-400 shadow-sm flex items-center justify-center transition-all border border-transparent hover:border-red-100 hover:scale-110" title="Error">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-        </div>
     </div>
 
     <div class="reveal">
@@ -642,7 +610,7 @@
                     { trigger: "No creo que él...", verb: "TENER", options: ["Tiene", "Tenga", "Tengas"], correct: 1 }, 
                     { trigger: "Ojalá que tú...", verb: "SER", options: ["Seas", "Eres", "Sea"], correct: 0 }, 
                     { trigger: "Espero que ellos...", verb: "IR", options: ["Van", "Vayan", "Vayas"], correct: 1 }, 
-                    { trigger: "Me alegra que...", verb: "ESTAR", options: ["Estés", "Estás", "Esté"], correct: 2 } 
+                    { trigger: "Me alegra que él/ella...", verb: "ESTAR", options: ["Estés", "Estás", "Esté"], correct: 2 } 
                 ];
 
                 // ELEMENTOS
@@ -1032,19 +1000,19 @@
     </div>
 </section>
 
-<section id="travel-journal-final" data-background="#f8fafc">
+<section id="roommate-rules" data-background="#f8fafc">
     <div class="slide-container h-full flex flex-col justify-start items-center pt-2 pb-2">
         
         <div class="bg-white w-full max-w-6xl h-full shadow-xl rounded-lg overflow-hidden flex flex-col relative border border-slate-200">
             
             <div class="bg-white p-6 border-b-2 border-slate-100 flex items-center justify-between flex-shrink-0 z-20">
                 <div class="flex items-center gap-4">
-                    <div class="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg">
-                        <i class="fas fa-pen-fancy text-2xl"></i>
+                    <div class="bg-emerald-500 text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg">
+                        <i class="fas fa-home text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-3xl font-playfair font-black text-slate-800 m-0">Diario de Viaje</h2>
-                        <p class="text-slate-400 font-sans text-sm font-bold uppercase tracking-widest">Escribe la conjugación correcta (Pretérito)</p>
+                        <h2 class="text-3xl font-playfair font-black text-slate-800 m-0">Reglas del Apartamento</h2>
+                        <p class="text-slate-400 font-sans text-sm font-bold uppercase tracking-widest">Conjuga en Presente de Subjuntivo</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -1055,81 +1023,67 @@
 
             <div class="flex-1 overflow-y-auto p-8 md:p-12 bg-[#fdfbf7] relative">
                 
-                <div class="max-w-5xl mx-auto mb-12 flex flex-col md:flex-row justify-center items-center gap-8 relative z-10">
-                    <div class="absolute top-[-10px] left-1/4 w-16 h-6 bg-orange-200 opacity-50 rotate-[-15deg]"></div>
-                    <div class="absolute top-[-10px] right-1/4 w-16 h-6 bg-orange-200 opacity-50 rotate-[15deg]"></div>
-
-                    <div class="bg-white p-2 pb-4 shadow-md rotate-[-2deg] border border-slate-200 max-w-[300px] transform transition hover:scale-105 hover:rotate-0 z-10">
-                        <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=400&auto=format&fit=crop" class="w-full h-48 object-cover filter grayscale-[20%] sepia-[10%] rounded-sm">
-                        <p class="text-center font-handlee text-slate-600 mt-2 text-lg">La Candelaria, Bogotá 🏔️</p>
-                    </div>
-                    
-                    <div class="bg-white p-2 pb-4 shadow-md rotate-[3deg] border border-slate-200 max-w-[300px] transform transition hover:scale-105 hover:rotate-0 z-10 mt-4 md:mt-0">
-                        <img src="https://images.unsplash.com/photo-1583531352515-8884af319dc1?q=80&w=400&auto=format&fit=crop" class="w-full h-48 object-cover filter contrast-110 saturation-110 rounded-sm">
-                        <p class="text-center font-handlee text-slate-600 mt-2 text-lg">Playa Blanca, Caribe 🌴</p>
-                    </div>
-                </div>
                 <div class="max-w-5xl mx-auto font-serif text-xl md:text-2xl text-slate-700 leading-[5rem] relative z-0"> 
                     
                     <p class="mb-8">
-                        "Fue una semana inolvidable. Primero, nosotros
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(LLEGAR)</span>
+                        "¡Hola, nuevo compañero de piso! Para vivir aquí sin problemas, es importante que tú
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(LIMPIAR)</span>
                         <input type="text" 
                                class="journal-input" 
                                placeholder="escribe..." 
-                               onchange="validateJournal(this, 'llegamos')"
+                               onchange="validateJournal(this, 'limpies')"
                                onkeydown="if(event.key==='Enter') this.blur()">
-                        a Bogotá. Aunque hacía frío, caminamos por el centro histórico y yo
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(VISITAR)</span>
+                        la cocina después de cocinar. También te pido que no
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(HACER)</span>
                         <input type="text" 
                                class="journal-input" 
                                placeholder="..." 
-                               onchange="validateJournal(this, 'visité')"
+                               onchange="validateJournal(this, 'hagas')"
                                onkeydown="if(event.key==='Enter') this.blur()">
-                        el Museo del Oro."
+                        fiestas los domingos por la noche."
                     </p>
 
                     <div class="w-full h-px bg-slate-300 my-6 opacity-50"></div>
 
                     <p class="mb-8">
-                        "Al día siguiente, mi esposa
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(COMPRAR)</span>
+                        "Los gastos son compartidos. Es justo que nosotros
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(PONER)</span>
                         <input type="text" 
                                class="journal-input" 
                                placeholder="..." 
-                               onchange="validateJournal(this, 'compró')"
+                               onchange="validateJournal(this, 'pongamos')"
                                onkeydown="if(event.key==='Enter') this.blur()">
-                        un sombrero tradicional. Después, tomamos un vuelo hacia la costa."
+                        el mismo dinero para el internet. Además, sugiero que tú
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(PAGAR)</span>
+                        <input type="text" 
+                               class="journal-input" 
+                               placeholder="..." 
+                               onchange="validateJournal(this, 'pagues')"
+                               onkeydown="if(event.key==='Enter') this.blur()">
+                        tu parte del alquiler antes del día 5."
                     </p>
 
                     <div class="w-full h-px bg-slate-300 my-6 opacity-50"></div>
 
                     <p class="mb-8">
-                        "En Cartagena, el clima cambió totalmente. Nosotros
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(BEBER)</span>
+                        "Finalmente, ¡bienvenido! Ojalá que nosotros
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(TENER)</span>
                         <input type="text" 
                                class="journal-input" 
                                placeholder="..." 
-                               onchange="validateJournal(this, 'bebimos')"
+                               onchange="validateJournal(this, 'tengamos')"
                                onkeydown="if(event.key==='Enter') this.blur()">
-                        jugo de coco fresco. Por la noche, la gente local
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(BAILAR)</span>
+                        una gran convivencia. Me alegra mucho que
+                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(SER)</span>
                         <input type="text" 
                                class="journal-input" 
                                placeholder="..." 
-                               onchange="validateJournal(this, 'bailó')" 
+                               onchange="validateJournal(this, 'seamos')" 
                                onkeydown="if(event.key==='Enter') this.blur()">
-                        en la plaza (la gente = singular). Yo también
-                        <span class="font-sans font-bold text-red-600 text-lg mx-2 bg-red-50 px-2 py-1 rounded border border-red-100 select-none">(APRENDER)</span>
-                        <input type="text" 
-                               class="journal-input" 
-                               placeholder="..." 
-                               onchange="validateJournal(this, 'aprendí')"
-                               onkeydown="if(event.key==='Enter') this.blur()">
-                        pasos de salsa."
+                        compañeros este año."
                     </p>
 
-                    <p class="mt-12 text-base text-slate-400 italic text-center opacity-70 font-handlee">--- Fin de la entrada del 20 de Julio ---</p>
+                    <p class="mt-12 text-base text-slate-400 italic text-center opacity-70 font-handlee">--- Contrato de Convivencia ---</p>
                 </div>
             </div>
         </div>
@@ -1140,9 +1094,9 @@
         .journal-input {
             background: transparent;
             border: none;
-            border-bottom: 3px solid #94a3b8; /* Línea gris más visible */
+            border-bottom: 3px solid #94a3b8;
             color: #334155;
-            font-family: 'Handlee', cursive; /* Letra tipo mano */
+            font-family: 'Handlee', cursive;
             font-size: 1.6rem;
             font-weight: bold;
             text-align: center;
@@ -1152,7 +1106,7 @@
         }
         .journal-input:focus {
             outline: none;
-            border-bottom-color: #f97316; /* Naranja al escribir */
+            border-bottom-color: #f97316;
             background: #fff7ed;
         }
         .journal-input::placeholder {
@@ -1162,14 +1116,12 @@
             font-weight: normal;
             font-style: italic;
         }
-        /* Estilo Correcto */
         .journal-input.correct {
             border-bottom-color: #10b981 !important;
             color: #047857 !important;
-            background-color: transparent !important; /* Transparente para que parezca escrito en el papel */
-            pointer-events: none; /* Bloquear */
+            background-color: transparent !important;
+            pointer-events: none;
         }
-        /* Estilo Incorrecto */
         .journal-input.wrong {
             border-bottom-color: #ef4444 !important;
             color: #b91c1c !important;
@@ -1185,23 +1137,18 @@
 
     <script>
         function validateJournal(input, correctAnswer) {
-            // Limpiar y normalizar (quitar espacios, minúsculas)
             const userAnswer = input.value.trim().toLowerCase();
             const correct = correctAnswer.toLowerCase();
 
-            // Aceptar variaciones comunes si es necesario (aquí es estricto por ahora)
             if (userAnswer === correct) {
-                // CORRECTO
                 input.classList.remove('wrong');
                 input.classList.add('correct');
                 if(window.react) window.react('confetti');
-                input.blur(); // Quitar foco
+                input.blur();
                 updateWriteProgress();
             } else {
-                // INCORRECTO
                 input.classList.add('wrong');
                 if(window.react) window.react('error');
-                // Quitar clase de error al volver a escribir
                 input.addEventListener('input', function() {
                     this.classList.remove('wrong');
                 }, {once: true});
@@ -1209,20 +1156,21 @@
         }
 
         function updateWriteProgress() {
-            const total = 6;
+            const container = document.getElementById('roommate-rules');
+            const total = container ? container.querySelectorAll('.journal-input').length : 6;
             const current = document.querySelectorAll('.journal-input.correct').length;
-            document.getElementById('write-counter').innerText = current;
+            
+            var el = document.getElementById('write-counter');
+            if (el) el.innerText = current;
             
             if(current === total) {
                 if(window.react) window.react('applause');
-                // Opcional: Mostrar mensaje final
             }
         }
     </script>
 </section>
 
-
-<section id="executive-reading" data-background="#f8fafc">
+<section id="hr-reading" data-background="#f8fafc">
     <div class="slide-container h-full flex flex-col px-4 pt-2 pb-6">
         
         <div class="flex-1 bg-white rounded-t-2xl shadow-xl border-x border-t border-slate-200 relative overflow-hidden flex flex-col">
@@ -1232,39 +1180,34 @@
                     <div class="w-3 h-3 rounded-full bg-red-500"></div>
                     <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span class="ml-4 font-mono text-sm opacity-70">CONFIDENCIAL // REPORTE_ESTRATEGICO_2026.DOC</span>
+                    <span class="ml-4 font-mono text-sm opacity-70">INTERNO // COMUNICADO_RRHH.DOC</span>
                 </div>
-                <div class="text-xs font-bold bg-emerald-600 px-3 py-1 rounded">SOLO LECTURA</div>
+                <div class="text-xs font-bold bg-orange-600 px-3 py-1 rounded">IMPORTANTE</div>
             </div>
 
             <div class="p-10 md:p-14 overflow-y-auto leading-loose text-xl md:text-2xl text-slate-700 font-serif h-full bg-[#fdfbf7]">
                 
                 <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-8 border-b-4 border-slate-900 pb-4">
-                    ASUNTO: Expansión Mercado Asiático
+                    ASUNTO: Nuevas políticas de teletrabajo
                 </h1>
 
                 <p class="mb-6">
-                    <span class="font-bold text-slate-900">Estimada Junta Directiva:</span>
+                    <span class="font-bold text-slate-900">Estimado equipo:</span>
                 </p>
                 
                 <p class="mb-6">
-                    Les escribo para detallar las actividades críticas de esta semana. 
-                    El lunes, mi equipo y yo <strong>viajamos</strong> a la zona industrial norte. Aunque el precio del terreno era atractivo, nosotros <strong>observamos</strong> graves problemas logísticos que harían imposible la distribución.
+                    A partir de este mes, la empresa <strong>quiere que</strong> todos <em>trabajemos</em> desde casa los días viernes. La dirección <strong>espera que</strong> esta medida nos <em>ayude</em> a reducir el estrés y a tener un mejor balance de vida.
                 </p>
                 
                 <p class="mb-6">
-                    Por esa razón estratégica, <strong>descartamos</strong> la compra inmediata. En su lugar, esa misma tarde <strong>contactamos</strong> a consultores locales. Ellos <strong>escucharon</strong> nuestros requisitos y <strong>presentaron</strong> una alternativa en el distrito financiero: más costosa, pero con acceso directo al puerto.
+                    Sin embargo, el gerente de operaciones <strong>duda que</strong> la productividad <em>sea</em> la misma sin supervisión directa. Por eso, <strong>es vital que</strong> cada empleado <em>envíe</em> un reporte corto de tareas al final de la jornada. 
                 </p>
                 
                 <p class="mb-6">
-                    El martes, yo <strong>asistí</strong> a una cena con el Ministro de Comercio. Él <strong>prometió</strong> incentivos fiscales si cerramos el trato antes de fin de mes.
-                </p>
-                
-                <p class="mb-6">
-                    Finalmente, ayer nosotros <strong>firmamos</strong> el pre-acuerdo. La expansión está en marcha.
+                    Finalmente, les <strong>pido que</strong> <em>tengan</em> paciencia mientras los técnicos ajustan los servidores. ¡<strong>Ojalá que</strong> el nuevo sistema <em>funcione</em> perfectamente hoy mismo!
                 </p>
 
-                <p class="mt-10 text-base text-slate-400 italic text-center">--- Fin del Documento ---</p>
+                <p class="mt-10 text-base text-slate-400 italic text-center">--- Departamento de Recursos Humanos ---</p>
             </div>
         </div>
 
@@ -1272,53 +1215,47 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-300 hover:shadow-md transition-shadow">
-                    <p class="text-xs font-bold text-emerald-700 uppercase mb-2">1. Decisión Estratégica</p>
-                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Por qué rechazaron el primer terreno?</p>
+                    <p class="text-xs font-bold text-orange-600 uppercase mb-2">1. Deseo (Wish)</p>
+                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Qué espera lograr la empresa con el teletrabajo?</p>
                     <div class="flex flex-col gap-2">
-                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Precio alto</button>
-                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Problemas logísticos</button>
+                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Que los empleados trabajen más horas.</button>
+                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Que la medida ayude a reducir el estrés.</button>
                     </div>
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-300 hover:shadow-md transition-shadow">
-                    <p class="text-xs font-bold text-emerald-700 uppercase mb-2">2. Negociación</p>
-                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Qué ventaja tiene la nueva ubicación?</p>
+                    <p class="text-xs font-bold text-orange-600 uppercase mb-2">2. Duda (Doubt)</p>
+                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Cuál es el temor del gerente de operaciones?</p>
                     <div class="flex flex-col gap-2">
-                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Es más barata</button>
-                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Acceso al puerto</button>
+                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Duda que la productividad sea la misma.</button>
+                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Duda que el internet funcione en las casas.</button>
                     </div>
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-300 hover:shadow-md transition-shadow">
-                    <p class="text-xs font-bold text-emerald-700 uppercase mb-2">3. Resultado</p>
-                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Qué ofreció el Ministro?</p>
+                    <p class="text-xs font-bold text-orange-600 uppercase mb-2">3. Petición (Request)</p>
+                    <p class="text-slate-800 font-bold text-lg mb-3 leading-tight">¿Qué obligación "es vital que" cumplan los viernes?</p>
                     <div class="flex flex-col gap-2">
-                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Incentivos fiscales</button>
-                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Terrenos gratis</button>
+                        <button onclick="analyzeText(this, true)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">A. Enviar un reporte al final del día.</button>
+                        <button onclick="analyzeText(this, false)" class="text-left text-sm px-3 py-2 rounded bg-slate-50 hover:bg-slate-100 border border-slate-200 transition">B. Asistir a una reunión obligatoria.</button>
                     </div>
                 </div>
 
             </div>
         </div>
-
     </div>
 
     <script>
         function analyzeText(btn, isCorrect) {
-            // Deshabilitar hermanos para evitar trampas visuales rápidas
             const parent = btn.parentElement;
             const siblings = parent.getElementsByTagName('button');
             for(let i=0; i<siblings.length; i++) {
                 siblings[i].classList.add('opacity-50', 'cursor-not-allowed');
                 siblings[i].disabled = true;
-                // Quitar estilos previos
                 siblings[i].classList.remove('bg-slate-50', 'hover:bg-slate-100');
             }
-
-            // Aplicar estilo al seleccionado
             btn.classList.remove('opacity-50', 'bg-slate-50');
             btn.style.opacity = "1";
-
             if(isCorrect) {
                 if(window.react) window.react('confetti');
                 btn.className = "text-left text-sm px-3 py-2 rounded bg-emerald-600 text-white border border-emerald-700 font-bold shadow-md";
@@ -1332,8 +1269,6 @@
     </script>
 </section>
 
-
-
 <section id="mission-complete" data-background="linear-gradient(135deg, #f0fdf4 0%, #fff7ed 100%)">
     <div class="slide-container h-full flex flex-col justify-center items-center">
         
@@ -1346,7 +1281,7 @@
             <h2 class="text-5xl font-playfair font-black text-slate-800 mt-4 mb-2 tracking-tight">
                 ¡Entrenamiento Completado!
             </h2>
-            <p class="text-xl text-slate-500 font-sans">Has dominado los verbos en el pasado.</p>
+            <p class="text-xl text-slate-500 font-sans">Has dominado los gatillos del Subjuntivo.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl items-stretch">
@@ -1359,7 +1294,7 @@
                      class="h-20 mb-6 object-contain">
                 
                 <h3 class="text-2xl font-black text-slate-800 uppercase tracking-widest mb-1">Certificado</h3>
-                <p class="text-emerald-600 font-bold text-sm bg-emerald-50 px-3 py-1 rounded-full mb-6">Nivel A2: Pretérito Indefinido</p>
+                <p class="text-emerald-600 font-bold text-sm bg-emerald-50 px-3 py-1 rounded-full mb-6">Nivel A2+: Presente de Subjuntivo</p>
                 
                 <div class="w-full h-px bg-slate-100 mb-6"></div>
                 
@@ -1382,14 +1317,14 @@
                     <div class="bg-slate-700/50 p-6 rounded-2xl border border-slate-600 mb-4">
                         <p class="text-orange-300 text-xs font-bold uppercase tracking-widest mb-2">Instrucciones</p>
                         <p class="text-lg leading-relaxed text-slate-200">
-                            Escribe un párrafo corto (5-8 líneas) contando: <br>
-                            <strong class="text-white">"¿Qué hiciste el fin de semana pasado?"</strong>
+                            Imagina que un amigo va a visitar tu país o ciudad por primera vez. <br>
+                            <strong class="text-white">Escribe 5 consejos o recomendaciones para su viaje.</strong>
                         </p>
                     </div>
 
                     <ul class="text-sm text-slate-400 space-y-2 pl-2">
-                        <li class="flex items-center gap-2"><i class="fas fa-caret-right text-orange-500"></i> Usa al menos 3 verbos en pasado (fui, comí, visité...).</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-caret-right text-orange-500"></i> Menciona un lugar y una comida.</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-caret-right text-orange-500"></i> Usa "Te recomiendo que...", "Es importante que...", "Ojalá que...".</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-caret-right text-orange-500"></i> ¡Cuidado con los verbos irregulares! (vaya, sea, tenga, haga).</li>
                     </ul>
                 </div>
 
@@ -1406,7 +1341,6 @@
 
     <script>
         (function(){
-            // Se ejecuta al cargar la diapositiva
             if(window.Reveal) {
                 Reveal.on('slidechanged', event => {
                     if (event.currentSlide.id === 'mission-complete') {
@@ -1416,7 +1350,6 @@
                     }
                 });
             }
-            // Fallback por si no se usa Reveal o para prueba directa
             setTimeout(() => {
                 if(window.react) window.react('confetti');
             }, 800);

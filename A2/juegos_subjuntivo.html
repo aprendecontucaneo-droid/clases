@@ -98,8 +98,9 @@
         <div class="bg-black/30 p-4 flex justify-between items-center border-b border-white/5">
             <div class="flex items-center gap-2">
                 <span class="text-3xl filter drop-shadow-lg" id="lives-display">
-                    <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+                    <span class="heart">❤️</span><span class="heart">❤️</span>
                 </span>
+                <button type="button" id="btn-music" onclick="toggleBGM()" class="ml-2 p-1 rounded bg-white/10 hover:bg-white/20 text-2xl" title="Música on/off" aria-label="Música">🔊</button>
             </div>
             <div class="text-center">
                  <h1 class="text-xl font-bold text-yellow-400 tracking-wider">MISIÓN SUBJUNTIVO</h1>
@@ -109,7 +110,7 @@
                 <div class="w-full h-3 bg-gray-700 rounded-full mt-1 overflow-hidden">
                     <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-500" style="width: 0%"></div>
                 </div>
-                <div class="text-xs mt-1 text-gray-400"><span id="level-indicator">1</span>/15</div>
+                <div class="text-xs mt-1 text-gray-400"><span id="level-indicator">1</span>/12</div>
             </div>
         </div>
 
@@ -236,9 +237,59 @@
 
     </div>
 
-    <!-- AUDIO SYSTEM -->
+    <!-- AUDIO SYSTEM + BGM -->
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let bgmEnabled = true;
+        let bgmGain = null;
+        let bgmOsc1 = null, bgmOsc2 = null;
+
+        function startBGM() {
+            if (!bgmEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            try {
+                if (bgmGain) return;
+                bgmGain = audioCtx.createGain();
+                bgmGain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+                bgmGain.connect(audioCtx.destination);
+                bgmOsc1 = audioCtx.createOscillator();
+                bgmOsc2 = audioCtx.createOscillator();
+                bgmOsc1.type = 'sine';
+                bgmOsc2.type = 'sine';
+                bgmOsc1.frequency.setValueAtTime(220, audioCtx.currentTime);
+                bgmOsc2.frequency.setValueAtTime(330, audioCtx.currentTime);
+                bgmOsc1.connect(bgmGain);
+                bgmOsc2.connect(bgmGain);
+                bgmOsc1.start();
+                bgmOsc2.start();
+                const notes = [220, 247, 262, 277, 294, 262, 247, 220];
+                let idx = 0;
+                const changeNote = () => {
+                    if (!bgmGain) return;
+                    const f = notes[idx % notes.length];
+                    const t = audioCtx.currentTime;
+                    bgmOsc1.frequency.setTargetAtTime(f, t, 0.3);
+                    bgmOsc2.frequency.setTargetAtTime(f * 1.5, t, 0.3);
+                    idx++;
+                    setTimeout(changeNote, 2400);
+                };
+                setTimeout(changeNote, 2400);
+            } catch (e) {}
+        }
+        function stopBGM() {
+            try {
+                if (bgmOsc1) { bgmOsc1.stop(); bgmOsc1 = null; }
+                if (bgmOsc2) { bgmOsc2.stop(); bgmOsc2 = null; }
+                bgmGain = null;
+            } catch (e) {}
+        }
+        function toggleBGM() {
+            bgmEnabled = !bgmEnabled;
+            const btn = document.getElementById('btn-music');
+            if (btn) btn.textContent = bgmEnabled ? '🔊' : '🔇';
+            if (bgmEnabled) startBGM(); else stopBGM();
+        }
+
         const sound = {
             play: (type, freqStart, freqEnd, duration) => {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -271,17 +322,17 @@
     <!-- LOGIC -->
     <script>
         const levels = [
-            // --- NIVELES ESTÁNDAR (1-10) ---
+            // --- BLOQUE 1: El Despertar (Intermedio) ---
             {
                 type: 'choice',
-                modeName: 'Supervivencia Zombie',
-                color: 'bg-red-600',
-                context: "Un zombie está rompiendo tu ventana. Tienes un bate de béisbol.",
-                question: "¡Es urgente que ______ !",
+                modeName: 'Nivel 1: El Dilema del Tiempo',
+                color: 'bg-slate-600',
+                context: "Estás esperando a un contacto secreto en un café bajo la lluvia.",
+                question: "Me quedaré aquí hasta que ______ el contacto.",
                 options: [
-                    { text: "lo invites a cenar", type: 'logic_fail', feedback: "¡El zombie te comió el cerebro mientras ponías la mesa! 🧠" },
-                    { text: "te defiendes", type: 'grammar_fail', feedback: "¡Error gramatical! Usaste Indicativo y el zombie aprovechó tu duda." },
-                    { text: "te defiendas", type: 'correct', feedback: "¡Bien! Subjuntivo correcto. ¡Bateazo al zombie!" }
+                    { text: "llegue", type: 'correct', feedback: "Correcto. Acción futura en oración temporal: «hasta que» + subjuntivo." },
+                    { text: "llega", type: 'grammar_fail', feedback: "El indicativo suena a que ya está frente a ti; la frase dice «me quedaré», así que el verbo de la subordinada va en subjuntivo (llegue)." },
+                    { text: "se vaya", type: 'logic_fail', feedback: "Si se va antes de que lo veas, fallaste la misión. Aquí necesitas «llegue»." }
                 ]
             },
             {
@@ -297,147 +348,118 @@
                 ]
             },
             {
-                type: 'builder',
-                modeName: 'Constructor de Frases',
-                color: 'bg-blue-600',
-                context: "Organiza la frase para expresar DUDA sobre la inteligencia de Juan.",
-                words: ["Dudo", "que", "Juan", "sea", "inteligente"],
-                correctOrder: ["Dudo", "que", "Juan", "sea", "inteligente"],
-                feedback: "Muy bien. 'Dudar que' activa el subjuntivo (sea)."
+                type: 'binary',
+                modeName: 'Nivel 2: La Búsqueda a Ciegas',
+                color: 'bg-amber-800',
+                context: "Buscas un mapa en una biblioteca antigua. No sabes si el mapa existe.",
+                question: "¿Es gramaticalmente correcta esta frase para buscar algo que NO sabes si existe?: «Busco el libro que tiene el mapa del tesoro».",
+                isCorrect: false,
+                feedback: "Falso. Si usas «tiene» (indicativo), implicas que el libro ya lo conoces y existe. Para algo desconocido debes usar subjuntivo: «Busco el libro que tenga el mapa del tesoro»."
             },
-            {
-                type: 'choice',
-                modeName: 'Drama Amoroso',
-                color: 'bg-pink-600',
-                context: "Tu ex-novio/a tóxico/a te escribe a las 3 AM: 'Te extraño'.",
-                question: "Es importante que no ______.",
-                options: [
-                    { text: "le contestes", type: 'correct', feedback: "¡Bien hecho! Mantén tu dignidad con el subjuntivo." },
-                    { text: "le contestas", type: 'grammar_fail', feedback: "Perdiste la dignidad gramatical usando indicativo." },
-                    { text: "lo bloquees", type: 'logic_fail', feedback: "Lógica: La frase dice 'que NO lo bloquees'. ¡Error! Bloquearlo es lo mejor." } 
-                ]
-            },
-            {
-                type: 'choice',
-                modeName: 'Cazavampiros',
-                color: 'bg-purple-700',
-                context: "Un vampiro te ofrece pasar a su castillo oscuro.",
-                question: "Te sugiero que ______ corriendo.",
-                options: [
-                    { text: "entres", type: 'logic_fail', feedback: "Entraste... y eras delicioso. 🧛‍♂️" },
-                    { text: "salgas", type: 'correct', feedback: "¡Corre! Sugerencia + Subjuntivo." },
-                    { text: "sales", type: 'grammar_fail', feedback: "El vampiro odia la mala gramática (indicativo)." }
-                ]
-            },
-            {
-                type: 'builder',
-                modeName: 'Lámpara Mágica',
-                color: 'bg-yellow-600',
-                context: "Pide un deseo para ganar la lotería.",
-                words: ["Ojalá", "que", "yo", "gane", "la", "lotería"],
-                correctOrder: ["Ojalá", "que", "yo", "gane", "la", "lotería"],
-                feedback: "¡Ojalá! Recuerda: Ojalá siempre va con subjuntivo."
-            },
-            {
-                type: 'choice',
-                modeName: 'Entrevista de Trabajo',
-                color: 'bg-gray-600',
-                context: "El jefe pregunta: '¿Por qué quieres el trabajo?'",
-                question: "Busco un trabajo que ______ bien.",
-                options: [
-                    { text: "pague", type: 'correct', feedback: "Bien. Buscas algo indefinido (no sabes si existe), así que subjuntivo." },
-                    { text: "paga", type: 'grammar_fail', feedback: "Si dices 'paga' (indicativo), implica que ya tienes ese trabajo específico." },
-                    { text: "cueste", type: 'logic_fail', feedback: "¿Un trabajo que TE cueste dinero? ¡Mala idea!" }
-                ]
-            },
-            {
-                type: 'choice',
-                modeName: 'Encuentro Alienígena',
-                color: 'bg-indigo-600',
-                context: "Un alien te apunta con un láser.",
-                question: "Es necesario que ______ pacíficos.",
-                options: [
-                    { text: "seamos", type: 'correct', feedback: "Correcto. Necesidad impersonal." },
-                    { text: "ataquemos", type: 'logic_fail', feedback: "¡Te desintegraron! No ataques a quien tiene láseres." },
-                    { text: "somos", type: 'grammar_fail', feedback: "Indicativo incorrecto." }
-                ]
-            },
-            {
-                type: 'builder',
-                modeName: 'Sentimientos',
-                color: 'bg-red-500',
-                context: "Te molesta que tu vecino cante mal.",
-                words: ["Me", "molesta", "que", "él", "cante"],
-                correctOrder: ["Me", "molesta", "que", "él", "cante"],
-                feedback: "Verbos de emoción (molestar) activan subjuntivo."
-            },
-            {
-                type: 'choice',
-                modeName: 'Bosque Peligroso',
-                color: 'bg-green-800',
-                context: "Te encuentras un oso. Tienes un sándwich de miel.",
-                question: "Recomiendo que ______ el sándwich lejos y corras.",
-                options: [
-                    { text: "tires", type: 'correct', feedback: "¡Bien pensado! Distrae al oso." },
-                    { text: "tiras", type: 'grammar_fail', feedback: "El oso no entiende indicativo, solo miel." },
-                    { text: "comas", type: 'logic_fail', feedback: "Te comiste la miel... ¡y el oso te comió a ti!" }
-                ]
-            },
-            
-            // --- HISTORIA FINAL: EL TEMPLO MALDITO (11-15) ---
             {
                 type: 'input',
-                modeName: 'Historia: La Puerta',
-                color: 'bg-stone-800',
-                context: "Has llegado al Templo del Indicativo. La puerta tiene una inscripción mágica. Para entrar, debes completar la frase escribiendo el verbo correctamente.",
-                question: "Solo pasará quien ______ (tener) la mente abierta.",
-                answers: ["tenga"],
-                feedback: "¡La puerta retumba y se abre! El subjuntivo es tu llave."
+                modeName: 'Nivel 3: El Veneno de la Duda',
+                color: 'bg-emerald-800',
+                context: "Un alquimista te ofrece un brebaje. No estás seguro de que sea seguro.",
+                question: "No creo que esta poción ______ (ser) potable.",
+                answers: ["sea"],
+                feedback: "«No creer que» niega la certeza y exige subjuntivo (sea)."
+            },
+            {
+                type: 'choice',
+                modeName: 'Nivel 4: El Puente del Aunque',
+                color: 'bg-cyan-800',
+                context: "Un guardia te bloquea el paso. Está lloviendo a cántaros ahora mismo.",
+                question: "Pasaré el puente aunque ______ lloviendo.",
+                options: [
+                    { text: "está", type: 'correct', feedback: "Correcto. Como YA está lloviendo, usas indicativo para admitir el hecho real. «Aunque» + indicativo = hecho presente." },
+                    { text: "esté", type: 'grammar_fail', feedback: "«Esté» sería «aunque llueva (en el futuro/quizás)». Aquí el hecho ya es real: está lloviendo, así que el indicativo es más preciso." },
+                    { text: "seque", type: 'logic_fail', feedback: "¡No tiene sentido con el contexto! Está lloviendo, no secando." }
+                ]
+            },
+            {
+                type: 'builder',
+                modeName: 'Nivel 5: La Orden del Capitán',
+                color: 'bg-blue-800',
+                context: "Debes organizar la orden de retirada antes de que los barcos zarpen.",
+                words: ["Les", "prohíbo", "que", "zarpen", "sin", "mí"],
+                correctOrder: ["Les", "prohíbo", "que", "zarpen", "sin", "mí"],
+                feedback: "Los verbos de influencia y prohibición (prohibir) siempre disparan el subjuntivo (zarpen)."
             },
             {
                 type: 'binary',
-                modeName: 'Historia: El Guardián',
-                color: 'bg-stone-700',
-                context: "Un esqueleto guardián te bloquea el paso. Él habla, pero su gramática podría ser una trampa. ¿Es CORRECTA esta frase?",
-                question: "'Dudo que tú tienes el valor para pasar.'",
-                isCorrect: false, // Incorrecto, debería ser 'tengas'
-                feedback: "¡Exacto! Era INCORRECTA. Al dudar, debería haber usado subjuntivo (tengas). El esqueleto se desmorona."
-            },
-            {
-                type: 'choice',
-                modeName: 'Historia: La Sala de Pociones',
-                color: 'bg-purple-900',
-                context: "Encuentras dos pociones. Un pergamino antiguo dice: 'Te aconsejo que bebas la que NO ______ (brillar)'. (La poción VERDE brilla, la AZUL no).",
-                question: "Elige la acción correcta:",
-                options: [
-                    { text: "beber la azul (que no brille)", type: 'correct', feedback: "¡Correcto! 'Brille' es subjuntivo y la lógica te salvó del veneno brillante." },
-                    { text: "beber la verde (que brilla)", type: 'logic_fail', feedback: "¡Bebiste la poción brillante! Te convertiste en sapo. 🐸" },
-                    { text: "beber la azul (que no brilla)", type: 'grammar_fail', feedback: "Elegiste bien la poción, pero tu gramática activó la trampa del templo." }
-                ]
+                modeName: 'Nivel 6: El Juicio de Valor',
+                color: 'bg-violet-700',
+                context: "Ves a un caballero atacando a un dragón que solo estaba durmiendo.",
+                question: "¿Es correcta esta reacción?: «Me parece injusto que el caballero ataque al dragón».",
+                isCorrect: true,
+                feedback: "Verdadero. Las expresiones impersonales de juicio de valor (es injusto, es bueno, es raro) requieren subjuntivo. «Ataque» es correcto."
             },
             {
                 type: 'input',
-                modeName: 'Historia: El Puente de Lava',
+                modeName: 'Nivel 7: La Condición Imposible',
+                color: 'bg-amber-700',
+                context: "Encuentras una lámpara, pero el genio está de mal humor.",
+                question: "Te daré el oro con tal de que te ______ (ir) ahora mismo.",
+                answers: ["vayas"],
+                feedback: "«Con tal de que» es una conjunción que siempre requiere subjuntivo (vayas)."
+            },
+            {
+                type: 'choice',
+                modeName: 'Nivel 8: El Antecedente Inexistente',
                 color: 'bg-orange-700',
-                context: "Un puente de piedra cruza un río de lava. Las piedras se caen si no usas el verbo adecuado.",
-                question: "El puente caerá a menos que tú ______ (correr) rápido.",
-                answers: ["corras"],
-                feedback: "¡Corriste como el viento! El subjuntivo mantuvo las piedras en su lugar."
+                context: "Estás en un desierto y mueres de sed.",
+                question: "Necesito un oasis que ______ agua fresca.",
+                options: [
+                    { text: "tenga", type: 'correct', feedback: "Correcto. Buscas algo que tal vez no esté ahí; antecedente indefinido → subjuntivo (tenga)." },
+                    { text: "tiene", type: 'grammar_fail', feedback: "Si dices «tiene», es porque ya lo estás viendo. Pero tienes sed: no lo conoces aún, así que subjuntivo (tenga)." },
+                    { text: "venda", type: 'logic_fail', feedback: "¿Un oasis que vende agua? Lógica fallida." }
+                ]
             },
             {
                 type: 'builder',
-                modeName: 'Historia: El Hechizo Final',
-                color: 'bg-yellow-800',
-                context: "El espíritu del templo trata de atraparte. Debes lanzar el hechizo de expulsión final.",
-                words: ["Quiero", "que", "tú", "desaparezcas", "ahora"],
-                correctOrder: ["Quiero", "que", "tú", "desaparezcas", "ahora"],
-                feedback: "¡El espíritu se desvanece gritando en Indicativo! Has escapado con el tesoro."
+                modeName: 'Nivel 9: La Paradoja del Tiempo',
+                color: 'bg-indigo-800',
+                context: "Un viaje en el tiempo. Debes advertir a tu «yo» del pasado.",
+                words: ["Avísame", "en", "cuanto", "veas", "al", "traidor"],
+                correctOrder: ["Avísame", "en", "cuanto", "veas", "al", "traidor"],
+                feedback: "«En cuanto» + futuro/mandato siempre usa subjuntivo (veas)."
+            },
+            {
+                type: 'input',
+                modeName: 'Nivel 10: La Negación de la Realidad',
+                color: 'bg-rose-800',
+                context: "El villano intenta convencerte de que el cielo es verde.",
+                question: "No es verdad que el cielo ______ (ser) verde.",
+                answers: ["sea"],
+                feedback: "Negar la veracidad («No es verdad que…») es un disparador clásico del subjuntivo (sea)."
+            },
+            {
+                type: 'choice',
+                modeName: 'Nivel 11: La Finalidad Oculta',
+                color: 'bg-red-800',
+                context: "Estás saboteando la máquina del villano.",
+                question: "He cortado los cables para que la bomba no ______.",
+                options: [
+                    { text: "explote", type: 'correct', feedback: "Correcto. Finalidad: «para que» + subjuntivo (explote)." },
+                    { text: "explota", type: 'grammar_fail', feedback: "El indicativo no funciona con «para que»; se requiere subjuntivo (explote)." },
+                    { text: "brille", type: 'logic_fail', feedback: "¿De qué sirve que no brille si va a explotar? La finalidad es que no explote." }
+                ]
+            },
+            {
+                type: 'builder',
+                modeName: 'Nivel 12: El Hechizo de Expulsión',
+                color: 'bg-purple-900',
+                context: "El espíritu final te pregunta qué quieres de él.",
+                words: ["No", "hay", "nada", "que", "me", "asuste", "aquí"],
+                correctOrder: ["No", "hay", "nada", "que", "me", "asuste", "aquí"],
+                feedback: "Oraciones de relativo con antecedente negativo («No hay nada que…») exigen subjuntivo (asuste)."
             }
         ];
 
         const game = {
             levelIdx: 0,
-            lives: 3,
+            lives: 2,
             score: 0,
             currentBuilder: [],
 
@@ -483,8 +505,9 @@
 
             start: function() {
                 sound.click();
+                if (typeof startBGM === 'function') startBGM();
                 this.levelIdx = 0;
-                this.lives = 3;
+                this.lives = 2;
                 this.score = 0;
                 this.updateUI();
                 this.showScreen('game');
@@ -498,7 +521,7 @@
             updateUI: function() {
                 // Lives
                 let heartsHtml = '';
-                for(let i=0; i<3; i++) {
+                for(let i=0; i<2; i++) {
                     heartsHtml += `<span class="heart text-2xl mx-1 ${i < this.lives ? '' : 'lost'}">❤️</span>`;
                 }
                 this.ui.lives.innerHTML = heartsHtml;

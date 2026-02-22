@@ -265,6 +265,9 @@
 </head>
 
 <body class="h-screen w-screen overflow-hidden">
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/audio/2021/10/25/audio_4b2de670f2.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="header-container"></div>
 
@@ -347,17 +350,17 @@
                 id: 'start',
                 bg: 'bg-start',
                 icon: 'fa-dungeon',
-                text: "Te despiertas dentro de una cueva. Hace frío y está oscuro. No recuerdas cómo has llegado. Solo ves un poco de luz al fondo.",
-                options: [{ text: "Caminar hacia la luz", next: 's2_crossroads' }]
+                text: "Despiertas en una cueva húmeda. La memoria te falla. Solo una tenue luz al final del túnel te guía. (Nivel: A2)",
+                options: [{ text: "Avanzar con cautela", next: 's2_crossroads' }]
             },
             's2_crossroads': {
                 id: 's2_crossroads',
                 bg: 'bg-start',
                 icon: 'fa-signs-post',
-                text: "Llegas a un cruce. A la izquierda oyes agua. A la derecha no se oye nada. Tienes que elegir un camino.",
+                text: "El camino se divide. A la izquierda, escuchas el eco de una corriente de agua. A la derecha, un silencio sepulcral.",
                 options: [
-                    { text: "Ir hacia el río (izquierda)", next: 's3_river' },
-                    { text: "Ir por el túnel seco (derecha)", next: 's3_dry' }
+                    { text: "Seguir el sonido del agua (Izquierda)", next: 's3_river' },
+                    { text: "Adentrarse en el silencio (Derecha)", next: 's3_dry' }
                 ]
             },
             's3_river': {
@@ -365,10 +368,10 @@
                 bg: 'bg-river',
                 icon: 'fa-water',
                 type: 'puzzle',
-                text: "Un río corta el camino. En la orilla hay piedras con palabras. Para cruzar, tienes que formar una frase correcta con las piedras.",
-                solution: ["El", "puente", "está", "lejos"],
-                words: ["lejos", "El", "está", "puente", "río", "agua"],
-                successMsg: "Las piedras brillan y aparece un puente. Puedes pasar.",
+                text: "Un río bloquea tu paso. Hay piedras grabadas en la orilla. Forma una frase correcta en PASADO para crear un puente mágico.",
+                solution: ["Ayer", "perdí", "mi", "mapa", "aquí"],
+                words: ["mapa", "perdí", "Ayer", "aquí", "pierdo", "mi"],
+                successMsg: "Las piedras flotan y forman un camino seguro.",
                 next: 's4_camp'
             },
             's3_dry': {
@@ -376,10 +379,10 @@
                 bg: 'bg-start',
                 icon: 'fa-bat',
                 type: 'combat',
-                enemyName: "Murciélagos",
-                text: "De repente salen murciélagos del techo. Tienes que responder bien para ahuyentarlos.",
+                enemyName: "Enjambre de Murciélagos",
+                text: "¡El techo se mueve! Para espantarlos, debes recordar lo que pasó antes. Usa los tiempos del pasado.",
                 hp: 3,
-                topic: 'verbs',
+                topic: 'past_tenses',
                 next: 's4_camp'
             },
             's4_camp': {
@@ -388,28 +391,33 @@
                 icon: 'fa-campground',
                 type: 'rest',
                 item: 'torch',
-                text: "Encuentras un campamento viejo. Nadie está. Hay una antorcha encendida y algo de comida. Puedes descansar un poco.",
+                text: "Hallas los restos de un campamento abandonado. Recoges una antorcha que misteriosamente sigue ardiendo. Tu fuerza se recupera.",
                 heal: true,
-                options: [{ text: "Coger la antorcha y descansar", next: 's4b_sala' }]
+                options: [{ text: "Tomar la antorcha y continuar", next: 's4b_sala' }]
             },
             's4b_sala': {
                 id: 's4b_sala',
                 bg: 'bg-ruins',
                 icon: 'fa-map',
-                text: "Ves dos pasillos. Uno está muy oscuro. El otro lleva a una sala con mapas dibujados en la pared.",
+                text: "Frente a ti hay dos túneles. Uno parece una antigua biblioteca en ruinas. El otro desciende hacia la oscuridad total.",
                 options: [
-                    { text: "Ir por el túnel oscuro", next: 's5_dark_tunnel' },
-                    { text: "Entrar en la sala de mapas", next: 's4c_mapas' }
+                    { text: "Entrar a la biblioteca en ruinas", next: 's4c_mapas' },
+                    { text: "Bajar a la oscuridad", next: 's5_dark_tunnel' }
                 ]
             },
             's4c_mapas': {
                 id: 's4c_mapas',
                 bg: 'bg-forest',
-                icon: 'fa-scroll',
+                icon: 'fa-book-dead',
                 type: 'logic',
-                text: "En el mapa hay un acertijo: En un restaurante el camarero dice «¿Qué desea tomar?». ¿Qué respuesta es la correcta?",
-                correct: "Un café con leche, por favor.",
-                options: ["La cuenta, por favor.", "Un café con leche, por favor.", "¿Dónde está el baño?", "Buenos días."],
+                text: "(Nivel B1) Lees el diario de un explorador: «Si hubiera sabido que el dragón escupía veneno, no habría venido sin la máscara.» ¿Qué significa esto?",
+                correct: "Vino sin la máscara porque no sabía lo del veneno.",
+                options: [
+                    "Sabía lo del veneno, pero olvidó la máscara.",
+                    "Vino sin la máscara porque no sabía lo del veneno.",
+                    "Trajo la máscara porque sabía lo del veneno.",
+                    "No vino porque el dragón escupía veneno."
+                ],
                 next: 's4d_logic'
             },
             's4d_logic': {
@@ -417,48 +425,53 @@
                 bg: 'bg-forest',
                 icon: 'fa-brain',
                 type: 'logic',
-                text: "En el mapa pone: «Hay 4 velas. Apago 2. ¿Cuántas velas quedan encendidas?»",
-                correct: "Dos",
-                options: ["Una", "Dos", "Tres", "Cuatro"],
+                text: "En la pared hay otro enigma: «Salgo de la ciudad pero nunca me muevo. Conecto casas, pero no tengo puertas.» ¿Qué soy?",
+                correct: "La calle / La carretera",
+                options: ["El coche", "El río", "La calle / La carretera", "El mapa"],
                 next: 's5_dark_tunnel'
             },
             's5_dark_tunnel': {
                 id: 's5_dark_tunnel',
                 bg: 'bg-start',
-                icon: 'fa-skull',
-                text: "El siguiente túnel está muy oscuro. No ves nada delante.",
+                icon: 'fa-eye-slash',
+                text: "Una oscuridad antinatural envuelve el pasillo. No puedes ver ni tus propias manos.",
                 checkItem: 'torch',
-                itemSuccess: { text: "Enciendes la antorcha. Ves un agujero en el suelo y lo evitas. Sigues adelante.", next: 's6_ruins' },
-                itemFail: { text: "No ves el agujero. Te caes y te haces daño. Te levantas y sigues.", damage: 1, next: 's6_ruins' }
+                itemSuccess: { text: "La luz de tu antorcha revela unas estacas afiladas en el suelo. Las esquivas con cuidado.", next: 's6_ruins' },
+                itemFail: { text: "Caminas a ciegas y caes sobre unas rocas afiladas. Te lastimas, pero logras arrastrarte fuera.", damage: 1, next: 's6_ruins' }
             },
             's6_ruins': {
                 id: 's6_ruins',
                 bg: 'bg-ruins',
-                icon: 'fa-scroll',
-                text: "Llegas a unas ruinas. Un esqueleto guarda la puerta. Puedes hablar con él o pelear.",
+                icon: 'fa-archway',
+                text: "Llegas a la puerta de una cripta. Un Guardián de Piedra bloquea el paso. Sus ojos brillan.",
                 options: [
-                    { text: "Hablar con el esqueleto", next: 's7_skeleton_riddle' },
-                    { text: "Pelear con el esqueleto", next: 's7_combat_skeleton' }
+                    { text: "Intentar responder a su acertijo", next: 's7_skeleton_riddle' },
+                    { text: "Atacar al Guardián", next: 's7_combat_skeleton' }
                 ]
             },
             's7_skeleton_riddle': {
                 id: 's7_skeleton_riddle',
                 bg: 'bg-ruins',
-                icon: 'fa-skull-crossbones',
+                icon: 'fa-monument',
                 type: 'riddle',
-                text: "El esqueleto dice: «Tengo hojas pero no soy árbol. Tengo lomo pero no soy animal. La gente me abre para leer. ¿Qué soy?»",
-                correct: "El libro",
-                options: ["El árbol", "El libro", "El gato", "La puerta"],
+                text: "El Guardián habla: «Te digo qué hacer pero no tengo voz. Tengo mares sin agua y ciudades sin gente. ¿Qué soy?»",
+                correct: "Un mapa",
+                options: ["Un libro", "Un mapa", "El viento", "Un espíritu"],
                 next: 's7b_logic'
             },
             's7b_logic': {
                 id: 's7b_logic',
                 bg: 'bg-ruins',
-                icon: 'fa-brain',
+                icon: 'fa-balance-scale',
                 type: 'logic',
-                text: "El esqueleto te da otra pista: «En la cueva no hay ventanas ni luz del sol. ¿Aquí dentro siempre es de día o de noche?» Piensa bien.",
-                correct: "Siempre es de noche",
-                options: ["Siempre es de día", "Siempre es de noche", "A veces es de día", "Hay ventanas"],
+                text: "«Una prueba más», dice el Guardián. «¿Qué oración expresa una DUDA correctamente en español?»",
+                correct: "Dudo que mañana haga buen tiempo.",
+                options: [
+                    "Dudo que mañana hace buen tiempo.",
+                    "Dudo que mañana hará buen tiempo.",
+                    "Dudo que mañana haga buen tiempo.",
+                    "Dudo si mañana hace buen tiempo."
+                ],
                 next: 's8_lab'
             },
             's7_combat_skeleton': {
@@ -466,40 +479,45 @@
                 bg: 'bg-ruins',
                 icon: 'fa-khanda',
                 type: 'combat',
-                enemyName: "Guerrero Esqueleto",
-                text: "El esqueleto coge su espada. Tienes que ganar con el español.",
-                hp: 4,
-                topic: 'verbs',
+                enemyName: "Guardián de Piedra",
+                text: "El Guardián te ataca. Debes defenderte usando pronombres avanzados.",
+                hp: 3,
+                topic: 'pronouns_b1',
                 next: 's8_lab'
             },
             's8_lab': {
                 id: 's8_lab',
                 bg: 'bg-ruins',
                 icon: 'fa-flask',
-                text: "Hay un laboratorio con frascos y libros. En una mesa ves una llave dorada y una poción roja. Solo puedes llevar una cosa.",
+                text: "Entras al laboratorio del antiguo alquimista. Sobre una mesa de obsidiana hay dos objetos. Solo tienes tiempo de coger uno antes de que la sala colapse.",
                 options: [
-                    { text: "Coger la llave", getItem: 'key', next: 's8b_logic' },
-                    { text: "Beber la poción (te cura un poco)", heal: true, next: 's8b_logic' }
+                    { text: "Coger la llave de cristal", getItem: 'key', next: 's8b_logic' },
+                    { text: "Beber el elixir carmesí (curación)", heal: true, next: 's8b_logic' }
                 ]
             },
             's8b_logic': {
                 id: 's8b_logic',
                 bg: 'bg-ruins',
-                icon: 'fa-key',
+                icon: 'fa-box',
                 type: 'logic',
-                text: "Hay una caja cerrada y tres llaves: roja, verde y azul. Un papel dice: «La llave correcta no es la roja ni la azul.» ¿Cuál llave abre la caja?",
-                correct: "La verde",
-                options: ["La roja", "La verde", "La azul", "Ninguna"],
+                text: "Una puerta mágica te hace una pregunta lógica: «Si Ana es más alta que Beatriz, y Beatriz es más alta que Carmen... ¿Es Carmen más alta que Ana?»",
+                correct: "No, Carmen es la más baja.",
+                options: ["Sí, Carmen es más alta.", "No, Carmen es la más baja.", "Son de la misma altura.", "Falta información."],
                 next: 's9_hallway'
             },
             's9_hallway': {
                 id: 's9_hallway',
                 bg: 'bg-start',
-                icon: 'fa-walking',
+                icon: 'fa-wind',
                 type: 'logic',
-                text: "Un fantasma aparece y te dice: «Ana tiene tres manzanas. Le da una a Pedro. ¿Cuántas manzanas tiene ahora Ana?» Responde con lógica.",
-                correct: "Dos",
-                options: ["Una", "Dos", "Tres", "Cuatro"],
+                text: "Un Espectro aparece de la nada y exige saber: «¿Qué frase condicional es correcta?»",
+                correct: "Si tuviera dinero, viajaría por el mundo.",
+                options: [
+                    "Si tengo dinero, viajaría por el mundo.",
+                    "Si tendría dinero, viajaré por el mundo.",
+                    "Si tuviera dinero, viajaría por el mundo.",
+                    "Si tuviera dinero, viajo por el mundo."
+                ],
                 next: 's9b_combat'
             },
             's9b_combat': {
@@ -507,73 +525,48 @@
                 bg: 'bg-start',
                 icon: 'fa-ghost',
                 type: 'combat',
-                enemyName: "Sombra",
-                text: "La Sombra no se va. Tienes que vencerla con pronombres correctos.",
+                enemyName: "Espectro de las Sombras",
+                text: "El espectro se enfurece. ¡Derrótalo usando el subjuntivo y condicional!",
                 hp: 3,
-                topic: 'pronouns',
+                topic: 'subjunctive',
                 next: 's10_locked_door'
             },
             's10_locked_door': {
                 id: 's10_locked_door',
                 bg: 'bg-ruins',
                 icon: 'fa-door-closed',
-                text: "Una puerta de metal cierra el paso. Tiene cerradura.",
+                text: "Una inmensa puerta de cristal te separa de la salida. No tiene manija, solo una cerradura mágica.",
                 checkItem: 'key',
-                itemSuccess: { text: "Tienes la llave. La puerta se abre. Puedes seguir.", next: 's11_bridge' },
-                itemFail: { text: "No tienes llave. Tienes que forzar la cerradura y te cansas mucho.", damage: 1, next: 's11_bridge' }
-            },
-            's11_bridge': {
-                id: 's11_bridge',
-                bg: 'bg-river',
-                icon: 'fa-bridge',
-                type: 'riddle',
-                text: "Un guardián invisible pregunta: «¿Cuál frase es correcta en español?»",
-                correct: "Mañana voy a comer con mi amigo.",
-                options: [
-                    "Mañana voy comer con mi amigo.",
-                    "Mañana voy a comer con mi amigo.",
-                    "Mañana comer voy con mi amigo.",
-                    "Voy comer mañana con mi amigo."
-                ],
-                next: 's11b_logic'
-            },
-            's11b_logic': {
-                id: 's11b_logic',
-                bg: 'bg-river',
-                icon: 'fa-question',
-                type: 'logic',
-                text: "El guardián dice: «Luis llega a las 8. El autobús tarda 30 minutos. ¿A qué hora tiene que salir Luis de casa?»",
-                correct: "A las 7 y media",
-                options: ["A las 8", "A las 7 y media", "A las 9", "A las 30"],
-                next: 's12_boss_intro'
+                itemSuccess: { text: "La llave de cristal encaja perfectamente. La puerta se desvanece.", next: 's12_boss_intro' },
+                itemFail: { text: "Sin la llave, debes golpear el cristal hasta romperlo. Los cristales te hieren gravemente.", damage: 2, next: 's12_boss_intro' }
             },
             's12_boss_intro': {
                 id: 's12_boss_intro',
                 bg: 'bg-boss',
                 icon: 'fa-dragon',
-                text: "Casi sales de la cueva, pero un dragón enorme se despierta. Dice: «Nadie sale sin demostrar que sabe español.»",
-                options: [{ text: "Estoy listo", next: 's13_boss_p1' }]
+                text: "Sientes el viento del exterior. ¡Casi eres libre! Pero un gigantesco Dragón de las Palabras desciende del techo. «Nadie escapa sin dominar el subjuntivo», ruge.",
+                options: [{ text: "¡Lucha por tu libertad!", next: 's13_boss_p1' }]
             },
             's13_boss_p1': {
                 id: 's13_boss_p1',
                 bg: 'bg-boss',
-                icon: 'fa-fire',
+                icon: 'fa-fire-flame-curved',
                 type: 'combat',
                 enemyName: "Dragón (Fase 1)",
-                text: "El dragón lanza fuego. Responde bien para defenderte.",
+                text: "El dragón te lanza ráfagas de fuego lingüístico. ¡Responde rápido!",
                 hp: 4,
-                topic: 'verbs',
+                topic: 'subjunctive',
                 next: 's14_boss_p2'
             },
             's14_boss_p2': {
                 id: 's14_boss_p2',
                 bg: 'bg-boss',
-                icon: 'fa-bomb',
+                icon: 'fa-wand-magic-sparkles',
                 type: 'puzzle',
-                text: "El dragón está débil. Para vencerlo tienes que formar el hechizo correcto con las palabras.",
-                solution: ["Yo", "soy", "un", "maestro"],
-                words: ["soy", "maestro", "Yo", "un", "el", "es"],
-                successMsg: "El hechizo golpea al dragón. ¡Lo has vencido!",
+                text: "El dragón está herido pero prepara su ataque final. Ordena este hechizo usando el subjuntivo para sellarlo para siempre.",
+                solution: ["Es", "imposible", "que", "tú", "me", "venzas"],
+                words: ["imposible", "que", "venzas", "tú", "me", "Es", "vences"],
+                successMsg: "¡La magia de tus palabras silencia al dragón! La cueva se abre.",
                 next: 'victory'
             },
             'victory': { type: 'win' },
@@ -581,20 +574,24 @@
         };
 
         const QUESTIONS = {
-            verbs: [
-                { q: "Yo ____ (vivir) aquí desde hace un año.", correct: "vivo", opts: ["vive", "viven", "vivimos"] },
-                { q: "Nosotros ____ (comer) pan cada día.", correct: "comemos", opts: ["comen", "comes", "como"] },
-                { q: "Ellos ____ (ser) muy altos.", correct: "son", opts: ["es", "sois", "somos"] },
-                { q: "Tú ____ (tener) que descansar.", correct: "tienes", opts: ["tiene", "tenemos", "tienen"] },
-                { q: "Ella ____ (ir) al mercado los lunes.", correct: "va", opts: ["voy", "vamos", "van"] },
-                { q: "¿Qué ____ (hacer) tú ahora?", correct: "haces", opts: ["hace", "hacen", "hago"] }
+            past_tenses: [
+                { q: "Ayer, mientras yo ____ (caminar) por el bosque, vi una luz.", correct: "caminaba", opts: ["caminé", "camino", "caminaría"] },
+                { q: "El año pasado, nosotros ____ (ir) a España de vacaciones.", correct: "fuimos", opts: ["íbamos", "vamos", "fueron"] },
+                { q: "Cuando era niño, siempre ____ (jugar) en la calle.", correct: "jugaba", opts: ["jugué", "juego", "jugaría"] },
+                { q: "Anoche no ____ (poder - yo) dormir por el ruido.", correct: "pude", opts: ["podía", "puedo", "podré"] }
             ],
-            pronouns: [
-                { q: "¿Ves a Juan? Sí, ___ veo.", correct: "lo", opts: ["le", "se", "la"] },
-                { q: "¿Compraste la mesa? Sí, ___ compré ayer.", correct: "la", opts: ["lo", "le", "los"] },
-                { q: "Ellos ___ levantan muy temprano.", correct: "se", opts: ["nos", "os", "les"] },
-                { q: "Mi hermana ___ lava el pelo cada día.", correct: "se", opts: ["me", "te", "le"] },
-                { q: "¿____ puedes pasar el agua? (a mí)", correct: "Me", opts: ["Te", "Se", "Lo"] }
+            pronouns_b1: [
+                { q: "¿Le diste el mapa al guía? Sí, ya ___ ___ di.", correct: "se lo", opts: ["le lo", "te lo", "me lo"] },
+                { q: "¡No ___ ___ digas a nadie! Es un secreto.", correct: "se lo", opts: ["le lo", "lo le", "te le"] },
+                { q: "¿Tienes las llaves? Por favor, ____.", correct: "dámelas", opts: ["dáselas", "médalas", "dálemelas"] },
+                { q: "Estaba leyendo el libro, pero mi hermano ___ ___ quitó.", correct: "me lo", opts: ["se lo", "te lo", "nos lo"] }
+            ],
+            subjunctive: [
+                { q: "Dudo que el dragón ____ (estar) dormido.", correct: "esté", opts: ["está", "estuvo", "estaba"] },
+                { q: "Te daré el tesoro cuando ____ (llegar) a la salida.", correct: "llegues", opts: ["llegas", "llegaste", "llegarás"] },
+                { q: "Si tuviera una espada más grande, te ____ (vencer).", correct: "vencería", opts: ["venceré", "venzo", "vencí"] },
+                { q: "Es importante que nosotros no ____ (hacer) ruido.", correct: "hagamos", opts: ["hacemos", "hicimos", "haremos"] },
+                { q: "Me pidió que le ____ (ayudar) con la puerta.", correct: "ayudara", opts: ["ayudo", "ayudaré", "ayudaba"] }
             ]
         };
 
@@ -674,7 +671,7 @@
             const [q, setQ] = useState(null);
 
             const nextQ = useCallback(() => {
-                const list = QUESTIONS[type] || QUESTIONS.verbs;
+                const list = QUESTIONS[type] || QUESTIONS.past_tenses;
                 const item = list[Math.floor(Math.random() * list.length)];
                 setQ({ ...item, mixedOpts: [item.correct, ...item.opts].sort(() => Math.random() - 0.5) });
             }, [type]);
@@ -715,18 +712,39 @@
         // --- GAME CONTROLLER ---
         const Game = () => {
             const [nodeId, setNodeId] = useState(null);
-            const [hp, setHp] = useState(5); // Más vida porque es más largo (5 HP)
+            const [hp, setHp] = useState(5);
             const [items, setItems] = useState([]);
             const [overlay, setOverlay] = useState(null);
             const [subProgress, setSubProgress] = useState(0);
+            const [musicOn, setMusicOn] = useState(true);
 
             const currentNode = STORY[nodeId];
+
+            const toggleMusic = () => {
+                const bgMusic = document.getElementById('bg-music');
+                if (!bgMusic) return;
+                const next = !musicOn;
+                setMusicOn(next);
+                if (next) {
+                    bgMusic.volume = 0.25;
+                    bgMusic.play().catch(() => {});
+                } else {
+                    bgMusic.pause();
+                }
+            };
 
             const start = () => {
                 setNodeId('start');
                 setHp(5);
                 setItems([]);
                 setSubProgress(0);
+                const bgMusic = document.getElementById('bg-music');
+                if (bgMusic && musicOn) {
+                    bgMusic.volume = 0.25;
+                    bgMusic.play().catch(e => console.log("El navegador bloqueó el autoplay", e));
+                } else if (bgMusic && !musicOn) {
+                    bgMusic.pause();
+                }
                 audio.startAmbience();
             };
 
@@ -807,12 +825,15 @@
 
             if (!currentNode && !nodeId) {
                 return (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-black bg-start text-center p-4">
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-black bg-start text-center p-4 relative">
+                        <button type="button" onClick={toggleMusic} className="absolute top-4 right-4 w-12 h-12 rounded-full bg-slate-800/80 border border-slate-600 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:border-amber-500 transition-colors z-10" title={musicOn ? "Silenciar música" : "Activar música"}>
+                            <i className={`fas text-xl ${musicOn ? "fa-volume-up" : "fa-volume-mute"}`}></i>
+                        </button>
                         <i className="fas fa-mountain text-8xl text-slate-600 mb-4 animate-float"></i>
                         <h1 className="text-6xl md:text-8xl text-amber-500 font-cinzel mb-2 animate-float">ESCAPE</h1>
                         <h2 className="text-2xl text-slate-400 font-cinzel mb-12">La Gran Odisea</h2>
                         <button onClick={start} className="bg-amber-700 hover:bg-amber-600 text-white font-bold py-4 px-12 rounded-full animate-pulse transition-transform hover:scale-105">COMENZAR AVENTURA</button>
-                        <p className="mt-4 text-slate-500 text-sm">Nivel A2 • Lógica, gramática y acertijos • ~20 min</p>
+                        <p className="mt-4 text-slate-500 text-sm">Nivel A2 → B1 • Pasados, pronombres, subjuntivo y condicional • ~25 min</p>
                     </div>
                 );
             }
@@ -851,8 +872,13 @@
                                 {items.includes('key') && <i className="fas fa-key" title="Llave"></i>}
                             </div>
                         </div>
-                        <div className="text-xs text-slate-500 font-tech border border-slate-700 px-2 py-1 rounded bg-black/50">
-                            SECCIÓN: {nodeId.toUpperCase()}
+                        <div className="flex items-center gap-2">
+                            <button type="button" onClick={toggleMusic} className="w-10 h-10 rounded-full bg-slate-800/80 border border-slate-600 flex items-center justify-center text-slate-400 hover:text-amber-400 hover:border-amber-500 transition-colors" title={musicOn ? "Silenciar música" : "Activar música"}>
+                                <i className={`fas ${musicOn ? "fa-volume-up" : "fa-volume-mute"}`}></i>
+                            </button>
+                            <div className="text-xs text-slate-500 font-tech border border-slate-700 px-2 py-1 rounded bg-black/50">
+                                SECCIÓN: {nodeId.toUpperCase()}
+                            </div>
                         </div>
                     </div>
 
