@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Desafío del Pasado - Nivel B1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        /* Animaciones para respuestas */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .correct {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+            animation: pop 0.3s ease;
+        }
+
+        .incorrect {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
+            animation: shake 0.4s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="glass-panel w-full max-w-3xl p-6 md:p-10 relative overflow-hidden">
+        
+        <!-- PANTALLA DE INICIO -->
+        <div id="start-screen" class="text-center fade-in">
+            <div class="text-6xl mb-4">🏛️</div>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-blue-900 mb-4">El Desafío del Pasado</h1>
+            <p class="text-lg text-gray-600 mb-8">Nivel B1: Domina los Verbos Irregulares en Pretérito Indefinido.</p>
+            <p class="text-md text-gray-500 mb-8 bg-blue-50 p-4 rounded-lg text-left">
+                <strong>Reglas:</strong> Enfrentarás 10 niveles de dificultad progresiva. Lee cuidadosamente, elige la forma correcta y aprende de tus errores. ¿Estás listo para el desafío?
+            </p>
+            <button onclick="startGame()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full text-xl transition-colors w-full md:w-auto">
+                ▶ Comenzar Aventura
+            </button>
+        </div>
+
+        <!-- PANTALLA DE JUEGO -->
+        <div id="game-screen" class="hidden fade-in">
+            <!-- Header con progreso -->
+            <div class="flex justify-between items-center mb-6">
+                <span id="level-indicator" class="font-bold text-blue-800 bg-blue-100 px-4 py-1 rounded-full text-sm">Nivel 1/10</span>
+                <span id="score-indicator" class="font-bold text-green-700 bg-green-100 px-4 py-1 rounded-full text-sm">Puntos: 0</span>
+            </div>
+            
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 10%"></div>
+            </div>
+
+            <!-- Pregunta -->
+            <h2 id="question-title" class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2"></h2>
+            <p id="question-text" class="text-xl md:text-2xl font-semibold text-gray-800 mb-8 leading-relaxed"></p>
+
+            <!-- Opciones -->
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <!-- Los botones se inyectan vía JS -->
+            </div>
+
+            <!-- Caja de Feedback (Oculta por defecto) -->
+            <div id="feedback-box" class="hidden bg-gray-50 border-l-4 p-4 rounded-r-lg mb-6 fade-in">
+                <div class="flex items-start">
+                    <div id="feedback-icon" class="text-2xl mr-3"></div>
+                    <div>
+                        <h3 id="feedback-title" class="font-bold text-lg mb-1"></h3>
+                        <p id="feedback-rationale" class="text-gray-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón Siguiente -->
+            <div class="text-right">
+                <button id="next-btn" onclick="nextQuestion()" class="hidden bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                    Siguiente Nivel ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE RESULTADOS -->
+        <div id="result-screen" class="hidden text-center fade-in">
+            <div id="result-emoji" class="text-7xl mb-6"></div>
+            <h2 id="result-title" class="text-4xl font-extrabold text-blue-900 mb-4"></h2>
+            <p class="text-xl text-gray-600 mb-2">Tu puntuación final es:</p>
+            <div class="text-6xl font-black text-blue-600 mb-8">
+                <span id="final-score"></span>/10
+            </div>
+            <p id="result-message" class="text-lg text-gray-700 mb-10 bg-blue-50 p-6 rounded-xl"></p>
+            <button onclick="restartGame()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full text-xl transition-colors">
+                ↻ Volver a Jugar
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE PREGUNTAS (Nivel B1) ---
+        const questions = [
+            {
+                levelName: "Nivel 1: El Grupo U",
+                text: "Ayer, mis amigos y yo (tener) ______ que trabajar hasta muy tarde en la oficina.",
+                options: [
+                    { text: "tuvimos", correct: true, rationale: "¡Correcto! 'Tener' pertenece al grupo 'U' y toma la terminación irregular para 'nosotros' sin tilde." },
+                    { text: "tenimos", correct: false, rationale: "Incorrecto. Estás aplicando una terminación regular a un verbo de raíz irregular." },
+                    { text: "tuvisteis", correct: false, rationale: "Esta forma es para 'vosotros', pero el sujeto es 'mis amigos y yo' (nosotros)." },
+                    { text: "teniemos", correct: false, rationale: "Esta conjugación no existe, es una mezcla de imperfecto y pretérito." }
+                ]
+            },
+            {
+                levelName: "Nivel 2: El Grupo J",
+                text: "El juez les preguntó, pero los testigos no le (decir) ______ la verdad a la policía.",
+                options: [
+                    { text: "decieron", correct: false, rationale: "Cuidado, 'Decir' es irregular y su raíz cambia a 'dij-'." },
+                    { text: "dijieron", correct: false, rationale: "Error común. Después de la letra 'j', la terminación pierde la 'i' y se convierte en '-eron'." },
+                    { text: "dicieron", correct: false, rationale: "Palabra inexistente. La raíz correcta es 'dij-'." },
+                    { text: "dijeron", correct: true, rationale: "¡Exacto! En el grupo J, la tercera persona del plural pierde la 'i' (terminan en -eron)." }
+                ]
+            },
+            {
+                levelName: "Nivel 3: Sonidos engañosos",
+                text: "Yo (empezar) ______ a estudiar español hace exactamente dos años.",
+                options: [
+                    { text: "empezé", correct: false, rationale: "En español, la combinación 'ze' casi nunca se utiliza; se prefiere cambiar a 'ce'." },
+                    { text: "empecé", correct: true, rationale: "¡Muy bien! Los verbos terminados en '-zar' cambian la 'z' por 'c' en la forma 'Yo' para mantener el sonido." },
+                    { text: "empiezé", correct: false, rationale: "No hay cambio de vocal (e->ie) en el pretérito indefinido para este verbo." },
+                    { text: "empezó", correct: false, rationale: "Esa es la forma para 'él/ella', pero el sujeto de la oración es 'Yo'." }
+                ]
+            },
+            {
+                levelName: "Nivel 4: El Sándwich",
+                text: "El camarero nos sirvió la comida rápida, pero nos (pedir) ______ que esperáramos por el postre.",
+                options: [
+                    { text: "pedió", correct: false, rationale: "Falta el cambio vocálico. Recuerda la regla del 'sándwich' (e->i) para la 3ª persona." },
+                    { text: "pidío", correct: false, rationale: "La tilde está mal ubicada. La mayor fuerza de voz va en la 'o' final (pidió)." },
+                    { text: "pidió", correct: true, rationale: "¡Correcto! 'Pedir' es un verbo '-ir' que cambia su vocal (e->i) en la 3ª persona singular." },
+                    { text: "pidieron", correct: false, rationale: "Es para 'ellos', pero el sujeto de la acción de pedir es 'El camarero' (él)." }
+                ]
+            },
+            {
+                levelName: "Nivel 5: Los Gemelos Rebeldes",
+                text: "La película (ser) ______ muy aburrida, pero al final no me (ir) ______ del cine.",
+                options: [
+                    { text: "fue / fui", correct: true, rationale: "¡Perfecto! 'Ser' e 'ir' comparten la misma conjugación. La película (ella) = fue; Yo = fui." },
+                    { text: "fui / fue", correct: false, rationale: "Estás invirtiendo los sujetos. 'Fui' es para Yo, y 'fue' es para Él/Ella." },
+                    { text: "era / iba", correct: false, rationale: "Estos son verbos en pretérito imperfecto, no en pretérito indefinido." },
+                    { text: "estuvo / anduve", correct: false, rationale: "Gramaticalmente posible, pero buscamos los equivalentes de 'ser' e 'ir'." }
+                ]
+            },
+            {
+                levelName: "Nivel 6: Combinación Mortal",
+                text: "Cuando (saber - yo) ______ la sorpresa, me (poner - yo) ______ muy feliz inmediatamente.",
+                options: [
+                    { text: "sabí / poní", correct: false, rationale: "Ambos verbos son fuertemente irregulares y no usan las terminaciones regulares '-í'." },
+                    { text: "supe / poní", correct: false, rationale: "Acertaste el primero, pero 'poner' cambia su raíz a 'pus-'." },
+                    { text: "supe / puse", correct: true, rationale: "¡Excelente! Ambos son del Grupo U. La raíz de saber es 'sup-' y la de poner es 'pus-'." },
+                    { text: "sabí / puse", correct: false, rationale: "Acertaste el segundo, pero 'saber' cambia completamente su raíz a 'sup-'." }
+                ]
+            },
+            {
+                levelName: "Nivel 7: El Grupo I",
+                text: "¿Qué (hacer) ______ ustedes cuando (venir) ______ la tormenta tan fuerte?",
+                options: [
+                    { text: "hicieron / vino", correct: true, rationale: "¡Magistral! Ambos cambian su vocal a 'i' (hic-, vin-). 'Ustedes' usa '-ieron' y 'la tormenta' usa '-o'." },
+                    { text: "hacieron / venió", correct: false, rationale: "No estás aplicando los cambios de raíz irregular (hic-, vin-)." },
+                    { text: "hizieron / vino", correct: false, rationale: "La raíz 'hiz-' con 'z' solo se usa en 'él/ella hizo' para mantener el sonido, no en plural." },
+                    { text: "hicieron / venió", correct: false, rationale: "Aplicaste bien la regla a 'hacer', pero olvidaste la irregularidad de 'venir' (vino)." }
+                ]
+            },
+            {
+                levelName: "Nivel 8: El engaño del Grupo J",
+                text: "A pesar de ser difícil, los estudiantes (traducir) ______ todo el texto sin diccionario.",
+                options: [
+                    { text: "traducieron", correct: false, rationale: "Error muy común incluso en nativos. La raíz 'traduc-' cambia a 'traduj-'." },
+                    { text: "tradujieron", correct: false, rationale: "Recuerda la regla de oro del Grupo J: la terminación para ellos pierde la 'i' (-eron)." },
+                    { text: "tradujeron", correct: true, rationale: "¡Correcto! Los verbos en '-ducir' pertenecen al Grupo J y pierden la 'i' en la 3ª del plural." },
+                    { text: "traducen", correct: false, rationale: "Esa es la forma correcta, pero para el tiempo Presente." }
+                ]
+            },
+            {
+                levelName: "Nivel 9: Matices de significado",
+                text: "Traté de abrir la puerta principal, pero estaba trabada y no (poder) ______.",
+                options: [
+                    { text: "podía", correct: false, rationale: "El imperfecto ('podía') describe un estado continuo. Aquí hubo un intento puntual y terminado." },
+                    { text: "podí", correct: false, rationale: "'Poder' es del Grupo U (pud-) y no usa terminaciones regulares." },
+                    { text: "pudo", correct: false, rationale: "Esta es la forma para 'él/ella', pero la oración comienza con 'Traté' (Yo)." },
+                    { text: "pude", correct: true, rationale: "¡Excelente! 'No pude' indica un intento específico en el pasado que fracasó en ese preciso momento." }
+                ]
+            },
+            {
+                levelName: "Nivel 10 (Jefe Final): Trampa de tildes",
+                text: "Yo le (dar) ______ el regalo, ella lo (ver) ______ y me (dar) ______ las gracias.",
+                options: [
+                    { text: "dí / vió / dió", correct: false, rationale: "Cuidado: por regla general, las palabras de una sola sílaba en español NO llevan tilde en el pasado." },
+                    { text: "di / veyó / dio", correct: false, rationale: "La forma 'veyó' no existe. La conjugación correcta para la tercera persona es 'vio'." },
+                    { text: "daba / veía / daba", correct: false, rationale: "Son formas correctas, pero del pretérito imperfecto. Necesitamos acciones terminadas." },
+                    { text: "di / vio / dio", correct: true, rationale: "¡VICTORIA! Estos verbos cortos son rebeldes y tienen una regla vital: ¡NUNCA llevan tilde!" }
+                ]
+            }
+        ];
+
+        // --- LÓGICA DEL JUEGO ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // Elementos del DOM
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const levelIndicator = document.getElementById('level-indicator');
+        const scoreIndicator = document.getElementById('score-indicator');
+        const progressBar = document.getElementById('progress-bar');
+        const questionTitle = document.getElementById('question-title');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackRationale = document.getElementById('feedback-rationale');
+        const nextBtn = document.getElementById('next-btn');
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            score = 0;
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            
+            const q = questions[currentQuestionIndex];
+            
+            // Actualizar UI
+            levelIndicator.innerText = `Nivel ${currentQuestionIndex + 1}/10`;
+            scoreIndicator.innerText = `Puntos: ${score}`;
+            progressBar.style.width = `${((currentQuestionIndex + 1) / 10) * 100}%`;
+            
+            questionTitle.innerText = q.levelName;
+            questionText.innerText = q.text;
+            
+            // Limpiar opciones
+            optionsContainer.innerHTML = '';
+            
+            // Crear botones de opciones
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn bg-white border-2 border-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl text-lg text-left w-full hover:bg-blue-50 hover:border-blue-300 focus:outline-none";
+                btn.innerText = opt.text;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if (answered) return;
+            answered = true;
+            
+            const q = questions[currentQuestionIndex];
+            const selectedOption = q.options[selectedIndex];
+            const buttons = optionsContainer.querySelectorAll('button');
+            
+            // Deshabilitar botones
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed', 'opacity-75');
+            });
+
+            // Colorear y dar feedback
+            feedbackBox.classList.remove('hidden');
+            
+            if (selectedOption.correct) {
+                btnElement.classList.add('correct');
+                score++;
+                scoreIndicator.innerText = `Puntos: ${score}`;
+                
+                feedbackBox.className = "bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6 fade-in";
+                feedbackIcon.innerText = "✅";
+                feedbackTitle.innerText = "¡Excelente!";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-green-800";
+            } else {
+                btnElement.classList.add('incorrect');
+                
+                // Resaltar la correcta
+                const correctIndex = q.options.findIndex(o => o.correct);
+                buttons[correctIndex].classList.add('bg-green-100', 'border-green-400', 'text-green-800');
+                
+                feedbackBox.className = "bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-6 fade-in";
+                feedbackIcon.innerText = "❌";
+                feedbackTitle.innerText = "No del todo...";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-red-800";
+            }
+
+            feedbackRationale.innerText = selectedOption.rationale;
+            nextBtn.classList.remove('hidden');
+            
+            // Cambiar texto del botón si es la última pregunta
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerText = "Ver Resultados Finales 🏆";
+                nextBtn.classList.replace('bg-gray-800', 'bg-yellow-600');
+                nextBtn.classList.replace('hover:bg-gray-900', 'hover:bg-yellow-700');
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            gameScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = score;
+            
+            const resultEmoji = document.getElementById('result-emoji');
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            if (score === 10) {
+                resultEmoji.innerText = "👑";
+                resultTitle.innerText = "¡Nivel Experto!";
+                resultMessage.innerHTML = "¡Impresionante! Tienes un dominio total de los irregulares en el Nivel B1. <strong>Los verdaderos rebeldes se rinden ante ti.</strong>";
+            } else if (score >= 7) {
+                resultEmoji.innerText = "🌟";
+                resultTitle.innerText = "¡Muy buen trabajo!";
+                resultMessage.innerHTML = "Comprendes muy bien los grupos irregulares. Solo un pequeño repaso a los detalles y serás imparable.";
+            } else if (score >= 4) {
+                resultEmoji.innerText = "📚";
+                resultTitle.innerText = "Vas por buen camino";
+                resultMessage.innerHTML = "El pretérito indefinido es un reto. Te recomendamos repasar las diferencias entre los <strong>Grupos U y J</strong>.";
+            } else {
+                resultEmoji.innerText = "💪";
+                resultTitle.innerText = "¡No te rindas!";
+                resultMessage.innerHTML = "Los irregulares requieren práctica. Vuelve a intentarlo y lee detenidamente las explicaciones de cada respuesta.";
+            }
+        }
+
+        function restartGame() {
+            // Reset next button style in case it was modified in the last question
+            nextBtn.innerText = "Siguiente Nivel ➔";
+            nextBtn.classList.remove('bg-yellow-600', 'hover:bg-yellow-700');
+            nextBtn.classList.add('bg-gray-800', 'hover:bg-gray-900');
+            startGame();
+        }
+    </script>
+</body>
+</html>
